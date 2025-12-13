@@ -76,6 +76,12 @@
     ⚠ SYSTEM OVERLOAD ⚠
 </div>
 
+<!-- Logout Button -->
+<a href="/auth/logout"
+    class="fixed top-2 right-40 z-50 border border-pink-500 text-pink-500 hover:bg-pink-900 px-2 py-1 text-xs font-mono transition">
+    [ DISCONNECT ]
+</a>
+
 <div class="flex h-screen bg-black font-mono overflow-hidden">
 
     <!-- Left Panel: Status -->
@@ -321,33 +327,82 @@
     }
 
     function showOptimizingLoader() {
-        const chatBox = document.getElementById('chatHistory');
-        // Prevent dupes
-        if (document.getElementById('optimizingLoader')) return;
+        // Lock Input
+        const input = document.getElementById('msgInput');
+        input.disabled = true;
+        input.placeholder = ">> OPTIMIZING <<";
 
+        const chatBox = document.getElementById('chatHistory');
         const div = document.createElement('div');
         div.id = 'optimizingLoader';
-        div.className = 'chat-bubble agent opacity-50 animate-pulse text-xs';
-        div.innerText = '⚙️ OPTIMIZING CONTENT...';
+        div.className = 'chat-bubble agent opacity-50 animate-pulse text-xs border border-pink-500 bg-pink-900/50';
+        div.innerText = '⚙️ NEURAL REWRITING IN PROGRESS...';
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function appendOptimizerFeedback(data) {
+    function handleOptimizerPreview(data) {
         const loader = document.getElementById('optimizingLoader');
         if (loader) loader.remove();
 
+        // Show Modal or Inline Confirm? Inline is safer for terminal.
         const chatBox = document.getElementById('chatHistory');
         const div = document.createElement('div');
-        div.className = 'optimizer-feedback';
+        div.id = 'optimizerConfirmBox';
+        div.className = 'border border-pink-500 bg-black p-4 text-sm mb-4';
+
         div.innerHTML = `
-            <div><strong>⚡ AI OPTIMIZER INTERVENTION</strong></div>
-            <span class="optimizer-original">'${data.original}'</span>
-            <span class="optimizer-arrow">➔</span>
-            <span class="optimizer-final">'${data.rewritten}'</span>
+            <div class="text-pink-300 font-bold mb-2">⚡ OPTIMIZATION COMPLETE</div>
+            <div class="mb-2 text-gray-500 line-through text-xs">'${data.original}'</div>
+            <div class="mb-4 text-green-400 font-bold text-lg">"${data.rewritten}"</div>
+            <div class="flex gap-2">
+                <button onclick="confirmOptimization('${data.rewritten.replace(/'/g, "\\'")}')" 
+                    class="flex-1 bg-green-700 hover:bg-green-600 text-white py-2 font-bold transition">
+                    [ CONFIRM ]
+                </button>
+                <button onclick="cancelOptimization('${data.original.replace(/'/g, "\\'")}')" 
+                    class="flex-1 bg-red-900 hover:bg-red-800 text-gray-300 py-2 font-bold transition">
+                    [ REJECT ]
+                </button>
+            </div>
         `;
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Make global so onclick works
+    window.confirmOptimization = function (text) {
+        const box = document.getElementById('optimizerConfirmBox');
+        if (box) box.remove();
+
+        // Send Confirm
+        client.send({
+            content: text,
+            confirm_opt: true
+        });
+
+        // Optimistically append (or wait for echo? Echo is safer)
+        const input = document.getElementById('msgInput');
+        input.disabled = false;
+        input.placeholder = "Inject response...";
+        input.focus();
+    };
+
+    window.cancelOptimization = function (original) {
+        const box = document.getElementById('optimizerConfirmBox');
+        if (box) box.remove();
+
+        const input = document.getElementById('msgInput');
+        input.disabled = false;
+        input.value = original; // Restore
+        input.placeholder = "Inject response...";
+        input.focus();
+    };
+
+    function appendOptimizerFeedback(data) {
+        // Deprecated by Preview Flow? Keep for legacy or if confirmed elsewhere?
+        // Scenario 1 implies manual confirm. So this might not trigger if we verify correctly.
+        // But if backend sends it, show it.
     }
 
     function appendMessage(data) {
@@ -369,12 +424,6 @@
         chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
-    function applyHyperVisibility(mode) {
-        document.body.classList.remove('mode-blackbox', 'mode-forensic');
-        if (mode === 'blackbox') document.body.classList.add('mode-blackbox');
-        if (mode === 'forensic') document.body.classList.add('mode-forensic');
-    }
-
     function applyTemperature(temp) {
         document.body.classList.remove('instability-low', 'instability-med', 'instability-high');
 
@@ -391,5 +440,7 @@
             else ind.classList.add('hidden');
         }
     }
+
+    // Helper for applying HyperVis (Already there)
 </script>
 {% endblock %}

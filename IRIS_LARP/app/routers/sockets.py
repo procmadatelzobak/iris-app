@@ -185,37 +185,43 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
 
-                    # v1.5 AI Optimizer (Man-in-the-Middle)
+                    # v1.5 AI Optimizer && v2.0 Confirm Flow
                     final_content = content
                     was_rewritten = False
 
-                    if gamestate.optimizer_active:
-                        # Check Power (Load + Cost <= Capacity)
-                        # We use hypothetical load. 
-                        # Ideally we check available headroom: Capacity - CurrentLoad >= Cost
-                        # Use updated gamestate properties
+                    is_confirming = msg_data.get("confirm_opt", False) # Flag sent by client
+
+                    if gamestate.optimizer_active and not is_confirming:
+                        # Check Power
                         current_load = gamestate.power_load
-                        cost = gamestate.OPTIMIZER_COST_MW
+                        cost = gamestate.COST_OPTIMIZER_ACTIVE
                         if current_load + cost <= gamestate.power_capacity:
                             # ACTIVE and POWER OK
-                            
-                            # v1.7 UI Feedback: Optimizing Start
-                            # Broadcast to both Agent (Loader) and User (Waiting)
+
+                            # Broadcast Start
                             await routing_logic.broadcast_to_session(session_id, json.dumps({
                                 "type": "optimizing_start"
                             }))
-                            
+
                             from ..logic.llm_core import llm_service
                             try:
                                 rewritten = await llm_service.rewrite_message(content, gamestate.optimizer_prompt)
                                 if rewritten and rewritten.strip():
-                                    final_content = rewritten
-                                    was_rewritten = True
+                                    # v2.0: Send PREVIEW to Agent, do not broadcast/save yet
+                                    await websocket.send_text(json.dumps({
+                                        "type": "optimizer_preview",
+                                        "original": content,
+                                        "rewritten": rewritten
+                                    }))
+                                    continue # Stop processing, wait for confirmation
                             except Exception as e:
                                 print(f"Optimizer Error: {e}")
+                                # Fallback to sending original if error? Or fail?
+                                # If error, let's just send original.
 
                     # Save (Rewritten or Original)
-                    log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content, is_optimized=was_rewritten)
+                    # If is_confirming, 'content' IS the rewritten version sent back by client
+                    log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content, is_optimized=is_confirming or was_rewritten)
                     db_save.add(log)
                     db_save.commit()
 
@@ -225,16 +231,10 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "role": "agent",
                         "content": final_content,
                         "session_id": session_id,
-                        "id": log.id # v1.7
+                        "id": log.id 
                     }))
-
-                    # Feedback to Agent (If rewritten)
-                    if was_rewritten:
-                         await websocket.send_text(json.dumps({
-                             "type": "optimizer_feedback",
-                             "original": content,
-                             "rewritten": final_content
-                         }))
+                    
+                    # No feedback needed if confirmed, client knows.
 
                 elif user.role == UserRole.USER:
                     cmd_type = msg_data.get("type")

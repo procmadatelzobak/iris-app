@@ -1,0 +1,160 @@
+/* UNIVERSAL THEMES */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&family=Quicksand:wght@500;700&family=Roboto+Mono:wght@400;700&display=swap');
+
+/* Default (LOW) - Stark, Industrial */
+:root {
+    --bg-color: #111;
+    --text-color: #ccc;
+    --accent-color: #444;
+    --border-color: #333;
+    --font-main: 'Roboto Mono', monospace;
+    --radius: 0px;
+    --shadow: none;
+    --btn-bg: #222;
+    --btn-text: #fff;
+    --btn-border: 1px solid #555;
+    --glass-opacity: 0.9;
+}
+
+/* THEME CLASSES APPLIED TO BODY */
+
+/* 1. NATURE (MID) - Organic, Green, Soft */
+body.theme-mid {
+    --bg-color: #0a1f0a;
+    --text-color: #e0ffe0;
+    --accent-color: #2e8b57;
+    --border-color: #228b22;
+    --font-main: 'Quicksand', sans-serif;
+    --radius: 12px;
+    --shadow: 0 4px 12px rgba(0, 255, 0, 0.2);
+    --btn-bg: #1a4d1a;
+    --btn-text: #fff;
+    --btn-border: 1px solid #3cb371;
+    --glass-opacity: 0.7;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(34, 139, 34, 0.1) 0%, transparent 20%);
+}
+
+/* 2. LUXURY (HIGH) - Gold, Sharp, Elegant */
+body.theme-high {
+    --bg-color: #050505;
+    --text-color: #e5c100;
+    --accent-color: #ffd700;
+    --border-color: #b8860b;
+    --font-main: 'Playfair Display', serif;
+    --radius: 2px;
+    --shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    --btn-bg: #1a1a00;
+    --btn-text: #ffd700;
+    --btn-border: 1px solid #ffd700;
+    --glass-opacity: 0.95;
+    letter-spacing: 1px;
+}
+
+/* 3. PARTY (PARTY) - Pink, Bubbles, Fun */
+body.theme-party {
+    --bg-color: #1a051a;
+    --text-color: #ffccff;
+    --accent-color: #ff66ff;
+    --border-color: #ff33cc;
+    --font-main: 'Inter', sans-serif;
+    --radius: 25px;
+    --shadow: 0 4px 20px rgba(255, 105, 180, 0.4);
+    --btn-bg: #4d004d;
+    --btn-text: #fff;
+    --btn-border: 2px solid #ff66ff;
+    --glass-opacity: 0.8;
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+}
+
+/* GLOBAL STYLES USING VARS */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    transition: all 0.5s ease;
+}
+
+.theme-card {
+    background-color: rgba(0, 0, 0, var(--glass-opacity));
+    border: var(--btn-border);
+    /* Reusing btn border for card default */
+    border-color: var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s;
+}
+
+.theme-btn {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: var(--btn-border);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-family: var(--font-main);
+    transition: transform 0.1s;
+}
+
+.theme-btn:hover {
+    filter: brightness(1.2);
+}
+
+.theme-btn:active {
+    transform: scale(0.98);
+}
+
+.theme-input {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    font-family: var(--font-main);
+}
+
+.theme-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--accent-color);
+}
+
+/* SPECIFIC THEME OVERRIDES */
+body.theme-high .theme-card {
+    border-width: 1px;
+    border-style: solid;
+}
+
+body.theme-party .theme-card {
+    border-width: 3px;
+}
+
+/* BUBBLE ANIMATION FOR PARTY */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+}
+
+.bubble {
+    position: fixed;
+    bottom: -100px;
+    background: rgba(255, 100, 255, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 10s linear infinite;
+    z-index: 0;
+}

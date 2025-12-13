@@ -15,30 +15,31 @@ function initGrid() {
         grid.innerHTML = '';
         for (let i = 1; i <= TOTAL_SESSIONS; i++) {
             const card = document.createElement('div');
-            card.className = 'session-card';
-            // No ID on card to avoid dupe, use class logic if needed
+            card.className = 'session-card chernobyl-panel p-2 flex flex-col h-[280px] bg-black';
 
             card.innerHTML = `
                 <div class="flex justify-between border-b border-gray-800 mb-2 pb-1">
-                    <span class="text-lg font-bold text-gray-400">SESSION ${i}</span>
+                    <span class="text-xl font-bold text-green-500 font-mono editable-label" data-key="card_sess_${i}">KANÁL ${i}</span>
                     <span class="text-xs text-gray-600">ID: ${i}</span>
                 </div>
                 
                 <div class="flex justify-between items-center mb-2">
                     <div class="flex items-center gap-2">
-                        <span class="status-dot status-user-${i}"></span>
-                        <span class="text-green-700 font-bold">USER ${i}</span>
+                        <span class="bulb status-user-${i}"></span>
+                        <span class="text-green-700 font-bold editable-label" data-key="card_user_${i}">OBJEKT ${i}</span>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center bg-gray-900 p-1 rounded border border-gray-800 mb-2">
                     <div class="flex items-center gap-2">
-                        <span class="status-dot status-agent-${i}"></span>
-                        <span class="text-pink-800 font-bold label-agent-${i}">AGENT</span>
+                        <span class="bulb status-agent-${i}"></span>
+                        <span class="text-pink-800 font-bold label-agent-${i} editable-label" data-key="card_agent_${i}">STÍN</span>
                     </div>
+                    <!-- Status Text Placeholder -->
+                    <span class="text-xs text-gray-500" id="sub-agent-dynamic-${i}">ID:${i}</span>
                 </div>
                 
-                <div class="flex-1 overflow-hidden text-xs font-mono p-1 text-gray-300 flex flex-col justify-end chat-box-${i} bg-black/50">
+                <div class="flex-1 overflow-hidden text-xs font-mono p-1 text-gray-300 flex flex-col justify-end chat-box-${i} bg-black border border-green-900/30 inset-shadow">
                      <!-- Chat -->
                 </div>
             `;
@@ -135,6 +136,109 @@ function updateUI() {
             if (btn) btn.classList.add('active');
 
             if (tab === 'logs' || tab === 'all') refreshSystemLogs();
+            if (tab === 'graph') startGraphLoop();
+            else stopGraphLoop();
+        }
+
+        // --- NETWORK GRAPH (CANVAS) ---
+        let graphLoop = null;
+        function startGraphLoop() {
+            if (graphLoop) return;
+            const canvas = document.getElementById('networkGraph');
+            if (!canvas) return;
+            // Resize logic
+            const fit = () => {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+            };
+            window.addEventListener('resize', fit);
+            fit();
+
+            const ctx = canvas.getContext('2d');
+
+            // Loop
+            const loop = () => {
+                ctx.fillStyle = '#111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height); // Trail effect?
+
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const radius = Math.min(cx, cy) * 0.7;
+
+                ctx.strokeStyle = '#330000';
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                const time = Date.now() / 1000;
+
+                // Draw Sessions (Users) on Outer Circle
+                for (let i = 1; i <= TOTAL_SESSIONS; i++) {
+                    const angle = (i - 1) / TOTAL_SESSIONS * Math.PI * 2;
+                    const x = cx + Math.cos(angle) * radius;
+                    const y = cy + Math.sin(angle) * radius;
+
+                    // Node
+                    ctx.fillStyle = '#0f0';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Label
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '10px monospace';
+                    ctx.fillText(`U${i}`, x + 10, y + 10);
+
+                    // Determine connected Agent (Logic from updateUI)
+                    // AgentIndex = (Session I - 1 - Shift) % Total
+                    // Fix negative modulo
+                    let shift = currentShift || 0;
+                    let agentIndex = (i - 1 - shift) % TOTAL_SESSIONS;
+                    if (agentIndex < 0) agentIndex += TOTAL_SESSIONS;
+                    const agentId = agentIndex + 1;
+
+                    // Inner Circle for Agents? Or just link to calculated position?
+                    // Let's draw Agents on inner circle
+                    const innerR = radius * 0.5;
+                    const agAngle = (agentId - 1) / TOTAL_SESSIONS * Math.PI * 2 + (time * 0.1); // Spin!
+                    const agX = cx + Math.cos(agAngle) * innerR;
+                    const agY = cy + Math.sin(agAngle) * innerR;
+
+                    if (i === 1) { // Draw Agent Node once per ID? 
+                        // Drawing inside this loop is redundant but works for simple viz
+                    }
+
+                    // Draw Line
+                    ctx.strokeStyle = `rgba(0, 255, 0, 0.3)`;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(agX, agY);
+                    ctx.stroke();
+
+                    // Draw Agent Node
+                    ctx.fillStyle = '#f0f';
+                    ctx.beginPath();
+                    ctx.arc(agX, agY, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#f8f';
+                    ctx.fillText(`A${agentId}`, agX + 8, agY + 8);
+                }
+
+                // Center Pulse (Reactor)
+                const pulse = 10 + Math.sin(time * 2) * 5;
+                ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(time))})`;
+                ctx.beginPath();
+                ctx.arc(cx, cy, pulse, 0, Math.PI * 2);
+                ctx.fill();
+
+                graphLoop = requestAnimationFrame(loop);
+            };
+            graphLoop = requestAnimationFrame(loop);
+        }
+
+        function stopGraphLoop() {
+            if (graphLoop) cancelAnimationFrame(graphLoop);
+            graphLoop = null;
         }
 
         // --- CONTROLS ---
@@ -176,16 +280,26 @@ function updateUI() {
 
                 users.forEach(u => {
                     const tr = document.createElement('tr');
+                    let statusClass = "text-green-500";
+                    if (u.status_level === 'party') statusClass = "text-pink-500 animate-pulse";
+                    if (u.status_level === 'high') statusClass = "text-yellow-500";
+
                     tr.innerHTML = `
-                <td>${u.id}</td>
-                <td class="font-bold text-white">${u.username}</td>
-                <td class="${u.credits < 0 ? 'text-red-500' : 'text-green-500'}">${u.credits}</td>
-                <td>${u.status_level.toUpperCase()}</td>
-                <td class="${u.is_locked ? 'text-red-500' : 'text-gray-500'}">${u.is_locked ? 'LOCKED' : 'OPEN'}</td>
-                <td class="flex gap-2">
-                    <button class="btn-action text-red-500" onclick="ecoAction('fine', ${u.id})">FINE</button>
-                    <button class="btn-action text-green-500" onclick="ecoAction('bonus', ${u.id})">BONUS</button>
-                    <button class="btn-action text-yellow-500" onclick="ecoAction('toggle_lock', ${u.id})">LOCK/UNLOCK</button>
+                <td class="p-2 border border-gray-700">${u.id}</td>
+                <td class="p-2 border border-gray-700 font-bold text-white">${u.username}</td>
+                <td class="p-2 border border-gray-700 ${u.credits < 0 ? 'text-red-500' : 'text-green-500'} font-mono text-right">${u.credits} CR</td>
+                <td class="p-2 border border-gray-700 ${statusClass}">${u.status_level.toUpperCase()}</td>
+                <td class="p-2 border border-gray-700 ${u.is_locked ? 'text-red-500' : 'text-gray-500'}">${u.is_locked ? 'LOCKED' : 'OPEN'}</td>
+                <td class="p-2 border border-gray-700 flex flex-wrap gap-1">
+                    <button class="bg-gray-800 text-red-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('fine', ${u.id})">POKUTA</button>
+                    <button class="bg-gray-800 text-green-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('bonus', ${u.id})">ÚPLATEK</button>
+                    <button class="bg-gray-800 text-yellow-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('toggle_lock', ${u.id})">ZÁMEK</button>
+                    <div class="border-l border-gray-600 pl-1 ml-1 flex gap-1">
+                        <button class="text-xs px-1 border border-gray-700 text-gray-500 hover:text-white" onclick="setStatus(${u.id}, 'low')">L</button>
+                        <button class="text-xs px-1 border border-green-900 text-green-500 hover:text-white" onclick="setStatus(${u.id}, 'mid')">M</button>
+                        <button class="text-xs px-1 border border-yellow-900 text-yellow-500 hover:text-white" onclick="setStatus(${u.id}, 'high')">H</button>
+                        <button class="text-xs px-1 border border-pink-900 text-pink-500 hover:text-white" onclick="setStatus(${u.id}, 'party')">P</button>
+                    </div>
                 </td>
             `;
                     tbody.appendChild(tr);
@@ -210,6 +324,21 @@ function updateUI() {
             });
 
             refreshEconomy();
+        }
+
+        window.setStatus = async function (userId, status) {
+            try {
+                const res = await fetch('/api/admin/economy/set_status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, status: status })
+                });
+                if (res.ok) {
+                    refreshEconomy();
+                } else {
+                    alert("Status Change Failed");
+                }
+            } catch (e) { console.error(e); }
         }
 
         // --- TASKS ---

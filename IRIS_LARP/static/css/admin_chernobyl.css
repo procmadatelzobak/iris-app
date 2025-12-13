@@ -1,0 +1,195 @@
+/* CHERNOBYL CONTROL PANEL THEME */
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --soviet-bg: #2b2b2b;
+    --soviet-panel: #383838;
+    --soviet-green: #33ff00;
+    --soviet-amber: #ffb000;
+    --soviet-red: #ff3333;
+    --soviet-dim: #1a1a1a;
+    --bezel-light: #505050;
+    --bezel-shadow: #1e1e1e;
+}
+
+body {
+    background-color: var(--soviet-bg);
+    color: var(--soviet-green);
+    font-family: 'Share Tech Mono', monospace;
+    text-transform: uppercase;
+    background-image: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.1) 2px,
+            rgba(0, 0, 0, 0.1) 4px);
+}
+
+/* PANELS & BEZELS */
+.chernobyl-panel {
+    background-color: var(--soviet-panel);
+    border: 4px solid var(--bezel-light);
+    border-right-color: var(--bezel-shadow);
+    border-bottom-color: var(--bezel-shadow);
+    box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.1), 5px 5px 10px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+
+.chernobyl-inset {
+    background-color: var(--soviet-dim);
+    border: 2px solid var(--bezel-shadow);
+    border-right-color: var(--bezel-light);
+    border-bottom-color: var(--bezel-light);
+    box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* BUTTONS - Physical Feel */
+.chernobyl-btn {
+    background-color: #444;
+    color: #ccc;
+    border: 3px solid var(--bezel-light);
+    border-right-color: var(--bezel-shadow);
+    border-bottom-color: var(--bezel-shadow);
+    text-shadow: 0 1px 0 #000;
+    transition: all 0.1s;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.chernobyl-btn:active,
+.chernobyl-btn.active {
+    border: 3px solid var(--bezel-shadow);
+    border-right-color: var(--bezel-light);
+    border-bottom-color: var(--bezel-light);
+    transform: translate(2px, 2px);
+    background-color: #333;
+    color: var(--soviet-amber);
+}
+
+.chernobyl-btn:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+/* BIG RED BUTTON */
+.btn-critical {
+    background-color: #800;
+    color: #ffcccc;
+    border-color: #a00;
+}
+
+.btn-critical:hover {
+    background-color: #a00;
+}
+
+.btn-critical:active {
+    background-color: #600;
+    border-color: #400;
+}
+
+/* EDITABLE LABELS */
+.editable-label {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+    cursor: text;
+}
+
+.editable-label:hover {
+    color: var(--soviet-amber);
+    text-shadow: 0 0 5px var(--soviet-amber);
+}
+
+/* INDICATORS */
+.bulb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #220000;
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.8);
+    border: 1px solid #000;
+    display: inline-block;
+}
+
+.bulb.on-green {
+    background-color: #00ff00;
+    box-shadow: 0 0 10px #00ff00, inset -1px -1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.bulb.on-red {
+    background-color: #ff0000;
+    box-shadow: 0 0 10px #ff0000, inset -1px -1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.bulb.on-amber {
+    background-color: #ffb000;
+    box-shadow: 0 0 10px #ffb000, inset -1px -1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* CRT EFFECTS */
+.crt-overlay {
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    opacity: 0.3;
+}
+
+/* SPECIFIC UI ELEMENTS */
+#monitor-view,
+#station-nav {
+    background-color: var(--soviet-dim);
+}
+
+input,
+select,
+textarea {
+    background-color: #000;
+    color: var(--soviet-green);
+    border: 1px solid var(--bezel-light);
+    font-family: 'VT323', monospace;
+    padding: 4px;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--soviet-green);
+}
+
+/* GRID OVERRIDES */
+.session-card {
+    background-color: #000;
+    border: 2px solid var(--bezel-light);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+}
+
+/* GLITCH ANIMATION (Existing reuse) */
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+
+    20% {
+        transform: translate(-2px, 2px);
+    }
+
+    40% {
+        transform: translate(-2px, -2px);
+    }
+
+    60% {
+        transform: translate(2px, 2px);
+    }
+
+    80% {
+        transform: translate(2px, -2px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}

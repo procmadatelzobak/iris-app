@@ -83,60 +83,74 @@ color: #fff;
 <div class="flex flex-col h-screen">
 
     <div id="hub-view"
-        class="h-screen w-screen bg-black flex items-center justify-center gap-8 p-10 z-50 absolute inset-0">
-        <div class="hub-card border-2 border-green-700 bg-black hover:bg-green-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96"
+        class="h-screen w-screen bg-black flex items-center justify-center gap-8 p-10 z-50 absolute inset-0 text-center">
+        <div class="chernobyl-panel hover:bg-green-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('monitor')">
-            <h2 class="text-4xl text-green-500 font-bold mb-4 font-mono">STANICE 1</h2>
-            <div class="text-green-300">MONITORING</div>
-            <div class="mt-auto text-xs text-green-800">STATUS: ONLINE</div>
+            <h2 class="text-6xl text-green-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
+                data-key="hub_station_1">UMYVADLO</h2>
+            <div class="text-green-300 editable-label" data-key="hub_desc_1">MONITORING</div>
+            <div class="mt-auto text-xs text-green-800"><span class="bulb on-green animate-pulse"></span> ONLINE</div>
         </div>
-        <div class="hub-card border-2 border-yellow-700 bg-black hover:bg-yellow-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96"
+        <div class="chernobyl-panel hover:bg-yellow-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('controls')">
-            <h2 class="text-4xl text-yellow-500 font-bold mb-4 font-mono">STANICE 2</h2>
-            <div class="text-yellow-300">KONTROLA</div>
-            <div class="mt-auto text-xs text-yellow-800">STATUS: ACTIVE</div>
+            <h2 class="text-6xl text-yellow-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
+                data-key="hub_station_2">ROZKOŠ</h2>
+            <div class="text-yellow-300 editable-label" data-key="hub_desc_2">KONTROLA</div>
+            <div class="mt-auto text-xs text-yellow-800"><span class="bulb on-amber"></span> ACTIVE</div>
         </div>
-        <div class="hub-card border-2 border-blue-700 bg-black hover:bg-blue-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96"
+        <div class="chernobyl-panel hover:bg-blue-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('economy')">
-            <h2 class="text-4xl text-blue-500 font-bold mb-4 font-mono">STANICE 3</h2>
-            <div class="text-blue-300">EKONOMIKA</div>
-            <div class="mt-auto text-xs text-blue-800">STATUS: STABLE</div>
+            <h2 class="text-6xl text-blue-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
+                data-key="hub_station_3">BAHNO</h2>
+            <div class="text-blue-300 editable-label" data-key="hub_desc_3">EKONOMIKA</div>
+            <div class="mt-auto text-xs text-blue-800"><span class="bulb on-green"></span> STABLE</div>
         </div>
-        <div class="hub-card border-2 border-purple-700 bg-black hover:bg-purple-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96"
+        <div class="chernobyl-panel hover:bg-purple-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('tasks')">
-            <h2 class="text-4xl text-purple-500 font-bold mb-4 font-mono">STANICE 4</h2>
-            <div class="text-purple-300">ÚKOLY</div>
-            <div class="mt-auto text-xs text-purple-800">STATUS: PENDING</div>
+            <h2 class="text-6xl text-purple-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
+                data-key="hub_station_4">MRKEV</h2>
+            <div class="text-purple-300 editable-label" data-key="hub_desc_4">ÚKOLY</div>
+            <div class="mt-auto text-xs text-purple-800"><span class="bulb on-amber animate-pulse"></span> PENDING</div>
         </div>
     </div>
 
-    <!-- Top Bar (Hidden in Hub) -->
+    <!-- Top Bar -->
     <div id="station-nav"
-        class="admin-nav z-40 hidden flex justify-between items-center bg-gray-900 border-b border-gray-700 px-4 py-2">
-        <div class="text-xl font-bold text-white flex items-center gap-4">
-            <span id="station-title">STANICE</span>
+        class="admin-nav z-40 hidden flex justify-between items-center px-4 py-2 border-b-4 border-gray-700 bg-gray-900 shadow-xl">
+        <div class="text-2xl font-bold text-white flex items-center gap-4">
+            <span id="station-title" class="text-shadow bg-black px-2 border border-gray-600">STANICE</span>
         </div>
 
         <div class="flex gap-4 ml-auto mr-4">
-            <button class="text-yellow-500 hover:text-white" onclick="toggleEditMode()">[ ✎ LABELS ]</button>
-            <button class="text-red-500 hover:text-white" onclick="toggleAIModal()">[ AI CONFIG ]</button>
-            <button class="text-red-500 hover:text-white" onclick="triggerReset()">[ RESET ]</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm editable-label" data-key="btn_labels"
+                onclick="toggleEditMode()">PŘEPSAT REALITU</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm editable-label" data-key="btn_ai_cfg"
+                onclick="toggleAIModal()">MODZEK</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm text-red-500 border-red-800 editable-label"
+                data-key="btn_reset_sys" onclick="triggerReset()">AUTO-DESTRUKCE</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800"
+                onclick="window.location.href='/auth/logout'">ODHLÁSIT</button>
         </div>
 
-        <button class="border border-red-500 text-red-500 px-4 py-1 hover:bg-red-900 transition"
-            onclick="closeStation()">
-            [ ZMĚNIT OVLÁDACÍ STANICI ]
+        <button class="chernobyl-btn px-4 py-1 text-red-400 hover:text-white" onclick="closeStation()">
+            [ X ]
         </button>
     </div>
 
     <!-- View A: MONITOR (Station 1) -->
-    <div id="view-monitor" class="view-container hidden pt-16">
+    <div id="view-monitor" class="view-container hidden pt-4">
         <!-- Monitor Tabs -->
-        <div class="flex gap-4 mb-4 border-b border-gray-800 pb-2">
-            <button class="nav-btn active" onclick="switchMonitorTab('all')" id="mtab-all">PŘEHLED (VŠE)</button>
-            <button class="nav-btn" onclick="switchMonitorTab('chats')" id="mtab-chats">CHATY</button>
-            <button class="nav-btn" onclick="switchMonitorTab('logs')" id="mtab-logs">SYSTÉMOVÝ LOG</button>
-            <div class="ml-auto text-green-500 font-mono" id="monitorShiftDisplay">SHIFT: 0</div>
+        <div class="flex gap-4 mb-4 border-b-4 border-gray-800 pb-2 bg-black/50 p-2">
+            <button class="nav-btn active editable-label" data-key="tab_all" onclick="switchMonitorTab('all')"
+                id="mtab-all">VŠEVIDOUCÍ</button>
+            <button class="nav-btn editable-label" data-key="tab_chats" onclick="switchMonitorTab('chats')"
+                id="mtab-chats">ŠUM</button>
+            <button class="nav-btn editable-label" data-key="tab_logs" onclick="switchMonitorTab('logs')"
+                id="mtab-logs">HISTORIE OMYLŮ</button>
+            <button class="nav-btn editable-label" data-key="tab_graph" onclick="switchMonitorTab('graph')"
+                id="mtab-graph">PAVUČINA</button>
+            <div class="ml-auto text-green-500 font-mono border border-green-900 px-2 bg-black"
+                id="monitorShiftDisplay">SHIFT: 0</div>
         </div>
 
         <!-- Tab Content -->
@@ -144,12 +158,14 @@ color: #fff;
             <!-- Chats + Logs -->
             <div class="flex gap-4 h-full">
                 <div class="w-3/4 flex flex-col">
-                    <h3 class="text-green-600 mb-2">AKTIVNÍ RELACE</h3>
+                    <h3 class="text-green-600 mb-2 editable-label" data-key="hdr_active_sessions">AKTIVNÍ RELACE</h3>
                     <div class="monitor-grid" id="sessionGrid"></div>
                 </div>
-                <div class="w-1/4 border-l border-gray-800 pl-4 flex flex-col">
-                    <h3 class="text-gray-500 mb-2">HLINÍK LOG</h3>
-                    <div id="miniLog" class="flex-1 overflow-y-auto text-xs font-mono text-gray-400 space-y-1"></div>
+                <div class="w-1/4 border-l-4 border-gray-800 pl-4 flex flex-col">
+                    <h3 class="text-gray-500 mb-2 editable-label" data-key="hdr_log_mini">HLINÍK LOG</h3>
+                    <div id="miniLog"
+                        class="flex-1 overflow-y-auto text-xs font-mono text-gray-400 space-y-1 bg-black p-2 border border-gray-800">
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,13 +176,17 @@ color: #fff;
 
         <div id="mon-content-logs" class="mon-tab hidden flex flex-col h-full">
             <div class="flex justify-between mb-2">
-                <h3 class="text-gray-400">HLINÍK SYSTÉMOVÝ LOG</h3>
-                <button class="text-xs text-red-500 border border-red-900 px-2" onclick="resetSystemLogs()">RESET
-                    LOG</button>
+                <h3 class="text-gray-400 editable-label" data-key="hdr_log_full">HLINÍK SYSTÉMOVÝ LOG</h3>
+                <button class="text-xs text-red-500 border border-red-900 px-2 hover:bg-red-900 editable-label"
+                    data-key="btn_reset_log" onclick="resetSystemLogs()">VYMAZAT HISTORII</button>
             </div>
             <div id="fullLog"
                 class="flex-1 overflow-y-auto bg-black border border-gray-800 p-4 font-mono text-sm text-green-300">
             </div>
+        </div>
+
+        <div id="mon-content-graph" class="mon-tab hidden">
+            <canvas id="networkGraph" class="w-full h-full bg-black border border-green-900"></canvas>
         </div>
     </div>
 
@@ -174,22 +194,23 @@ color: #fff;
     <div id="view-controls" class="view-container hidden">
         <div class="grid grid-cols-2 gap-8">
             <!-- Global Shift -->
-            <div class="border border-yellow-900 p-6 bg-black">
-                <h3 class="text-2xl text-yellow-500 mb-6 editable-label" data-key="lbl_shift">GLOBAL SHIFT</h3>
-                <div class="text-6xl font-bold text-white mb-6" id="controlShift">0</div>
-                <button class="w-full border border-yellow-500 text-yellow-500 py-4 hover:bg-yellow-900 editable-label"
+            <div class="chernobyl-panel p-6 bg-black">
+                <h3 class="text-4xl text-yellow-500 mb-6 editable-label" data-key="lbl_shift">POSUN REALITY</h3>
+                <div class="text-8xl font-bold text-white mb-6 text-center border-2 border-yellow-900 p-4"
+                    id="controlShift">0</div>
+                <button class="w-full chernobyl-btn py-4 hover:bg-yellow-900 editable-label text-xl"
                     data-key="btn_shift" onclick="triggerShift()">
-                    [ >> EXECUTE SHIFT >> ]
+                    [ >> ROZTOČIT KOLA OSUDU >> ]
                 </button>
             </div>
 
             <!-- Power & Instability Column -->
             <div class="space-y-6">
                 <!-- Power Management v1.4 -->
-                <div class="border border-blue-900 p-6 bg-black">
-                    <h3 class="text-2xl text-blue-500 mb-4 editable-label" data-key="lbl_energy">CORE REACTOR OUTPUT
-                    </h3>
-                    <div class="bg-gray-900 border border-blue-900 p-2 mb-4 rounded relative overflow-hidden h-8">
+                <div class="chernobyl-panel p-6 bg-black">
+                    <h3 class="text-2xl text-blue-500 mb-4 editable-label" data-key="lbl_energy">TLAK PÁRY</h3>
+                    <div
+                        class="bg-gray-900 border border-blue-900 p-1 mb-4 relative overflow-hidden h-12 chernobyl-inset">
                         <div id="powerBar" class="h-full bg-blue-600 transition-all duration-500 relative"
                             style="width: 10%;">
                             <!-- Stripe Pattern -->
@@ -198,22 +219,21 @@ color: #fff;
                             </div>
                         </div>
                         <div
-                            class="absolute inset-0 flex items-center justify-center text-white text-shadow font-bold z-10">
+                            class="absolute inset-0 flex items-center justify-center text-white text-shadow font-bold z-10 text-xl">
                             <span id="powerText">-- / -- MW</span>
                         </div>
                     </div>
-                    <button
-                        class="w-full border border-blue-500 text-blue-500 py-2 hover:bg-blue-900 transition editable-label"
+                    <button class="w-full chernobyl-btn py-2 hover:bg-blue-900 transition editable-label"
                         data-key="btn_buy_power" onclick="buyPower()" id="btnBuyPower">
-                        [ <span id="buyPowerText">BUY POWER (+50MW) - 1000 CR</span> ]
+                        [ <span id="buyPowerText">PŘIHODIT UHLÍ (+50MW) - 1000 CR</span> ]
                     </button>
                 </div>
 
                 <!-- Instability -->
-                <div class="border border-red-900 p-6 bg-black">
-                    <h3 class="text-2xl text-red-500 mb-6 editable-label" data-key="lbl_temperature">CORE TEMPERATURE
-                    </h3>
-                    <div class="bg-gray-900 border border-red-900 p-2 mb-4 rounded relative overflow-hidden h-8">
+                <div class="chernobyl-panel p-6 bg-black">
+                    <h3 class="text-2xl text-red-500 mb-6 editable-label" data-key="lbl_temperature">HLADINA STRESU</h3>
+                    <div
+                        class="bg-gray-900 border border-red-900 p-1 mb-4 relative overflow-hidden h-12 chernobyl-inset">
                         <!-- Background Grid -->
                         <div class="absolute inset-0 opacity-20"
                             style="background-image: linear-gradient(90deg, transparent 50%, #300 50%); background-size: 20px 100%;">
@@ -227,42 +247,44 @@ color: #fff;
 
                         <!-- Overlay Text -->
                         <div
-                            class="absolute inset-0 flex items-center justify-center font-bold text-shadow text-white z-10">
+                            class="absolute inset-0 flex items-center justify-center font-bold text-shadow text-white z-10 text-xl">
                             <span id="controlChernobyl">0%</span>
                         </div>
                     </div>
 
                     <div class="mb-6">
-                        <span class="text-gray-500 block mb-2">AGENCY OPERATION MODE</span>
+                        <span class="text-gray-500 block mb-2 editable-label" data-key="lbl_mode">RYCHLOST BĚHU</span>
                         <div class="flex gap-2">
-                            <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
-                                onclick="setMode('normal')">NORMAL</button>
-                            <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
-                                onclick="setMode('low_power')">LOW POWER</button>
-                            <button class="flex-1 border border-red-600 p-2 text-red-500 hover:bg-red-900 transition"
-                                onclick="setMode('overclock')">OVERCLOCK</button>
+                            <button
+                                class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:text-white transition editable-label"
+                                data-key="btn_mode_normal" onclick="setMode('normal')">NORMÁL</button>
+                            <button
+                                class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:text-white transition editable-label"
+                                data-key="btn_mode_low" onclick="setMode('low_power')"> ÚSPORA</button>
+                            <button
+                                class="flex-1 chernobyl-btn p-2 text-sm text-red-500 hover:bg-red-900 transition editable-label"
+                                data-key="btn_mode_oc" onclick="setMode('overclock')">PŘETÍŽENÍ</button>
                         </div>
                     </div>
 
                     <div class="mb-6 border-t border-gray-800 pt-4">
-                        <span class="text-gray-500 block mb-2">VISIBILITY PROTOCOLS</span>
+                        <span class="text-gray-500 block mb-2 editable-label" data-key="lbl_vis">FILTR PRAVDY</span>
                         <div class="flex gap-2">
-                            <!-- Renamed IDs/Keys for consistent Labeling if needed, but existing logic serves -->
                             <button
-                                class="flex-1 border border-blue-600 p-2 text-blue-400 hover:text-white transition width-auto"
-                                onclick="setHyperVis('normal')">NORMAL</button>
+                                class="flex-1 chernobyl-btn p-2 text-sm text-blue-400 hover:text-white transition width-auto editable-label"
+                                data-key="btn_vis_norm" onclick="setHyperVis('normal')">ŽÁDNÝ</button>
                             <button
-                                class="flex-1 border border-gray-600 p-2 text-gray-400 hover:bg-gray-900 transition width-auto"
-                                onclick="setHyperVis('blackbox')">BLACKBOX</button>
+                                class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:bg-gray-900 transition width-auto editable-label"
+                                data-key="btn_vis_bb" onclick="setHyperVis('blackbox')">ČERNÁ SKŘÍŇKA</button>
                             <button
-                                class="flex-1 border border-purple-600 p-2 text-purple-400 hover:bg-purple-900 transition width-auto"
-                                onclick="setHyperVis('forensic')">FORENSIC</button>
+                                class="flex-1 chernobyl-btn p-2 text-sm text-purple-400 hover:bg-purple-900 transition width-auto editable-label"
+                                data-key="btn_vis_forensic" onclick="setHyperVis('forensic')">FOREZKA</button>
                         </div>
                     </div>
 
-                    <input type="range" class="w-full accent-red-600" min="20" max="400" id="manualChernobyl"
-                        onchange="sendChernobylLevel(this.value)">
-                    <div class="text-xs text-gray-600 mt-1">MANUAL OVERRIDE</div>
+                    <input type="range" class="w-full accent-red-600 bg-gray-800" min="20" max="400"
+                        id="manualChernobyl" onchange="sendChernobylLevel(this.value)">
+                    <div class="text-xs text-gray-600 mt-1">MANUÁLNÍ KOREKCE</div>
                 </div>
             </div>
         </div>
@@ -270,32 +292,32 @@ color: #fff;
 
     <!-- View C: ECONOMY -->
     <div id="view-economy" class="view-container hidden">
-        <div
-            class="border border-yellow-900 p-4 mb-6 bg-black flex justify-between items-center shadow-lg shadow-yellow-900/20">
+        <div class="chernobyl-panel p-4 mb-6 bg-black flex justify-between items-center shadow-lg shadow-yellow-900/20">
             <div>
-                <h3 class="text-yellow-500 font-bold tracking-widest text-sm mb-1">SYSTEM TREASURY</h3>
+                <h3 class="text-yellow-500 font-bold tracking-widest text-sm mb-1 editable-label"
+                    data-key="lbl_treasury">NÁRODNÍ BANKA BAHNA</h3>
                 <div class="text-4xl text-white font-mono" id="treasuryBalance">---- CR</div>
             </div>
             <div class="text-right font-mono text-sm">
-                <div class="text-gray-400">TAX RATE: <span class="text-white">10%</span></div>
-                <div class="text-gray-400">STATUS: <span class="text-green-500">ACTIVE</span></div>
+                <div class="text-gray-400">DAŇ: <span class="text-white">10%</span></div>
+                <div class="text-gray-400">STAV: <span class="text-green-500">STABILNÍ</span></div>
             </div>
         </div>
 
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl text-yellow-600 font-bold">SUBJECT ECONOMY</h2>
-            <button class="btn-action border-yellow-500 text-yellow-500" onclick="refreshEconomy()">REFRESH
-                DATA</button>
+            <h2 class="text-xl text-yellow-600 font-bold editable-label" data-key="hdr_eco_sub">EKONOMIKA PODDANÝCH</h2>
+            <button class="chernobyl-btn border-yellow-500 text-yellow-500 px-4 py-1 editable-label"
+                data-key="btn_refresh_eco" onclick="refreshEconomy()">VYKOPAT POKLAD</button>
         </div>
-        <table class="eco-table">
+        <table class="eco-table w-full border border-gray-700 bg-gray-900 text-sm">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>USER</th>
-                    <th>CREDITS</th>
-                    <th>STATUS</th>
-                    <th>LOCK</th>
-                    <th>ACTIONS</th>
+                <tr class="bg-black text-yellow-500">
+                    <th class="border border-gray-700 p-2">ID</th>
+                    <th class="border border-gray-700 p-2">UŽIVATEL</th>
+                    <th class="border border-gray-700 p-2">KREDITY</th>
+                    <th class="border border-gray-700 p-2">STATUS</th>
+                    <th class="border border-gray-700 p-2">ZÁMEK</th>
+                    <th class="border border-gray-700 p-2">AKCE</th>
                 </tr>
             </thead>
             <tbody id="economyTableBody">
@@ -307,12 +329,12 @@ color: #fff;
     <!-- View D: TASKS -->
     <div id="view-tasks" class="view-container hidden">
         <div class="grid grid-cols-2 gap-4 h-full">
-            <div class="border border-blue-900 p-4 flex flex-col">
-                <h3 class="text-blue-500 font-bold mb-2">PENDING APPROVAL</h3>
+            <div class="chernobyl-panel border-blue-900 p-4 flex flex-col bg-black">
+                <h3 class="text-blue-500 font-bold mb-2 editable-label" data-key="lbl_pending">MRKEV NA HOLI (ČEKÁ)</h3>
                 <div class="flex-1 overflow-y-auto space-y-2" id="pendingTasksCtx"></div>
             </div>
-            <div class="border border-green-900 p-4 flex flex-col">
-                <h3 class="text-green-500 font-bold mb-2">SUBMITTED FOR PAYMENT</h3>
+            <div class="chernobyl-panel border-green-900 p-4 flex flex-col bg-black">
+                <h3 class="text-green-500 font-bold mb-2 editable-label" data-key="lbl_submitted">SKLIZEŇ (HOTOVO)</h3>
                 <div class="flex-1 overflow-y-auto space-y-2" id="submittedTasksCtx"></div>
             </div>
         </div>

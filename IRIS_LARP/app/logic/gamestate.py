@@ -11,6 +11,7 @@ class HyperVisibilityMode(str, enum.Enum):
     NORMAL = "normal"
     BLACKBOX = "blackbox"
     FORENSIC = "forensic"
+    EPHEMERAL = "ephemeral"
 
 class GameState:
     _instance = None
@@ -131,5 +132,25 @@ class GameState:
     def set_shift(self, value: int):
         self.global_shift_offset = value % settings.TOTAL_SESSIONS
         return self.global_shift_offset
+
+    def reset_state(self):
+        """Resets all transient game state to defaults."""
+        self.global_shift_offset = settings.DEFAULT_GLOBAL_SHIFT_OFFSET
+        self.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+        self.temperature = 80.0
+        self.chernobyl_mode = ChernobylMode.NORMAL
+        self.power_capacity = 100
+        self.power_load = 0
+        self.is_overloaded = False
+        self.power_boost_end_time = 0.0
+        self.treasury_balance = 500
+        self.tax_rate = 0.20
+        self.optimizer_active = False
+        # Costs reset too? Yes.
+        self.COST_BASE = 10.0
+        self.COST_PER_USER = 5.0
+        self.COST_PER_AUTOPILOT = 10.0
+        self.COST_LOW_LATENCY = 30.0
+        self.COST_OPTIMIZER_ACTIVE = 15.0
 
 gamestate = GameState()

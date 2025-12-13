@@ -23,6 +23,12 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
     # Return role to redirect frontend
     return {"access_token": access_token, "token_type": "bearer", "role": user.role.value}
 
+@router.get("/logout")
+async def logout(request: Request):
+    response = templates.TemplateResponse("login.html", {"request": request, "title": "IRIS Login"})
+    response.delete_cookie("access_token")
+    return response
+
 @router.get("/terminal", response_class=HTMLResponse)
 async def terminal(request: Request, current_user: Annotated[database.User, Depends(dependencies.get_current_user_cookie)]):
     # Route to correct template based on role

@@ -98,9 +98,14 @@ async def fine_user(action: EconomyAction, admin=Depends(get_current_admin)):
     user = db.query(User).filter(User.id == action.user_id).first()
     if user:
         user.credits -= action.amount
+        # Auto-lock if negative
+        if user.credits < 0 and not user.is_locked:
+            user.is_locked = True
+            await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": true}}')
+            
         db.commit()
         # notify user
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "FINED: {action.reason}"}}')
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "FINED: {action.reason}", "is_locked": {str(user.is_locked).lower()}}}')
     db.close()
     return {"status": "ok"}
 
@@ -110,8 +115,13 @@ async def bonus_user(action: EconomyAction, admin=Depends(get_current_admin)):
     user = db.query(User).filter(User.id == action.user_id).first()
     if user:
         user.credits += action.amount
+        # Auto-unlock if positive
+        if user.credits >= 0 and user.is_locked:
+            user.is_locked = False
+            await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": false}}')
+            
         db.commit()
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "BONUS: {action.reason}"}}')
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "BONUS: {action.reason}", "is_locked": {str(user.is_locked).lower()}}}')
     db.close()
     return {"status": "ok"}
 
@@ -125,7 +135,33 @@ async def toggle_lock(action: EconomyAction, admin=Depends(get_current_admin)):
         state = "LOCKED" if user.is_locked else "UNLOCKED"
         await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": {str(user.is_locked).lower()}}}')
     db.close()
+    db.close()
     return {"status": "ok", "state": state}
+
+class StatusUpdate(BaseModel):
+    user_id: int
+    status: str
+
+@router.post("/economy/set_status")
+async def set_user_status(action: StatusUpdate, admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    user = db.query(User).filter(User.id == action.user_id).first()
+    if user:
+        # Validate status enum? Python Enum helps but string is passed.
+        # Accept low, mid, high, party
+        valid = ["low", "mid", "high", "party"]
+        if action.status not in valid:
+             db.close()
+             raise HTTPException(status_code=400, detail="Invalid status")
+             
+        user.status_level = action.status
+        db.commit()
+        
+        # Broadcast theme update to User
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "theme_update", "theme": "{action.status}"}}')
+        
+    db.close()
+    return {"status": "ok", "new_level": action.status}
 
 @router.post("/economy/global_bonus")
 async def global_bonus(action: EconomyAction, admin=Depends(get_current_admin)):
@@ -156,6 +192,7 @@ class TaskAction(BaseModel):
     task_id: int
     reward: int = 0 # For approval
     rating: int = 0 # For payment (0-100)
+    prompt_content: str = None # v2.0 Task Editing
 
 @router.get("/tasks")
 async def get_tasks(admin=Depends(get_current_admin)):
@@ -182,9 +219,14 @@ async def approve_task(action: TaskAction, admin=Depends(get_current_admin)):
     if task:
         task.status = TaskStatus.ACTIVE
         task.reward_offered = action.reward
+        
+        # v2.0 Edit on Approve
+        if action.prompt_content:
+            task.prompt_desc = action.prompt_content
+            
         db.commit()
         # Notify User
-        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "task_update", "id": {task.id}, "status": "active", "reward": {action.reward}}}')
+        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "task_update", "id": {task.id}, "status": "active", "reward": {action.reward}, "prompt": "{task.prompt_desc}"}}')
     db.close()
     return {"status": "approved"}
 
@@ -357,3 +399,37 @@ async def reset_system_logs(admin=Depends(get_current_admin)):
     db.commit()
     db.close()
     return {"status": "ok"}
+
+@router.post("/root/reset")
+async def reset_system(admin=Depends(get_current_admin)):
+    """ROOT ONLY: Full System Wipe"""
+    db = SessionLocal()
+    try:
+        # 1. Truncate Logs
+        db.query(SystemLog).delete()
+        db.query(ChatLog).delete()
+        
+        # 2. Reset Users
+        users = db.query(User).filter(User.role == UserRole.USER).all()
+        for u in users:
+            u.credits = 100
+            u.is_locked = False
+            u.status_level = "low"
+        
+        # 3. Clear Tasks
+        db.query(Task).delete()
+        
+        db.commit()
+        
+        # 4. Reset Gamestate
+        gamestate.reset_state()
+        
+        # 5. Broadcast
+        await routing_logic.broadcast_global('{"type": "system_reset"}')
+        
+        return {"status": "system_reset_complete"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()

@@ -22,6 +22,7 @@ class StatusLevel(str, enum.Enum):
     LOW = "low"
     MID = "mid"
     HIGH = "high"
+    PARTY = "party"
 
 class TaskStatus(str, enum.Enum):
     PENDING_APPROVAL = "pending_approval"
