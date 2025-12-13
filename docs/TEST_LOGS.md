@@ -1,0 +1,13 @@
+# Test Logs
+
+## Automated Tests
+
+| Date | Test Suite | Scope | Result | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| 2025-12-13 | `verify_v1_4.py` | v1.4 API Logic | **PASS** | Checked Labels, Power Buy (Logic+Treasury), Tax Calculation, Timer Config. |
+
+## Manual Verification Required
+
+- [ ] **Glitch Effects**: Verify visual distortion on User Terminal when Load > Capacity.
+- [ ] **Timer Lockout**: Verify Input is disabled on Agent Terminal after timeout.
+- [ ] **Audio**: Verify SFX triggers for Timer/Overload.
