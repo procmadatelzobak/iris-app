@@ -37,12 +37,45 @@
 
     body.mode-forensic {
         filter: contrast(1.5) sepia(1) hue-rotate(240deg);
+
+        /* AI Optimizer Feedback */
+        .optimizer-feedback {
+            border: 1px dashed #d6bcfa;
+            background: rgba(40, 0, 40, 0.6);
+            padding: 8px;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: #e9d8fd;
+            border-radius: 4px;
+        }
+
+        .optimizer-original {
+            text-decoration: line-through;
+            opacity: 0.6;
+            color: #f687b3;
+        }
+
+        .optimizer-arrow {
+            color: #fff;
+            margin: 0 5px;
+        }
+
+        .optimizer-final {
+            color: #4ade80;
+            font-weight: bold;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="crt-overlay"></div>
+<!-- Overload Signal -->
+<div id="overloadSignal"
+    class="fixed top-2 right-2 border-2 border-red-600 bg-red-900/80 text-white font-bold px-4 py-2 z-50 animate-pulse hidden">
+    ⚠ SYSTEM OVERLOAD ⚠
+</div>
+
 <div class="flex h-screen bg-black font-mono overflow-hidden">
 
     <!-- Left Panel: Status -->
@@ -190,7 +223,7 @@
     const client = new SocketClient(wsUrl, (data) => {
         // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
-            applyChernobyl(data.chernobyl || 0);
+            applyTemperature(data.temperature || data.chernobyl || 0);
             if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
 
             if (data.shift !== undefined) {
@@ -198,6 +231,11 @@
             }
             if (data.agent_window !== undefined) timerLimit = data.agent_window;
 
+        } else if (data.type === 'optimizing_start') {
+            showOptimizingLoader();
+        } else if (data.type === 'optimizer_feedback') {
+            appendOptimizerFeedback(data);
+            if (window.sfx) window.sfx.playError();
         } else if (data.type === 'typing_sync') {
             // Mirroring Logic
             if (data.tabId !== tabId) {
@@ -282,6 +320,36 @@
         }
     }
 
+    function showOptimizingLoader() {
+        const chatBox = document.getElementById('chatHistory');
+        // Prevent dupes
+        if (document.getElementById('optimizingLoader')) return;
+
+        const div = document.createElement('div');
+        div.id = 'optimizingLoader';
+        div.className = 'chat-bubble agent opacity-50 animate-pulse text-xs';
+        div.innerText = '⚙️ OPTIMIZING CONTENT...';
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendOptimizerFeedback(data) {
+        const loader = document.getElementById('optimizingLoader');
+        if (loader) loader.remove();
+
+        const chatBox = document.getElementById('chatHistory');
+        const div = document.createElement('div');
+        div.className = 'optimizer-feedback';
+        div.innerHTML = `
+            <div><strong>⚡ AI OPTIMIZER INTERVENTION</strong></div>
+            <span class="optimizer-original">'${data.original}'</span>
+            <span class="optimizer-arrow">➔</span>
+            <span class="optimizer-final">'${data.rewritten}'</span>
+        `;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
     function appendMessage(data) {
         if (!data.content) return;
         const div = document.createElement('div');
@@ -307,16 +375,20 @@
         if (mode === 'forensic') document.body.classList.add('mode-forensic');
     }
 
-    function applyChernobyl(level) {
-        document.body.className = '';
-        applyHyperVisibility("{{ 'blackbox' if gamestate.hyper_visibility_mode == 'BLACKBOX' else 'normal' }}"); // Crude init? Better rely on JS dynamic.
-        // Re-apply current hyper mode if needed. 
-        // Better: Just apply instability classes.
-        if (level > 20 && level <= 50) document.body.classList.add('instability-low');
-        if (level > 50 && level <= 80) document.body.classList.add('instability-med');
-        if (level > 80) {
+    function applyTemperature(temp) {
+        document.body.classList.remove('instability-low', 'instability-med', 'instability-high');
+
+        if (temp > 100 && temp <= 250) document.body.classList.add('instability-low');
+        if (temp > 250 && temp <= 350) document.body.classList.add('instability-med');
+        if (temp > 350) {
             document.body.classList.add('instability-high');
             sfx.playError();
+        }
+
+        const ind = document.getElementById('overloadSignal');
+        if (ind) {
+            if (temp > 350) ind.classList.remove('hidden');
+            else ind.classList.add('hidden');
         }
     }
 </script>

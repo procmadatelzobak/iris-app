@@ -5,3 +5,5 @@
 | 2025-12-13 | Implement v1.4 Features (Power, Treasury, Timer) | Phase 15-18 | features implemented, UI updated, logic verified via script. |
 | 2025-12-13 | "Projdi si agent workflow file a proveď inicializaci pravidel." | Workflow Init | Documentation files reconstructed/created. |
 | 2025-12-13 | "Phase 16 Specification: AI Optimizer & Economy Rebalance" | Phase 19 | Started implementation of Optimizer/Eco update. |
+| 2025-12-13 | "Phase 20 Specification: Critical Fixes & Root Control Implementation" | Phase 20 | Started Phase 20 (Fixes + Root Control). |
+| 2025-12-13 | "Phase 21 Specification: UI Feedback, Temperature System & Lore Integration" | Phase 21 | Started Phase 21 (Temp Refactor, UI Feedback). |

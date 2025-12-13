@@ -155,6 +155,23 @@
                 </div>
             </div>
 
+            <!-- System Constants Tuning -->
+            <div class="god-panel">
+                <div class="god-title">PHYSICS CONSTANTS</div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs text-gray-500">TAX RATE (0.0 - 1.0)</label>
+                        <input type="number" step="0.01" id="inTax"
+                            class="w-full bg-black border border-gray-700 p-1 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">POWER CALC (MW)</label>
+                        <input type="number" id="inPower" class="w-full bg-black border border-gray-700 p-1 text-white">
+                    </div>
+                    <button class="btn-god w-full mt-2" onclick="applySystemConstants()">[ APPLY PHYSICS ]</button>
+                </div>
+            </div>
+
             <!-- Quick Actions -->
             <div class="god-panel col-span-2">
                 <div class="god-title">EXECUTIVE PROTOCOLS</div>
@@ -261,6 +278,30 @@
     const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
     const client = new SocketClient(wsUrl, handlePayload, (s) => { console.log("WS", s) });
     client.connect(token);
+
+    // Init Constants
+    setTimeout(() => fetchRootState(), 1000);
+
+    async function fetchRootState() {
+        try {
+            const res = await fetch('/api/admin/root/state');
+            const data = await res.json();
+            document.getElementById('inTax').value = data.tax_rate;
+            document.getElementById('inPower').value = data.power_cap;
+        } catch (e) { console.error(e); }
+    }
+
+    window.applySystemConstants = async () => {
+        const tax = parseFloat(document.getElementById('inTax').value);
+        const power = parseFloat(document.getElementById('inPower').value);
+
+        await fetch('/api/admin/root/update_constants', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tax_rate: tax, power_cap: power })
+        });
+        alert("PHYSICS UPDATED");
+    };
 
     function handlePayload(data) {
         logEvent(data.type);

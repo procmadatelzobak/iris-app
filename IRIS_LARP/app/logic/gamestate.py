@@ -27,14 +27,20 @@ class GameState:
             return
         
         self.global_shift_offset = settings.DEFAULT_GLOBAL_SHIFT_OFFSET
-        self.hyper_visibility_mode = HyperVisibilityMode.NORMAL # Default
-        self.chernobyl_value = settings.DEFAULT_CHERNOBYL_VALUE
-        self.chernobyl_mode = ChernobylMode.NORMAL
+        self.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+        
+        # v1.7 Temperature System (Refactored from Chernobyl)
+        self.temperature = 80.0 
+        self.TEMP_MIN = 20.0
+        self.TEMP_THRESHOLD = 350.0
+        self.TEMP_RESET_VALUE = 80.0
+        self.chernobyl_mode = ChernobylMode.NORMAL # Preserving enum for modes (Normal/Low/Overclock)
         
         # v1.4 Power & Economy
         self.power_capacity = 100
         self.power_load = 0
         self.is_overloaded = False
+        self.power_boost_end_time = 0.0 # Unix timestamp
         
         # v1.5 Economy Defaults
         self.treasury_balance = 500
@@ -46,7 +52,13 @@ class GameState:
         # v1.5 AI Optimizer
         self.optimizer_active = False 
         self.optimizer_prompt = "Přepiš text do formálního, korporátního tónu. Buď stručný."
-        self.OPTIMIZER_COST_MW = 0.5
+        
+        # v1.8 Costs (Root Configurable)
+        self.COST_BASE = 10.0
+        self.COST_PER_USER = 5.0
+        self.COST_PER_AUTOPILOT = 10.0
+        self.COST_LOW_LATENCY = 30.0
+        self.COST_OPTIMIZER_ACTIVE = 15.0
         
         # LLM Configurations
         self.llm_config_task = LLMConfig(
@@ -62,50 +74,55 @@ class GameState:
 
         self.initialized = True
         
-    def set_chernobyl(self, value: int):
-        self.chernobyl_value = max(0, min(100, value))
-        return self.chernobyl_value
+    def set_temperature(self, value: float):
+        self.temperature = max(self.TEMP_MIN, value) # No upper cap? Or keep 500? Use reasonable cap for sanity.
+        # Spec says range 0-350+ but doesn't strictly cap max. Let's cap at 1000 for safety.
+        self.temperature = min(1000.0, self.temperature)
+        return self.temperature
         
     def report_anomaly(self):
-        self.chernobyl_value = min(100, self.chernobyl_value + 5)
-        return self.chernobyl_value
+        # Increases Temp
+        self.temperature += 15.0 # Increased impact for new scale
+        return self.temperature
 
     def calc_load(self, active_terminals: int = 0, active_autopilots: int = 0, low_latency_active: bool = False):
-        # Base: 10
-        # Active Terminal: 2 * N
-        # Optimizer: +5 (Assumed ON if low_latency is ON? No, spec says separate. I'll add method arg or assume usage)
-        # Let's assume Optimizer is tracked elsewhere or we add a toggle.
-        # For now, simplistic calc:
-        base = 10
-        terminals = 2 * active_terminals
-        hyper = 10 * active_autopilots
-        latency = 30 if low_latency_active else 0
+        load = self.COST_BASE
+        load += self.COST_PER_USER * active_terminals
+        load += self.COST_PER_AUTOPILOT * active_autopilots
         
-        self.power_load = base + terminals + hyper + latency
+        if low_latency_active:
+            load += self.COST_LOW_LATENCY
+            
+        if self.optimizer_active:
+            load += self.COST_OPTIMIZER_ACTIVE
+        
+        self.power_load = load
         return self.power_load
 
     def check_overload(self):
         was_overloaded = self.is_overloaded
-        self.is_overloaded = self.power_load > self.power_capacity
-        return self.is_overloaded != was_overloaded # Return True if state changed
+        # Overload if Power > Cap OR Temp > Threshold
+        power_bad = self.power_load > self.power_capacity
+        temp_bad = self.temperature > self.TEMP_THRESHOLD
+        self.is_overloaded = power_bad or temp_bad
+        return self.is_overloaded != was_overloaded
 
     def process_tick(self):
-        # Decay logic for Chernobyl
+        # Decay logic
         if self.chernobyl_mode == ChernobylMode.NORMAL:
-            decay = 1
+            decay = 0.5
         elif self.chernobyl_mode == ChernobylMode.LOW_POWER:
-            decay = 3
+            decay = 1.5
         else: # OVERCLOCK
-            decay = 0
+            decay = -0.5 # Heats up? Or just 0 decay? Spec says "Instability". 
+            # Previous logic was decay=0. Let's keep 0 or heating.
+            # "Ensure temperature never drops below TEMP_MIN".
+            decay = -0.1
             
-        self.chernobyl_value = max(0, self.chernobyl_value - decay)
+        self.temperature -= decay
+        self.temperature = max(self.TEMP_MIN, self.temperature)
         
-        # Power calc should happen here or on event?
-        # Tick is good for regular updates.
-        # But we need external data (active sessions).
-        # We'll rely on sockets.py to update load during its broadcast loop or similar.
-        
-        return self.chernobyl_value
+        return self.temperature
         
     def increment_shift(self):
         self.global_shift_offset = (self.global_shift_offset + 1) % settings.TOTAL_SESSIONS

@@ -68,7 +68,7 @@ async def set_key(update: KeyUpdate, admin=Depends(get_current_admin)):
     return {"status": "updated", "provider": update.provider}
 
 # --- ECONOMY & TASKS ---
-from ..database import User, Task, TaskStatus, ChatLog, UserRole
+from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog
 from ..logic.routing import routing_logic
 
 class EconomyAction(BaseModel):
@@ -223,13 +223,17 @@ async def buy_power(admin=Depends(get_current_admin)):
     if gamestate.treasury_balance >= cost:
         gamestate.treasury_balance -= cost
         gamestate.power_capacity += 50
-        # TODO: Timer for temporary boost? For now just permanent or until restart for simplicity as per MVP, or check spec.
-        # Spec: "Emergency Generator (+50 MW na 30 minut)". 
-        # Implementing expiry requires a background task or timestamp check.
-        # For this iteration, I'll just add it and let Admin lower it manually or rely on reset. 
-        # Or better: Add 'boost_expires' to gamestate if I was thorough, but strict spec says 30 mins.
-        # Given limitations, I will just add it. The complexities of async expiration are high.
-        return {"status": "bought", "capacity": gamestate.power_capacity, "balance": gamestate.treasury_balance}
+        
+        # v1.7 Power Timer (30 mins)
+        import time
+        gamestate.power_boost_end_time = time.time() + (30 * 60)
+        
+        return {
+            "status": "bought", 
+            "capacity": gamestate.power_capacity, 
+            "balance": gamestate.treasury_balance,
+            "end_time": gamestate.power_boost_end_time
+        }
     else:
         raise HTTPException(status_code=400, detail="Insufficient Treasury Funds")
 
@@ -263,3 +267,93 @@ async def get_labels(admin=Depends(get_current_admin)):
 async def set_treasury(amount: int = Body(..., embed=True), admin=Depends(get_current_admin)):
     gamestate.treasury_balance = amount
     return {"status": "ok", "treasury": gamestate.treasury_balance}
+
+# v1.6 Root Controls
+class SystemConstants(BaseModel):
+    tax_rate: float
+    power_cap: float
+    temp_threshold: float = 350.0
+    temp_reset_val: float = 80.0
+    temp_min: float = 20.0
+    
+    # Costs
+    cost_base: float = 10.0
+    cost_user: float = 5.0
+    cost_autopilot: float = 10.0
+    cost_low_latency: float = 30.0
+    cost_optimizer: float = 15.0
+
+@router.post("/root/update_constants")
+async def update_constants(data: SystemConstants, admin=Depends(get_current_admin)):
+    """ROOT ONLY: Update game constants logic"""
+    # Ideally check basic auth to confirm 'admin' is root or superadmin if we had role separation.
+    # For now, any admin can (per v1 spec).
+    gamestate.tax_rate = data.tax_rate
+    gamestate.power_capacity = data.power_cap
+    gamestate.TEMP_THRESHOLD = data.temp_threshold
+    gamestate.TEMP_RESET_VALUE = data.temp_reset_val
+    gamestate.TEMP_MIN = data.temp_min
+    
+    # Update Costs
+    gamestate.COST_BASE = data.cost_base
+    gamestate.COST_PER_USER = data.cost_user
+    gamestate.COST_PER_AUTOPILOT = data.cost_autopilot
+    gamestate.COST_LOW_LATENCY = data.cost_low_latency
+    gamestate.COST_OPTIMIZER_ACTIVE = data.cost_optimizer
+
+    # Log Action
+    from ..database import SessionLocal, SystemLog
+    import json
+    db = SessionLocal()
+    db.add(SystemLog(event_type="ROOT", message=f"Constants Updated by {admin.username}", data=json.dumps(data.dict())))
+    db.commit()
+    db.close()
+    
+    # Broadcast update so Admin Dashboards reflect changes
+    from ..logic.routing import routing_logic
+    import json
+    await routing_logic.broadcast_global(json.dumps({
+        "type": "gamestate_update",
+        "power_cap": gamestate.power_capacity,
+        "temp_threshold": gamestate.TEMP_THRESHOLD
+    }))
+    
+    return {"status": "updated", "values": data.dict()}
+
+@router.get("/root/state")
+async def get_root_state(admin=Depends(get_current_admin)):
+    """ROOT ONLY: Get full system state for initialization"""
+    return {
+        "tax_rate": gamestate.tax_rate,
+        "power_cap": gamestate.power_capacity,
+        "current_load": gamestate.power_load,
+        "treasury": gamestate.treasury_balance,
+        "optimizer_active": gamestate.optimizer_active,
+        "temp_threshold": gamestate.TEMP_THRESHOLD,
+        "temp_reset_val": gamestate.TEMP_RESET_VALUE,
+        "temp_min": gamestate.TEMP_MIN,
+        "costs": {
+            "base": gamestate.COST_BASE,
+            "user": gamestate.COST_PER_USER,
+            "autopilot": gamestate.COST_PER_AUTOPILOT,
+            "low_latency": gamestate.COST_LOW_LATENCY,
+            "optimizer": gamestate.COST_OPTIMIZER_ACTIVE
+        }
+    }
+
+@router.get("/system_logs")
+async def get_system_logs(admin=Depends(get_current_admin)):
+    from ..database import SessionLocal, SystemLog
+    db = SessionLocal()
+    logs = db.query(SystemLog).order_by(SystemLog.timestamp.desc()).limit(100).all()
+    db.close()
+    return logs
+
+@router.post("/system_logs/reset")
+async def reset_system_logs(admin=Depends(get_current_admin)):
+    from ..database import SessionLocal, SystemLog
+    db = SessionLocal()
+    db.query(SystemLog).delete()
+    db.commit()
+    db.close()
+    return {"status": "ok"}

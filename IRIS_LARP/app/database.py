@@ -56,6 +56,7 @@ class ChatLog(Base):
     is_hyper = Column(Boolean, default=False)
     is_hidden_for_agent = Column(Boolean, default=False)
     was_reported = Column(Boolean, default=False)
+    is_optimized = Column(Boolean, default=False) # v1.7
 
     sender = relationship("User", back_populates="logs")
 
@@ -77,6 +78,15 @@ class SystemConfig(Base):
 
     key = Column(String, primary_key=True, index=True)
     value = Column(String) # JSON or simple string
+
+class SystemLog(Base):
+    __tablename__ = "system_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    event_type = Column(String, index=True) # e.g. "ACTION", "ALERT", "ECONOMY", "ROOT"
+    message = Column(Text)
+    data = Column(String, nullable=True) # Optional JSON details
 
 def init_db():
     Base.metadata.create_all(bind=engine)

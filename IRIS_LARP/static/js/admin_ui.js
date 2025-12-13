@@ -9,40 +9,42 @@ let onlineAgents = new Set();
 const TOTAL_SESSIONS = 8;
 
 // Initialize Grid
+// Initialize Grid (Multi-grid support)
 function initGrid() {
-    sessionGrid.innerHTML = '';
-    for (let i = 1; i <= TOTAL_SESSIONS; i++) {
-        const card = document.createElement('div');
-        card.className = 'session-card';
-        card.id = `session-${i}`;
+    document.querySelectorAll('.monitor-grid').forEach(grid => {
+        grid.innerHTML = '';
+        for (let i = 1; i <= TOTAL_SESSIONS; i++) {
+            const card = document.createElement('div');
+            card.className = 'session-card';
+            // No ID on card to avoid dupe, use class logic if needed
 
-        // HTML Structure
-        card.innerHTML = `
-            <div class="flex justify-between border-b border-gray-800 mb-2 pb-1">
-                <span class="text-lg font-bold text-gray-400">SESSION ${i}</span>
-                <span class="text-xs text-gray-600">ID: ${i}</span>
-            </div>
-            
-            <!-- User Status -->
-            <div class="flex justify-between items-center mb-2">
-                <div class="flex items-center gap-2">
-                    <span class="status-dot" id="status-user-${i}"></span>
-                    <span class="text-green-700 font-bold">USER ${i}</span>
+            card.innerHTML = `
+                <div class="flex justify-between border-b border-gray-800 mb-2 pb-1">
+                    <span class="text-lg font-bold text-gray-400">SESSION ${i}</span>
+                    <span class="text-xs text-gray-600">ID: ${i}</span>
                 </div>
-                <div class="text-xs text-gray-500">SUBJ-${i}</div>
-            </div>
+                
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="status-dot status-user-${i}"></span>
+                        <span class="text-green-700 font-bold">USER ${i}</span>
+                    </div>
+                </div>
 
-            <!-- Agent Status (Dynamic) -->
-            <div class="flex justify-between items-center bg-gray-900 p-1 rounded border border-gray-800">
-                <div class="flex items-center gap-2">
-                    <span class="status-dot" id="status-agent-dynamic-${i}"></span>
-                    <span class="text-pink-800 font-bold" id="label-agent-dynamic-${i}">AGENT ?</span>
+                <div class="flex justify-between items-center bg-gray-900 p-1 rounded border border-gray-800 mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="status-dot status-agent-${i}"></span>
+                        <span class="text-pink-800 font-bold label-agent-${i}">AGENT</span>
+                    </div>
                 </div>
-                <div class="text-xs text-gray-600" id="sub-agent-dynamic-${i}">ROUTED</div>
-            </div>
-        `;
-        sessionGrid.appendChild(card);
-    }
+                
+                <div class="flex-1 overflow-hidden text-xs font-mono p-1 text-gray-300 flex flex-col justify-end chat-box-${i} bg-black/50">
+                     <!-- Chat -->
+                </div>
+            `;
+            grid.appendChild(card);
+        }
+    });
 }
 
 // Update UI based on State
@@ -51,8 +53,10 @@ function updateUI() {
     onlineCount.innerText = onlineUsers.size + onlineAgents.size;
 
     for (let i = 1; i <= TOTAL_SESSIONS; i++) {
-        // User i is always in Session i
-        const userDot = document.getElementById(`status-user-${i}`);
+        // Update Dots by class
+        const userDots = document.querySelectorAll(`.status-user-${i}`);
+        const agentDots = document.querySelectorAll(`.status-agent-${i}`);
+        const agentLabels = document.querySelectorAll(`.label-agent-${i}`);
         // DB IDs for userX usually align with X if seeded cleanly, but we rely on seeding script order.
         // Assuming ID X = User X for visualization simplicity.
         // In productio we'd map logical IDs.
@@ -70,40 +74,67 @@ function updateUI() {
         }
 
         // --- GLOBAL STATE ---
-        window.currentView = 'monitor';
+        // --- GLOBAL STATE ---
+        window.currentView = null; // Hub
         window.sessionData = {};
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("Admin UI Loaded");
             initWebSocket();
-            switchView('monitor');
+            initGrid(); // Init immediately
 
-            // Poll Tasks every 5 seconds
+            // Poll
             setInterval(refreshTasks, 5000);
+            setInterval(refreshEconomy, 10000);
+            setInterval(refreshSystemLogs, 5000);
         });
 
-        // --- NAVIGATION ---
-        window.switchView = function (viewName, broadcast = true) {
-            console.log("Switching to", viewName);
-            window.currentView = viewName;
+        // --- HUB NAVIGATION ---
+        window.openStation = function (name) {
+            document.getElementById('hub-view').classList.add('hidden');
+            document.getElementById('station-nav').classList.remove('hidden');
+            document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
 
-            // Default Buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            const btn = document.getElementById(`nav-${viewName}`);
-            if (btn) btn.classList.add('active');
-
-            // Views
-            document.querySelectorAll('.view-container').forEach(el => el.classList.add('hidden'));
-            const view = document.getElementById(`view-${viewName}`);
+            const view = document.getElementById(`view-${name}`);
             if (view) view.classList.remove('hidden');
 
-            if (viewName === 'economy') refreshEconomy();
-            if (viewName === 'tasks') refreshTasks();
+            const titles = {
+                'monitor': 'STANICE 1: MONITORING',
+                'controls': 'STANICE 2: KONTROLA',
+                'economy': 'STANICE 3: EKONOMIKA',
+                'tasks': 'STANICE 4: ÚKOLY'
+            };
+            const tEl = document.getElementById('station-title');
+            if (tEl) tEl.innerText = titles[name] || name.toUpperCase();
 
-            if (broadcast && window.socket) {
-                window.socket.send(JSON.stringify({ type: 'admin_view_sync', view: viewName }));
+            window.currentView = name;
+
+            if (name === 'economy') refreshEconomy();
+            if (name === 'tasks') refreshTasks();
+            if (name === 'monitor') {
+                if (!window.currentTab) switchMonitorTab('all');
+                refreshSystemLogs();
             }
+        }
+
+        window.closeStation = function () {
+            document.getElementById('hub-view').classList.remove('hidden');
+            document.getElementById('station-nav').classList.add('hidden');
+            document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
+            window.currentView = null;
+        }
+
+        window.switchMonitorTab = function (tab) {
+            window.currentTab = tab;
+            document.querySelectorAll('.mon-tab').forEach(e => e.classList.add('hidden'));
+            document.getElementById(`mon-content-${tab}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
+            const btn = document.getElementById(`mtab-${tab}`);
+            if (btn) btn.classList.add('active');
+
+            if (tab === 'logs' || tab === 'all') refreshSystemLogs();
         }
 
         // --- CONTROLS ---
@@ -112,8 +143,9 @@ function updateUI() {
         }
 
         window.sendChernobylLevel = function (val) {
-            document.getElementById('controlChernobyl').innerText = val + "%";
-            socket.send(JSON.stringify({ type: 'chernobyl_command', level: parseInt(val) }));
+            document.getElementById('controlChernobyl').innerText = val + "°C";
+            // Renamed internal command type
+            socket.send(JSON.stringify({ type: 'temperature_command', value: parseFloat(val) }));
         }
 
         window.setMode = function (mode) {
@@ -280,10 +312,8 @@ function updateUI() {
             if (data.type === 'init') {
                 renderMonitor(data.active_sessions); // active_sessions? Init payload has online count.
             } else if (data.type === 'admin_view_sync') {
-                // Sync View
-                if (data.view !== window.currentView) {
-                    switchView(data.view, false); // Do not broadcast back
-                }
+                // Ignore sync for Hub? Or auto-open?
+                // Let's ignore to let admin stay in hub.
             } else if (data.type === 'gamestate_update') {
                 if (data.shift !== undefined) {
                     const el1 = document.getElementById('monitorShift');
@@ -291,11 +321,12 @@ function updateUI() {
                     if (el1) el1.innerText = data.shift;
                     if (el2) el2.innerText = data.shift;
                 }
-                if (data.chernobyl !== undefined) {
+                if (data.temperature !== undefined) {
                     const el = document.getElementById('controlChernobyl');
-                    if (el) el.innerText = Math.round(data.chernobyl) + "%";
+                    // Use new update function
+                    updateTemperatureUI(data.temperature);
                     const ch_man = document.getElementById('manualChernobyl');
-                    if (ch_man) ch_man.value = data.chernobyl;
+                    if (ch_man) ch_man.value = data.temperature;
                 }
             } else if (data.type === 'message') {
                 updateMonitorChat(data);
@@ -303,37 +334,19 @@ function updateUI() {
         }
 
         function renderMonitor(sessions) {
-            const grid = document.getElementById('sessionGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            for (let i = 1; i <= 8; i++) {
-                const div = document.createElement('div');
-                div.className = 'session-card';
-                div.id = `sess-${i}`;
-                div.innerHTML = `
-             <div class="flex justify-between items-center border-b border-gray-800 pb-1 mb-1">
-                 <span class="text-xs text-gray-500">SESSION ${i}</span>
-                 <div class="status-dot"></div>
-             </div>
-             <div class="flex-1 overflow-hidden text-xs font-mono p-1 text-gray-300 flex flex-col justify-end" id="chat-${i}">
-                 <!-- logs -->
-             </div>
-        `;
-                grid.appendChild(div);
-            }
+            // Handled by initGrid()
         }
 
         function updateMonitorChat(msg) {
             const sessId = msg.session_id || 1;
-            const chatDiv = document.getElementById(`chat-${sessId}`);
-            if (chatDiv) {
+            // Select all chat boxes for this session (e.g. in Overview and Chats tab)
+            document.querySelectorAll(`.chat-box-${sessId}`).forEach(chatDiv => {
                 const line = document.createElement('div');
                 line.innerText = `[${msg.sender}]: ${msg.content}`;
-                line.className = "truncate hover:whitespace-normal bg-black mb-1";
+                line.className = "truncate hover:whitespace-normal bg-black mb-1 px-1";
                 chatDiv.appendChild(line);
                 chatDiv.scrollTop = chatDiv.scrollHeight;
-            }
+            });
         }
 
         // AI Modal Toggles
@@ -428,10 +441,10 @@ const client = new SocketClient(textUrl, (data) => {
 
     if (data.type === 'gamestate_update') {
         currentShift = data.shift;
-        if (data.chernobyl !== undefined) {
-            updateChernobylUI(data.chernobyl);
+        if (data.temperature !== undefined) {
+            updateTemperatureUI(data.temperature);
             const range = document.getElementById('manualChernobyl');
-            if (range) range.value = data.chernobyl;
+            if (range) range.value = data.temperature;
         }
         if (data.power_load !== undefined) {
             updatePowerUI(data.power_load, data.power_capacity, data.is_overloaded);
@@ -460,41 +473,47 @@ function triggerReset() {
     }
 }
 
-function updateChernobylUI(val) {
+function updateTemperatureUI(val) {
+    // Range 0-350 for display (standard). Overflow >350 is Meltdown.
     // 1. Update Text
     const label = document.getElementById('controlChernobyl');
-    if (label) label.innerText = Math.round(val) + "%";
+    if (label) label.innerText = Math.round(val) + "°C";
 
     // 2. Update Bar Width
     const bar = document.getElementById('chemBar');
     if (bar) {
-        // Infinite effect logic:
-        // If > 100, we can wrap mod 100, or clamp?
-        // Let's clamp visual width to 100% but change color?
-        // Or just let it go to 100% and stay there (while effects go wild).
-        // Let's try width = val + "%". If >100, it fills container.
-        bar.style.width = Math.min(val, 100) + "%";
+        // Linear scale 0-350 = 0-100%
+        let pct = (val / 350) * 100;
+        bar.style.width = Math.min(pct, 100) + "%";
 
-        // Color Shift based on level
-        if (val > 100) {
-            bar.style.background = "linear-gradient(90deg, #ff00ff, #ffffff)"; // Plasma
-        } else if (val > 80) {
-            bar.style.background = "linear-gradient(90deg, #ff0000, #ffaa00)"; // Critical
+        // Color Logic per v1.7 Spec
+        if (val > 350) {
+            // Meltdown
+            bar.style.background = "#ff0000";
+            bar.style.opacity = Math.random() > 0.5 ? "1" : "0.5"; // Glitch effect inline or class
+            // Ideally use class logic but inline gradient is here
+        } else if (val > 300) {
+            // Critical (Orange)
+            bar.style.background = "linear-gradient(90deg, #ffaa00, #ff4400)";
+        } else if (val > 100) {
+            // Warning (Yellow)
+            bar.style.background = "linear-gradient(90deg, #00ff00, #ffff00)";
         } else {
-            bar.style.background = "linear-gradient(90deg, #00ff00, #ffff00, #ff0000)"; // Normal
+            // Safe (Green)
+            bar.style.background = "#00ff00";
         }
     }
 
-    // 3. Global Effects (Body)
+    // 3. Global Effects
     const body = document.body;
-    body.className = 'bg-gray-900 text-white font-mono'; // Base classes
-    if (val > 20 && val <= 50) body.classList.add('instability-low');
-    if (val > 50 && val <= 80) body.classList.add('instability-med');
-    if (val > 80) body.classList.add('instability-high');
+    body.className = 'bg-gray-900 text-white font-mono';
+    if (val > 350) body.classList.add('instability-high'); // Reuse class for extreme
+    else if (val > 300) body.classList.add('instability-med');
+    // else safe
 }
 
 function sendChernobylLevel(val) {
-    client.send({ type: 'chernobyl_command', level: parseInt(val) });
+    client.send({ type: 'temperature_command', value: parseFloat(val) });
 }
 
 // v1.4 Power & Labels
@@ -517,6 +536,9 @@ function updatePowerUI(load, cap, overloaded) {
     }
 }
 
+// Power Timer
+let powerTimerInterval = null;
+
 window.buyPower = async function () {
     if (!confirm("BUY +50MW CAPACITY FOR 1000 CREDITS?")) return;
     try {
@@ -525,11 +547,48 @@ window.buyPower = async function () {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
-            // alert("POWER PURCHASED");
+            const data = await res.json();
+            // Start Timer if end_time present
+            if (data.end_time) {
+                startPowerTimer(data.end_time);
+            }
         } else {
             alert("TRANSACTION DENIED (Check Funds)");
         }
     } catch (e) { console.error(e); }
+}
+
+function startPowerTimer(endTime) {
+    const btn = document.getElementById('btnBuyPower');
+    const txt = document.getElementById('buyPowerText');
+    if (!btn || !txt) return;
+
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+    btn.classList.remove('editable-label'); // prevent edit during boost
+
+    if (powerTimerInterval) clearInterval(powerTimerInterval);
+
+    powerTimerInterval = setInterval(() => {
+        const now = Date.now() / 1000;
+        const diff = endTime - now;
+
+        if (diff <= 0) {
+            clearInterval(powerTimerInterval);
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.classList.add('editable-label');
+            txt.innerText = "BUY POWER (+50MW) - 1000 CR";
+            return;
+        }
+
+        // Format MM:SS
+        const m = Math.floor(diff / 60);
+        const s = Math.floor(diff % 60);
+        const fmt = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+        txt.innerText = `[ ACTIVE BOOST: ${fmt} ]`;
+    }, 1000);
 }
 
 let isEditMode = false;
@@ -701,4 +760,55 @@ async function saveConfig(type) {
             alert("UPDATE FAILED");
         }
     }
+}
+
+// --- SYSTEM LOGS ---
+window.refreshSystemLogs = async function () {
+    try {
+        const res = await fetch('/api/admin/system_logs', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) return;
+        const logs = await res.json();
+
+        // Mini Log (Overview Tab)
+        const mini = document.getElementById('miniLog');
+        if (mini) {
+            mini.innerHTML = logs.slice(0, 30).map(l => {
+                const color = getLogColor(l.event_type);
+                return `<div class="mb-1 border-b border-gray-900 pb-1 break-words">
+                    <span class="text-gray-600 mr-1">[${new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}]</span>
+                    <span class="${color}">${l.message}</span>
+                </div>`;
+            }).join('');
+        }
+
+        // Full Log (Logs Tab)
+        const full = document.getElementById('fullLog');
+        if (full) {
+            full.innerHTML = logs.map(l => {
+                const color = getLogColor(l.event_type);
+                return `<div class="mb-1 font-mono text-sm border-b border-gray-800 pb-1 hover:bg-gray-900/50 break-words">
+                    <span class="text-gray-500 mr-2">[${new Date(l.timestamp).toLocaleString()}]</span>
+                    <strong class="${color} mr-2">[${l.event_type}]</strong>
+                    <span class="text-gray-300">${l.message}</span>
+                    ${l.data ? `<span class="text-xs text-gray-600 block ml-8 break-all">${l.data}</span>` : ''}
+                </div>`;
+            }).join('');
+        }
+    } catch (e) { console.error("Log fetch failed", e); }
+}
+
+window.resetSystemLogs = async function () {
+    if (!confirm("CLEAR SYSTEM LOGS? CANNOT BE UNDONE.")) return;
+    await fetch('/api/admin/system_logs/reset', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+    refreshSystemLogs();
+}
+
+function getLogColor(type) {
+    if (type === 'ACTION') return 'text-blue-400';
+    if (type === 'ROOT') return 'text-purple-400';
+    if (type === 'REPORT') return 'text-orange-400';
+    if (type === 'ERROR') return 'text-red-500';
+    if (type === 'ALERT') return 'text-yellow-400';
+    if (type === 'TASK') return 'text-pink-400';
+    return 'text-gray-400';
 }

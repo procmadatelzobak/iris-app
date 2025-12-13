@@ -52,7 +52,7 @@ async def lifespan(app: FastAPI):
                 
                 await routing_logic.broadcast_global(json.dumps({
                     "type": "gamestate_update",
-                    "chernobyl": new_val,
+                    "temperature": new_val,
                     "shift": gamestate.global_shift_offset,
                     "power_load": current_load,
                     "power_capacity": gamestate.power_capacity,

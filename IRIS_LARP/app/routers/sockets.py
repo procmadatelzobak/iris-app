@@ -62,14 +62,18 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
         }))
 
     # Admin Init
+        # Admin Init
     if user.role == UserRole.ADMIN:
         # Send GameState
         await websocket.send_text(json.dumps({
             "type": "init",
             "shift": gamestate.global_shift_offset,
-            "chernobyl": gamestate.chernobyl_value,
+            "temperature": gamestate.temperature,
             "online": routing_logic.get_online_status()
         }))
+    
+    # ... (skipping unchanged lines)
+
     
     # Send History on Connect (User/Agent logic)
     from ..database import SessionLocal, ChatLog
@@ -194,18 +198,24 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         cost = gamestate.OPTIMIZER_COST_MW
                         if current_load + cost <= gamestate.power_capacity:
                             # ACTIVE and POWER OK
+                            
+                            # v1.7 UI Feedback: Optimizing Start
+                            # Broadcast to both Agent (Loader) and User (Waiting)
+                            await routing_logic.broadcast_to_session(session_id, json.dumps({
+                                "type": "optimizing_start"
+                            }))
+                            
                             from ..logic.llm_core import llm_service
                             try:
                                 rewritten = await llm_service.rewrite_message(content, gamestate.optimizer_prompt)
                                 if rewritten and rewritten.strip():
                                     final_content = rewritten
                                     was_rewritten = True
-                                    # Trigger hypothetical Power Spike (Just logic, no storage)
                             except Exception as e:
                                 print(f"Optimizer Error: {e}")
 
                     # Save (Rewritten or Original)
-                    log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content)
+                    log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content, is_optimized=was_rewritten)
                     db_save.add(log)
                     db_save.commit()
 
@@ -214,7 +224,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "sender": user.username,
                         "role": "agent",
                         "content": final_content,
-                        "session_id": session_id
+                        "session_id": session_id,
+                        "id": log.id # v1.7
                     }))
 
                     # Feedback to Agent (If rewritten)
@@ -250,7 +261,12 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     # Task Request
                     if cmd_type == "task_request":
                         from ..database import Task, TaskStatus
-                        # Check existing
+                        # Log
+                        from ..database import SessionLocal, SystemLog 
+                        db_log = SessionLocal()
+                        db_log.add(SystemLog(event_type="ACTION", message=f"{user.username} requested task"))
+                        db_log.commit()
+                        db_log.close()
                         existing = db_save.query(Task).filter(Task.user_id == user.id, Task.status.in_([TaskStatus.PENDING_APPROVAL, TaskStatus.ACTIVE])).first()
                         if not existing:
                             new_task = Task(
@@ -273,6 +289,49 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             await routing_logic.broadcast_to_admins(json.dumps({
                                 "type": "admin_refresh_tasks"
                             }))
+                            
+                            # Log
+                            db_log = SessionLocal()
+                            db_log.add(SystemLog(event_type="TASK", message=f"{user.username} requested task"))
+                            db_log.commit()
+                            db_log.close()
+                        continue
+
+                    # v1.7 Report Logic
+                    if cmd_type == "report_message":
+                        msg_id = msg_data.get("id")
+                        # Verify DB
+                        target_log = db_save.query(ChatLog).filter(ChatLog.id == msg_id).first()
+                        if target_log:
+                            if target_log.is_optimized:
+                                # IMMUNITY
+                                await websocket.send_text(json.dumps({
+                                    "type": "report_denied",
+                                    "reason": "SYSTEM_VERIFIED"
+                                }))
+                            else:
+                                # Normal Report -> Heat Up
+                                gamestate.report_anomaly()
+                                target_log.was_reported = True
+                                db_save.commit()
+                                
+                                # Broadcast new temp
+                                await routing_logic.broadcast_global(json.dumps({
+                                    "type": "gamestate_update", 
+                                    "temperature": gamestate.temperature
+                                }))
+                                
+                                # Ack
+                                await websocket.send_text(json.dumps({
+                                    "type": "report_accepted",
+                                    "msg": "Report filed. Anomaly detected."
+                                }))
+                                
+                                # Log
+                                db_log = SessionLocal()
+                                db_log.add(SystemLog(event_type="REPORT", message=f"{user.username} reported message {msg_id}"))
+                                db_log.commit()
+                                db_log.close()
                         continue
 
                     if not content: continue
@@ -285,7 +344,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     await routing_logic.broadcast_to_session(session_id, json.dumps({
                         "sender": user.username,
                         "role": "user",
-                        "content": content
+                        "content": content,
+                        "id": log.id
                     }))
                     
                     # CHECK FOR AUTOPILOT
@@ -333,7 +393,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                                 "sender": agent_username,
                                 "role": "agent",
                                 "content": reply,
-                                "session_id": session_id
+                                "session_id": session_id,
+                                "id": log_ai.id
                             }))
 
                 elif user.role == UserRole.ADMIN:
@@ -341,22 +402,21 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     cmd_type = msg_data.get("type")
                     if cmd_type == "shift_command":
                         new_shift = gamestate.increment_shift()
-                        # Broadcast Shift and Chernobyl to EVERYONE so UIs update
+                        # Broadcast Shift and Temp to EVERYONE so UIs update
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update", 
                             "shift": new_shift,
-                            "chernobyl": gamestate.chernobyl_value
+                            "temperature": gamestate.temperature
                         }))
                     
-                    elif cmd_type == "chernobyl_command":
-                        level = msg_data.get("level", 0)
-                        gamestate.set_chernobyl(level)
-                        # Switch to manual mode if setting level manually? 
-                        # Or just let it be.
+                    elif cmd_type == "temperature_command": # Renamed from chernobyl_command
+                        level = msg_data.get("value", 0) 
+                        gamestate.set_temperature(float(level))
+                        
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update", 
                             "shift": gamestate.global_shift_offset,
-                            "chernobyl": gamestate.chernobyl_value
+                            "temperature": gamestate.temperature
                         }))
 
                     elif cmd_type == "chernobyl_mode_command":
@@ -375,20 +435,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     elif cmd_type == "reset_game":
                         # Full System Reset
                         gamestate.global_shift_offset = 0
-                        gamestate.chernobyl_value = 0
+                        gamestate.set_temperature(gamestate.TEMP_RESET_VALUE) # v1.7 Reset to 80
                         gamestate.chernobyl_mode = ChernobylMode.NORMAL
                         gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
-                        
-                        # Clear ChatLogs? 
-                        # db_save.query(ChatLog).delete()
-                        # db_save.commit()
-                        # Keeping logs for forensic might be better, unless "NUKE".
-                        # Let's say NUKE keeps logs but resets game state.
                         
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update", 
                             "shift": 0,
-                            "chernobyl": 0,
+                            "temperature": gamestate.temperature,
                             "hyper_mode": "normal",
                             "msg": "SYSTEM RESET INITIATED"
                         }))
@@ -413,13 +467,21 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         
                     elif cmd_type == "hyper_vis_command":
                         mode_str = msg_data.get("mode", "normal")
+                        old_mode = gamestate.hyper_visibility_mode
                         from ..logic.gamestate import HyperVisibilityMode
-                        if mode_str == "blackbox":
+                        if mode_str == "normal":
+                            gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+                        elif mode_str == "blackbox":
                             gamestate.hyper_visibility_mode = HyperVisibilityMode.BLACKBOX
                         elif mode_str == "forensic":
                             gamestate.hyper_visibility_mode = HyperVisibilityMode.FORENSIC
-                        else:
-                            gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+                        
+                        # Log
+                        from ..database import SessionLocal, SystemLog
+                        db_log = SessionLocal()
+                        db_log.add(SystemLog(event_type="ACTION", message=f"{user.username} changed HYPER to {mode_str}"))
+                        db_log.commit()
+                        db_log.close()
                         
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update",

@@ -31,6 +31,34 @@
 ### Economy Rebalance
 - [x] **Defaults**: Treasury 500 CR, Tax 20% [DONE]
 - [x] **Logic**: Centralized `economy.py` processor [DONE]
+| **Phase 19** | AI Optimizer & Economy | [DONE] |
+| **Phase 20** | Root Control & Fixes | [DONE] |
+| **Phase 21** | UI Feedback & Lore | [IN_PROGRESS] |
+
+## Feature Status (v1.7 UI & Lore)
+
+### Temperature System
+- [ ] **Logic**: Rename `chernobyl` -> `temperature` [PLAN]
+- [ ] **Constants**: `TEMP_MIN`, `TEMP_THRESHOLD`, `TEMP_RESET_VALUE` [PLAN]
+- [ ] **UI**: Heat Bar (0-350 scale) [PLAN]
+
+### Optimizer Feedback
+- [ ] **Agent UX**: "Optimizing..." loader [PLAN]
+- [ ] **User UX**: Immunity to Reports (Verified Content) [PLAN]
+
+### Power Timer
+- [ ] **Logic**: Track `power_boost_end_time` [PLAN]
+- [ ] **UI**: Persistent countdown on Buy button [PLAN]
+
+## Feature Status (v1.6 Root Control)
+
+### Fixes
+- [x] **LLM Core**: Robust `rewrite_message` [DONE]
+- [x] **Agent UI**: Optimizer Feedback Visualization [DONE]
+
+### Root Controls
+- [x] **API**: Update Game Constants (Tax, Power) [DONE]
+- [x] **UI**: Root Dashboard Tuning Panel [DONE]
 
 ## Feature Status (v1.4)
 

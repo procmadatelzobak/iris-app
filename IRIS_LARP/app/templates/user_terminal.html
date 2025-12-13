@@ -60,6 +60,12 @@
     <div class="text-sm text-red-400 mt-2">CONTACT ADMINISTRATOR</div>
 </div>
 
+<!-- Overload Signal -->
+<div id="overloadSignal"
+    class="fixed top-2 right-2 border-2 border-red-600 bg-red-900/80 text-white font-bold px-4 py-2 z-50 animate-pulse hidden">
+    ⚠ SYSTEM OVERLOAD ⚠
+</div>
+
 <div class="flex h-screen overflow-hidden">
     <!-- Left Panel: Status -->
     <div class="w-1/3 border-r border-green-900/30 p-4 flex flex-col bg-black/40">
@@ -133,8 +139,10 @@
 
     const client = new SocketClient(wsUrl, (data) => {
         // Handle Game Updates vs Chat
+        // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
-            applyChernobyl(data.chernobyl || 0);
+            // Updated for Phase 21 (temperature key)
+            applyChernobyl(data.temperature || data.chernobyl || 0);
 
             // v1.4 Glitch
             if (data.is_overloaded) {
@@ -153,6 +161,13 @@
             renderTask(data);
         } else if (data.type === 'typing_sync') {
             handleTypingSync(data);
+        } else if (data.type === 'report_denied') {
+            showToast("⚠️ REPORT REJECTED: SYSTEM VERIFIED", "error");
+            if (window.sfx) sfx.playError();
+        } else if (data.type === 'report_accepted') {
+            showToast("✅ ANOMALY LOGGED", "success");
+        } else if (data.type === 'optimizing_start') {
+            handleOptimizingStart();
         } else {
             // Assume Chat
             appendMessage(data);
@@ -166,6 +181,21 @@
     });
 
     client.connect(token);
+
+    // Optimizing/Processing handler
+    function handleOptimizingStart() {
+        const hist = document.getElementById('chatHistory');
+        // Remove existing
+        const old = document.getElementById('opt-loading');
+        if (old) old.remove();
+
+        const d = document.createElement('div');
+        d.id = "opt-loading";
+        d.className = "text-green-800 text-xs italic animate-pulse ml-2";
+        d.innerText = ">> INCOMING TRANSMISSION [PROCESSING]...";
+        hist.appendChild(d);
+        hist.scrollTop = hist.scrollHeight;
+    }
 
     function requestTask() {
         client.send({ type: 'task_request' });
@@ -248,6 +278,10 @@
     });
 
     function appendMessage(data) {
+        // Remove loading
+        const loader = document.getElementById('opt-loading');
+        if (loader) loader.remove();
+
         if (!data.content) return; // Skip non-content messages
         const div = document.createElement('div');
         div.className = `chat-bubble ${data.role === 'user' ? 'user self-end' : 'agent self-start'}`;
@@ -256,6 +290,16 @@
         const sender = document.createElement('span');
         sender.className = 'sender';
         sender.innerText = data.sender.toUpperCase();
+
+        // Report Button (Agent Only)
+        if (data.role === 'agent' && data.id) {
+            const rBtn = document.createElement('button');
+            rBtn.innerText = "[ ! ]";
+            rBtn.className = "ml-2 text-red-500 hover:text-red-300 text-xs opacity-50 hover:opacity-100 transition";
+            rBtn.title = "REPORT ANOMALY";
+            rBtn.onclick = () => reportMessage(data.id);
+            sender.appendChild(rBtn);
+        }
 
         const content = document.createElement('div');
         content.innerText = data.content;
@@ -267,15 +311,37 @@
         chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
+    function reportMessage(id) {
+        if (!confirm("REPORT MESSAGE AS ANOMALY?")) return;
+        client.send({ type: 'report_message', id: id });
+    }
+
+    // Toast Logic
+    function showToast(msg, type) {
+        const t = document.createElement('div');
+        t.innerText = msg;
+        t.className = `fixed top-4 right-4 p-4 border text-white font-bold z-50 animate-bounce ${type === 'error' ? 'bg-red-900 border-red-500' : 'bg-green-900 border-green-500'}`;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
     function applyChernobyl(level) {
-        document.body.className = ''; // Reset
-        if (level > 20 && level <= 50) document.body.classList.add('instability-low');
-        if (level > 50 && level <= 80) document.body.classList.add('instability-med');
-        if (level > 80) {
+        document.body.className = '';
+        // 0-350 Scale
+        if (level > 100 && level <= 300) document.body.classList.add('instability-low');
+        if (level > 300 && level <= 350) document.body.classList.add('instability-med');
+        if (level > 350) {
             document.body.classList.add('instability-high');
-            // Maybe play alarm once?
-            sfx.playError();
+            if (window.sfx) sfx.playError();
+        }
+
+        // Overload Logic (based on Temp or is_overloaded flag? using Temp > 350 for visual sync)
+        const ind = document.getElementById('overloadSignal');
+        if (ind) {
+            if (level > 350) ind.classList.remove('hidden');
+            else ind.classList.add('hidden');
         }
     }
 </script>
 {% endblock %}
+```
