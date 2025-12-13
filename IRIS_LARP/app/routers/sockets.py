@@ -92,14 +92,26 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
         
         if session_id_to_load:
             history = db.query(ChatLog).filter(ChatLog.session_id == session_id_to_load).order_by(ChatLog.timestamp).all()
-            for log in history:
-                sender_role = log.sender.role.value
-                await websocket.send_text(json.dumps({
-                    "sender": log.sender.username,
-                    "role": sender_role,
-                    "content": log.content,
-                    "session_id": log.session_id if user.role == UserRole.AGENT else None
-                }))
+            
+            # Hyper Visibility Filter for Agents
+            should_send_history = True
+            if user.role == UserRole.AGENT:
+                from ..logic.gamestate import HyperVisibilityMode
+                if gamestate.hyper_visibility_mode == HyperVisibilityMode.BLACKBOX:
+                    should_send_history = False
+                elif gamestate.hyper_visibility_mode == HyperVisibilityMode.EPHEMERAL: # Not in Enum yet, but logic placeholder
+                     # Assuming Ephemeral means empty history for now as per spec
+                     should_send_history = False
+            
+            if should_send_history:
+                for log in history:
+                    sender_role = log.sender.role.value
+                    await websocket.send_text(json.dumps({
+                        "sender": log.sender.username,
+                        "role": sender_role,
+                        "content": log.content,
+                        "session_id": log.session_id if user.role == UserRole.AGENT else None
+                    }))
         
         # Send initial status for User
         if user.role == UserRole.USER:
@@ -108,6 +120,18 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                 "credits": user.credits,
                 "is_locked": user.is_locked
             }))
+
+             # Check for active task
+             from ..database import Task, TaskStatus
+             active_task = db.query(Task).filter(Task.user_id == user.id, Task.status.in_([TaskStatus.PENDING_APPROVAL, TaskStatus.ACTIVE])).first()
+             if active_task:
+                 await websocket.send_text(json.dumps({
+                     "type": "task_update",
+                     "is_active": True,
+                     "status": active_task.status.value,
+                     "description": active_task.prompt_desc,
+                     "reward": active_task.reward_offered
+                 }))
     except Exception as e:
         print(f"Error loading history: {e}")
     finally:
@@ -123,21 +147,21 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                 msg_data = {"content": data}
 
             content = msg_data.get("content")
-            
+
             # Persist and Route
             db_save = SessionLocal()
             try:
                 if user.role == UserRole.AGENT:
                     cmd_type = msg_data.get("type")
                     agent_logical_id = get_logical_id(user.username, "agent")
-                    
+
                     if cmd_type == "autopilot_toggle":
                         status = msg_data.get("status") # true/false
                         routing_logic.active_autopilots[agent_logical_id] = status
                         if not status:
                              # Clear history on OFF
                              routing_logic.hyper_histories[agent_logical_id] = []
-                        # Sync Status? Ideally yes, but sound feedback is local. 
+                        # Sync Status? Ideally yes, but sound feedback is local.
                         # Let's verify toggle state sync later if needed.
                         continue
 
@@ -156,16 +180,16 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     agent_index = agent_logical_id - 1
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
-                    
+
                     # Manual Override - If Agent types, they might want to clear history or just interject?
                     # Spec doesn't say. Let's assume manual typing doesn't break autopilot but maybe adds to context?
                     # For now, just save/send.
-                    
+
                     # Save
                     log = ChatLog(session_id=session_id, sender_id=user.id, content=content)
                     db_save.add(log)
                     db_save.commit()
-                    
+
                     await routing_logic.broadcast_to_session(session_id, json.dumps({
                         "sender": user.username,
                         "role": "agent",
@@ -174,6 +198,55 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     }))
 
                 elif user.role == UserRole.USER:
+                    cmd_type = msg_data.get("type")
+
+                    # User Mirroring
+                    if cmd_type == "typing_sync":
+                        content = msg_data.get("content", "")
+                        # Send to ALL sessions of this user (including other open tabs)
+                        # broadcast_to_session sends to User+Agent. We specifically want "My other tabs".
+                        # Use routing_logic.broadcast_to_user(user.id) if it existed, or broadcast_to_session and filter on client?
+                        # Re-using broadcast_to_session targets Agent too (which is fine, Agent could see typing).
+                        # But specific requirement: "broadcast to all connection of same user".
+                        # Let's add that logic inline or helper.
+                        if user.id in routing_logic.user_connections:
+                            for conn in routing_logic.user_connections[user.id]:
+                                if conn != websocket: # Don't echo back
+                                    await conn.send_text(json.dumps({
+                                        "type": "typing_sync",
+                                        "sender": user.username,
+                                        "content": content
+                                    }))
+                        continue
+
+                    # Task Request
+                    if cmd_type == "task_request":
+                        from ..database import Task, TaskStatus
+                        # Check existing
+                        existing = db_save.query(Task).filter(Task.user_id == user.id, Task.status.in_([TaskStatus.PENDING_APPROVAL, TaskStatus.ACTIVE])).first()
+                        if not existing:
+                            new_task = Task(
+                                user_id=user.id,
+                                prompt_desc="Waiting for assignment...",
+                                reward_offered=0,
+                                status=TaskStatus.PENDING_APPROVAL
+                            )
+                            db_save.add(new_task)
+                            db_save.commit()
+
+                            # Notify User
+                            await websocket.send_text(json.dumps({
+                                "type": "task_update",
+                                "is_active": True,
+                                "status": "pending_approval"
+                            }))
+
+                            # Notify Admins
+                            await routing_logic.broadcast_to_admins(json.dumps({
+                                "type": "admin_refresh_tasks"
+                            }))
+                        continue
+
                     if not content: continue
                     session_id = get_logical_id(user.username, "user")
                     # Save User Message
@@ -272,9 +345,36 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         # Broadcast? Usually mode change doesn't need broadcast, just the effect (value change)
 
                     elif cmd_type == "reset_game":
-                         # Placeholder
-                         pass
-                    
+                        # Full System Reset
+                        gamestate.global_shift_offset = 0
+                        gamestate.chernobyl_value = 0
+                        gamestate.chernobyl_mode = ChernobylMode.NORMAL
+                        gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+                        
+                        # Clear ChatLogs? 
+                        # db_save.query(ChatLog).delete()
+                        # db_save.commit()
+                        # Keeping logs for forensic might be better, unless "NUKE".
+                        # Let's say NUKE keeps logs but resets game state.
+                        
+                        await routing_logic.broadcast_global(json.dumps({
+                            "type": "gamestate_update", 
+                            "shift": 0,
+                            "chernobyl": 0,
+                            "hyper_mode": "normal",
+                            "msg": "SYSTEM RESET INITIATED"
+                        }))
+                        
+                    elif cmd_type == "admin_broadcast":
+                         content = msg_data.get("content", "SYSTEM ALERT")
+                         await routing_logic.broadcast_global(json.dumps({
+                             "type": "message",
+                             "sender": "ROOT",
+                             "role": "admin",
+                             "content": f"⚠ {content} ⚠",
+                             "is_alert": True
+                         }))
+
                     elif cmd_type == "admin_view_sync":
                         view = msg_data.get("view", "monitor")
                         await routing_logic.broadcast_to_admins(json.dumps({

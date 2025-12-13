@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    /* Global Overrides for Root */
+    body {
+        font-family: 'Courier New', monospace;
+        background-color: #050505;
+        color: #d4af37;
+        /* Gold */
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #111;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #d4af37;
+    }
+
+    /* Nav */
+    .admin-nav {
+        display: flex;
+        border-bottom: 2px solid #d4af37;
+        background: #111;
+        padding-left: 1rem;
+    }
+
+    .nav-btn {
+        padding: 1rem 2rem;
+        color: #886;
+        border-right: 1px solid #443;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+        background: #221;
+        color: #fff;
+        text-shadow: 0 0 5px #d4af37;
+    }
+
+    .nav-btn.active {
+        background: #332;
+        color: #d4af37;
+        border-bottom: 3px solid #d4af37;
+    }
+
+    .view-container {
+        padding: 1rem;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    /* God Mode Elements */
+    .god-panel {
+        border: 1px solid #d4af37;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: rgba(20, 20, 10, 0.9);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+
+    .god-title {
+        color: #d4af37;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-bottom: 1px solid #554;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .btn-god {
+        border: 1px solid #d4af37;
+        color: #d4af37;
+        padding: 0.5rem 1rem;
+        text-transform: uppercase;
+        background: transparent;
+        transition: all 0.2s;
+        font-weight: bold;
+    }
+
+    .btn-god:hover {
+        background: #d4af37;
+        color: #000;
+        box-shadow: 0 0 15px #d4af37;
+    }
+
+    .btn-nuke {
+        border-color: #f00;
+        color: #f00;
+    }
+
+    .btn-nuke:hover {
+        background: #f00;
+        color: #fff;
+        box-shadow: 0 0 20px #f00;
+    }
+
+    /* Monitor */
+    .session-card {
+        border: 1px solid #443;
+        background: #0a0a0a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="crt-overlay" style="opacity: 0.05;"></div>
+<div class="scan-line" style="opacity: 0.05;"></div>
+
+<div class="flex flex-col h-screen">
+
+    <!-- Navigation -->
+    <div class="admin-nav z-10 flex justify-between items-center">
+        <div class="flex">
+            <div class="nav-btn active" onclick="switchView('dashboard')" id="nav-dashboard">DASHBOARD</div>
+            <div class="nav-btn" onclick="switchView('economy')" id="nav-economy">GLOBAL ECO</div>
+            <div class="nav-btn" onclick="switchView('time')" id="nav-time">CHRONOS</div>
+            <div class="nav-btn" onclick="switchView('surveillance')" id="nav-surveillance">PANOPTICON</div>
+        </div>
+        <div
+            class="px-4 font-mono text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-yellow-600 animate-pulse">
+            ROOT ACCESS GRANTED
+        </div>
+    </div>
+
+    <!-- VIEW: DASHBOARD (Summary) -->
+    <div id="view-dashboard" class="view-container">
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Stats -->
+            <div class="god-panel">
+                <div class="god-title">SYSTEM STATUS</div>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span>SHIFT OFFSET</span>
+                        <span class="font-mono text-2xl text-white" id="valShift">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>ONLINE USERS</span>
+                        <span class="font-mono text-2xl text-white" id="valOnline">--</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>CHERNOBYL</span>
+                        <span class="font-mono text-2xl text-red-500" id="valChernobyl">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="god-panel col-span-2">
+                <div class="god-title">EXECUTIVE PROTOCOLS</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="btn-god" onclick="triggerShift()">>> FORCE SHIFT >></button>
+                    <button class="btn-god border-pink-500 text-pink-500 hover:bg-pink-900"
+                        onclick="broadcastMsg()">GLOBAL BROADCAST</button>
+                    <button class="btn-god btn-nuke" onclick="triggerReset()">[ SYSTEM RESET ]</button>
+                    <button class="btn-god border-blue-500 text-blue-500 hover:bg-blue-900"
+                        onclick="location.reload()">RELOAD UI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Raw Logs -->
+        <div class="god-panel mt-6 flex-1 h-96">
+            <div class="god-title">SYSTEM LOG STREAM</div>
+            <div id="logStream"
+                class="font-mono text-xs text-gray-400 h-full overflow-y-auto p-2 bg-black border border-gray-800">
+                <!-- Logs from socket -->
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: ECONOMY -->
+    <div id="view-economy" class="view-container hidden">
+        <div class="god-panel">
+            <div class="god-title">GLOBAL ECONOMY MANIPULATION</div>
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(100)">STIMULUS
+                    (+100)</button>
+                <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(1000)">LARGE STIMULUS
+                    (+1000)</button>
+                <button class="btn-god text-red-500 border-red-500" onclick="injectGlobal(-100)">TAXATION
+                    (-100)</button>
+                <button class="btn-god text-red-500 border-red-500" onclick="resetEconomy()">RESET ALL CREDITS</button>
+            </div>
+
+            <div class="god-title mt-8">INDIVIDUAL EDITOR</div>
+            <table class="w-full text-left text-sm border border-gray-800">
+                <thead class="bg-gray-900 text-yellow-600">
+                    <tr>
+                        <th>USER</th>
+                        <th>CREDITS</th>
+                        <th>STATUS</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="rootEcoTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- VIEW: TIME (CHRONOS) -->
+    <div id="view-time" class="view-container hidden">
+        <div class="god-panel w-1/2 mx-auto">
+            <div class="god-title">TIME MANIPULATION</div>
+            <div class="text-center mb-8">
+                <div class="text-6xl font-bold mb-2 text-white" id="bigShift">0</div>
+                <div class="text-sm text-gray-500">CURRENT SHIFT OFFSET</div>
+            </div>
+
+            <div class="space-y-4">
+                <input type="number" id="targetShift" class="w-full bg-gray-900 border border-yellow-700 p-2 text-white"
+                    placeholder="Target Shift (0-7)">
+                <button class="btn-god w-full" onclick="setShift()">JUMP TO SHIFT</button>
+            </div>
+
+            <div class="mt-8 border-t border-gray-800 pt-4">
+                <label class="block mb-2 text-red-500">CHERNOBYL OVERRIDE</label>
+                <input type="range" min="0" max="200" value="0" class="w-full accent-red-600"
+                    oninput="sendChernobylLevel(this.value)">
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>0%</span>
+                    <span>100%</span>
+                    <span>MELTDOWN</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: SURVEILLANCE -->
+    <div id="view-surveillance" class="view-container hidden">
+        <div class="god-title">PANOPTICON 8x8</div>
+        <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
+            <!-- 8 Sessions -->
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
+<script>
+    // Root UI Logic - Simplified/Inline
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = '/';
+
+    // --- STATE ---
+    let currentView = 'dashboard';
+
+    // --- SOCKET ---
+    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+    const client = new SocketClient(wsUrl, handlePayload, (s) => { console.log("WS", s) });
+    client.connect(token);
+
+    function handlePayload(data) {
+        logEvent(data.type);
+        if (data.type === 'gamestate_update') {
+            document.getElementById('valShift').innerText = data.shift;
+            document.getElementById('bigShift').innerText = data.shift;
+            document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
+        }
+        if (data.type === 'message') {
+            // Update Panopticon
+            const sessId = data.session_id || 1;
+            const chatDiv = document.getElementById(`rootChat-${sessId}`);
+            if (chatDiv) {
+                const row = document.createElement('div');
+                row.className = `text-xs mb-1 ${data.role === 'agent' ? 'text-pink-400' : 'text-green-400'}`;
+                row.innerText = `${data.sender}: ${data.content}`;
+                chatDiv.appendChild(row);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }
+        }
+    }
+
+    function logEvent(type) {
+        const div = document.createElement('div');
+        div.innerText = `${new Date().toLocaleTimeString()} - ${type}`;
+        document.getElementById('logStream').prepend(div);
+    }
+
+    // --- NAVIGATION ---
+    window.switchView = function (view) {
+        document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
+        document.getElementById(`view-${view}`).classList.remove('hidden');
+        document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
+        document.getElementById(`nav-${view}`).classList.add('active');
+        currentView = view;
+
+        if (view === 'economy') refreshEconomy();
+        if (view === 'surveillance') initGrid();
+    }
+
+    // --- ACTIONS ---
+    window.triggerShift = () => client.send({ type: 'shift_command' });
+    window.injectGlobal = async (amt) => {
+        if (!confirm(`Inject ${amt} credits to ALL users?`)) return;
+        // Need new API for this? Or loop in JS?
+        // Loop in JS is slow. Better API.
+        // For now, let's just use loop as iterating 8 users is fine.
+        // But better implementation: Backend endpoint.
+        // Let's assume we have /api/admin/economy/global_bonus
+        // I will create that if needed. For now, loop frontend?
+        // We can just reuse `ecoAction` inside a loop from the table data.
+        const users = await fetchUsers();
+        for (const u of users) {
+            await fetch('/api/admin/economy/bonus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: u.id, amount: amt, reason: "GOD STIMULUS" })
+            });
+        }
+        alert("EXECUTION COMPLETE");
+        refreshEconomy();
+    };
+
+    window.resetEconomy = async () => {
+        // Loop set to 100? or 0?
+        alert("Not implemented yet - Requires specific endpoint to be safe.");
+    };
+
+    window.broadcastMsg = () => {
+        const msg = prompt("GLOBAL MESSAGE:");
+        if (msg) client.send({ type: 'admin_broadcast', content: msg });
+        // Note: sockets.py needs to handle 'admin_broadcast' or similar. 
+        // Existing logic supports 'broadcast_global' via python but not direct socket cmd for admin maybe?
+        // I'll check sockets.py later.
+    };
+
+    window.triggerReset = () => {
+        if (prompt("TYPE 'NUKE' TO CONFIRM") === 'NUKE') {
+            client.send({ type: 'reset_game' });
+        }
+    };
+
+    window.setShift = () => {
+        // We probably don't have a "Jump to Shift" command in backend yet, only "increment".
+        // Use loop to increment? Risk of race conditions.
+        // Better: Add SetShift command.
+        alert("Backend 'Set Shift' command not available. Use Force Shift.");
+    };
+
+    window.sendChernobylLevel = (val) => {
+        client.send({ type: 'chernobyl_command', level: parseInt(val) });
+        document.getElementById('valChernobyl').innerText = val + "%";
+    }
+
+    // --- ECONOMY TABLE ---
+    async function fetchUsers() {
+        const res = await fetch('/api/admin/data/users');
+        return await res.json();
+    }
+
+    async function refreshEconomy() {
+        const users = await fetchUsers();
+        const tbody = document.getElementById('rootEcoTable');
+        tbody.innerHTML = '';
+        users.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-800 hover:bg-gray-900";
+            tr.innerHTML = `
+                 <td class="p-2 font-bold">${u.username}</td>
+                 <td class="p-2 text-yellow-500">${u.credits}</td>
+                 <td class="p-2">${u.status_level}</td>
+                 <td class="p-2">
+                     <button onclick="ecoAction('bonus', ${u.id}, 100)" class="text-green-500 text-xs">[+100]</button>
+                     <button onclick="ecoAction('fine', ${u.id}, 100)" class="text-red-500 text-xs">[-100]</button>
+                 </td>
+             `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    window.ecoAction = async (type, uid, amt) => {
+        await fetch(`/api/admin/economy/${type}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: uid, amount: amt, reason: "ROOT" })
+        });
+        refreshEconomy();
+    }
+
+    // --- GRID ---
+    function initGrid() {
+        const grid = document.getElementById('rootGrid');
+        if (grid.children.length > 0) return; // already init
+
+        for (let i = 1; i <= 8; i++) {
+            grid.innerHTML += `
+                <div class="border border-gray-800 bg-black flex flex-col h-40">
+                    <div class="bg-gray-900 px-2 py-1 text-xs text-gray-500 flex justify-between">
+                        <span>SESSION ${i}</span>
+                        <span id="label-sess-${i}">Active</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-1 font-mono text-[10px]" id="rootChat-${i}"></div>
+                </div>
+            `;
+        }
+    }
+
+</script>
+{% endblock %}

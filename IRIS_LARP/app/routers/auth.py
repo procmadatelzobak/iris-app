@@ -31,6 +31,8 @@ async def terminal(request: Request, current_user: Annotated[database.User, Depe
     elif current_user.role == database.UserRole.AGENT:
          return templates.TemplateResponse("agent_terminal.html", {"request": request, "user": current_user})
     elif current_user.role == database.UserRole.ADMIN:
+        if current_user.username == "root":
+             return templates.TemplateResponse("admin/root_dashboard.html", {"request": request, "user": current_user})
         return templates.TemplateResponse("admin/dashboard.html", {"request": request, "user": current_user})
     
     raise HTTPException(status_code=400, detail="Unknown Role")

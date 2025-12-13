@@ -430,7 +430,8 @@ const client = new SocketClient(textUrl, (data) => {
         currentShift = data.shift;
         if (data.chernobyl !== undefined) {
             updateChernobylUI(data.chernobyl);
-            document.getElementById('chernobylRange').value = data.chernobyl;
+            const range = document.getElementById('manualChernobyl');
+            if (range) range.value = data.chernobyl;
         }
         updateUI();
     }
@@ -453,16 +454,33 @@ function triggerReset() {
 }
 
 function updateChernobylUI(val) {
-    const label = document.getElementById('chernobylValue');
-    label.innerText = val + "%";
+    // 1. Update Text
+    const label = document.getElementById('controlChernobyl');
+    if (label) label.innerText = Math.round(val) + "%";
 
-    // Optional: Add visual feedback to admin dashboard too?
-    if (val > 80) label.classList.add('blink');
-    else label.classList.remove('blink');
+    // 2. Update Bar Width
+    const bar = document.getElementById('chemBar');
+    if (bar) {
+        // Infinite effect logic:
+        // If > 100, we can wrap mod 100, or clamp?
+        // Let's clamp visual width to 100% but change color?
+        // Or just let it go to 100% and stay there (while effects go wild).
+        // Let's try width = val + "%". If >100, it fills container.
+        bar.style.width = Math.min(val, 100) + "%";
 
-    // Apply global effects
+        // Color Shift based on level
+        if (val > 100) {
+            bar.style.background = "linear-gradient(90deg, #ff00ff, #ffffff)"; // Plasma
+        } else if (val > 80) {
+            bar.style.background = "linear-gradient(90deg, #ff0000, #ffaa00)"; // Critical
+        } else {
+            bar.style.background = "linear-gradient(90deg, #00ff00, #ffff00, #ff0000)"; // Normal
+        }
+    }
+
+    // 3. Global Effects (Body)
     const body = document.body;
-    body.className = '';
+    body.className = 'bg-gray-900 text-white font-mono'; // Base classes
     if (val > 20 && val <= 50) body.classList.add('instability-low');
     if (val > 50 && val <= 80) body.classList.add('instability-med');
     if (val > 80) body.classList.add('instability-high');

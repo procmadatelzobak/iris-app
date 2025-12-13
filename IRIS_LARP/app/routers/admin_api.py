@@ -127,6 +127,30 @@ async def toggle_lock(action: EconomyAction, admin=Depends(get_current_admin)):
     db.close()
     return {"status": "ok", "state": state}
 
+@router.post("/economy/global_bonus")
+async def global_bonus(action: EconomyAction, admin=Depends(get_current_admin)):
+    # user_id ignored
+    db = SessionLocal()
+    users = db.query(User).filter(User.role == UserRole.USER).all()
+    for user in users:
+        user.credits += action.amount
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "GLOBAL STIMULUS: {action.reason}"}}')
+    db.commit()
+    db.close()
+    return {"status": "ok", "count": len(users)}
+
+@router.post("/economy/reset")
+async def reset_economy(admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    users = db.query(User).filter(User.role == UserRole.USER).all()
+    for user in users:
+        user.credits = 100 # Default
+        user.is_locked = False
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "user_status", "credits": 100, "is_locked": false}}')
+    db.commit()
+    db.close()
+    return {"status": "reset", "count": len(users)}
+
 # Tasks
 class TaskAction(BaseModel):
     task_id: int

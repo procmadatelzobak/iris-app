@@ -115,19 +115,33 @@ color: #fff;
 
             <div class="border border-red-900 p-6 bg-black">
                 <h3 class="text-2xl text-red-500 mb-6">CHERNOBYL INSTABILITY</h3>
-                <div class="mb-4">
-                    <span class="text-gray-500">CURRENT LEVEL:</span>
-                    <span class="text-4xl text-red-600 font-bold ml-2" id="controlChernobyl">0%</span>
+                <div class="bg-gray-900 border border-red-900 p-2 mb-4 rounded relative overflow-hidden h-8">
+                    <!-- Background Grid -->
+                    <div class="absolute inset-0 opacity-20"
+                        style="background-image: linear-gradient(90deg, transparent 50%, #300 50%); background-size: 20px 100%;">
+                    </div>
+
+                    <!-- The Bar -->
+                    <div id="chemBar" class="h-full transition-all duration-1000 ease-out relative"
+                        style="width: 0%; background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);">
+                        <div class="absolute right-0 top-0 bottom-0 w-2 bg-white opacity-50 animate-pulse"></div>
+                    </div>
+
+                    <!-- Overlay Text -->
+                    <div
+                        class="absolute inset-0 flex items-center justify-center font-bold text-shadow text-white z-10">
+                        <span id="controlChernobyl">0%</span>
+                    </div>
                 </div>
 
                 <div class="mb-6">
                     <span class="text-gray-500 block mb-2">AGENCY OPERATION MODE</span>
                     <div class="flex gap-2">
-                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white"
+                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
                             onclick="setMode('normal')">NORMAL</button>
-                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white"
+                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
                             onclick="setMode('low_power')">LOW POWER</button>
-                        <button class="flex-1 border border-red-600 p-2 text-red-500 hover:bg-red-900"
+                        <button class="flex-1 border border-red-600 p-2 text-red-500 hover:bg-red-900 transition"
                             onclick="setMode('overclock')">OVERCLOCK</button>
                     </div>
                 </div>
@@ -135,11 +149,12 @@ color: #fff;
                 <div class="mb-6 border-t border-gray-800 pt-4">
                     <span class="text-gray-500 block mb-2">VISIBILITY PROTOCOLS</span>
                     <div class="flex gap-2">
-                        <button class="flex-1 border border-blue-600 p-2 text-blue-400 hover:text-white"
+                        <button class="flex-1 border border-blue-600 p-2 text-blue-400 hover:text-white transition"
                             onclick="setHyperVis('normal')">NORMAL</button>
-                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:bg-gray-900"
+                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:bg-gray-900 transition"
                             onclick="setHyperVis('blackbox')">BLACKBOX</button>
-                        <button class="flex-1 border border-purple-600 p-2 text-purple-400 hover:bg-purple-900"
+                        <button
+                            class="flex-1 border border-purple-600 p-2 text-purple-400 hover:bg-purple-900 transition"
                             onclick="setHyperVis('forensic')">FORENSIC</button>
                     </div>
                 </div>
