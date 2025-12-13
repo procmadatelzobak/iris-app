@@ -42,31 +42,10 @@
 {% endblock %}
 
 {% block content %}
-<!-- ... content ... -->
-{% block scripts %}
-<script src="/static/js/socket_client.js"></script>
-<script src="/static/js/sound_engine.js"></script>
-<script>
-    // ...
-    const client = new SocketClient(wsUrl, (data) => {
-        // Handle Game Updates vs Chat
-        if (data.type === 'gamestate_update') {
-            applyChernobyl(data.chernobyl || 0);
-            if (data.hyper_mode) applyHyperVisibility(data.hyper_mode); // Handle Mode
+<div class="crt-overlay"></div>
+<div class="flex h-screen bg-black font-mono overflow-hidden">
 
-            if (data.shift !== undefined) {
-                document.getElementById('shiftDisplay').innerText = data.shift;
-            }
-        } else if (data.type === 'typing_sync') {
-            // ...
-            function applyHyperVisibility(mode) {
-                document.body.classList.remove('mode-blackbox', 'mode-forensic');
-                if (mode === 'blackbox') document.body.classList.add('mode-blackbox');
-                if (mode === 'forensic') document.body.classList.add('mode-forensic');
-            }
-
-            function applyChernobyl(level) {
-// ...
+    <!-- Left Panel: Status -->
     <div class="w-1/4 status-panel p-4 flex flex-col">
         <h1 class="text-2xl font-bold mb-6 glitch-effect text-pink-500">ROZHRANÍ_HLINÍK</h1>
 
@@ -83,6 +62,16 @@
                 <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
                 <span class="text-sm font-mono text-blue-300">ZABEZPEČENÝ KANÁL</span>
             </div>
+            <div class="text-xs text-gray-500 mt-1">SESSION: <span id="sessionIdDisplay">--</span></div>
+        </div>
+
+        <!-- Timer v1.4 -->
+        <div class="mb-4">
+            <div class="text-xs text-yellow-400 mb-1">REAKČNÍ SMYČKA</div>
+            <div class="h-2 bg-gray-800 rounded overflow-hidden mb-1 border border-yellow-900">
+                <div id="timerBar" class="h-full bg-yellow-500 w-full transition-all duration-1000 linear"></div>
+            </div>
+            <div class="text-right text-xs text-yellow-600 font-mono" id="timerText">STANDBY</div>
         </div>
 
         <div class="mt-auto">
@@ -90,144 +79,210 @@
             <div class="font-mono text-gray-300">{{ user.username }}</div>
             <div class="text-xs text-gray-600 mt-2">TERMINÁL ID: <span id="termId">--</span></div>
         </div>
-    </div>
-     <div class="flex-1"></div>
 
-        <button class="w-full border border-pink-500 text-pink-500 hover:bg-pink-900 py-2 mb-2 transition"
-            onclick="toggleAuto()">
-            [ TOGGLE AUTOPILOT ]
-        </button>
-    </div >
-
-        <!-- Right Panel: Chat -->
-        <div class="w-3/4 flex flex-col bg-black bg-opacity-95 relative">
-            <div class="bg-pink-900 bg-opacity-20 p-2 text-center text-xs text-pink-300 border-b border-pink-800">
-                SECURE CHANNEL ESTABLISHED
-            </div>
-
-            <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
-                <!-- Messages -->
-            </div>
-
-            <div class="p-4 border-t border-pink-900 bg-gray-900">
-                <form id="chatForm" class="flex gap-2">
-                    <input type="text" id="msgInput"
-                        class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
-                        placeholder="Inject response..." autocomplete="off">
-                        <button type="submit"
-                            class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
-                            TRANSMIT
-                        </button>
-                </form>
-            </div>
+        <div class="mt-4">
+            <button class="w-full border border-pink-500 text-pink-500 hover:bg-pink-900 py-2 transition"
+                onclick="toggleAuto()">
+                [ TOGGLE AUTOPILOT ]
+            </button>
         </div>
-</div >
-        {% endblock %}
+    </div>
 
-    {% block scripts %}
-    <script src="/static/js/socket_client.js"></script>
+
+    <!-- Right Panel: Chat -->
+    <div class="w-3/4 flex flex-col bg-black bg-opacity-95 relative">
+        <div class="bg-pink-900 bg-opacity-20 p-2 text-center text-xs text-pink-300 border-b border-pink-800">
+            SECURE CHANNEL ESTABLISHED
+        </div>
+
+        <!-- Lock Overlay -->
+        <div id="lockOverlay"
+            class="absolute inset-0 bg-black bg-opacity-80 z-20 hidden flex items-center justify-center flex-col">
+            <div class="text-red-500 font-bold text-2xl glitch-effect mb-4">SPOJENÍ PŘERUŠENO</div>
+            <div class="text-gray-400">ČAS PRO ODPOVĚĎ VYPRŠEL</div>
+            <div class="text-gray-600 text-xs mt-2">ČEKÁNÍ NA KLIENTA... (Reset na zprávu)</div>
+        </div>
+
+        <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
+            <!-- Messages -->
+        </div>
+
+        <div class="p-4 border-t border-pink-900 bg-gray-900">
+            <form id="chatForm" class="flex gap-2">
+                <input type="text" id="msgInput"
+                    class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
+                    placeholder="Inject response..." autocomplete="off">
+                <button type="submit"
+                    class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
+                    TRANSMIT
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
 <script src="/static/js/sound_engine.js"></script>
 <script>
-        const token = localStorage.getItem('token');
-        const sessionIdDisplay = document.getElementById('sessionIdDisplay');
-        const chatHistory = document.getElementById('chatHistory');
-        const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
+    const token = localStorage.getItem('token');
+    const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+    const chatHistory = document.getElementById('chatHistory');
+    const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
-        // Initialize Socket
-        const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+    // Timer Vars
+    let timerLimit = 120;
+    let timerRemaining = 120;
+    let timerInterval = null;
 
-    // Store reference to client
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerRemaining = timerLimit;
+        updateTimerUI();
+
+        document.getElementById('timerText').innerText = "ODPOČET AKTIVNÍ";
+        document.getElementById('lockOverlay').classList.add('hidden');
+        document.getElementById('msgInput').disabled = false;
+
+        timerInterval = setInterval(() => {
+            timerRemaining--;
+            updateTimerUI();
+            if (timerRemaining <= 0) {
+                clearInterval(timerInterval);
+                lockInput();
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerRemaining = timerLimit;
+        updateTimerUI();
+        document.getElementById('timerText').innerText = "STANDBY";
+        document.getElementById('lockOverlay').classList.add('hidden'); // Ensure unlocked
+        document.getElementById('msgInput').disabled = false;
+    }
+
+    function updateTimerUI() {
+        const bar = document.getElementById('timerBar');
+        const pct = Math.max(0, (timerRemaining / timerLimit) * 100);
+        bar.style.width = pct + "%";
+
+        if (pct < 25) {
+            bar.classList.remove('bg-yellow-500');
+            bar.classList.add('bg-red-500');
+        } else {
+            bar.classList.remove('bg-red-500');
+            bar.classList.add('bg-yellow-500');
+        }
+    }
+
+    function lockInput() {
+        document.getElementById('lockOverlay').classList.remove('hidden');
+        document.getElementById('msgInput').disabled = true;
+        sfx.playError();
+    }
+
+    // Initialize Socket
+    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
     const client = new SocketClient(wsUrl, (data) => {
         // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
             applyChernobyl(data.chernobyl || 0);
-        if (data.shift !== undefined) {
-            document.getElementById('shiftDisplay').innerText = data.shift;
+            if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
+
+            if (data.shift !== undefined) {
+                document.getElementById('shiftDisplay').innerText = data.shift;
             }
+            if (data.agent_window !== undefined) timerLimit = data.agent_window;
+
         } else if (data.type === 'typing_sync') {
             // Mirroring Logic
             if (data.tabId !== tabId) {
                 const input = document.getElementById('msgInput');
-        // Only update if content differs to avoid cursor jump?
-        // Or just overwrite.
-        if (input.value !== data.content) {
-            input.value = data.content;
+                if (input.value !== data.content) {
+                    input.value = data.content;
                 }
             }
         } else {
-            // ... standard messages ...
+            // Standard messages
             if (data.session_id) {
-            sessionIdDisplay.innerText = "S" + data.session_id;
+                sessionIdDisplay.innerText = "S" + data.session_id;
             }
-        appendMessage(data);
-        const currentUsername = "{{ user.username }}";
-        if (data.sender !== currentUsername) {
-            sfx.playReceive();
+            appendMessage(data);
+            const currentUsername = "{{ user.username }}";
+            if (data.sender !== currentUsername) {
+                sfx.playReceive();
+                if (data.role === 'user') startTimer();
             }
         }
     });
 
-        client.connect(token);
+    client.connect(token);
 
     // Input Mirroring
     document.getElementById('msgInput').addEventListener('input', (e) => {
-            client.send({
-                type: 'typing_sync',
-                content: e.target.value,
-                tabId: tabId
-            });
+        client.send({
+            type: 'typing_sync',
+            content: e.target.value,
+            tabId: tabId
+        });
     });
 
     document.getElementById('chatForm').addEventListener('submit', (e) => {
-            e.preventDefault();
+        e.preventDefault();
         const input = document.getElementById('msgInput');
         const text = input.value.trim();
         if (text) {
             client.send({ content: text });
-        // Sync clear
-        client.send({type: 'typing_sync', content: "", tabId: tabId });
+            // Sync clear
+            client.send({ type: 'typing_sync', content: "", tabId: tabId });
 
-        appendMessage({
-            sender: '{{ user.username }}',
-        role: 'agent',
-        content: text
+            appendMessage({
+                sender: '{{ user.username }}',
+                role: 'agent',
+                content: text
             });
-        input.value = '';
-        sfx.playSend();
+            input.value = '';
+            sfx.playSend();
+            stopTimer(); // Agent responded
         }
     });
 
     // Typing SFX
     document.getElementById('msgInput').addEventListener('keydown', () => {
-            sfx.playType();
+        sfx.playType();
     });
 
-        // ... (Auto Logic) ...
-        let isAutopilotOn = false;
-        const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
+    // Auto Logic
+    let isAutopilotOn = false;
+    const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
 
-        function toggleAuto() {
-            isAutopilotOn = !isAutopilotOn;
-        client.send({type: 'autopilot_toggle', status: isAutopilotOn });
+    function toggleAuto() {
+        isAutopilotOn = !isAutopilotOn;
+        client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
         updateAutoBtnUI(isAutopilotOn);
-        // Play sound locally
         if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
         else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
     }
 
-        function updateAutoBtnUI(isOn) {
+    function updateAutoBtnUI(isOn) {
         if (isOn) {
             autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
-        autoBtn.classList.add('bg-pink-600', 'text-white');
-        autoBtn.classList.remove('text-pink-500', 'hover:bg-pink-900');
+            autoBtn.classList.replace('text-pink-500', 'text-white');
+            autoBtn.classList.add('bg-pink-600');
+            autoBtn.classList.remove('hover:bg-pink-900');
         } else {
             autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
-        autoBtn.classList.remove('bg-pink-600', 'text-white');
-        autoBtn.classList.add('text-pink-500', 'hover:bg-pink-900');
+            autoBtn.classList.replace('text-white', 'text-pink-500');
+            autoBtn.classList.remove('bg-pink-600');
+            autoBtn.classList.add('hover:bg-pink-900');
         }
     }
 
-        function appendMessage(data) {
+    function appendMessage(data) {
         if (!data.content) return;
         const div = document.createElement('div');
         div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
@@ -246,8 +301,17 @@
         chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
+    function applyHyperVisibility(mode) {
+        document.body.classList.remove('mode-blackbox', 'mode-forensic');
+        if (mode === 'blackbox') document.body.classList.add('mode-blackbox');
+        if (mode === 'forensic') document.body.classList.add('mode-forensic');
+    }
+
     function applyChernobyl(level) {
         document.body.className = '';
+        applyHyperVisibility("{{ 'blackbox' if gamestate.hyper_visibility_mode == 'BLACKBOX' else 'normal' }}"); // Crude init? Better rely on JS dynamic.
+        // Re-apply current hyper mode if needed. 
+        // Better: Just apply instability classes.
         if (level > 20 && level <= 50) document.body.classList.add('instability-low');
         if (level > 50 && level <= 80) document.body.classList.add('instability-med');
         if (level > 80) {
@@ -257,5 +321,3 @@
     }
 </script>
 {% endblock %}
-{% endblock %}
-```

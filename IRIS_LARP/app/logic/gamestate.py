@@ -21,6 +21,7 @@ class GameState:
             cls._instance.initialized = False
         return cls._instance
     
+
     def __init__(self):
         if self.initialized:
             return
@@ -29,6 +30,17 @@ class GameState:
         self.hyper_visibility_mode = HyperVisibilityMode.NORMAL # Default
         self.chernobyl_value = settings.DEFAULT_CHERNOBYL_VALUE
         self.chernobyl_mode = ChernobylMode.NORMAL
+        
+        # v1.4 Power & Economy
+        self.power_capacity = 100
+        self.power_load = 0
+        self.is_overloaded = False
+        
+        self.treasury_balance = 0
+        self.tax_rate = 0.1 # 10%
+        
+        # v1.4 Timer
+        self.agent_response_window = 120 # Default 2 mins (Standard)
         
         # LLM Configurations
         self.llm_config_task = LLMConfig(
@@ -52,7 +64,27 @@ class GameState:
         self.chernobyl_value = min(100, self.chernobyl_value + 5)
         return self.chernobyl_value
 
+    def calc_load(self, active_terminals: int = 0, active_autopilots: int = 0, low_latency_active: bool = False):
+        # Base: 10
+        # Active Terminal: 2 * N
+        # Optimizer: +5 (Assumed ON if low_latency is ON? No, spec says separate. I'll add method arg or assume usage)
+        # Let's assume Optimizer is tracked elsewhere or we add a toggle.
+        # For now, simplistic calc:
+        base = 10
+        terminals = 2 * active_terminals
+        hyper = 10 * active_autopilots
+        latency = 30 if low_latency_active else 0
+        
+        self.power_load = base + terminals + hyper + latency
+        return self.power_load
+
+    def check_overload(self):
+        was_overloaded = self.is_overloaded
+        self.is_overloaded = self.power_load > self.power_capacity
+        return self.is_overloaded != was_overloaded # Return True if state changed
+
     def process_tick(self):
+        # Decay logic for Chernobyl
         if self.chernobyl_mode == ChernobylMode.NORMAL:
             decay = 1
         elif self.chernobyl_mode == ChernobylMode.LOW_POWER:
@@ -61,6 +93,12 @@ class GameState:
             decay = 0
             
         self.chernobyl_value = max(0, self.chernobyl_value - decay)
+        
+        # Power calc should happen here or on event?
+        # Tick is good for regular updates.
+        # But we need external data (active sessions).
+        # We'll rely on sockets.py to update load during its broadcast loop or similar.
+        
         return self.chernobyl_value
         
     def increment_shift(self):

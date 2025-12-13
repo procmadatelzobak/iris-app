@@ -433,6 +433,13 @@ const client = new SocketClient(textUrl, (data) => {
             const range = document.getElementById('manualChernobyl');
             if (range) range.value = data.chernobyl;
         }
+        if (data.power_load !== undefined) {
+            updatePowerUI(data.power_load, data.power_capacity, data.is_overloaded);
+        }
+        if (data.treasury !== undefined) {
+            const el = document.getElementById('treasuryBalance');
+            if (el) el.innerText = data.treasury.toLocaleString() + " CR";
+        }
         updateUI();
     }
 
@@ -490,10 +497,101 @@ function sendChernobylLevel(val) {
     client.send({ type: 'chernobyl_command', level: parseInt(val) });
 }
 
+// v1.4 Power & Labels
+function updatePowerUI(load, cap, overloaded) {
+    const text = document.getElementById('powerText');
+    const bar = document.getElementById('powerBar');
+
+    if (text) text.innerText = `${load} / ${cap} MW${overloaded ? " (!)" : ""}`;
+    if (bar) {
+        const pct = Math.min(100, (load / cap) * 100);
+        bar.style.width = pct + "%";
+
+        if (overloaded) {
+            bar.classList.remove('bg-blue-600');
+            bar.classList.add('bg-red-600', 'animate-pulse');
+        } else {
+            bar.classList.remove('bg-red-600', 'animate-pulse');
+            bar.classList.add('bg-blue-600');
+        }
+    }
+}
+
+window.buyPower = async function () {
+    if (!confirm("BUY +50MW CAPACITY FOR 1000 CREDITS?")) return;
+    try {
+        const res = await fetch('/api/admin/power/buy', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            // alert("POWER PURCHASED");
+        } else {
+            alert("TRANSACTION DENIED (Check Funds)");
+        }
+    } catch (e) { console.error(e); }
+}
+
+let isEditMode = false;
+window.toggleEditMode = function () {
+    isEditMode = !isEditMode;
+    const els = document.querySelectorAll('.editable-label');
+
+    if (isEditMode) {
+        els.forEach(el => {
+            el.contentEditable = "true";
+            el.style.border = "1px dashed #fff";
+            el.style.backgroundColor = "rgba(0,0,0,0.5)";
+        });
+        alert("EDIT MODE ENGAGED. Click text to edit. Toggle off to save.");
+    } else {
+        // Save
+        const packet = {};
+        els.forEach(el => {
+            el.contentEditable = "false";
+            el.style.border = "none";
+            el.style.backgroundColor = "transparent";
+            const key = el.dataset.key;
+            if (key) packet[key] = el.innerText;
+        });
+
+        saveLabels(packet);
+    }
+}
+
+async function saveLabels(labels) {
+    try {
+        await fetch('/api/admin/labels', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ labels: labels })
+        });
+    } catch (e) { console.error("Label save failed", e); }
+}
+
+async function loadLabels() {
+    try {
+        const res = await fetch('/api/admin/labels', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            for (const [key, val] of Object.entries(data)) {
+                const el = document.querySelector(`.editable-label[data-key="${key}"]`);
+                if (el) el.innerText = val;
+            }
+        }
+    } catch (e) { console.warn("No labels loaded"); }
+}
+
 // Init
 initGrid();
 loadKeys();
 loadConfig();
+loadLabels();
 
 function switchTab(tabId) {
     // Hide all

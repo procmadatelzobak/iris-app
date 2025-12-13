@@ -82,14 +82,17 @@ color: #fff;
 <div class="crt-overlay"></div>
 <div class="flex flex-col h-screen">
 
-    <!-- Navigation -->
     <div class="admin-nav z-10">
         <div class="nav-btn active" onclick="switchView('monitor')" id="nav-monitor">MONITOR</div>
         <div class="nav-btn" onclick="switchView('controls')" id="nav-controls">CONTROLS</div>
         <div class="nav-btn" onclick="switchView('economy')" id="nav-economy">ECONOMY</div>
         <div class="nav-btn" onclick="switchView('tasks')" id="nav-tasks">TASKS</div>
-        <div class="nav-btn ml-auto text-red-500" onclick="toggleAIModal()">[ AI CONFIG ]</div>
-        <div class="nav-btn text-red-500" onclick="triggerReset()">[ RESET ]</div>
+
+        <div class="ml-auto flex gap-4">
+            <div class="nav-btn text-yellow-500" onclick="toggleEditMode()">[ ✎ LABELS ]</div>
+            <div class="nav-btn text-red-500" onclick="toggleAIModal()">[ AI CONFIG ]</div>
+            <div class="nav-btn text-red-500" onclick="triggerReset()">[ RESET ]</div>
+        </div>
     </div>
 
     <!-- View A: MONITOR -->
@@ -104,70 +107,115 @@ color: #fff;
     <!-- View B: CONTROLS -->
     <div id="view-controls" class="view-container hidden">
         <div class="grid grid-cols-2 gap-8">
+            <!-- Global Shift -->
             <div class="border border-yellow-900 p-6 bg-black">
-                <h3 class="text-2xl text-yellow-500 mb-6">GLOBAL SHIFT</h3>
+                <h3 class="text-2xl text-yellow-500 mb-6 editable-label" data-key="lbl_shift">GLOBAL SHIFT</h3>
                 <div class="text-6xl font-bold text-white mb-6" id="controlShift">0</div>
-                <button class="w-full border border-yellow-500 text-yellow-500 py-4 hover:bg-yellow-900"
-                    onclick="triggerShift()">
+                <button class="w-full border border-yellow-500 text-yellow-500 py-4 hover:bg-yellow-900 editable-label"
+                    data-key="btn_shift" onclick="triggerShift()">
                     [ >> EXECUTE SHIFT >> ]
                 </button>
             </div>
 
-            <div class="border border-red-900 p-6 bg-black">
-                <h3 class="text-2xl text-red-500 mb-6">CHERNOBYL INSTABILITY</h3>
-                <div class="bg-gray-900 border border-red-900 p-2 mb-4 rounded relative overflow-hidden h-8">
-                    <!-- Background Grid -->
-                    <div class="absolute inset-0 opacity-20"
-                        style="background-image: linear-gradient(90deg, transparent 50%, #300 50%); background-size: 20px 100%;">
+            <!-- Power & Instability Column -->
+            <div class="space-y-6">
+                <!-- Power Management v1.4 -->
+                <div class="border border-blue-900 p-6 bg-black">
+                    <h3 class="text-2xl text-blue-500 mb-4 editable-label" data-key="lbl_energy">CORE REACTOR OUTPUT
+                    </h3>
+                    <div class="bg-gray-900 border border-blue-900 p-2 mb-4 rounded relative overflow-hidden h-8">
+                        <div id="powerBar" class="h-full bg-blue-600 transition-all duration-500 relative"
+                            style="width: 10%;">
+                            <!-- Stripe Pattern -->
+                            <div class="absolute inset-0"
+                                style="background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.3) 10px, rgba(0,0,0,0.3) 20px);">
+                            </div>
+                        </div>
+                        <div
+                            class="absolute inset-0 flex items-center justify-center text-white text-shadow font-bold z-10">
+                            <span id="powerText">-- / -- MW</span>
+                        </div>
                     </div>
-
-                    <!-- The Bar -->
-                    <div id="chemBar" class="h-full transition-all duration-1000 ease-out relative"
-                        style="width: 0%; background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);">
-                        <div class="absolute right-0 top-0 bottom-0 w-2 bg-white opacity-50 animate-pulse"></div>
-                    </div>
-
-                    <!-- Overlay Text -->
-                    <div
-                        class="absolute inset-0 flex items-center justify-center font-bold text-shadow text-white z-10">
-                        <span id="controlChernobyl">0%</span>
-                    </div>
+                    <button
+                        class="w-full border border-blue-500 text-blue-500 py-2 hover:bg-blue-900 transition editable-label"
+                        data-key="btn_buy_power" onclick="buyPower()">
+                        [ BUY POWER (+50MW) - 1000 CR ]
+                    </button>
                 </div>
 
-                <div class="mb-6">
-                    <span class="text-gray-500 block mb-2">AGENCY OPERATION MODE</span>
-                    <div class="flex gap-2">
-                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
-                            onclick="setMode('normal')">NORMAL</button>
-                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
-                            onclick="setMode('low_power')">LOW POWER</button>
-                        <button class="flex-1 border border-red-600 p-2 text-red-500 hover:bg-red-900 transition"
-                            onclick="setMode('overclock')">OVERCLOCK</button>
-                    </div>
-                </div>
+                <!-- Instability -->
+                <div class="border border-red-900 p-6 bg-black">
+                    <h3 class="text-2xl text-red-500 mb-6 editable-label" data-key="lbl_chernobyl">CHERNOBYL INSTABILITY
+                    </h3>
+                    <div class="bg-gray-900 border border-red-900 p-2 mb-4 rounded relative overflow-hidden h-8">
+                        <!-- Background Grid -->
+                        <div class="absolute inset-0 opacity-20"
+                            style="background-image: linear-gradient(90deg, transparent 50%, #300 50%); background-size: 20px 100%;">
+                        </div>
 
-                <div class="mb-6 border-t border-gray-800 pt-4">
-                    <span class="text-gray-500 block mb-2">VISIBILITY PROTOCOLS</span>
-                    <div class="flex gap-2">
-                        <button class="flex-1 border border-blue-600 p-2 text-blue-400 hover:text-white transition"
-                            onclick="setHyperVis('normal')">NORMAL</button>
-                        <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:bg-gray-900 transition"
-                            onclick="setHyperVis('blackbox')">BLACKBOX</button>
-                        <button
-                            class="flex-1 border border-purple-600 p-2 text-purple-400 hover:bg-purple-900 transition"
-                            onclick="setHyperVis('forensic')">FORENSIC</button>
-                    </div>
-                </div>
+                        <!-- The Bar -->
+                        <div id="chemBar" class="h-full transition-all duration-1000 ease-out relative"
+                            style="width: 0%; background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);">
+                            <div class="absolute right-0 top-0 bottom-0 w-2 bg-white opacity-50 animate-pulse"></div>
+                        </div>
 
-                <input type="range" class="w-full accent-red-600" min="0" max="100" id="manualChernobyl"
-                    onchange="sendChernobylLevel(this.value)">
-                <div class="text-xs text-gray-600 mt-1">MANUAL OVERRIDE</div>
+                        <!-- Overlay Text -->
+                        <div
+                            class="absolute inset-0 flex items-center justify-center font-bold text-shadow text-white z-10">
+                            <span id="controlChernobyl">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <span class="text-gray-500 block mb-2">AGENCY OPERATION MODE</span>
+                        <div class="flex gap-2">
+                            <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
+                                onclick="setMode('normal')">NORMAL</button>
+                            <button class="flex-1 border border-gray-600 p-2 text-gray-400 hover:text-white transition"
+                                onclick="setMode('low_power')">LOW POWER</button>
+                            <button class="flex-1 border border-red-600 p-2 text-red-500 hover:bg-red-900 transition"
+                                onclick="setMode('overclock')">OVERCLOCK</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 border-t border-gray-800 pt-4">
+                        <span class="text-gray-500 block mb-2">VISIBILITY PROTOCOLS</span>
+                        <div class="flex gap-2">
+                            <!-- Renamed IDs/Keys for consistent Labeling if needed, but existing logic serves -->
+                            <button
+                                class="flex-1 border border-blue-600 p-2 text-blue-400 hover:text-white transition width-auto"
+                                onclick="setHyperVis('normal')">NORMAL</button>
+                            <button
+                                class="flex-1 border border-gray-600 p-2 text-gray-400 hover:bg-gray-900 transition width-auto"
+                                onclick="setHyperVis('blackbox')">BLACKBOX</button>
+                            <button
+                                class="flex-1 border border-purple-600 p-2 text-purple-400 hover:bg-purple-900 transition width-auto"
+                                onclick="setHyperVis('forensic')">FORENSIC</button>
+                        </div>
+                    </div>
+
+                    <input type="range" class="w-full accent-red-600" min="0" max="100" id="manualChernobyl"
+                        onchange="sendChernobylLevel(this.value)">
+                    <div class="text-xs text-gray-600 mt-1">MANUAL OVERRIDE</div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- View C: ECONOMY -->
     <div id="view-economy" class="view-container hidden">
+        <div
+            class="border border-yellow-900 p-4 mb-6 bg-black flex justify-between items-center shadow-lg shadow-yellow-900/20">
+            <div>
+                <h3 class="text-yellow-500 font-bold tracking-widest text-sm mb-1">SYSTEM TREASURY</h3>
+                <div class="text-4xl text-white font-mono" id="treasuryBalance">---- CR</div>
+            </div>
+            <div class="text-right font-mono text-sm">
+                <div class="text-gray-400">TAX RATE: <span class="text-white">10%</span></div>
+                <div class="text-gray-400">STATUS: <span class="text-green-500">ACTIVE</span></div>
+            </div>
+        </div>
+
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl text-yellow-600 font-bold">SUBJECT ECONOMY</h2>
             <button class="btn-action border-yellow-500 text-yellow-500" onclick="refreshEconomy()">REFRESH

@@ -21,19 +21,51 @@ async def lifespan(app: FastAPI):
     
     async def game_loop():
         last_val = -1
+        last_load = -1
+        last_treasury = -1
+        last_overload = False
+        
         while True:
             await asyncio.sleep(1)
+            
+            # 1. Tick Chernobyl
             new_val = gamestate.process_tick()
             
-            # Broadcast if changed (or regularly to sync? Let's do change only + 10s sync?)
-            # Just change for now to save bandwidth
-            if int(new_val) != int(last_val):
+            # 2. Calc Load
+            counts = routing_logic.get_active_counts()
+            is_low_latency = gamestate.agent_response_window <= 30
+            current_load = gamestate.calc_load(
+                active_terminals=counts["users"],
+                active_autopilots=counts["autopilots"],
+                low_latency_active=is_low_latency
+            )
+            
+            # 3. Check Overload
+            is_overloaded = gamestate.check_overload()
+            
+            # 4. Broadcast
+            # Detect changes (Optimization: only send if changed)
+            if (int(new_val) != int(last_val) or 
+                current_load != last_load or 
+                gamestate.treasury_balance != last_treasury or
+                is_overloaded != last_overload):
+                
                 await routing_logic.broadcast_global(json.dumps({
                     "type": "gamestate_update",
                     "chernobyl": new_val,
-                    "shift": gamestate.global_shift_offset
+                    "shift": gamestate.global_shift_offset,
+                    "power_load": current_load,
+                    "power_capacity": gamestate.power_capacity,
+                    "treasury": gamestate.treasury_balance,
+                    "is_overloaded": is_overloaded,
+                    "agent_window": gamestate.agent_response_window,
+                    "hyper_mode": gamestate.hyper_visibility_mode.value
                 }))
+                
                 last_val = new_val
+                last_load = current_load
+                last_treasury = gamestate.treasury_balance
+                last_overload = is_overloaded
                 
     task = asyncio.create_task(game_loop())
     yield

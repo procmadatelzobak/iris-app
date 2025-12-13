@@ -14,7 +14,8 @@ class ConnectionManager:
         
         # Autopilot State
         self.active_autopilots: Dict[int, bool] = {} # AgentID -> True/False
-        self.hyper_histories: Dict[int, List[Dict[str, str]]] = {} # AgentID -> History
+        # v1.4 Timer State
+        self.session_last_msg_time: Dict[int, float] = {} # SessionID -> timestamp
 
     async def connect(self, websocket: WebSocket, role: UserRole, user_id: int):
         await websocket.accept()
@@ -34,10 +35,14 @@ class ConnectionManager:
             if user_id in self.user_connections:
                 if websocket in self.user_connections[user_id]:
                     self.user_connections[user_id].remove(websocket)
+                    if not self.user_connections[user_id]:
+                        del self.user_connections[user_id]
         elif role == UserRole.AGENT:
             if user_id in self.agent_connections:
                 if websocket in self.agent_connections[user_id]:
                     self.agent_connections[user_id].remove(websocket)
+                    if not self.agent_connections[user_id]:
+                        del self.agent_connections[user_id]
         elif role == UserRole.ADMIN:
             if websocket in self.admin_connections:
                 self.admin_connections.remove(websocket)
@@ -45,12 +50,17 @@ class ConnectionManager:
     async def send_personal_message(self, message: str, websocket: WebSocket):
         await websocket.send_text(message)
 
+    def update_session_activity(self, session_id: int):
+        import time
+        self.session_last_msg_time[session_id] = time.time()
+
     async def broadcast_to_session(self, session_id: int, message: str):
         # 1. Send to USER bound to this session
         user_id = session_id 
         if user_id in self.user_connections:
             for connection in self.user_connections[user_id]:
-                await connection.send_text(message)
+                try: await connection.send_text(message)
+                except: pass
         
         # 2. Send to AGENT currently routed to this session
         shift = gamestate.global_shift_offset
@@ -63,7 +73,8 @@ class ConnectionManager:
             
             if current_session_id == session_id:
                 for connection in connections:
-                    await connection.send_text(message)
+                    try: await connection.send_text(message)
+                    except: pass
 
     async def broadcast_to_agent(self, agent_id: int, message: str):
         if agent_id in self.agent_connections:
@@ -73,7 +84,8 @@ class ConnectionManager:
 
     async def broadcast_to_admins(self, message: str):
         for connection in self.admin_connections:
-            await connection.send_text(message)
+            try: await connection.send_text(message)
+            except: pass
 
     async def broadcast_global(self, message: str):
         # Admins
@@ -100,6 +112,12 @@ class ConnectionManager:
         return {
             "users": list(self.user_connections.keys()),
             "agents": list(self.agent_connections.keys())
+        }
+
+    def get_active_counts(self):
+        return {
+            "users": len(self.user_connections),
+            "autopilots": sum(1 for v in self.active_autopilots.values() if v)
         }
 
 routing_logic = ConnectionManager()

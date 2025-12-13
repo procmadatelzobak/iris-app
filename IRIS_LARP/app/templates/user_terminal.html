@@ -2,6 +2,50 @@
 
 {% block head %}
 <link href="/static/css/terminal.css" rel="stylesheet">
+<style>
+    /* Glitch Mode v1.4 */
+    @keyframes glitch-shake {
+        0% {
+            transform: translate(0);
+        }
+
+        20% {
+            transform: translate(-2px, 2px);
+        }
+
+        40% {
+            transform: translate(2px, -2px);
+        }
+
+        60% {
+            transform: translate(-2px, -2px);
+        }
+
+        80% {
+            transform: translate(2px, 2px);
+        }
+
+        100% {
+            transform: translate(0);
+        }
+    }
+
+    body.glitch-mode-active {
+        animation: glitch-shake 0.1s infinite;
+        filter: contrast(1.5) sepia(1) hue-rotate(-50deg) saturate(3);
+    }
+
+    body.glitch-mode-active .glitch-text::before {
+        content: attr(data-text);
+        position: absolute;
+        left: 2px;
+        text-shadow: -1px 0 red;
+        background: black;
+        overflow: hidden;
+        clip: rect(0, 900px, 0, 0);
+        animation: noise-anim 2s infinite linear alternate-reverse;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -91,6 +135,13 @@
         // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
             applyChernobyl(data.chernobyl || 0);
+
+            // v1.4 Glitch
+            if (data.is_overloaded) {
+                document.body.classList.add('glitch-mode-active');
+            } else {
+                document.body.classList.remove('glitch-mode-active');
+            }
         } else if (data.type === 'user_status') {
             if (data.credits !== undefined) creditsDisplay.innerText = data.credits;
             if (data.is_locked !== undefined) setLock(data.is_locked);
