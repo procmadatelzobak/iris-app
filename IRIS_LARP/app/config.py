@@ -17,6 +17,8 @@ class Settings:
     
     # OpenAI
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
     # System Defaults
     DEFAULT_GLOBAL_SHIFT_OFFSET: int = 0

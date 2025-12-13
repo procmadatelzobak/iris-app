@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link href="/static/css/terminal.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="crt-overlay"></div>
+<div class="scan-line"></div>
+
+<div class="flex h-screen overflow-hidden">
+    <!-- Left Panel: Status -->
+    <div class="w-1/4 status-panel p-4 flex flex-col justify-between">
+        <div>
+            <h1 class="text-2xl font-bold mb-4 glitch-effect text-green-400">IRIS_TERMINAL</h1>
+            <div class="mb-4">
+                <span class="text-xs text-gray-400">USER_ID</span>
+                <div class="text-xl">{{ user.username }}</div>
+            </div>
+            <div class="mb-4">
+                <span class="text-xs text-gray-400">CREDITS</span>
+                <div class="text-xl text-yellow-400" id="creditsDisplay">{{ user.credits }}</div>
+            </div>
+            <div class="mb-4">
+                <span class="text-xs text-gray-400">STATUS</span>
+                <div class="text-xl text-blue-400">{{ user.status_level }}</div>
+            </div>
+        </div>
+
+        <div class="text-xs text-gray-500">
+            SYSTEM STATUS: <span class="blink text-green-500">ONLINE</span><br>
+            LATENCY: <span id="pingDisplay">12ms</span>
+        </div>
+    </div>
+
+    <!-- Right Panel: Chat -->
+    <div class="w-3/4 flex flex-col bg-black bg-opacity-90 relative">
+        <!-- Chat History -->
+        <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
+            <!-- Messages injected here -->
+            <div class="text-center text-gray-600 mt-10">--- SESSION ESTABLISHED ---</div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 border-t border-green-900 bg-gray-900">
+            <form id="chatForm" class="flex gap-2">
+                <input type="text" id="msgInput"
+                    class="flex-1 bg-black border border-green-700 text-green-400 p-2 focus:outline-none focus:border-green-400 font-mono"
+                    placeholder="Type transmission..." autocomplete="off">
+                <button type="submit"
+                    class="bg-green-900 hover:bg-green-700 text-white px-6 py-2 border border-green-600 font-bold transition duration-150">
+                    SEND
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
+<script src="/static/js/sound_engine.js"></script>
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = '/';
+
+    const chatHistory = document.getElementById('chatHistory');
+    const creditsDisplay = document.getElementById('creditsDisplay');
+
+    // Initialize Socket
+    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+
+    const client = new SocketClient(wsUrl, (data) => {
+        // Handle Game Updates vs Chat
+        if (data.type === 'gamestate_update') {
+            applyChernobyl(data.chernobyl || 0);
+        } else {
+            // Assume Chat
+            appendMessage(data);
+            // SFX (if not self) - user sends messages to themselves via broadcast too?
+            // Yes, broadcast_to_session sends to user connection list.
+            // We can check data.sender to avoid double ping.
+            const currentUsername = "{{ user.username }}";
+            if (data.sender !== currentUsername) {
+                sfx.playReceive();
+            }
+        }
+    }, (status) => {
+        console.log("WS Status:", status);
+    });
+
+    client.connect(token);
+
+    // Form Submit
+    document.getElementById('chatForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (text) {
+            client.send({ content: text });
+            input.value = '';
+            sfx.playSend(); // Local feedback
+        }
+    });
+
+    // Typing SFX
+    document.getElementById('msgInput').addEventListener('keydown', () => {
+        sfx.playType();
+    });
+
+    function appendMessage(data) {
+        if (!data.content) return; // Skip non-content messages
+        const div = document.createElement('div');
+        div.className = `chat-bubble ${data.role === 'user' ? 'user self-end' : 'agent self-start'}`;
+
+        // Sender label
+        const sender = document.createElement('span');
+        sender.className = 'sender';
+        sender.innerText = data.sender.toUpperCase();
+
+        const content = document.createElement('div');
+        content.innerText = data.content;
+
+        div.appendChild(sender);
+        div.appendChild(content);
+
+        chatHistory.appendChild(div);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function applyChernobyl(level) {
+        document.body.className = ''; // Reset
+        if (level > 20 && level <= 50) document.body.classList.add('instability-low');
+        if (level > 50 && level <= 80) document.body.classList.add('instability-med');
+        if (level > 80) {
+            document.body.classList.add('instability-high');
+            // Maybe play alarm once?
+            sfx.playError();
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+body {
+    background-color: #050505;
+    color: #00ff00;
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #003300;
+    border: 1px solid #00ff00;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #005500;
+}
+
+/* Animations */
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0)
+    }
+
+    20% {
+        transform: translate(-2px, 2px)
+    }
+
+    40% {
+        transform: translate(-2px, -2px)
+    }
+
+    60% {
+        transform: translate(2px, 2px)
+    }
+
+    80% {
+        transform: translate(2px, -2px)
+    }
+
+    100% {
+        transform: translate(0)
+    }
+}
+
+.glitch-effect:hover {
+    animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
+    color: #ff0000;
+}
+
+/* Chat Bubbles */
+.chat-bubble {
+    border: 1px solid #00ff00;
+    background: rgba(0, 20, 0, 0.9);
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    position: relative;
+}
+
+.chat-bubble.user {
+    border-color: #00ff00;
+    color: #e0ffe0;
+    margin-right: 20%;
+}
+
+.chat-bubble.agent {
+    border-color: #ff00ff;
+    color: #ffe0ff;
+    margin-left: 20%;
+    text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+}
+
+.chat-bubble .sender {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-bottom: 4px;
+    display: block;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.3);
+}
+
+/* Status Panel */
+.status-panel {
+    border-right: 1px solid #00ff00;
+    background: rgba(0, 10, 0, 0.95);
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(0, 255, 0, 0.3);
+    animation: scan 3s linear infinite;
+    pointer-events: none;
+    z-index: 50;
+}
+
+@keyframes scan {
+    0% {
+        top: 0%
+    }
+
+    100% {
+        top: 100%
+    }
+}
+
+/* CRT Screen Effect Overlay */
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Instability Levels */
+.instability-low {
+    animation: flicker 4s infinite;
+}
+
+.instability-med {
+    animation: glitch 2s infinite;
+    filter: contrast(1.2) brightness(0.8);
+}
+
+.instability-high {
+    animation: glitch 0.2s infinite, shake 0.5s infinite;
+    filter: hue-rotate(90deg) contrast(2);
+    color: #ff0000 !important;
+    text-shadow: 2px 2px #ff0000;
+}
+
+.instability-high .status-panel {
+    border-color: red !important;
+}
+
+.instability-high body {
+    background-color: #100000;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.97;
+    }
+
+    5% {
+        opacity: 0.8;
+    }
+
+    10% {
+        opacity: 0.9;
+    }
+
+    15% {
+        opacity: 0.99;
+    }
+
+    100% {
+        opacity: 0.97;
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
+}

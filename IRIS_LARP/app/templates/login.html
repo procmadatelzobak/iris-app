@@ -44,9 +44,12 @@
 
             if (response.ok) {
                 localStorage.setItem('token', data.access_token);
-                // Decode token to see role, or call /auth/me
-                // For now, reload or redirect based on role (future phase)
-                alert('Access Granted. Token: ' + data.access_token.substring(0, 10) + '...');
+                // Set cookie for HTML navigation
+                document.cookie = `access_token=${data.access_token}; path=/; max-age=86400`;
+
+                // Redirect based on role
+                // We can just go to /auth/terminal. The backend will serve the right template.
+                window.location.href = '/auth/terminal';
             } else {
                 errorMsg.textContent = data.detail || 'Access Denied';
                 errorMsg.classList.remove('hidden');

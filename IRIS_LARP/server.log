@@ -1,0 +1,15 @@
+INFO:     Will watch for changes in these directories: ['/home/sinuhet/projekty/iris-app/IRIS_LARP']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [26258] using WatchFiles
+INFO:     Started server process [26262]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:38078 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzY1NzI0OTA1fQ.L0seVktRWa848Og5TrKhTPBkRKJ6pRj7fF-msjrDhlA" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:38092 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzY1NzIyMzAzfQ.ZNiRKxEBpo1GRQim9k-Sjr5UEnpA9sno0v7QjgSq27U" [accepted]
+INFO:     connection open
+Seeding complete.
+INFO:     127.0.0.1:41780 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41780 - "GET /static/css/tailwind.min.css HTTP/1.1" 404 Not Found
+INFO:     connection closed
+INFO:     connection closed

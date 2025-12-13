@@ -5,11 +5,13 @@ from contextlib import asynccontextmanager
 from .routers import auth, sockets, admin_api
 from .database import init_db
 from .config import settings
+from .seed import seed_data
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     init_db()
+    seed_data()
     yield
     # Shutdown
 

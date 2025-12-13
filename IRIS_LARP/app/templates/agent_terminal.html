@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link href="/static/css/terminal.css" rel="stylesheet">
+<style>
+    /* Agent specific overrides */
+    body {
+        color: #f0f;
+        text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+    }
+
+    .status-panel {
+        border-right: 1px solid #f0f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #330033;
+        border: 1px solid #f0f;
+    }
+
+    .chat-bubble.agent {
+        border-color: #f0f;
+        color: #fdf;
+    }
+
+    .chat-bubble.user {
+        border-color: #0f0;
+        color: #dfd;
+        opacity: 0.8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="crt-overlay"></div>
+<div class="scan-line"></div>
+
+<div class="flex h-screen overflow-hidden">
+    <!-- Left Panel: Agent Controls -->
+    <div class="w-1/4 status-panel p-4 flex flex-col">
+        <h1 class="text-2xl font-bold mb-6 glitch-effect text-pink-500">HLINIK_INTERFACE</h1>
+
+        <div class="mb-6">
+            <span class="text-xs text-gray-400">OPERATOR</span>
+            <div class="text-xl text-white">{{ user.username }}</div>
+        </div>
+
+        <div class="bg-gray-900 border border-pink-900 p-4 mb-4">
+            <h3 class="text-pink-400 text-sm mb-2 font-bold">SESSION ROUTING</h3>
+            <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">CURRENT SESSION</span>
+                <span class="text-2xl font-bold text-white" id="sessionIdDisplay">--</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-2">SHIFT OFFSET: <span id="shiftDisplay">CALCULATING...</span></div>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <button class="w-full border border-pink-500 text-pink-500 hover:bg-pink-900 py-2 mb-2 transition"
+            onclick="toggleAuto()">
+            [ TOGGLE AUTOPILOT ]
+        </button>
+    </div>
+
+    <!-- Right Panel: Chat -->
+    <div class="w-3/4 flex flex-col bg-black bg-opacity-95 relative">
+        <div class="bg-pink-900 bg-opacity-20 p-2 text-center text-xs text-pink-300 border-b border-pink-800">
+            SECURE CHANNEL ESTABLISHED
+        </div>
+
+        <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
+            <!-- Messages -->
+        </div>
+
+        <div class="p-4 border-t border-pink-900 bg-gray-900">
+            <form id="chatForm" class="flex gap-2">
+                <input type="text" id="msgInput"
+                    class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
+                    placeholder="Inject response..." autocomplete="off">
+                <button type="submit"
+                    class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
+                    TRANSMIT
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
+<script src="/static/js/sound_engine.js"></script>
+<script>
+    const token = localStorage.getItem('token');
+    const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+    const chatHistory = document.getElementById('chatHistory');
+
+    // Initialize Socket
+    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+
+    const client = new SocketClient(wsUrl, (data) => {
+        // Handle Game Updates vs Chat
+        if (data.type === 'gamestate_update') {
+            applyChernobyl(data.chernobyl || 0);
+            if (data.shift !== undefined) {
+                // Should update shift display? It says "CALCULATING..."
+                // Logic to update shift display is missing in original template too.
+                document.getElementById('shiftDisplay').innerText = data.shift;
+            }
+        } else {
+            // If message has session_id
+            if (data.session_id) {
+                sessionIdDisplay.innerText = "S" + data.session_id;
+            }
+            appendMessage(data);
+            // SFX Logic
+            const currentUsername = "{{ user.username }}";
+            // If incoming message (User) -> Receive sound
+            // If Agent Auto-reply -> It comes as "agent" sender.
+            if (data.sender !== currentUsername) {
+                sfx.playReceive();
+            }
+        }
+    });
+
+    client.connect(token);
+
+    document.getElementById('chatForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (text) {
+            client.send({ content: text });
+            // Optimistic append handled by server echo usually for consistency in chat system, 
+            // but this template had optimistic append.
+            // Let's keep it but suppress sound? Or play local "type" sound.
+            appendMessage({
+                sender: '{{ user.username }}',
+                role: 'agent',
+                content: text
+            });
+            input.value = '';
+            sfx.playSend();
+        }
+    });
+
+    // Typing SFX
+    document.getElementById('msgInput').addEventListener('keydown', () => {
+        sfx.playType();
+    });
+
+    let isAutopilotOn = false;
+    const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
+
+    function toggleAuto() {
+        isAutopilotOn = !isAutopilotOn;
+        // Send to Server
+        client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
+
+        // Sound
+        if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
+        else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
+
+        // Visual Update
+        if (isAutopilotOn) {
+            autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
+            autoBtn.classList.add('bg-pink-600', 'text-white');
+            autoBtn.classList.remove('text-pink-500', 'hover:bg-pink-900');
+        } else {
+            autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
+            autoBtn.classList.remove('bg-pink-600', 'text-white');
+            autoBtn.classList.add('text-pink-500', 'hover:bg-pink-900');
+        }
+    }
+
+    function appendMessage(data) {
+        if (!data.content) return;
+        const div = document.createElement('div');
+        div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
+
+        const sender = document.createElement('span');
+        sender.className = 'sender';
+        sender.innerText = data.sender.toUpperCase();
+
+        const content = document.createElement('div');
+        content.innerText = data.content;
+
+        div.appendChild(sender);
+        div.appendChild(content);
+
+        chatHistory.appendChild(div);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function applyChernobyl(level) {
+        document.body.className = ''; // Reset
+        if (level > 20 && level <= 50) document.body.classList.add('instability-low');
+        if (level > 50 && level <= 80) document.body.classList.add('instability-med');
+        if (level > 80) {
+            document.body.classList.add('instability-high');
+            sfx.playError();
+        }
+    }
+</script>
+{% endblock %}
