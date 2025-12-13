@@ -37,12 +37,18 @@ These accounts are auto-generated on the first system run.
 
 ## 2. Deployment Instructions
 
-1.  **Start Server:**
+1.  **Installation (First Run)**:
     ```bash
     cd /path/to/IRIS_LARP
-    source venv/bin/activate
-    python run.py
+    chmod +x install.sh run.sh
+    ./install.sh
     ```
+
+2.  **Start Server**:
+    ```bash
+    ./run.sh
+    ```
+    (Or manually: `source venv/bin/activate` + `python run.py`)
 2.  **Access:**
     *   Open Browser: `http://localhost:8000`
     *   Login with appropriate credentials.
