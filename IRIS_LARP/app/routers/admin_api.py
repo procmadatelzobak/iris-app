@@ -66,3 +66,124 @@ async def set_key(update: KeyUpdate, admin=Depends(get_current_admin)):
     db.commit()
     db.close()
     return {"status": "updated", "provider": update.provider}
+
+# --- ECONOMY & TASKS ---
+from ..database import User, Task, TaskStatus, ChatLog, UserRole
+from ..logic.routing import routing_logic
+
+class EconomyAction(BaseModel):
+    user_id: int
+    amount: int = 0
+    reason: str = "Admin Action"
+
+@router.get("/data/users")
+async def get_users(admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    users = db.query(User).filter(User.role == UserRole.USER).all()
+    res = []
+    for u in users:
+        res.append({
+            "id": u.id,
+            "username": u.username,
+            "credits": u.credits,
+            "status_level": u.status_level,
+            "is_locked": u.is_locked
+        })
+    db.close()
+    return res
+
+@router.post("/economy/fine")
+async def fine_user(action: EconomyAction, admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    user = db.query(User).filter(User.id == action.user_id).first()
+    if user:
+        user.credits -= action.amount
+        db.commit()
+        # notify user
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "FINED: {action.reason}"}}')
+    db.close()
+    return {"status": "ok"}
+
+@router.post("/economy/bonus")
+async def bonus_user(action: EconomyAction, admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    user = db.query(User).filter(User.id == action.user_id).first()
+    if user:
+        user.credits += action.amount
+        db.commit()
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "BONUS: {action.reason}"}}')
+    db.close()
+    return {"status": "ok"}
+
+@router.post("/economy/toggle_lock")
+async def toggle_lock(action: EconomyAction, admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    user = db.query(User).filter(User.id == action.user_id).first()
+    if user:
+        user.is_locked = not user.is_locked
+        db.commit()
+        state = "LOCKED" if user.is_locked else "UNLOCKED"
+        await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": {str(user.is_locked).lower()}}}')
+    db.close()
+    return {"status": "ok", "state": state}
+
+# Tasks
+class TaskAction(BaseModel):
+    task_id: int
+    reward: int = 0 # For approval
+    rating: int = 0 # For payment (0-100)
+
+@router.get("/tasks")
+async def get_tasks(admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    tasks = db.query(Task).all()
+    # Simple serialization
+    res = []
+    for t in tasks:
+        res.append({
+            "id": t.id,
+            "user_id": t.user_id,
+            "prompt": t.prompt_desc,
+            "status": t.status,
+            "reward": t.reward_offered,
+            "submission": t.submission_content
+        })
+    db.close()
+    return res
+
+@router.post("/tasks/approve")
+async def approve_task(action: TaskAction, admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    task = db.query(Task).filter(Task.id == action.task_id).first()
+    if task:
+        task.status = TaskStatus.ACTIVE
+        task.reward_offered = action.reward
+        db.commit()
+        # Notify User
+        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "task_update", "id": {task.id}, "status": "active", "reward": {action.reward}}}')
+    db.close()
+    return {"status": "approved"}
+
+@router.post("/tasks/pay")
+async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
+    db = SessionLocal()
+    task = db.query(Task).filter(Task.id == action.task_id).first()
+    if task and task.status == TaskStatus.SUBMITTED:
+        task.status = TaskStatus.COMPLETED
+        task.final_rating = action.rating
+        
+        # Calc payout
+        payout = int(task.reward_offered * (action.rating / 100))
+        
+        # Add credits
+        user = db.query(User).filter(User.id == task.user_id).first()
+        if user:
+            user.credits += payout
+        
+        db.commit()
+        
+        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "TASK COMPLETED: +{payout} CR"}}')
+        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "task_update", "id": {task.id}, "status": "completed"}}')
+
+    db.close()
+    return {"status": "paid"}

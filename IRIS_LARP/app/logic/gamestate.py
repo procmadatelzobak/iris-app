@@ -1,5 +1,16 @@
 from ..config import settings
 from .llm_core import LLMConfig, LLMProvider
+import enum
+
+class ChernobylMode(str, enum.Enum):
+    NORMAL = "normal"
+    LOW_POWER = "low_power"
+    OVERCLOCK = "overclock"
+
+class HyperVisibilityMode(str, enum.Enum):
+    NORMAL = "normal"
+    BLACKBOX = "blackbox"
+    FORENSIC = "forensic"
 
 class GameState:
     _instance = None
@@ -15,8 +26,9 @@ class GameState:
             return
         
         self.global_shift_offset = settings.DEFAULT_GLOBAL_SHIFT_OFFSET
-        self.hyper_visibility_mode = settings.DEFAULT_HYPER_VISIBILITY
+        self.hyper_visibility_mode = HyperVisibilityMode.NORMAL # Default
         self.chernobyl_value = settings.DEFAULT_CHERNOBYL_VALUE
+        self.chernobyl_mode = ChernobylMode.NORMAL
         
         # LLM Configurations
         self.llm_config_task = LLMConfig(
@@ -34,6 +46,21 @@ class GameState:
         
     def set_chernobyl(self, value: int):
         self.chernobyl_value = max(0, min(100, value))
+        return self.chernobyl_value
+        
+    def report_anomaly(self):
+        self.chernobyl_value = min(100, self.chernobyl_value + 5)
+        return self.chernobyl_value
+
+    def process_tick(self):
+        if self.chernobyl_mode == ChernobylMode.NORMAL:
+            decay = 1
+        elif self.chernobyl_mode == ChernobylMode.LOW_POWER:
+            decay = 3
+        else: # OVERCLOCK
+            decay = 0
+            
+        self.chernobyl_value = max(0, self.chernobyl_value - decay)
         return self.chernobyl_value
         
     def increment_shift(self):

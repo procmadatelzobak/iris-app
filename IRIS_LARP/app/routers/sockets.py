@@ -100,6 +100,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     "content": log.content,
                     "session_id": log.session_id if user.role == UserRole.AGENT else None
                 }))
+        
+        # Send initial status for User
+        if user.role == UserRole.USER:
+             await websocket.send_text(json.dumps({
+                "type": "user_status",
+                "credits": user.credits,
+                "is_locked": user.is_locked
+            }))
     except Exception as e:
         print(f"Error loading history: {e}")
     finally:
@@ -129,6 +137,17 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         if not status:
                              # Clear history on OFF
                              routing_logic.hyper_histories[agent_logical_id] = []
+                        # Sync Status? Ideally yes, but sound feedback is local. 
+                        # Let's verify toggle state sync later if needed.
+                        continue
+
+                    if cmd_type == "typing_sync":
+                        content = msg_data.get("content", "")
+                        await routing_logic.broadcast_to_agent(user.id, json.dumps({
+                            "type": "typing_sync",
+                            "sender": user.username, # To identify self vs mirror
+                            "content": content
+                        }))
                         continue
 
                     if not content: continue
@@ -231,15 +250,53 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     elif cmd_type == "chernobyl_command":
                         level = msg_data.get("level", 0)
                         gamestate.set_chernobyl(level)
+                        # Switch to manual mode if setting level manually? 
+                        # Or just let it be.
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update", 
                             "shift": gamestate.global_shift_offset,
                             "chernobyl": gamestate.chernobyl_value
                         }))
 
+                    elif cmd_type == "chernobyl_mode_command":
+                        from ..logic.gamestate import ChernobylMode
+                        mode_str = msg_data.get("mode", "normal")
+                        # Map string to enum
+                        if mode_str == "low_power":
+                            gamestate.chernobyl_mode = ChernobylMode.LOW_POWER
+                        elif mode_str == "overclock":
+                            gamestate.chernobyl_mode = ChernobylMode.OVERCLOCK
+                        else:
+                            gamestate.chernobyl_mode = ChernobylMode.NORMAL
+                            
+                        # Broadcast? Usually mode change doesn't need broadcast, just the effect (value change)
+
                     elif cmd_type == "reset_game":
                          # Placeholder
                          pass
+                    
+                    elif cmd_type == "admin_view_sync":
+                        view = msg_data.get("view", "monitor")
+                        await routing_logic.broadcast_to_admins(json.dumps({
+                            "type": "admin_view_sync",
+                            "view": view,
+                            "sender_id": user.id 
+                        }))
+                        
+                    elif cmd_type == "hyper_vis_command":
+                        mode_str = msg_data.get("mode", "normal")
+                        from ..logic.gamestate import HyperVisibilityMode
+                        if mode_str == "blackbox":
+                            gamestate.hyper_visibility_mode = HyperVisibilityMode.BLACKBOX
+                        elif mode_str == "forensic":
+                            gamestate.hyper_visibility_mode = HyperVisibilityMode.FORENSIC
+                        else:
+                            gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+                        
+                        await routing_logic.broadcast_global(json.dumps({
+                            "type": "gamestate_update",
+                            "hyper_mode": gamestate.hyper_visibility_mode.value
+                        }))
 
             finally:
                 db_save.close()

@@ -1,15 +1,20 @@
+[IRIS] Booting System...
 INFO:     Will watch for changes in these directories: ['/home/sinuhet/projekty/iris-app/IRIS_LARP']
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [26258] using WatchFiles
-INFO:     Started server process [26262]
+INFO:     Started reloader process [32645] using WatchFiles
+INFO:     Started server process [32661]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:38078 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzY1NzI0OTA1fQ.L0seVktRWa848Og5TrKhTPBkRKJ6pRj7fF-msjrDhlA" [accepted]
+INFO:     127.0.0.1:45092 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzY1NzMzNjI1fQ.CaYneyvfyRVf7T6BC3349kQzSmpETVf4_Fk2kJwonHo" [accepted]
 INFO:     connection open
-INFO:     127.0.0.1:38092 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzY1NzIyMzAzfQ.ZNiRKxEBpo1GRQim9k-Sjr5UEnpA9sno0v7QjgSq27U" [accepted]
+INFO:     127.0.0.1:45102 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbjEiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NjU3MzMxMjF9.nfpSRv2sR3zmsO3ePy2IFoZ4wn_kczQIUjOAAteTh-M" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:45112 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzY1NzMzNTMzfQ.a2Pc1LbHtlGD0F6nHNiyYwjujMupS6Vvy-Om7oC70UE" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:53598 - "WebSocket /ws/connect?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzY1NzM0NTI5fQ.VfScP9GQSBVhRUGeq8Wkh6_nYbtBY-93-9wM3spRO4w" [accepted]
 INFO:     connection open
 Seeding complete.
-INFO:     127.0.0.1:41780 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:41780 - "GET /static/css/tailwind.min.css HTTP/1.1" 404 Not Found
-INFO:     connection closed
-INFO:     connection closed
+INFO:     127.0.0.1:53614 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53614 - "GET /static/css/tailwind.min.css HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53626 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49822 - "GET /auth/dashboard HTTP/1.1" 404 Not Found

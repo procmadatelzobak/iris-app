@@ -71,8 +71,32 @@ To enable Autopilot for Agents, you must configure the LLM provider.
 
 ---
 
+## 4. Operational Features
 
-## 3. Troubleshooting
+### Admin Dashboard Tabs
+1.  **MONITOR**: Real-time grid of all User sessions. Chat logs update live.
+2.  **CONTROLS**:
+    *   **Agency Operation Mode**: Normal / Low Power (Fast Decay) / Overclock.
+    *   **Visibility Protocols**:
+        *   **NORMAL**: Standard view.
+        *   **BLACKBOX**: Agents see NO history (blind operation).
+        *   **FORENSIC**: Agents see raw data / high contrast visual mode.
+    *   **Chernobyl Meter**: Manual override for Instability.
+3.  **ECONOMY**: Manage User credits, issuing Fines or Bonuses, and Toggling Lockout.
+4.  **TASKS**: Review and Pay/Reject user task submissions.
+
+### Advanced Capabilities
+*   **Mirroring**:
+    *   **Admin Sync**: All connected Admins see the same Dashboard Tab. Switching tabs updates everyone instantly.
+    *   **Agent Sync**: Agents logged into multiple devices (e.g., Tablet + Laptop) share real-time typing. Input on one device appears on the other.
+*   **User Lockout**:
+    *   If a User is "Locked" (via Economy tab or insufficient credits), their terminal displays a "SYSTEM LOCKED" overlay, disabling all input.
+*   **Hyper Visibility**:
+    *   Controlled via the "Controls" tab. Affects how Agents perceive the chat history.
+
+---
+
+## 5. Troubleshooting
 
 *   **Database Lock:** If the system crashes, delete `data/iris.db` (Caution: data loss) and restart. It will re-seed.
 *   **Login Failed:** Check caps lock. All passwords are case sensitive.

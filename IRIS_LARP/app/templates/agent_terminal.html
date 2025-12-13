@@ -28,152 +28,206 @@
         color: #dfd;
         opacity: 0.8;
     }
+
+    /* Hyper Visibility Modes */
+    body.mode-blackbox #chatHistory {
+        filter: blur(20px) brightness(0.1);
+        pointer-events: none;
+    }
+
+    body.mode-forensic {
+        filter: contrast(1.5) sepia(1) hue-rotate(240deg);
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="crt-overlay"></div>
-<div class="scan-line"></div>
+<!-- ... content ... -->
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
+<script src="/static/js/sound_engine.js"></script>
+<script>
+    // ...
+    const client = new SocketClient(wsUrl, (data) => {
+        // Handle Game Updates vs Chat
+        if (data.type === 'gamestate_update') {
+            applyChernobyl(data.chernobyl || 0);
+            if (data.hyper_mode) applyHyperVisibility(data.hyper_mode); // Handle Mode
 
-<div class="flex h-screen overflow-hidden">
-    <!-- Left Panel: Agent Controls -->
+            if (data.shift !== undefined) {
+                document.getElementById('shiftDisplay').innerText = data.shift;
+            }
+        } else if (data.type === 'typing_sync') {
+            // ...
+            function applyHyperVisibility(mode) {
+                document.body.classList.remove('mode-blackbox', 'mode-forensic');
+                if (mode === 'blackbox') document.body.classList.add('mode-blackbox');
+                if (mode === 'forensic') document.body.classList.add('mode-forensic');
+            }
+
+            function applyChernobyl(level) {
+// ...
     <div class="w-1/4 status-panel p-4 flex flex-col">
-        <h1 class="text-2xl font-bold mb-6 glitch-effect text-pink-500">HLINIK_INTERFACE</h1>
+        <h1 class="text-2xl font-bold mb-6 glitch-effect text-pink-500">ROZHRANÍ_HLINÍK</h1>
 
-        <div class="mb-6">
-            <span class="text-xs text-gray-400">OPERATOR</span>
-            <div class="text-xl text-white">{{ user.username }}</div>
-        </div>
-
-        <div class="bg-gray-900 border border-pink-900 p-4 mb-4">
-            <h3 class="text-pink-400 text-sm mb-2 font-bold">SESSION ROUTING</h3>
-            <div class="flex justify-between items-center">
-                <span class="text-xs text-gray-400">CURRENT SESSION</span>
-                <span class="text-2xl font-bold text-white" id="sessionIdDisplay">--</span>
+        <div class="mb-4">
+            <div class="text-xs text-green-400 mb-1">CÍLOVÝ POSUN SVĚTA</div>
+            <div class="text-3xl font-mono text-green-500 border border-green-800 p-2 text-center" id="shiftDisplay">
+                --
             </div>
-            <div class="text-xs text-gray-500 mt-2">SHIFT OFFSET: <span id="shiftDisplay">CALCULATING...</span></div>
         </div>
 
-        <div class="flex-1"></div>
+        <div class="mb-4">
+            <div class="text-xs text-blue-400 mb-1">STAV PŘIPOJENÍ</div>
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-sm font-mono text-blue-300">ZABEZPEČENÝ KANÁL</span>
+            </div>
+        </div>
+
+        <div class="mt-auto">
+            <div class="text-xs text-gray-500">OPERÁTOR</div>
+            <div class="font-mono text-gray-300">{{ user.username }}</div>
+            <div class="text-xs text-gray-600 mt-2">TERMINÁL ID: <span id="termId">--</span></div>
+        </div>
+    </div>
+     <div class="flex-1"></div>
 
         <button class="w-full border border-pink-500 text-pink-500 hover:bg-pink-900 py-2 mb-2 transition"
             onclick="toggleAuto()">
             [ TOGGLE AUTOPILOT ]
         </button>
-    </div>
+    </div >
 
-    <!-- Right Panel: Chat -->
-    <div class="w-3/4 flex flex-col bg-black bg-opacity-95 relative">
-        <div class="bg-pink-900 bg-opacity-20 p-2 text-center text-xs text-pink-300 border-b border-pink-800">
-            SECURE CHANNEL ESTABLISHED
+        <!-- Right Panel: Chat -->
+        <div class="w-3/4 flex flex-col bg-black bg-opacity-95 relative">
+            <div class="bg-pink-900 bg-opacity-20 p-2 text-center text-xs text-pink-300 border-b border-pink-800">
+                SECURE CHANNEL ESTABLISHED
+            </div>
+
+            <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
+                <!-- Messages -->
+            </div>
+
+            <div class="p-4 border-t border-pink-900 bg-gray-900">
+                <form id="chatForm" class="flex gap-2">
+                    <input type="text" id="msgInput"
+                        class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
+                        placeholder="Inject response..." autocomplete="off">
+                        <button type="submit"
+                            class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
+                            TRANSMIT
+                        </button>
+                </form>
+            </div>
         </div>
+</div >
+        {% endblock %}
 
-        <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
-            <!-- Messages -->
-        </div>
-
-        <div class="p-4 border-t border-pink-900 bg-gray-900">
-            <form id="chatForm" class="flex gap-2">
-                <input type="text" id="msgInput"
-                    class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
-                    placeholder="Inject response..." autocomplete="off">
-                <button type="submit"
-                    class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
-                    TRANSMIT
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script src="/static/js/socket_client.js"></script>
+    {% block scripts %}
+    <script src="/static/js/socket_client.js"></script>
 <script src="/static/js/sound_engine.js"></script>
 <script>
-    const token = localStorage.getItem('token');
-    const sessionIdDisplay = document.getElementById('sessionIdDisplay');
-    const chatHistory = document.getElementById('chatHistory');
+        const token = localStorage.getItem('token');
+        const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+        const chatHistory = document.getElementById('chatHistory');
+        const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
-    // Initialize Socket
-    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+        // Initialize Socket
+        const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
 
+    // Store reference to client
     const client = new SocketClient(wsUrl, (data) => {
         // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
             applyChernobyl(data.chernobyl || 0);
-            if (data.shift !== undefined) {
-                // Should update shift display? It says "CALCULATING..."
-                // Logic to update shift display is missing in original template too.
-                document.getElementById('shiftDisplay').innerText = data.shift;
+        if (data.shift !== undefined) {
+            document.getElementById('shiftDisplay').innerText = data.shift;
+            }
+        } else if (data.type === 'typing_sync') {
+            // Mirroring Logic
+            if (data.tabId !== tabId) {
+                const input = document.getElementById('msgInput');
+        // Only update if content differs to avoid cursor jump?
+        // Or just overwrite.
+        if (input.value !== data.content) {
+            input.value = data.content;
+                }
             }
         } else {
-            // If message has session_id
+            // ... standard messages ...
             if (data.session_id) {
-                sessionIdDisplay.innerText = "S" + data.session_id;
+            sessionIdDisplay.innerText = "S" + data.session_id;
             }
-            appendMessage(data);
-            // SFX Logic
-            const currentUsername = "{{ user.username }}";
-            // If incoming message (User) -> Receive sound
-            // If Agent Auto-reply -> It comes as "agent" sender.
-            if (data.sender !== currentUsername) {
-                sfx.playReceive();
+        appendMessage(data);
+        const currentUsername = "{{ user.username }}";
+        if (data.sender !== currentUsername) {
+            sfx.playReceive();
             }
         }
     });
 
-    client.connect(token);
+        client.connect(token);
+
+    // Input Mirroring
+    document.getElementById('msgInput').addEventListener('input', (e) => {
+            client.send({
+                type: 'typing_sync',
+                content: e.target.value,
+                tabId: tabId
+            });
+    });
 
     document.getElementById('chatForm').addEventListener('submit', (e) => {
-        e.preventDefault();
+            e.preventDefault();
         const input = document.getElementById('msgInput');
         const text = input.value.trim();
         if (text) {
             client.send({ content: text });
-            // Optimistic append handled by server echo usually for consistency in chat system, 
-            // but this template had optimistic append.
-            // Let's keep it but suppress sound? Or play local "type" sound.
-            appendMessage({
-                sender: '{{ user.username }}',
-                role: 'agent',
-                content: text
+        // Sync clear
+        client.send({type: 'typing_sync', content: "", tabId: tabId });
+
+        appendMessage({
+            sender: '{{ user.username }}',
+        role: 'agent',
+        content: text
             });
-            input.value = '';
-            sfx.playSend();
+        input.value = '';
+        sfx.playSend();
         }
     });
 
     // Typing SFX
     document.getElementById('msgInput').addEventListener('keydown', () => {
-        sfx.playType();
+            sfx.playType();
     });
 
-    let isAutopilotOn = false;
-    const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
+        // ... (Auto Logic) ...
+        let isAutopilotOn = false;
+        const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
 
-    function toggleAuto() {
-        isAutopilotOn = !isAutopilotOn;
-        // Send to Server
-        client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
-
-        // Sound
+        function toggleAuto() {
+            isAutopilotOn = !isAutopilotOn;
+        client.send({type: 'autopilot_toggle', status: isAutopilotOn });
+        updateAutoBtnUI(isAutopilotOn);
+        // Play sound locally
         if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
         else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
+    }
 
-        // Visual Update
-        if (isAutopilotOn) {
+        function updateAutoBtnUI(isOn) {
+        if (isOn) {
             autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
-            autoBtn.classList.add('bg-pink-600', 'text-white');
-            autoBtn.classList.remove('text-pink-500', 'hover:bg-pink-900');
+        autoBtn.classList.add('bg-pink-600', 'text-white');
+        autoBtn.classList.remove('text-pink-500', 'hover:bg-pink-900');
         } else {
             autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
-            autoBtn.classList.remove('bg-pink-600', 'text-white');
-            autoBtn.classList.add('text-pink-500', 'hover:bg-pink-900');
+        autoBtn.classList.remove('bg-pink-600', 'text-white');
+        autoBtn.classList.add('text-pink-500', 'hover:bg-pink-900');
         }
     }
 
-    function appendMessage(data) {
+        function appendMessage(data) {
         if (!data.content) return;
         const div = document.createElement('div');
         div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
@@ -193,7 +247,7 @@
     }
 
     function applyChernobyl(level) {
-        document.body.className = ''; // Reset
+        document.body.className = '';
         if (level > 20 && level <= 50) document.body.classList.add('instability-low');
         if (level > 50 && level <= 80) document.body.classList.add('instability-med');
         if (level > 80) {
@@ -203,3 +257,5 @@
     }
 </script>
 {% endblock %}
+{% endblock %}
+```

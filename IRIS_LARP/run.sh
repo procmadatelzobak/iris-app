@@ -14,4 +14,11 @@ source venv/bin/activate
 #     echo "[WARNING] .env file not found. System will run with defaults."
 # fi
 
+# Cleanup Port 8000
+if fuser 8000/tcp >/dev/null 2>&1; then
+    echo "[IRIS] Port 8000 in use. Killing old process..."
+    fuser -k 8000/tcp >/dev/null 2>&1
+    sleep 1
+fi
+
 python run.py

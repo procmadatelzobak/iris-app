@@ -65,6 +65,12 @@ class ConnectionManager:
                 for connection in connections:
                     await connection.send_text(message)
 
+    async def broadcast_to_agent(self, agent_id: int, message: str):
+        if agent_id in self.agent_connections:
+            for connection in self.agent_connections[agent_id]:
+                try: await connection.send_text(message)
+                except: pass
+
     async def broadcast_to_admins(self, message: str):
         for connection in self.admin_connections:
             await connection.send_text(message)
