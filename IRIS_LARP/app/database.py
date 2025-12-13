@@ -28,6 +28,7 @@ class TaskStatus(str, enum.Enum):
     ACTIVE = "active"
     SUBMITTED = "submitted"
     COMPLETED = "completed"
+    PAID = "paid"
 
 # Models
 class User(Base):

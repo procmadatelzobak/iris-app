@@ -181,21 +181,49 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
 
-                    # Manual Override - If Agent types, they might want to clear history or just interject?
-                    # Spec doesn't say. Let's assume manual typing doesn't break autopilot but maybe adds to context?
-                    # For now, just save/send.
+                    # v1.5 AI Optimizer (Man-in-the-Middle)
+                    final_content = content
+                    was_rewritten = False
 
-                    # Save
-                    log = ChatLog(session_id=session_id, sender_id=user.id, content=content)
+                    if gamestate.optimizer_active:
+                        # Check Power (Load + Cost <= Capacity)
+                        # We use hypothetical load. 
+                        # Ideally we check available headroom: Capacity - CurrentLoad >= Cost
+                        # Use updated gamestate properties
+                        current_load = gamestate.power_load
+                        cost = gamestate.OPTIMIZER_COST_MW
+                        if current_load + cost <= gamestate.power_capacity:
+                            # ACTIVE and POWER OK
+                            from ..logic.llm_core import llm_service
+                            try:
+                                rewritten = await llm_service.rewrite_message(content, gamestate.optimizer_prompt)
+                                if rewritten and rewritten.strip():
+                                    final_content = rewritten
+                                    was_rewritten = True
+                                    # Trigger hypothetical Power Spike (Just logic, no storage)
+                            except Exception as e:
+                                print(f"Optimizer Error: {e}")
+
+                    # Save (Rewritten or Original)
+                    log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content)
                     db_save.add(log)
                     db_save.commit()
 
+                    # Broadcast to Session (User sees final_content)
                     await routing_logic.broadcast_to_session(session_id, json.dumps({
                         "sender": user.username,
                         "role": "agent",
-                        "content": content,
+                        "content": final_content,
                         "session_id": session_id
                     }))
+
+                    # Feedback to Agent (If rewritten)
+                    if was_rewritten:
+                         await websocket.send_text(json.dumps({
+                             "type": "optimizer_feedback",
+                             "original": content,
+                             "rewritten": final_content
+                         }))
 
                 elif user.role == UserRole.USER:
                     cmd_type = msg_data.get("type")

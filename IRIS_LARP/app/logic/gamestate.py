@@ -36,11 +36,17 @@ class GameState:
         self.power_load = 0
         self.is_overloaded = False
         
-        self.treasury_balance = 0
-        self.tax_rate = 0.1 # 10%
+        # v1.5 Economy Defaults
+        self.treasury_balance = 500
+        self.tax_rate = 0.20 # 20%
         
         # v1.4 Timer
-        self.agent_response_window = 120 # Default 2 mins (Standard)
+        self.agent_response_window = 120 
+        
+        # v1.5 AI Optimizer
+        self.optimizer_active = False 
+        self.optimizer_prompt = "Přepiš text do formálního, korporátního tónu. Buď stručný."
+        self.OPTIMIZER_COST_MW = 0.5
         
         # LLM Configurations
         self.llm_config_task = LLMConfig(

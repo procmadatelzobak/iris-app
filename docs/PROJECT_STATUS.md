@@ -19,6 +19,18 @@
 | **Phase 16** | v1.4 API & Sockets | [DONE] |
 | **Phase 17** | v1.4 Frontend UI | [DONE] |
 | **Phase 18** | v1.4 Verification | [TESTED] |
+| **Phase 19** | AI Optimizer & Economy | [DONE] |
+
+## Feature Status (v1.5 AI Optimizer)
+
+### AI Optimizer (Man-in-the-Middle)
+- [x] **State**: `optimizer_active`, `optimizer_prompt` in GameState [DONE]
+- [x] **Logic**: Intercept Agent messages, rewrite via LLM, send Feedback to Agent [DONE]
+- [x] **Power**: Consumes 0.5 MW per msg (Logic check) [DONE]
+
+### Economy Rebalance
+- [x] **Defaults**: Treasury 500 CR, Tax 20% [DONE]
+- [x] **Logic**: Centralized `economy.py` processor [DONE]
 
 ## Feature Status (v1.4)
 

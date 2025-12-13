@@ -190,32 +190,22 @@ async def approve_task(action: TaskAction, admin=Depends(get_current_admin)):
 
 @router.post("/tasks/pay")
 async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
-    db = SessionLocal()
-    task = db.query(Task).filter(Task.id == action.task_id).first()
-    if task and task.status == TaskStatus.SUBMITTED:
-        task.status = TaskStatus.COMPLETED
-        task.final_rating = action.rating
-        
-        # Calc payout
-        full_payout = int(task.reward_offered * (action.rating / 100))
-        
-        # Tax Logic v1.4
-        tax = int(full_payout * gamestate.tax_rate)
-        user_payout = full_payout - tax
-        gamestate.treasury_balance += tax
-        
-        # Add credits
-        user = db.query(User).filter(User.id == task.user_id).first()
-        if user:
-            user.credits += user_payout
-        
-        db.commit()
-        
-        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "TASK COMPLETED: +{user_payout} CR (Tax: {tax} CR)"}}')
-        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "task_update", "id": {task.id}, "status": "completed"}}')
+    from ..logic.economy import process_task_payment
+    result = process_task_payment(action.task_id, action.rating)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
 
-    db.close()
-    return {"status": "paid", "tax_collected": tax}
+# v1.5 AI Optimizer
+@router.post("/optimizer/toggle")
+async def toggle_optimizer(active: bool = Body(..., embed=True), admin=Depends(get_current_admin)):
+    gamestate.optimizer_active = active
+    return {"status": "ok", "optimizer_active": gamestate.optimizer_active}
+
+@router.post("/optimizer/prompt")
+async def set_optimizer_prompt(prompt: str = Body(..., embed=True), admin=Depends(get_current_admin)):
+    gamestate.optimizer_prompt = prompt
+    return {"status": "ok", "optimizer_prompt": gamestate.optimizer_prompt}
 
 # v1.4 Endpoints
 

@@ -94,6 +94,28 @@ class LLMService:
             print(f"LLM Generation Error: {e}")
             return f"[SYSTEM ERROR: {str(e)}]"
 
+    async def evaluate_submission(self, prompt: str, submission: str) -> int:
+        full_user_prompt = f"TASK PROMPT: {prompt}\nUSER SUBMISSION: {submission}\n\nRate the submission from 0 to 100 based on creativity and relevance. Return ONLY the number."
+        
+        try:
+            temp_config = LLMConfig(provider=LLMProvider.OPENROUTER, model_name="google/gemini-2.0-flash-lite-preview-02-05:free")
+            resp = self.generate_response(temp_config, [{"role": "user", "content": full_user_prompt}])
+            clean_resp = ''.join(filter(str.isdigit, resp))
+            return int(clean_resp) if clean_resp else 50
+        except Exception:
+            return 50
+
+    async def rewrite_message(self, content: str, prompt: str) -> str:
+        """
+        Rewrites the user content based on the provided style prompt (AI Optimizer).
+        """
+        user_input = f"ORIGINAL TEXT: {content}\n\nINSTRUCTION: {prompt}\n\OUTPUT:"
+        
+        # Use a default config for the optimizer
+        temp_config = LLMConfig(provider=LLMProvider.OPENROUTER, model_name="google/gemini-2.0-flash-lite-preview-02-05:free")
+        response = self.generate_response(temp_config, [{"role": "user", "content": user_input}])
+        return response
+
     def _generate_openai(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
         client = OpenAI(api_key=api_key)
         messages = [{"role": "system", "content": config.system_prompt}]
