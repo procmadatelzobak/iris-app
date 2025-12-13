@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-700">
+        <h1 class="text-3xl font-bold mb-6 text-center text-green-500 glitch">IRIS TERMINAL ACCESS</h1>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Username</label>
+                <input type="text" name="username"
+                    class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 focus:outline-none focus:border-green-500"
+                    required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <input type="password" name="password"
+                    class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 focus:outline-none focus:border-green-500"
+                    required>
+            </div>
+            <button type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded transition duration-200">
+                INITIATE SESSION
+            </button>
+        </form>
+        <div id="errorMsg" class="mt-4 text-red-500 text-center hidden"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const errorMsg = document.getElementById('errorMsg');
+
+        try {
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('token', data.access_token);
+                // Decode token to see role, or call /auth/me
+                // For now, reload or redirect based on role (future phase)
+                alert('Access Granted. Token: ' + data.access_token.substring(0, 10) + '...');
+            } else {
+                errorMsg.textContent = data.detail || 'Access Denied';
+                errorMsg.classList.remove('hidden');
+            }
+        } catch (err) {
+            errorMsg.textContent = 'Connection Error';
+            errorMsg.classList.remove('hidden');
+        }
+    });
+</script>
+{% endblock %}
