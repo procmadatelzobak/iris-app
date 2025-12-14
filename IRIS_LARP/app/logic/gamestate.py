@@ -236,6 +236,8 @@ class GameState:
             "chernobyl_mode": self.chernobyl_mode.value,
             "is_overloaded": self.is_overloaded,
             "power_capacity": self.power_capacity,
+            "power_load": self.power_load,
+            "optimizer_active": self.optimizer_active,
         }
 
     def import_state(self, state_data: dict):
@@ -244,20 +246,24 @@ class GameState:
             return
         
         if "temperature" in state_data:
-            self.temperature = float(state_data["temperature"])
+            self.temperature = float(state_data.get("temperature", self.temperature))
         if "global_shift_offset" in state_data:
-            self.global_shift_offset = int(state_data["global_shift_offset"])
+            self.global_shift_offset = int(state_data.get("global_shift_offset", self.global_shift_offset))
         if "treasury_balance" in state_data:
-            self.treasury_balance = int(state_data["treasury_balance"])
+            self.treasury_balance = int(state_data.get("treasury_balance", self.treasury_balance))
         if "chernobyl_mode" in state_data:
-            mode_str = state_data["chernobyl_mode"]
+            mode_str = state_data.get("chernobyl_mode")
             try:
                 self.chernobyl_mode = ChernobylMode(mode_str)
             except ValueError:
                 pass  # Keep default if invalid
         if "is_overloaded" in state_data:
-            self.is_overloaded = bool(state_data["is_overloaded"])
+            self.is_overloaded = bool(state_data.get("is_overloaded", self.is_overloaded))
         if "power_capacity" in state_data:
-            self.power_capacity = int(state_data["power_capacity"])
+            self.power_capacity = int(state_data.get("power_capacity", self.power_capacity))
+        if "power_load" in state_data:
+            self.power_load = float(state_data.get("power_load", self.power_load))
+        if "optimizer_active" in state_data:
+            self.optimizer_active = bool(state_data.get("optimizer_active", self.optimizer_active))
 
 gamestate = GameState()
