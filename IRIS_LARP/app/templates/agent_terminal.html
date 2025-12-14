@@ -404,13 +404,13 @@
             // Lock Input
             const input = document.getElementById('msgInput');
             input.disabled = true;
-            input.placeholder = ">> OPTIMIZING <<";
+            input.placeholder = ">> PROBÍHÁ OPTIMALIZACE ODPOVĚDI <<";
 
             const chatBox = document.getElementById('chatHistory');
             const div = document.createElement('div');
             div.id = 'optimizingLoader';
             div.className = 'chat-bubble agent opacity-50 animate-pulse text-[10px] border border-pink-500 bg-pink-900/50';
-            div.innerText = '⚙️ NEURAL REWRITING IN PROGRESS...';
+            div.innerText = '⚙️ PROBÍHÁ OPTIMALIZACE ODPOVĚDI...';
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
         }

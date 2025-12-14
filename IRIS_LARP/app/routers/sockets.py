@@ -195,6 +195,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
 
+                    # Enforce prompt-first: agent cannot message without an active user prompt
+                    if session_id not in routing_logic.pending_responses:
+                        await websocket.send_text(json.dumps({
+                            "type": "error",
+                            "msg": "Vyčkej na zprávu od uživatele. Nelze odeslat bez nového promptu."
+                        }))
+                        continue
+
                     # Check if session has timed out - agent can no longer respond
                     if routing_logic.is_session_timed_out(session_id):
                         await websocket.send_text(json.dumps({
@@ -398,6 +406,10 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     agent_logical_id = agent_index + 1 # This is the Agent mapped to this user
                     
                     if routing_logic.active_autopilots.get(agent_logical_id):
+                        await routing_logic.broadcast_to_session(session_id, json.dumps({
+                            "type": "optimizing_start",
+                            "mode": "hyper"
+                        }))
                         # 1. Update History
                         if agent_logical_id not in routing_logic.hyper_histories:
                             routing_logic.hyper_histories[agent_logical_id] = []

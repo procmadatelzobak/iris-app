@@ -1,6 +1,25 @@
 # Development History
 
 
+## [2025-12-14] Phase 33 - Agent Response Timer Enforcement
+### Prompt
+- "U agenta má běžet odečet času na odpověď..." (add countdown, timeout error to user, prevent unsolicited agent replies, admin timer control, and optimizer/crazy mode waiting indicator).
+
+### Plan
+- [x] Enforce backend response window: block unsolicited agent messages, refine timeout messaging, and broadcast timer updates.
+- [x] Add user-facing countdown/"čekání na odpověď" indicator tied to the response window and optimizer/crazy mode processing.
+- [x] Expose response window setting on the admin dashboard with live updates to clients.
+- [x] Reconcile documentation and record any tests executed.
+
+### Outcome
+- Backend now blocks agent replies unless a user prompt is pending, sends clearer timeout failures to users, and broadcasts updated response windows to all terminals.
+- User terminal shows a countdown-based "ČEKÁNÍ NA ODPOVĚĎ" indicator that shifts to "probíhá optimalizace odpovědi" during optimizer/hyper flows.
+- Admin dashboard includes a response timer slider that immediately applies new limits across users and agents.
+
+### Tests
+- Not run (UI and websocket flow changes; manual verification pending).
+
+
 ## [2025-12-14] Phase 32 - Lore Web Viewer
 ### Prompt
 - Convert `/docs/iris/lore` markdown archive into an embeddable web app and integrate it as a dedicated tab in the ROOT dashboard.

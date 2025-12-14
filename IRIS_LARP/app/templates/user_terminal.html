@@ -153,6 +153,11 @@
     const chatHistory = document.getElementById('chatHistory');
     const creditsDisplay = document.getElementById('creditsDisplay');
 
+    // Response timer state
+    let responseWindowSeconds = 120;
+    let responseCountdownInterval = null;
+    let responseCountdownRemaining = 0;
+
     // Initialize Socket
     const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
 
@@ -174,6 +179,12 @@
             // Update shift display
             if (data.shift !== undefined) {
                 document.getElementById('shiftDisplay').innerText = data.shift;
+            }
+
+            // Sync agent response window
+            if (data.agent_window !== undefined) {
+                responseWindowSeconds = data.agent_window;
+                refreshWaitingIndicatorTimer();
             }
 
             // v1.4 Glitch
@@ -239,6 +250,8 @@
 
     // Optimizing/Processing handler
     function handleOptimizingStart() {
+        showAgentRespondingIndicator('PROBÍHÁ OPTIMALIZACE ODPOVĚDI');
+
         const hist = document.getElementById('chatHistory');
         // Remove existing
         const old = document.getElementById('opt-loading');
@@ -247,7 +260,7 @@
         const d = document.createElement('div');
         d.id = "opt-loading";
         d.className = "text-green-800 text-xs italic animate-pulse ml-2";
-        d.innerText = ">> INCOMING TRANSMISSION [PROCESSING]...";
+        d.innerText = "Probíhá optimalizace odpovědi...";
         hist.appendChild(d);
         hist.scrollTop = hist.scrollHeight;
     }
@@ -354,46 +367,74 @@
                 role: 'user',
                 content: text
             });
-            
-            // Show agent responding indicator
-            showAgentRespondingIndicator();
-            
+
+            // Show agent responding indicator and start countdown
+            showAgentRespondingIndicator('ČEKÁNÍ NA ODPOVĚĎ', true);
+
             input.value = '';
             sfx.playSend(); // Local feedback
         }
     });
     
-    // Agent responding indicator
-    let agentRespondingTimeout = null;
-    function showAgentRespondingIndicator() {
+    // Agent responding indicator with countdown
+    function ensureAgentIndicator() {
         const hist = document.getElementById('chatHistory');
         let indicator = document.getElementById('agentRespondingIndicator');
-        
+
         if (!indicator) {
             indicator = document.createElement('div');
             indicator.id = 'agentRespondingIndicator';
             indicator.className = 'text-sm text-pink-500 italic ml-2 animate-pulse p-2 border border-pink-900 bg-pink-900/20';
             indicator.innerHTML = `
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
                     <span class="inline-block w-2 h-2 bg-pink-500 rounded-full animate-ping"></span>
-                    ČEKÁM NA ODPOVĚĎ AGENTA...
+                    <div class="flex flex-col leading-tight">
+                        <span class="agent-indicator-primary font-semibold">ČEKÁNÍ NA ODPOVĚĎ</span>
+                        <span class="agent-indicator-timer text-xs text-pink-200">Čas: -- s</span>
+                    </div>
                 </div>
             `;
             hist.appendChild(indicator);
             hist.scrollTop = hist.scrollHeight;
         }
-        
-        // Auto-hide after 2 minutes (agent timeout)
-        clearTimeout(agentRespondingTimeout);
-        agentRespondingTimeout = setTimeout(() => {
-            hideAgentRespondingIndicator();
-        }, 120000);
+
+        return indicator;
     }
-    
+
+    function refreshWaitingIndicatorTimer() {
+        const indicator = document.getElementById('agentRespondingIndicator');
+        if (!indicator) return;
+        const timerRow = indicator.querySelector('.agent-indicator-timer');
+        const remaining = Math.max(0, responseCountdownRemaining || responseWindowSeconds);
+        const statusText = remaining <= 0 ? 'Čas vypršel' : `Zbývá ${remaining}s / ${responseWindowSeconds}s`;
+        if (timerRow) timerRow.innerText = statusText;
+    }
+
+    function startCountdownLoop() {
+        clearInterval(responseCountdownInterval);
+        refreshWaitingIndicatorTimer();
+        responseCountdownInterval = setInterval(() => {
+            responseCountdownRemaining = Math.max(0, responseCountdownRemaining - 1);
+            refreshWaitingIndicatorTimer();
+        }, 1000);
+    }
+
+    function showAgentRespondingIndicator(label = 'ČEKÁNÍ NA ODPOVĚĎ', resetTimer = false) {
+        const indicator = ensureAgentIndicator();
+        const primary = indicator.querySelector('.agent-indicator-primary');
+        if (primary) primary.innerText = label;
+
+        if (resetTimer || responseCountdownRemaining <= 0) {
+            responseCountdownRemaining = responseWindowSeconds;
+        }
+        startCountdownLoop();
+    }
+
     function hideAgentRespondingIndicator() {
         const indicator = document.getElementById('agentRespondingIndicator');
         if (indicator) indicator.remove();
-        clearTimeout(agentRespondingTimeout);
+        clearInterval(responseCountdownInterval);
+        responseCountdownRemaining = 0;
     }
 
     // Input Mirroring
