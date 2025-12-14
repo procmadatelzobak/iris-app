@@ -1,0 +1,7 @@
+{
+    "version": "4.0.2",
+    "deployment_date": "2024-10-15",
+    "currency_name": "Neuro-Credits (NC)",
+    "inflation_rate": "Dynamic",
+    "rules_url": "../../00_PRAVIDLA_LARPU.html"
+}

@@ -1,0 +1,58 @@
+[
+    {
+        "source": "U01",
+        "target": "A01",
+        "type": "past",
+        "desc_source": "Poznala jste Petra (A01). Je to váš bývalý žák.",
+        "desc_target": "Jana (U01) je vaše učitelka. Trapas."
+    },
+    {
+        "source": "U02",
+        "target": "S03",
+        "type": "trade",
+        "desc_source": "Kupujete od S03 kradenou měď, abyste splatil dluhy.",
+        "desc_target": "Prodáváte U02 firemní majetek."
+    },
+    {
+        "source": "U02",
+        "target": "S01",
+        "type": "blackmail",
+        "desc_source": "S01 ví o vašich dluzích. Musíte donášet.",
+        "desc_target": "Držíte U02 v šachu."
+    },
+    {
+        "source": "U03",
+        "target": "A02",
+        "type": "romance",
+        "desc_source": "Milujete tu AI. Je tak poetická!",
+        "desc_target": "U03 je do vaší role blázen. Je to creepy."
+    },
+    {
+        "source": "A08",
+        "target": "U06",
+        "type": "plot",
+        "desc_source": "Potřebujete, aby U06 (Konspirátor) zadal kód 'ALOBAL-666'.",
+        "desc_target": "Někdo zevnitř (A08) vám posílá šifry."
+    },
+    {
+        "source": "A04",
+        "target": "U05",
+        "type": "empathy",
+        "desc_source": "U05 vám připomíná vaši mámu. Nemůžete na ni být zlá.",
+        "desc_target": "Ta AI (A04) je taková unavená, chudinka."
+    },
+    {
+        "source": "U08",
+        "target": "A03",
+        "type": "rival",
+        "desc_source": "Ta AI (A03) je nějaká moc rychlá. To je bot? Zničím ho.",
+        "desc_target": "U08 si myslí, že je rychlý. Ukážu mu, co je to rychlost."
+    },
+    {
+        "source": "U07",
+        "target": "S04",
+        "type": "investigation",
+        "desc_source": "S04 je klíč. Je hloupý, určitě něco prokecne.",
+        "desc_target": "Ta ženská (U07) po mně pořád kouká. Asi se jí líbím."
+    }
+]

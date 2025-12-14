@@ -139,6 +139,11 @@ lore_web_dir = base_dir.parent / "doc" / "iris" / "lore-web"
 if lore_web_dir.exists():
     app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir)), name="lore-web")
 
+# Organizer Wiki - standalone documentation
+wiki_dir = lore_web_dir / "wiki"
+if wiki_dir.exists():
+    app.mount("/organizer-wiki", StaticFiles(directory=str(wiki_dir), html=True), name="wiki")
+
 app.mount("/docs/images", StaticFiles(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs", "images")), name="docs_images")
 
 # Templates
