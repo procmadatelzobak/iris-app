@@ -6,6 +6,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | 2025-12-13 | `verify_v1_4.py` | v1.4 API Logic | **PASS** | Checked Labels, Power Buy (Logic+Treasury), Tax Calculation, Timer Config. |
 | 2025-12-14 | n/a (UI/docs change) | Lore viewer embed | Not Run | Static documentation embed; manual UI check pending. |
+| 2025-12-14 | n/a (UI localization) | Agent terminal translations | Not Run | Localization change; verify visually in UI. |
 
 ## Manual Verification Required
 
