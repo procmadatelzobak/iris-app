@@ -12,6 +12,8 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from pydantic import BaseModel, field_validator
 from typing import Dict, Optional
 import html
+import json
+import re
 
 from ..dependencies import get_current_admin, get_current_user
 from ..logic.gamestate import gamestate
@@ -31,8 +33,9 @@ class CustomLabelUpdate(BaseModel):
         # Limit key length and format
         if len(v) > 100:
             raise ValueError('Key too long (max 100 chars)')
-        if not v.replace('_', '').replace('.', '').isalnum():
-            raise ValueError('Key can only contain alphanumeric, underscore and dot')
+        # Allow alphanumeric (including Unicode), underscore, dot, and hyphen
+        if not re.match(r'^[\w\.\-]+$', v, re.UNICODE):
+            raise ValueError('Key can only contain word characters, underscore, dot and hyphen')
         return v
     
     @field_validator('value')
@@ -99,7 +102,6 @@ async def set_language_mode(update: LanguageModeUpdate, admin=Depends(get_curren
     clear_cache()
     
     # Broadcast language change
-    import json
     await routing_logic.broadcast_global(json.dumps({
         "type": "language_change",
         "language_mode": update.language_mode
@@ -120,7 +122,6 @@ async def set_custom_label(update: CustomLabelUpdate, admin=Depends(get_current_
     gamestate.custom_labels[update.key] = update.value
     
     # Broadcast label update
-    import json
     await routing_logic.broadcast_global(json.dumps({
         "type": "translation_update",
         "key": update.key,
@@ -143,7 +144,6 @@ async def delete_custom_label(key: str, admin=Depends(get_current_admin)):
         del gamestate.custom_labels[key]
         
         # Broadcast label deletion
-        import json
         await routing_logic.broadcast_global(json.dumps({
             "type": "translation_update",
             "key": key,
@@ -163,7 +163,6 @@ async def reset_all_labels(admin=Depends(get_current_admin)):
     gamestate.custom_labels = {}
     
     # Broadcast reset
-    import json
     await routing_logic.broadcast_global(json.dumps({
         "type": "translations_reset"
     }))

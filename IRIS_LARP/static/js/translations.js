@@ -141,10 +141,18 @@ class TranslationManager {
             this.customLabels[key] = value;
         }
         
-        // Update elements with this key
+        // Update elements with this key using consistent logic
         document.querySelectorAll(`[data-key="${key}"]`).forEach(el => {
             const newValue = this.get(key);
-            el.textContent = newValue;
+            // Check if element has only text content
+            if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
+                el.textContent = newValue;
+            } else if (el.childNodes.length === 0) {
+                el.textContent = newValue;
+            } else {
+                // For complex elements, update first text node
+                this.updateTextNode(el, newValue);
+            }
         });
     }
 
