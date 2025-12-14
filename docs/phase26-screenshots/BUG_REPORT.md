@@ -35,7 +35,20 @@
   
   {% block head %}
   <style>
+  /* ... existing CSS content ... */
+  </style>
+  {% endblock %}
+  
+  {% block content %}
+  <!-- ... existing HTML content ... -->
+  {% endblock %}
+  
+  {% block scripts %}
+  <!-- ... existing scripts ... -->
+  {% endblock %}
   ```
+  
+  Poznámka: Stávající `{% endblock %}` na řádku 79 je v pořádku, problém je pouze chybějící úvodní deklarace.
 
 ![Admin Error](https://github.com/user-attachments/assets/64688d58-488c-477c-9223-9965a98cc89d)
 
