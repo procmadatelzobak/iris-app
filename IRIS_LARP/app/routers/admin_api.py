@@ -255,6 +255,18 @@ async def set_optimizer_prompt(prompt: str = Body(..., embed=True), admin=Depend
     gamestate.optimizer_prompt = prompt
     return {"status": "ok", "optimizer_prompt": gamestate.optimizer_prompt}
 
+@router.get("/controls/state")
+async def get_control_state(admin=Depends(get_current_admin)):
+    """Get current state of all admin controls"""
+    return {
+        "optimizer_active": gamestate.optimizer_active,
+        "agent_response_window": gamestate.agent_response_window,
+        "hyper_visibility_mode": gamestate.hyper_visibility_mode.value,
+        "temperature": gamestate.temperature,
+        "power_capacity": gamestate.power_capacity,
+        "shift_offset": gamestate.global_shift_offset
+    }
+
 # v1.4 Endpoints
 
 class TimerAction(BaseModel):
@@ -449,9 +461,11 @@ class AIConfigUpdate(BaseModel):
 async def get_ai_config(admin=Depends(get_current_admin)):
     """ROOT ONLY: Get AI configuration"""
     return {
+        "status": "ok",
         "optimizer_prompt": gamestate.optimizer_prompt,
         "autopilot_model": gamestate.llm_config_hyper.model_name,
-        "optimizer_active": gamestate.optimizer_active
+        "optimizer_active": gamestate.optimizer_active,
+        "test_mode": gamestate.test_mode
     }
 
 @router.post("/root/ai_config")

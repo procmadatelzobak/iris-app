@@ -3356,3 +3356,19 @@ INFO:     Finished server process [62540]
 INFO:     Started server process [63056]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/admin_api.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [63056]
+INFO:     Started server process [65406]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/admin_api.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65406]
+INFO:     Started server process [65555]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

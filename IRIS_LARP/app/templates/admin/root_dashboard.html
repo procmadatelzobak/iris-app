@@ -519,15 +519,41 @@
     };
 
     // Load initial AI config
-    async function loadAIConfig() {
+    window.loadAIConfig = async () => {
         try {
-            const res = await fetch('/api/admin/root/ai_config');
+            const res = await fetch('/api/admin/root/ai_config', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             const data = await res.json();
-            document.getElementById('optimizerPrompt').value = data.optimizer_prompt || '';
-            document.getElementById('autopilotModel').value = data.autopilot_model || 'google/gemini-2.0-flash-lite-preview-02-05:free';
-        } catch (e) {
-            console.error('Could not load AI config:', e);
-        }
+            if (data.status === 'ok') {
+                document.getElementById('optimizerPrompt').value = data.optimizer_prompt;
+                document.getElementById('autopilotModel').value = data.autopilot_model;
+
+                // Hydrate Test Mode State
+                if (data.test_mode !== undefined) {
+                    testModeActive = data.test_mode;
+                    const btn = document.getElementById('btnTestMode');
+                    const label = document.getElementById('testModeLabel');
+                    const status = document.getElementById('testModeStatus');
+
+                    if (testModeActive) {
+                        label.innerText = 'ENABLED';
+                        btn.classList.add('border-green-500', 'text-green-500');
+                        btn.classList.remove('border-gray-700');
+                        status.innerText = '✅ Quick login buttons will appear on login screen';
+                        status.classList.remove('text-gray-600');
+                        status.classList.add('text-green-500');
+                    } else {
+                        label.innerText = 'DISABLED';
+                        btn.classList.remove('border-green-500', 'text-green-500');
+                        btn.classList.add('border-gray-700');
+                        status.innerText = '❌ Standard password input required';
+                        status.classList.remove('text-green-500');
+                        status.classList.add('text-gray-600');
+                    }
+                }
+            }
+        } catch (e) { console.error("Config load failed", e); }
     }
 
     // Call on init

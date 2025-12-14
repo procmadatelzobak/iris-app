@@ -89,7 +89,50 @@ function updateUI() {
             setInterval(refreshTasks, 5000);
             setInterval(refreshEconomy, 10000);
             setInterval(refreshSystemLogs, 5000);
+            setInterval(loadControlState, 5000); // Sync controls periodically
+            loadControlState(); // Initial load
         });
+
+        // --- STATE SYNC ---
+        window.loadControlState = async function () {
+            try {
+                const res = await fetch('/api/admin/controls/state', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!res.ok) return;
+                const data = await res.json();
+
+                // Optimizer
+                const optBtn = document.getElementById('btnOptimizer');
+                if (optBtn) {
+                    if (data.optimizer_active) {
+                        optBtn.innerText = "OPTIMIZER: ON";
+                        optBtn.classList.remove('bg-gray-800');
+                        optBtn.classList.add('bg-green-900');
+                    } else {
+                        optBtn.innerText = "OPTIMIZER: OFF";
+                        optBtn.classList.remove('bg-green-900');
+                        optBtn.classList.add('bg-gray-800');
+                    }
+                }
+
+                // Visibility
+                document.querySelectorAll('.vis-btn').forEach(b => {
+                    b.classList.remove('bg-blue-900', 'text-white');
+                    b.classList.add('bg-gray-800', 'text-gray-400');
+                });
+                const visBtn = document.getElementById(`vis-${data.hyper_visibility_mode}`);
+                if (visBtn) {
+                    visBtn.classList.remove('bg-gray-800', 'text-gray-400');
+                    visBtn.classList.add('bg-blue-900', 'text-white');
+                }
+
+                // Timer
+                const timerInp = document.getElementById('timerInput');
+                if (timerInp && document.activeElement !== timerInp) {
+                    timerInp.value = data.agent_response_window;
+                }
+
+            } catch (e) { console.error("Control Sync Fail", e); }
+        }
 
         // --- HUB NAVIGATION ---
         window.openStation = function (name) {
