@@ -65,6 +65,12 @@ Po přihlášení jako subjekt uvidíte terminál s těmito částmi:
 ### 3.2 Pravý panel - Chat
 Zde probíhá komunikace s vaším agentem.
 
+#### Indikátory stavu
+- **Vaše uživatelské jméno** je zobrazeno v levém panelu
+- **Vaše odeslané zprávy** se okamžitě zobrazí v chatu (message echo)
+- **"Agent odpovídá..."** - animovaný indikátor se zobrazí, když agent zpracovává vaši zprávu
+- Indikátor zmizí, když agent odpoví nebo po 2 minutách timeout
+
 ---
 
 ## 4. Práce s úkoly
@@ -104,6 +110,8 @@ Zde probíhá komunikace s vaším agentem.
 - U zpráv od agenta můžete nahlásit problém
 - Kliknutím na **[ ! ]** nahlásíte zprávu jako anomálii
 - **Poznámka:** Některé zprávy jsou "ověřené" (mají badge **✓ VERIFIED**) a nelze je nahlásit
+  - Zprávy přepsané AI Optimizerem jsou automaticky označeny jako ověřené
+  - Tato funkce chrání systémově optimalizovaný obsah před nahlášením
 
 ---
 
@@ -133,6 +141,16 @@ Zde probíhá komunikace s vaším agentem.
 | **Glitch** | Vizuální efekt při přetížení systému |
 | **Purgatory** | Stav, kdy má subjekt záporné kredity |
 | **Agent** | Operátor, se kterým komunikujete |
+
+---
+
+## 8. Nedávné vylepšení (Phase 30)
+
+### Vylepšení uživatelského terminálu
+- **Zobrazení uživatelského jména**: Vaše jméno je nyní viditelné v levém panelu
+- **Okamžitý echo zpráv**: Vaše odeslané zprávy se ihned zobrazí v chatu
+- **Indikátor "Agent odpovídá"**: Animovaný indikátor vás informuje, kdy agent zpracovává vaši zprávu
+- **Automatické skrytí**: Indikátor zmizí po obdržení odpovědi nebo po 2 minutách
 
 ---
 

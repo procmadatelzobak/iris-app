@@ -36,4 +36,22 @@ Pro instalaci a technické detaily viz:
 
 ---
 
+## Aktuální verze: Phase 30
+
+Všechny příručky byly aktualizovány k fázi 30, která zahrnuje:
+- Vylepšení UI pro všechny terminály (User, Agent, Admin, ROOT)
+- Opravy navigace a layoutu
+- Vylepšení indikátorů stavu a zpětné vazby
+- Plnou českou lokalizaci
+
+### Co je nového v Phase 30?
+- **Agent terminál**: Plná šířka, zobrazení uživatelského jména, vylepšený timer
+- **User terminál**: Message echo, indikátor "Agent odpovídá", zobrazení jména
+- **Admin dashboard**: Opravená navigace mezi stanicemi
+- **ROOT přístup**: Přemístěné tlačítko, opravené záložky, česká lokalizace
+
+Pro kompletní historii změn viz [DEVELOPMENT_HISTORY.md](../DEVELOPMENT_HISTORY.md).
+
+---
+
 **Poslední aktualizace:** 2025-12-14

@@ -58,12 +58,14 @@ Po přihlášení jako agent uvidíte růžový terminál s těmito částmi:
 
 #### STAV PŘIPOJENÍ
 - Ukazuje vaše ID relace (např. S1, S2...)
+- Zobrazuje vaše uživatelské jméno
 - Zelená tečka = připojeno
 
 #### ČASOVAČ ODPOVĚDI
-- Žlutý pruh ukazuje zbývající čas na odpověď
+- Žlutý pruh (progress bar) ukazuje zbývající čas na odpověď
 - Když čas vyprší, vstup se zablokuje
 - Po odeslání zprávy se časovač resetuje
+- Výchozí čas: 120 sekund (2 minuty)
 
 ### 3.2 Chat panel
 Hlavní prostor pro komunikaci se subjekty.
@@ -129,6 +131,15 @@ Hlavní prostor pro komunikaci se subjekty.
 | **Optimizer** | AI přepisující zprávy agentů |
 | **Overload** | Přetížení systému (load > capacity) |
 | **Timeout** | Vypršení časového limitu pro odpověď |
+
+---
+
+## 8. Nedávné vylepšení (Phase 30)
+
+### Vylepšení rozhraní agenta
+- **Plná šířka layoutu**: Terminál agenta nyní využívá celou šířku obrazovky
+- **Zobrazení uživatelského jména**: Vaše jméno je nyní viditelné ve stavovém panelu
+- **Timer bar UI**: Vizuálně vylepšený časovač odpovědi
 
 ---
 

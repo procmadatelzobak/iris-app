@@ -95,12 +95,15 @@ Kliknutím na stanici se otevře její detail.
 ### TLAK PÁRY (Power)
 - Modrý pruh ukazuje zatížení vs. kapacitu
 - Tlačítko **[ PŘIHODIT UHLÍ ]** přidá 50MW na 30 minut za 1000 CR
-- Pokud je boost aktivní, zobrazí se odpočet
+- Pokud je boost aktivní, zobrazí se odpočet (persistent countdown timer)
+- AI Optimizer spotřebovává 0.5 MW za každou zprávu
 
 ### HLADINA STRESU (Teplota)
-- Barevný pruh od zelené po červenou
+- Barevný pruh od zelené po červenou (Heat Bar)
+- Škála: 0-350+ (nad 350 kritická hodnota)
 - Manuální posuvník pro ruční nastavení
 - Režimy: NORMÁL / ÚSPORA / PŘETÍŽENÍ
+- Zvyšuje se při reportování anomálií uživateli
 
 ### FILTR PRAVDY (Visibility)
 - ŽÁDNÝ - Agenti vidí vše normálně
@@ -173,6 +176,14 @@ Kliknutím na stanici se otevře její detail.
 | **Glitch** | Vizuální efekt při přetížení systému |
 | **Purgatory** | Stav, kdy má subjekt záporné kredity |
 | **Overload** | Přetížení systému (load > capacity) |
+
+---
+
+## 10. Nedávné vylepšení (Phase 30)
+
+### Vylepšení Admin Dashboard
+- **Opravená navigace dashboardu**: Všechny 4 stanice (Monitor, Controls, Economy, Tasks) nyní správně fungují
+- **Vylepšené přepínání pohledů**: Opravena funkce `openStation()` pro plynulý přechod mezi stanicemi
 
 ---
 

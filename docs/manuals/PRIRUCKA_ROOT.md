@@ -233,6 +233,19 @@ journalctl -u iris -f
 
 ---
 
+## 8. Nedávné vylepšení (Phase 30)
+
+### Přihlašovací obrazovka
+- **ROOT tlačítko přemístěno**: Tlačítko ROOT PŘÍSTUP nyní v hlavičce vpravo vedle "TESTOVACÍ REŽIM"
+- **Česká lokalizace**: Zlepšeno: "TEST MODE" → "TESTOVACÍ REŽIM: RYCHLÉ PŘIHLÁŠENÍ AKTIVNÍ"
+- **ROOT button text**: "ROOT ACCESS" → "ROOT PŘÍSTUP"
+
+### ROOT Dashboard vylepšení
+- **Opravená navigace záložek**: Všechny záložky (Dashboard, Config, Economy, Chronos, Panopticon) nyní správně fungují
+- **Vylepšená struktura pohledů**: Opraveno přepínání mezi vnořenými pohledy
+
+---
+
 ## Známé problémy
 
 > [!WARNING]
