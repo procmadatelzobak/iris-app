@@ -130,8 +130,6 @@
         <div class="flex gap-4 ml-auto mr-4">
             <button class="chernobyl-btn px-4 py-1 text-sm editable-label" data-key="btn_labels"
                 onclick="toggleEditMode()">PŘEPSAT REALITU</button>
-            <button class="chernobyl-btn px-4 py-1 text-sm editable-label" data-key="btn_ai_cfg"
-                onclick="toggleAIModal()">MODZEK</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-red-500 border-red-800 editable-label"
                 data-key="btn_reset_sys" onclick="triggerReset()">AUTO-DESTRUKCE</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800"
@@ -346,42 +344,7 @@
         </div>
     </div>
 
-    <!-- AI Config Modal (Reused) -->
-    <div id="aiModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center">
-        <!-- (Same as before, I'll allow JS to handle loading/saving logic, just keeping structure) -->
-        <div class="bg-gray-900 border border-green-500 w-3/4 h-3/4 p-4 flex flex-col shadow-lg">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-700">
-                <h2 class="text-xl text-green-500 font-bold">SYSTEM CONFIGURATION // AI NODE</h2>
-                <button class="text-red-500 hover:text-white" onclick="toggleAIModal()">[ CLOSE ]</button>
-            </div>
-            <div class="flex gap-4 mb-4">
-                <button class="btn-admin flex-1" onclick="switchConfigTab('keys')">API KEYS</button>
-                <button class="btn-admin flex-1" onclick="switchConfigTab('hyper')">HYPER</button>
-            </div>
-            <div class="flex-1 overflow-y-auto p-2 border border-gray-800 bg-black">
-                <!-- Brief placeholders, JS loads content -->
-                <div id="conf-keys" class="conf-tab">
-                    <p class="text-gray-500">API KEYS CONFIG (See Admin UI JS)</p>
-                    <!-- I should preserve the inputs for JS to find -->
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <label class="w-24 text-gray-400">OPENROUTER</label>
-                            <input type="password" id="key-openrouter" class="flex-1 bg-gray-800 text-white p-2">
-                            <button class="btn-action" onclick="saveKey('openrouter')">SAVE</button>
-                            <span id="status-openrouter" class="text-xs">...</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="conf-hyper" class="conf-tab hidden">
-                    <label>MODEL</label>
-                    <input type="text" id="hyper-model" class="w-full bg-gray-800 text-white p-2 mb-2">
-                    <label>PROMPT</label>
-                    <textarea id="hyper-prompt" class="w-full bg-gray-800 text-pink-300 p-2 h-64"></textarea>
-                    <button class="w-full btn-action mt-2" onclick="saveConfig('hyper')">UPDATE</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 </div>
 {% endblock %}

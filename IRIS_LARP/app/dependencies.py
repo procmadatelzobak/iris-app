@@ -82,3 +82,8 @@ async def get_current_admin(current_user: Annotated[User, Depends(get_current_us
     if current_user.role != UserRole.ADMIN:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough privileges")
     return current_user
+
+async def get_current_root(current_user: Annotated[User, Depends(get_current_user)]):
+    if current_user.role != UserRole.ADMIN or current_user.username != "root":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Root access required")
+    return current_user

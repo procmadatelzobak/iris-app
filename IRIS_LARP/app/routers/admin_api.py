@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
 from typing import List, Dict
-from ..dependencies import get_current_admin
+from ..dependencies import get_current_admin, get_current_root
 from ..logic.llm_core import llm_service, LLMConfig, LLMProvider
 from ..logic.gamestate import gamestate
 
@@ -36,7 +36,7 @@ class KeyUpdate(BaseModel):
     key: str
 
 @router.get("/llm/keys")
-async def get_keys(admin=Depends(get_current_admin)):
+async def get_keys(admin=Depends(get_current_root)):
     db = SessionLocal()
     keys = {}
     for provider in LLMProvider:
@@ -54,7 +54,7 @@ async def get_keys(admin=Depends(get_current_admin)):
     return keys
 
 @router.post("/llm/keys")
-async def set_key(update: KeyUpdate, admin=Depends(get_current_admin)):
+async def set_key(update: KeyUpdate, admin=Depends(get_current_root)):
     db = SessionLocal()
     key_name = f"{update.provider.value.upper()}_API_KEY"
     config = db.query(SystemConfig).filter(SystemConfig.key == key_name).first()
@@ -349,7 +349,7 @@ class SystemConstants(BaseModel):
     cost_optimizer: float = 15.0
 
 @router.post("/root/update_constants")
-async def update_constants(data: SystemConstants, admin=Depends(get_current_admin)):
+async def update_constants(data: SystemConstants, admin=Depends(get_current_root)):
     """ROOT ONLY: Update game constants logic"""
     # Ideally check basic auth to confirm 'admin' is root or superadmin if we had role separation.
     # For now, any admin can (per v1 spec).
@@ -386,7 +386,7 @@ async def update_constants(data: SystemConstants, admin=Depends(get_current_admi
     return {"status": "updated", "values": data.dict()}
 
 @router.get("/root/state")
-async def get_root_state(admin=Depends(get_current_admin)):
+async def get_root_state(admin=Depends(get_current_root)):
     """ROOT ONLY: Get full system state for initialization"""
     return {
         "tax_rate": gamestate.tax_rate,
@@ -424,7 +424,7 @@ async def reset_system_logs(admin=Depends(get_current_admin)):
     return {"status": "ok"}
 
 @router.post("/root/reset")
-async def reset_system(admin=Depends(get_current_admin)):
+async def reset_system(admin=Depends(get_current_root)):
     """ROOT ONLY: Full System Wipe"""
     db = SessionLocal()
     try:
@@ -463,7 +463,7 @@ class AIConfigUpdate(BaseModel):
     autopilot_model: str
 
 @router.get("/root/ai_config")
-async def get_ai_config(admin=Depends(get_current_admin)):
+async def get_ai_config(admin=Depends(get_current_root)):
     """ROOT ONLY: Get AI configuration"""
     return {
         "status": "ok",
@@ -474,7 +474,7 @@ async def get_ai_config(admin=Depends(get_current_admin)):
     }
 
 @router.post("/root/ai_config")
-async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_admin)):
+async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_root)):
     """ROOT ONLY: Update AI configuration"""
     # Update gamestate
     gamestate.optimizer_prompt = config.optimizer_prompt
@@ -495,7 +495,7 @@ async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_adm
     return {"status": "ok", "config": config.dict()}
 
 @router.post("/root/restart")
-async def restart_server(admin=Depends(get_current_admin)):
+async def restart_server(admin=Depends(get_current_root)):
     """ROOT ONLY: Restart the server process"""
     import subprocess
     import sys
@@ -528,7 +528,7 @@ subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.d
     return {"status": "restarting", "message": "Server will restart in ~3 seconds"}
 
 @router.post("/root/factory_reset")
-async def factory_reset(admin=Depends(get_current_admin)):
+async def factory_reset(admin=Depends(get_current_root)):
     """ROOT ONLY: Delete database and restart with fresh data"""
     import subprocess
     import sys
