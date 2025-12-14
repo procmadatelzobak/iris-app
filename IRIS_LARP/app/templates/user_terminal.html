@@ -74,7 +74,7 @@
                 </div>
                 <div class="p-2 bg-[rgba(255,255,255,0.05)] rounded">
                     <div class="text-xs opacity-70">KREDITY</div>
-                    <div class="font-mono text-2xl font-bold mt-1 text-[var(--accent-color)]" id="creditDisplay">--
+                    <div class="font-mono text-2xl font-bold mt-1 text-[var(--accent-color)]" id="creditsDisplay">--
                     </div>
                 </div>
             </div>
@@ -149,6 +149,11 @@
             // Updated for Phase 21 (temperature key)
             applyChernobyl(data.temperature || data.chernobyl || 0);
 
+            // Update shift display
+            if (data.shift !== undefined) {
+                document.getElementById('shiftDisplay').innerText = data.shift;
+            }
+
             // v1.4 Glitch
             if (data.is_overloaded) {
                 document.body.classList.add('glitch-mode-active');
@@ -157,6 +162,7 @@
             }
         } else if (data.type === 'user_status') {
             if (data.credits !== undefined) creditsDisplay.innerText = data.credits;
+            if (data.shift !== undefined) document.getElementById('shiftDisplay').innerText = data.shift;
             if (data.is_locked !== undefined) setLock(data.is_locked);
         } else if (data.type === 'lock_update') {
             setLock(data.locked);
