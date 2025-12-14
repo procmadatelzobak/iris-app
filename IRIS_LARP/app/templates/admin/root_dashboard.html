@@ -128,9 +128,15 @@
             <div class="nav-btn" onclick="switchView('time')" id="nav-time">CHRONOS</div>
             <div class="nav-btn" onclick="switchView('surveillance')" id="nav-surveillance">PANOPTICON</div>
         </div>
-        <div
-            class="px-4 font-mono text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-yellow-600 animate-pulse">
-            ROOT ACCESS GRANTED
+        <div class="flex items-center gap-4">
+            <div
+                class="px-4 font-mono text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-yellow-600 animate-pulse">
+                ROOT ACCESS GRANTED
+            </div>
+            <a href="/auth/logout"
+                class="border border-red-500 text-red-500 hover:bg-red-900 px-3 py-1 text-sm font-mono transition">
+                [ ODHLÁSIT ]
+            </a>
         </div>
     </div>
 
@@ -189,424 +195,459 @@
                         onclick="factoryReset()">[ FACTORY RESET ]</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Raw Logs -->
-        <div class="god-panel mt-6 flex-1 h-96">
-            <div class="god-title">SYSTEM LOG STREAM</div>
-            <div id="logStream"
-                class="font-mono text-xs text-gray-400 h-full overflow-y-auto p-2 bg-black border border-gray-800">
-                <!-- Logs from socket -->
+            <!-- Raw Logs -->
+            <div class="god-panel mt-6 max-h-80 overflow-hidden">
+                <div class="god-title">SYSTEM LOG STREAM</div>
+                <div id="logStream"
+                    class="font-mono text-xs text-gray-400 h-64 overflow-y-auto p-2 bg-black border border-gray-800">
+                    <!-- Logs from socket -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- VIEW: CONFIG -->
-    <div id="view-config" class="view-container hidden">
-        <!-- Test Mode Panel -->
-        <div class="god-panel">
-            <div class="god-title">🔧 DEVELOPER MODE</div>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="text-lg font-bold">Quick Login Buttons</div>
-                        <div class="text-sm text-gray-500">Enable passwordless login for testing (shows user buttons on
-                            login screen)</div>
+        <!-- VIEW: CONFIG -->
+        <div id="view-config" class="view-container hidden">
+            <!-- Test Mode Panel -->
+            <div class="god-panel">
+                <div class="god-title">🔧 DEVELOPER MODE</div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-lg font-bold">Quick Login Buttons</div>
+                            <div class="text-sm text-gray-500">Enable passwordless login for testing (shows user buttons
+                                on
+                                login screen)</div>
+                        </div>
+                        <button id="btnTestMode" class="btn-god px-8" onclick="toggleTestMode()">
+                            <span id="testModeLabel">DISABLED</span>
+                        </button>
                     </div>
-                    <button id="btnTestMode" class="btn-god px-8" onclick="toggleTestMode()">
-                        <span id="testModeLabel">DISABLED</span>
-                    </button>
+                    <div id="testModeStatus" class="text-sm text-gray-600 italic"></div>
                 </div>
-                <div id="testModeStatus" class="text-sm text-gray-600 italic"></div>
+            </div>
+
+            <!-- LLM Configuration -->
+            <div class="god-panel mt-6">
+                <div class="god-title">🤖 AI CONFIGURATION</div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">OPTIMIZER PROMPT</label>
+                        <textarea id="optimizerPrompt" rows="3"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="Rewrite instructions..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">AUTOPILOT MODEL</label>
+                        <select id="autopilotModel" class="w-full bg-black border border-gray-700 p-2 text-white">
+                            <option value="google/gemini-2.0-flash-lite-preview-02-05:free">Gemini 2.0 Flash (Free)
+                            </option>
+                            <option value="google/gemini-flash-1.5">Gemini 1.5 Flash</option>
+                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- API Keys Section -->
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <div class="text-sm text-yellow-500 mb-3">🔑 API KEYS (uloženo v .env)</div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">OPENAI API KEY</label>
+                            <input type="password" id="openaiKey"
+                                class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                                placeholder="sk-..." autocomplete="off">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">OPENROUTER API KEY</label>
+                            <input type="password" id="openrouterKey"
+                                class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                                placeholder="sk-or-..." autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 mt-2 italic">
+                        ⚠️ Klíče se ukládají pouze do .env souboru na serveru. Vyžaduje restart serveru.
+                    </div>
+                </div>
+
+                <button class="btn-god w-full mt-4" onclick="saveAIConfig()">[ SAVE AI CONFIG ]</button>
+            </div>
+
+            <!--System Info -->
+            <div class="god-panel mt-6">
+                <div class="god-title">ℹ️ SYSTEM INFORMATION</div>
+                <div class="grid grid-cols-3 gap-4 text-sm font-mono">
+                    <div>
+                        <div class="text-gray-500">Version</div>
+                        <div class="text-white">Phase 25.0</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-500">Total Users</div>
+                        <div class="text-white" id="sysUserCount">--</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-500">Database</div>
+                        <div class="text-white">SQLite (iris.db)</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- LLM Configuration -->
-        <div class="god-panel mt-6">
-            <div class="god-title">🤖 AI CONFIGURATION</div>
-            <div class="grid grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">OPTIMIZER PROMPT</label>
-                    <textarea id="optimizerPrompt" rows="3"
-                        class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
-                        placeholder="Rewrite instructions..."></textarea>
+        <!-- VIEW: ECONOMY -->
+        <div id="view-economy" class="view-container hidden">
+            <div class="god-panel">
+                <div class="god-title">GLOBAL ECONOMY MANIPULATION</div>
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(100)">STIMULUS
+                        (+100)</button>
+                    <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(1000)">LARGE STIMULUS
+                        (+1000)</button>
+                    <button class="btn-god text-red-500 border-red-500" onclick="injectGlobal(-100)">TAXATION
+                        (-100)</button>
+                    <button class="btn-god text-red-500 border-red-500" onclick="resetEconomy()">RESET ALL
+                        CREDITS</button>
                 </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">AUTOPILOT MODEL</label>
-                    <select id="autopilotModel" class="w-full bg-black border border-gray-700 p-2 text-white">
-                        <option value="google/gemini-2.0-flash-lite-preview-02-05:free">Gemini 2.0 Flash (Free)</option>
-                        <option value="google/gemini-flash-1.5">Gemini 1.5 Flash</option>
-                        <option value="gpt-4o-mini">GPT-4o Mini</option>
-                    </select>
-                </div>
+
+                <div class="god-title mt-8">INDIVIDUAL EDITOR</div>
+                <table class="w-full text-left text-sm border border-gray-800">
+                    <thead class="bg-gray-900 text-yellow-600">
+                        <tr>
+                            <th>USER</th>
+                            <th>CREDITS</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rootEcoTable"></tbody>
+                </table>
             </div>
-            <button class="btn-god w-full mt-4" onclick="saveAIConfig()">[ SAVE AI CONFIG ]</button>
         </div>
 
-        <!--System Info -->
-        <div class="god-panel mt-6">
-            <div class="god-title">ℹ️ SYSTEM INFORMATION</div>
-            <div class="grid grid-cols-3 gap-4 text-sm font-mono">
-                <div>
-                    <div class="text-gray-500">Version</div>
-                    <div class="text-white">Phase 25.0</div>
+        <!-- VIEW: TIME (CHRONOS) -->
+        <div id="view-time" class="view-container hidden">
+            <div class="god-panel w-1/2 mx-auto">
+                <div class="god-title">TIME MANIPULATION</div>
+                <div class="text-center mb-8">
+                    <div class="text-6xl font-bold mb-2 text-white" id="bigShift">0</div>
+                    <div class="text-sm text-gray-500">CURRENT SHIFT OFFSET</div>
                 </div>
-                <div>
-                    <div class="text-gray-500">Total Users</div>
-                    <div class="text-white" id="sysUserCount">--</div>
+
+                <div class="space-y-4">
+                    <input type="number" id="targetShift"
+                        class="w-full bg-gray-900 border border-yellow-700 p-2 text-white"
+                        placeholder="Target Shift (0-7)">
+                    <button class="btn-god w-full" onclick="setShift()">JUMP TO SHIFT</button>
                 </div>
-                <div>
-                    <div class="text-gray-500">Database</div>
-                    <div class="text-white">SQLite (iris.db)</div>
+
+                <div class="mt-8 border-t border-gray-800 pt-4">
+                    <label class="block mb-2 text-red-500">CHERNOBYL OVERRIDE</label>
+                    <input type="range" min="0" max="200" value="0" class="w-full accent-red-600"
+                        oninput="sendChernobylLevel(this.value)">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>0%</span>
+                        <span>100%</span>
+                        <span>MELTDOWN</span>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- VIEW: SURVEILLANCE -->
+        <div id="view-surveillance" class="view-container hidden">
+            <div class="god-title">PANOPTICON 8x8</div>
+            <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
+                <!-- 8 Sessions -->
+            </div>
+        </div>
+
     </div>
+    {% endblock %}
 
-    <!-- VIEW: ECONOMY -->
-    <div id="view-economy" class="view-container hidden">
-        <div class="god-panel">
-            <div class="god-title">GLOBAL ECONOMY MANIPULATION</div>
-            <div class="grid grid-cols-4 gap-4 mb-6">
-                <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(100)">STIMULUS
-                    (+100)</button>
-                <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(1000)">LARGE STIMULUS
-                    (+1000)</button>
-                <button class="btn-god text-red-500 border-red-500" onclick="injectGlobal(-100)">TAXATION
-                    (-100)</button>
-                <button class="btn-god text-red-500 border-red-500" onclick="resetEconomy()">RESET ALL CREDITS</button>
-            </div>
+    {% block scripts %}
+    <script src="/static/js/socket_client.js"></script>
+    <script>
+        // Root UI Logic - Simplified/Inline
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/';
 
-            <div class="god-title mt-8">INDIVIDUAL EDITOR</div>
-            <table class="w-full text-left text-sm border border-gray-800">
-                <thead class="bg-gray-900 text-yellow-600">
-                    <tr>
-                        <th>USER</th>
-                        <th>CREDITS</th>
-                        <th>STATUS</th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
-                <tbody id="rootEcoTable"></tbody>
-            </table>
-        </div>
-    </div>
+        // --- STATE ---
+        let currentView = 'dashboard';
 
-    <!-- VIEW: TIME (CHRONOS) -->
-    <div id="view-time" class="view-container hidden">
-        <div class="god-panel w-1/2 mx-auto">
-            <div class="god-title">TIME MANIPULATION</div>
-            <div class="text-center mb-8">
-                <div class="text-6xl font-bold mb-2 text-white" id="bigShift">0</div>
-                <div class="text-sm text-gray-500">CURRENT SHIFT OFFSET</div>
-            </div>
+        // --- SOCKET ---
+        const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+        const client = new SocketClient(wsUrl, handlePayload, (s) => { console.log("WS", s) });
+        client.connect(token);
 
-            <div class="space-y-4">
-                <input type="number" id="targetShift" class="w-full bg-gray-900 border border-yellow-700 p-2 text-white"
-                    placeholder="Target Shift (0-7)">
-                <button class="btn-god w-full" onclick="setShift()">JUMP TO SHIFT</button>
-            </div>
+        // Init Constants
+        setTimeout(() => fetchRootState(), 1000);
 
-            <div class="mt-8 border-t border-gray-800 pt-4">
-                <label class="block mb-2 text-red-500">CHERNOBYL OVERRIDE</label>
-                <input type="range" min="0" max="200" value="0" class="w-full accent-red-600"
-                    oninput="sendChernobylLevel(this.value)">
-                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>0%</span>
-                    <span>100%</span>
-                    <span>MELTDOWN</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW: SURVEILLANCE -->
-    <div id="view-surveillance" class="view-container hidden">
-        <div class="god-title">PANOPTICON 8x8</div>
-        <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
-            <!-- 8 Sessions -->
-        </div>
-    </div>
-
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script src="/static/js/socket_client.js"></script>
-<script>
-    // Root UI Logic - Simplified/Inline
-    const token = localStorage.getItem('token');
-    if (!token) window.location.href = '/';
-
-    // --- STATE ---
-    let currentView = 'dashboard';
-
-    // --- SOCKET ---
-    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
-    const client = new SocketClient(wsUrl, handlePayload, (s) => { console.log("WS", s) });
-    client.connect(token);
-
-    // Init Constants
-    setTimeout(() => fetchRootState(), 1000);
-
-    async function fetchRootState() {
-        try {
-            const res = await fetch('/api/admin/root/state');
-            const data = await res.json();
-            document.getElementById('inTax').value = data.tax_rate;
-            document.getElementById('inPower').value = data.power_cap;
-        } catch (e) { console.error(e); }
-    }
-
-    window.applySystemConstants = async () => {
-        const tax = parseFloat(document.getElementById('inTax').value);
-        const power = parseFloat(document.getElementById('inPower').value);
-
-        await fetch('/api/admin/root/update_constants', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tax_rate: tax, power_cap: power })
-        });
-        alert("PHYSICS UPDATED");
-    };
-
-    function handlePayload(data) {
-        logEvent(data.type);
-        if (data.type === 'gamestate_update') {
-            document.getElementById('valShift').innerText = data.shift;
-            document.getElementById('bigShift').innerText = data.shift;
-            document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
+        async function fetchRootState() {
+            try {
+                const res = await fetch('/api/admin/root/state');
+                const data = await res.json();
+                document.getElementById('inTax').value = data.tax_rate;
+                document.getElementById('inPower').value = data.power_cap;
+            } catch (e) { console.error(e); }
         }
-        if (data.type === 'message') {
-            // Update Panopticon
-            const sessId = data.session_id || 1;
-            const chatDiv = document.getElementById(`rootChat-${sessId}`);
-            if (chatDiv) {
-                const row = document.createElement('div');
-                row.className = `text-xs mb-1 ${data.role === 'agent' ? 'text-pink-400' : 'text-green-400'}`;
-                row.innerText = `${data.sender}: ${data.content}`;
-                chatDiv.appendChild(row);
-                chatDiv.scrollTop = chatDiv.scrollHeight;
+
+        window.applySystemConstants = async () => {
+            const tax = parseFloat(document.getElementById('inTax').value);
+            const power = parseFloat(document.getElementById('inPower').value);
+
+            await fetch('/api/admin/root/update_constants', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tax_rate: tax, power_cap: power })
+            });
+            alert("PHYSICS UPDATED");
+        };
+
+        function handlePayload(data) {
+            logEvent(data.type);
+            if (data.type === 'gamestate_update') {
+                document.getElementById('valShift').innerText = data.shift;
+                document.getElementById('bigShift').innerText = data.shift;
+                document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
             }
-        }
-    }
-
-    function logEvent(type) {
-        const div = document.createElement('div');
-        div.innerText = `${new Date().toLocaleTimeString()} - ${type}`;
-        document.getElementById('logStream').prepend(div);
-    }
-
-    // --- NAVIGATION ---
-    window.switchView = function (view) {
-        document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
-        document.getElementById(`view-${view}`).classList.remove('hidden');
-        document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
-        document.getElementById(`nav-${view}`).classList.add('active');
-        currentView = view;
-
-        if (view === 'economy') refreshEconomy();
-        if (view === 'surveillance') initGrid();
-    }
-
-    // --- ACTIONS ---
-    window.triggerShift = () => client.send({ type: 'shift_command' });
-    window.injectGlobal = async (amt) => {
-        if (!confirm(`Inject ${amt} credits to ALL users?`)) return;
-        // Need new API for this? Or loop in JS?
-        // Loop in JS is slow. Better API.
-        // For now, let's just use loop as iterating 8 users is fine.
-        // But better implementation: Backend endpoint.
-        // Let's assume we have /api/admin/economy/global_bonus
-        // I will create that if needed. For now, loop frontend?
-        // We can just reuse `ecoAction` inside a loop from the table data.
-        const users = await fetchUsers();
-        for (const u of users) {
-            await fetch('/api/admin/economy/bonus', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: u.id, amount: amt, reason: "GOD STIMULUS" })
-            });
-        }
-        alert("EXECUTION COMPLETE");
-        refreshEconomy();
-    };
-
-    window.resetEconomy = async () => {
-        // Loop set to 100? or 0?
-        alert("Not implemented yet - Requires specific endpoint to be safe.");
-    };
-
-    window.broadcastMsg = () => {
-        const msg = prompt("GLOBAL MESSAGE:");
-        if (msg) client.send({ type: 'admin_broadcast', content: msg });
-        // Note: sockets.py needs to handle 'admin_broadcast' or similar. 
-        // Existing logic supports 'broadcast_global' via python but not direct socket cmd for admin maybe?
-        // I'll check sockets.py later.
-    };
-
-    window.triggerReset = () => {
-        if (prompt("TYPE 'NUKE' TO CONFIRM") === 'NUKE') {
-            client.send({ type: 'reset_game' });
-        }
-    };
-
-    window.restartServer = async () => {
-        if (!confirm("RESTART SERVER? All connections will be dropped temporarily.")) return;
-        try {
-            const res = await fetch('/api/admin/root/restart', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
-            alert(data.message);
-            setTimeout(() => location.reload(), 5000);
-        } catch (e) {
-            alert("Restart failed: " + e);
-        }
-    };
-
-    window.factoryReset = async () => {
-        if (prompt("THIS WILL DELETE ALL DATA AND RESTART WITH DEFAULTS.\nType 'FACTORY RESET' to confirm:") !== 'FACTORY RESET') return;
-        try {
-            const res = await fetch('/api/admin/root/factory_reset', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
-            alert(data.message);
-            setTimeout(() => location.reload(), 8000);
-        } catch (e) {
-            alert("Factory reset failed: " + e);
-        }
-    };
-
-    window.setShift = () => {
-        const target = document.getElementById('targetShift').value;
-        if (target === '' || isNaN(parseInt(target))) {
-            alert('Enter a valid shift value (0-7)');
-            return;
-        }
-        client.send({ type: 'set_shift_command', value: parseInt(target) });
-        document.getElementById('bigShift').innerText = target;
-    };
-
-    window.sendChernobylLevel = (val) => {
-        client.send({ type: 'chernobyl_command', level: parseInt(val) });
-        document.getElementById('valChernobyl').innerText = val + "%";
-    }
-
-    // --- TEST MODE TOGGLE ---
-    let testModeActive = false;
-
-    window.toggleTestMode = async () => {
-        testModeActive = !testModeActive;
-
-        // Send WebSocket command
-        client.send({
-            type: 'test_mode_toggle',
-            enabled: testModeActive
-        });
-
-        // Update UI
-        const btn = document.getElementById('btnTestMode');
-        const label = document.getElementById('testModeLabel');
-        const status = document.getElementById('testModeStatus');
-
-        if (testModeActive) {
-            label.innerText = 'ENABLED';
-            btn.classList.add('border-green-500', 'text-green-500');
-            btn.classList.remove('border-gray-700');
-            status.innerText = '✅ Quick login buttons will appear on login screen';
-            status.classList.remove('text-gray-600');
-            status.classList.add('text-green-500');
-        } else {
-            label.innerText = 'DISABLED';
-            btn.classList.remove('border-green-500', 'text-green-500');
-            btn.classList.add('border-gray-700');
-            status.innerText = '❌ Standard password input required';
-            status.classList.remove('text-green-500');
-            status.classList.add('text-gray-600');
-        }
-    };
-
-    // --- AI CONFIGURATION ---
-    window.saveAIConfig = async () => {
-        const optimizerPrompt = document.getElementById('optimizerPrompt').value;
-        const autopilotModel = document.getElementById('autopilotModel').value;
-
-        // Send to backend (implement API endpoint later)
-        try {
-            await fetch('/api/admin/root/ai_config', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    optimizer_prompt: optimizerPrompt,
-                    autopilot_model: autopilotModel
-                })
-            });
-            alert('✅ AI Configuration Saved');
-        } catch (e) {
-            console.error(e);
-            alert('❌ Failed to save config');
-        }
-    };
-
-    // Load initial AI config
-    window.loadAIConfig = async () => {
-        try {
-            const res = await fetch('/api/admin/root/ai_config', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
-            if (data.status === 'ok') {
-                document.getElementById('optimizerPrompt').value = data.optimizer_prompt;
-                document.getElementById('autopilotModel').value = data.autopilot_model;
-
-                // Hydrate Test Mode State
-                if (data.test_mode !== undefined) {
-                    testModeActive = data.test_mode;
-                    const btn = document.getElementById('btnTestMode');
-                    const label = document.getElementById('testModeLabel');
-                    const status = document.getElementById('testModeStatus');
-
-                    if (testModeActive) {
-                        label.innerText = 'ENABLED';
-                        btn.classList.add('border-green-500', 'text-green-500');
-                        btn.classList.remove('border-gray-700');
-                        status.innerText = '✅ Quick login buttons will appear on login screen';
-                        status.classList.remove('text-gray-600');
-                        status.classList.add('text-green-500');
-                    } else {
-                        label.innerText = 'DISABLED';
-                        btn.classList.remove('border-green-500', 'text-green-500');
-                        btn.classList.add('border-gray-700');
-                        status.innerText = '❌ Standard password input required';
-                        status.classList.remove('text-green-500');
-                        status.classList.add('text-gray-600');
-                    }
+            if (data.type === 'message') {
+                // Update Panopticon
+                const sessId = data.session_id || 1;
+                const chatDiv = document.getElementById(`rootChat-${sessId}`);
+                if (chatDiv) {
+                    const row = document.createElement('div');
+                    row.className = `text-xs mb-1 ${data.role === 'agent' ? 'text-pink-400' : 'text-green-400'}`;
+                    row.innerText = `${data.sender}: ${data.content}`;
+                    chatDiv.appendChild(row);
+                    chatDiv.scrollTop = chatDiv.scrollHeight;
                 }
             }
-        } catch (e) { console.error("Config load failed", e); }
-    }
+        }
 
-    // Call on init
-    setTimeout(loadAIConfig, 1000);
+        function logEvent(type) {
+            // Filter out noisy gamestate_update messages
+            if (type === 'gamestate_update') return;
 
-    // --- ECONOMY TABLE ---
-    async function fetchUsers() {
-        const res = await fetch('/api/admin/data/users');
-        return await res.json();
-    }
+            const div = document.createElement('div');
+            div.innerText = `${new Date().toLocaleTimeString()} - ${type}`;
+            const logStream = document.getElementById('logStream');
+            logStream.prepend(div);
 
-    async function refreshEconomy() {
-        const users = await fetchUsers();
-        const tbody = document.getElementById('rootEcoTable');
-        tbody.innerHTML = '';
-        users.forEach(u => {
-            const tr = document.createElement('tr');
-            tr.className = "border-b border-gray-800 hover:bg-gray-900";
-            tr.innerHTML = `
+            // Keep log size manageable (max 50 entries)
+            while (logStream.children.length > 50) {
+                logStream.removeChild(logStream.lastChild);
+            }
+        }
+
+        // --- NAVIGATION ---
+        window.switchView = function (view) {
+            document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
+            document.getElementById(`nav-${view}`).classList.add('active');
+            currentView = view;
+
+            if (view === 'economy') refreshEconomy();
+            if (view === 'surveillance') initGrid();
+        }
+
+        // --- ACTIONS ---
+        window.triggerShift = () => client.send({ type: 'shift_command' });
+        window.injectGlobal = async (amt) => {
+            if (!confirm(`Inject ${amt} credits to ALL users?`)) return;
+            // Need new API for this? Or loop in JS?
+            // Loop in JS is slow. Better API.
+            // For now, let's just use loop as iterating 8 users is fine.
+            // But better implementation: Backend endpoint.
+            // Let's assume we have /api/admin/economy/global_bonus
+            // I will create that if needed. For now, loop frontend?
+            // We can just reuse `ecoAction` inside a loop from the table data.
+            const users = await fetchUsers();
+            for (const u of users) {
+                await fetch('/api/admin/economy/bonus', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: u.id, amount: amt, reason: "GOD STIMULUS" })
+                });
+            }
+            alert("EXECUTION COMPLETE");
+            refreshEconomy();
+        };
+
+        window.resetEconomy = async () => {
+            // Loop set to 100? or 0?
+            alert("Not implemented yet - Requires specific endpoint to be safe.");
+        };
+
+        window.broadcastMsg = () => {
+            const msg = prompt("GLOBAL MESSAGE:");
+            if (msg) client.send({ type: 'admin_broadcast', content: msg });
+            // Note: sockets.py needs to handle 'admin_broadcast' or similar. 
+            // Existing logic supports 'broadcast_global' via python but not direct socket cmd for admin maybe?
+            // I'll check sockets.py later.
+        };
+
+        window.triggerReset = () => {
+            if (prompt("TYPE 'NUKE' TO CONFIRM") === 'NUKE') {
+                client.send({ type: 'reset_game' });
+            }
+        };
+
+        window.restartServer = async () => {
+            if (!confirm("RESTART SERVER? All connections will be dropped temporarily.")) return;
+            try {
+                const res = await fetch('/api/admin/root/restart', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                alert(data.message);
+                setTimeout(() => location.reload(), 5000);
+            } catch (e) {
+                alert("Restart failed: " + e);
+            }
+        };
+
+        window.factoryReset = async () => {
+            if (prompt("THIS WILL DELETE ALL DATA AND RESTART WITH DEFAULTS.\nType 'FACTORY RESET' to confirm:") !== 'FACTORY RESET') return;
+            try {
+                const res = await fetch('/api/admin/root/factory_reset', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                alert(data.message);
+                setTimeout(() => location.reload(), 8000);
+            } catch (e) {
+                alert("Factory reset failed: " + e);
+            }
+        };
+
+        window.setShift = () => {
+            const target = document.getElementById('targetShift').value;
+            if (target === '' || isNaN(parseInt(target))) {
+                alert('Enter a valid shift value (0-7)');
+                return;
+            }
+            client.send({ type: 'set_shift_command', value: parseInt(target) });
+            document.getElementById('bigShift').innerText = target;
+        };
+
+        window.sendChernobylLevel = (val) => {
+            client.send({ type: 'chernobyl_command', level: parseInt(val) });
+            document.getElementById('valChernobyl').innerText = val + "%";
+        }
+
+        // --- TEST MODE TOGGLE ---
+        let testModeActive = false;
+
+        window.toggleTestMode = async () => {
+            testModeActive = !testModeActive;
+
+            // Send WebSocket command
+            client.send({
+                type: 'test_mode_toggle',
+                enabled: testModeActive
+            });
+
+            // Update UI
+            const btn = document.getElementById('btnTestMode');
+            const label = document.getElementById('testModeLabel');
+            const status = document.getElementById('testModeStatus');
+
+            if (testModeActive) {
+                label.innerText = 'ENABLED';
+                btn.classList.add('border-green-500', 'text-green-500');
+                btn.classList.remove('border-gray-700');
+                status.innerText = '✅ Quick login buttons will appear on login screen';
+                status.classList.remove('text-gray-600');
+                status.classList.add('text-green-500');
+            } else {
+                label.innerText = 'DISABLED';
+                btn.classList.remove('border-green-500', 'text-green-500');
+                btn.classList.add('border-gray-700');
+                status.innerText = '❌ Standard password input required';
+                status.classList.remove('text-green-500');
+                status.classList.add('text-gray-600');
+            }
+        };
+
+        // --- AI CONFIGURATION ---
+        window.saveAIConfig = async () => {
+            const optimizerPrompt = document.getElementById('optimizerPrompt').value;
+            const autopilotModel = document.getElementById('autopilotModel').value;
+
+            // Send to backend (implement API endpoint later)
+            try {
+                await fetch('/api/admin/root/ai_config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        optimizer_prompt: optimizerPrompt,
+                        autopilot_model: autopilotModel
+                    })
+                });
+                alert('✅ AI Configuration Saved');
+            } catch (e) {
+                console.error(e);
+                alert('❌ Failed to save config');
+            }
+        };
+
+        // Load initial AI config
+        window.loadAIConfig = async () => {
+            try {
+                const res = await fetch('/api/admin/root/ai_config', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    document.getElementById('optimizerPrompt').value = data.optimizer_prompt;
+                    document.getElementById('autopilotModel').value = data.autopilot_model;
+
+                    // Hydrate Test Mode State
+                    if (data.test_mode !== undefined) {
+                        testModeActive = data.test_mode;
+                        const btn = document.getElementById('btnTestMode');
+                        const label = document.getElementById('testModeLabel');
+                        const status = document.getElementById('testModeStatus');
+
+                        if (testModeActive) {
+                            label.innerText = 'ENABLED';
+                            btn.classList.add('border-green-500', 'text-green-500');
+                            btn.classList.remove('border-gray-700');
+                            status.innerText = '✅ Quick login buttons will appear on login screen';
+                            status.classList.remove('text-gray-600');
+                            status.classList.add('text-green-500');
+                        } else {
+                            label.innerText = 'DISABLED';
+                            btn.classList.remove('border-green-500', 'text-green-500');
+                            btn.classList.add('border-gray-700');
+                            status.innerText = '❌ Standard password input required';
+                            status.classList.remove('text-green-500');
+                            status.classList.add('text-gray-600');
+                        }
+                    }
+                }
+            } catch (e) { console.error("Config load failed", e); }
+        }
+
+        // Call on init
+        setTimeout(loadAIConfig, 1000);
+
+        // --- ECONOMY TABLE ---
+        async function fetchUsers() {
+            const res = await fetch('/api/admin/data/users');
+            return await res.json();
+        }
+
+        async function refreshEconomy() {
+            const users = await fetchUsers();
+            const tbody = document.getElementById('rootEcoTable');
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-800 hover:bg-gray-900";
+                tr.innerHTML = `
                  <td class="p-2 font-bold">${u.username}</td>
                  <td class="p-2 text-yellow-500">${u.credits}</td>
                  <td class="p-2">${u.status_level}</td>
@@ -615,26 +656,26 @@
                      <button onclick="ecoAction('fine', ${u.id}, 100)" class="text-red-500 text-xs">[-100]</button>
                  </td>
              `;
-            tbody.appendChild(tr);
-        });
-    }
+                tbody.appendChild(tr);
+            });
+        }
 
-    window.ecoAction = async (type, uid, amt) => {
-        await fetch(`/api/admin/economy/${type}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: uid, amount: amt, reason: "ROOT" })
-        });
-        refreshEconomy();
-    }
+        window.ecoAction = async (type, uid, amt) => {
+            await fetch(`/api/admin/economy/${type}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: uid, amount: amt, reason: "ROOT" })
+            });
+            refreshEconomy();
+        }
 
-    // --- GRID ---
-    function initGrid() {
-        const grid = document.getElementById('rootGrid');
-        if (grid.children.length > 0) return; // already init
+        // --- GRID ---
+        function initGrid() {
+            const grid = document.getElementById('rootGrid');
+            if (grid.children.length > 0) return; // already init
 
-        for (let i = 1; i <= 8; i++) {
-            grid.innerHTML += `
+            for (let i = 1; i <= 8; i++) {
+                grid.innerHTML += `
                 <div class="border border-gray-800 bg-black flex flex-col h-40">
                     <div class="bg-gray-900 px-2 py-1 text-xs text-gray-500 flex justify-between">
                         <span>SESSION ${i}</span>
@@ -643,8 +684,8 @@
                     <div class="flex-1 overflow-y-auto p-1 font-mono text-[10px]" id="rootChat-${i}"></div>
                 </div>
             `;
+            }
         }
-    }
 
-</script>
-{% endblock %}
+    </script>
+    {% endblock %}

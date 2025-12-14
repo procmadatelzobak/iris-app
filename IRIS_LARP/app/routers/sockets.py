@@ -467,18 +467,33 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         # Broadcast? Usually mode change doesn't need broadcast, just the effect (value change)
 
                     elif cmd_type == "reset_game":
-                        # Full System Reset
-                        gamestate.global_shift_offset = 0
-                        gamestate.set_temperature(gamestate.TEMP_RESET_VALUE) # v1.7 Reset to 80
+                        # Soft Reset: Broadcast failover message, reset temp/labels, keep credits/power
+                        
+                        # Reset temperature and modes
+                        gamestate.set_temperature(gamestate.TEMP_RESET_VALUE)
                         gamestate.chernobyl_mode = ChernobylMode.NORMAL
                         gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
                         
+                        # Reset custom labels (delete admin_labels.json)
+                        import os
+                        labels_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'admin_labels.json')
+                        if os.path.exists(labels_path):
+                            os.remove(labels_path)
+                        
+                        # Broadcast failover message to ALL users
+                        await routing_logic.broadcast_global(json.dumps({
+                            "type": "system_alert",
+                            "content": "⚠️ SYSTÉM REINICIALIZOVÁN ⚠️\nDošlo k přepnutí na záložní server v rámci failover protokolu.\nVšechny relace byly obnoveny. Pokračujte v práci.",
+                            "alert_type": "failover"
+                        }))
+                        
+                        # Also send gamestate update
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update", 
-                            "shift": 0,
+                            "shift": gamestate.global_shift_offset,
                             "temperature": gamestate.temperature,
                             "hyper_mode": "normal",
-                            "msg": "SYSTEM RESET INITIATED"
+                            "is_overloaded": False
                         }))
                         
                     elif cmd_type == "admin_broadcast":

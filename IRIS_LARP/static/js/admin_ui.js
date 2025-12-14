@@ -88,6 +88,97 @@ function updateUI() {
             // Poll
             setInterval(refreshTasks, 5000);
             setInterval(refreshEconomy, 10000);
+            // === STATION NAVIGATION (Fixed Phase 30) ===
+            function openStation(name) {
+                // 1. Hide Hub
+                document.getElementById('hub-view').classList.add('hidden');
+
+                // 2. Show Nav
+                document.getElementById('station-nav').classList.remove('hidden');
+                document.getElementById('station-nav').classList.add('flex');
+
+                // 3. Switch View
+                document.querySelectorAll('.view-container').forEach(el => el.classList.add('hidden'));
+                const view = document.getElementById('view-' + name);
+                if (view) {
+                    view.classList.remove('hidden');
+                    view.classList.add('block'); // Ensure display
+                }
+
+                // 4. Update Title
+                const titleMap = {
+                    'monitor': 'VŠEVIDOUCÍ',
+                    'controls': 'ROZKOŠ (KONTROLA)',
+                    'economy': 'BAHNO (EKONOMIKA)',
+                    'tasks': 'MRKEV (ÚKOLY)'
+                };
+                document.getElementById('station-title').innerText = titleMap[name] || name.toUpperCase();
+
+                // 5. Init specific logic if needed
+                if (name === 'monitor') {
+                    // trigger resize or grid init if needed
+                }
+            }
+
+            function closeStation() {
+                // 1. Hide Nav & Views
+                document.getElementById('station-nav').classList.add('hidden');
+                document.getElementById('station-nav').classList.remove('flex');
+                document.querySelectorAll('.view-container').forEach(el => el.classList.add('hidden'));
+
+                // 2. Show Hub
+                document.getElementById('hub-view').classList.remove('hidden');
+            }
+
+            // === EDIT MODE UTILS ===
+            let editMode = false;
+            function toggleEditMode() {
+                editMode = !editMode;
+                document.body.classList.toggle('edit-mode-active', editMode);
+
+                // Show/Hide inputs vs text? 
+                // For now, just toggling a class that might show borders or editable content.
+                // Use contenteditable?
+                const labels = document.querySelectorAll('.editable-label');
+                labels.forEach(l => {
+                    l.contentEditable = editMode;
+                    if (editMode) l.classList.add('border', 'border-yellow-500', 'bg-black');
+                    else l.classList.remove('border', 'border-yellow-500', 'bg-black');
+                });
+
+                // Save on disable?
+                if (!editMode) {
+                    saveLabels();
+                }
+            }
+
+            function saveLabels() {
+                const data = {};
+                document.querySelectorAll('.editable-label').forEach(l => {
+                    const key = l.dataset.key;
+                    if (key) data[key] = l.innerText;
+                });
+
+                // Send to server (requires endpoint)
+                // adminClient.send({type: 'save_labels', data: data});
+            }
+
+            // === AI MODAL ===
+            function toggleAIModal() {
+                const m = document.getElementById('aiModal');
+                if (m.classList.contains('hidden')) m.classList.remove('hidden');
+                else m.classList.add('hidden');
+            }
+
+            function switchConfigTab(tab) {
+                document.querySelectorAll('.conf-tab').forEach(t => t.classList.add('hidden'));
+                document.getElementById('conf-' + tab).classList.remove('hidden');
+            }
+
+            // Init
+            initGrid();
+            window.loadControlState(); // Start polling
+            setInterval(window.loadControlState, 5000);
             setInterval(refreshSystemLogs, 5000);
             setInterval(loadControlState, 5000); // Sync controls periodically
             loadControlState(); // Initial load

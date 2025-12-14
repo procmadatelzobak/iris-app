@@ -1,4 +1,7 @@
 {
+    "system": {
+        "test_mode": true
+    },
     "users": {
         "root": {
             "username": "root",
@@ -58,3 +61,4 @@
         "response_window": 120
     }
 }
+

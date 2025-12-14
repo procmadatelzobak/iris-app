@@ -84,274 +84,332 @@
 
 <div class="flex h-screen bg-black font-mono overflow-hidden">
 
-    <!-- Left Panel: Status -->
-    <div class="w-1/4 status-panel p-4 flex flex-col">
-        <h1 class="text-2xl font-bold mb-6 glitch-effect text-pink-500">ROZHRANÍ_HLINÍK</h1>
-
-        <div class="mb-4">
-            <div class="text-xs text-green-400 mb-1">CÍLOVÝ POSUN SVĚTA</div>
-            <div class="text-3xl font-mono text-green-500 border border-green-800 p-2 text-center" id="shiftDisplay">
-                --
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <div class="text-xs text-blue-400 mb-1">STAV PŘIPOJENÍ</div>
-            <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-sm font-mono text-blue-300">ZABEZPEČENÝ KANÁL</span>
-            </div>
-            <div class="text-xs text-gray-500 mt-1">SESSION: <span id="sessionIdDisplay">--</span></div>
-        </div>
-
-        <!-- Timer v1.4 -->
-        <div class="mb-4">
-            <div class="text-xs text-yellow-400 mb-1">REAKČNÍ SMYČKA</div>
-            <div class="h-2 bg-gray-800 rounded overflow-hidden mb-1 border border-yellow-900">
-                <div id="timerBar" class="h-full bg-yellow-500 w-full transition-all duration-1000 linear"></div>
-            </div>
-            <div class="text-right text-xs text-yellow-600 font-mono" id="timerText">STANDBY</div>
-        </div>
-
-        <div class="mt-auto">
-            <div class="text-xs text-gray-500">OPERÁTOR</div>
-            <div class="font-mono text-gray-300">{{ user.username }}</div>
-            <div class="text-xs text-gray-600 mt-2">TERMINÁL ID: <span id="termId">--</span></div>
-        </div>
-
-        <div class="mt-4">
-            <button class="w-full border border-pink-500 text-pink-500 hover:bg-pink-900 py-2 transition"
-                onclick="toggleAuto()">
-                [ TOGGLE AUTOPILOT ]
+    <!-- HYPER LOCK SCREEN OVERLAY -->
+    <div id="hyperLockOverlay" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col items-center justify-center">
+        <div class="text-pink-500 text-4xl font-bold mb-4 animate-pulse">HYPER-VISIBILITY ACTIVE</div>
+        <div class="text-pink-800 font-mono mb-8">NEURAL LINK ESTABLISHED // MANUAL OVERRIDE REQUIRED</div>
+        <div class="flex flex-col gap-4 w-64">
+            <input type="password" id="unlockPass" placeholder="ENTER OVERRIDE CODE"
+                class="bg-black border border-pink-900 text-center text-white p-2 focus:border-pink-500 outline-none">
+            <button onclick="attemptUnlock()"
+                class="bg-pink-900 text-white border border-pink-500 p-2 hover:bg-pink-700">
+                DEACTIVATE HYPER
             </button>
+            <a href="/auth/logout" class="text-center text-gray-500 text-xs hover:text-white mt-4">[ EMERGENCY
+                DISCONNECT ]</a>
         </div>
     </div>
 
+    <!-- Right Panel: Tools -->
+    <div class="w-1/3 flex flex-col gap-4">
+        <!-- Status Card -->
+        <div class="theme-card h-1/3 bg-black/60 relative p-4">
+            <h3 class="text-pink-500 border-b border-pink-900 mb-2 font-bold">STATUS</h3>
+            <div class="grid grid-cols-2 gap-4 text-xs font-mono text-pink-300">
+                <div>SESSION ID: <span id="sessionIdDisplay" class="text-white">...</span></div>
+                <!-- Left Panel: Status -->
+                <div class="w-1/4 status-panel p-4 flex flex-col">
+                    <h1 class="text-2xl font-bold mb-6 glitch-effect text-pink-500">ROZHRANÍ_HLINÍK</h1>
 
-    <!-- Right Panel: Chat -->
-    <div class="w-3/4 flex flex-col bg-black bg-opacity-95 relative">
-        <div class="bg-pink-900 bg-opacity-20 p-2 text-center text-xs text-pink-300 border-b border-pink-800">
-            SECURE CHANNEL ESTABLISHED
-        </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-green-400 mb-1">POSUN REALITY</div>
+                        <div class="text-3xl font-mono text-green-500 border border-green-800 p-2 text-center"
+                            id="shiftDisplay">
+                            --
+                        </div>
+                    </div>
 
-        <!-- Lock Overlay -->
-        <div id="lockOverlay"
-            class="absolute inset-0 bg-black bg-opacity-80 z-20 hidden flex items-center justify-center flex-col">
-            <div class="text-red-500 font-bold text-2xl glitch-effect mb-4">SPOJENÍ PŘERUŠENO</div>
-            <div class="text-gray-400">ČAS PRO ODPOVĚĎ VYPRŠEL</div>
-            <div class="text-gray-600 text-xs mt-2">ČEKÁNÍ NA KLIENTA... (Reset na zprávu)</div>
-        </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-blue-400 mb-1">STAV PŘIPOJENÍ</div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="text-sm font-mono text-blue-300">ZABEZPEČENÝ KANÁL</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">SESSION: <span id="sessionIdDisplay">--</span></div>
+                    </div>
 
-        <div id="chatHistory" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2">
-            <!-- Messages -->
-        </div>
+                    <!-- Timer v1.4 -->
+                    <div class="mb-4">
+                        <div class="text-xs text-yellow-400 mb-1">REAKČNÍ SMYČKA</div>
+                        <div class="h-2 bg-gray-800 rounded overflow-hidden mb-1 border border-yellow-900">
+                            <div id="timerBar" class="h-full bg-yellow-500 w-full transition-all duration-1000 linear">
+                            </div>
+                        </div>
+                        <div class="text-right text-xs text-yellow-600 font-mono" id="timerText">STANDBY</div>
+                    </div>
 
-        <div class="p-4 border-t border-pink-900 bg-gray-900">
-            <form id="chatForm" class="flex gap-2">
-                <input type="text" id="msgInput"
-                    class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
-                    placeholder="Inject response..." autocomplete="off">
-                <button type="submit"
-                    class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
-                    TRANSMIT
-                </button>
-            </form>
-        </div>
-    </div>
+                    <div class="mt-auto">
+                        <div class="text-xs text-gray-500">OPERÁTOR</div>
+                        <div class="font-mono text-gray-300">{{ user.username }}</div>
+                        <div class="text-xs text-gray-600 mt-2">TERMINÁL ID: <span id="termId">--</span></div>
 
-</div>
-{% endblock %}
+                        <a href="/auth/logout"
+                            class="block mt-4 text-center border border-red-900 text-red-500 hover:bg-red-900 hover:text-white px-2 py-1 text-xs">
+                            [ DISCONNECT ]
+                        </a>
+                    </div>
+                </div>
 
-{% block scripts %}
-<script src="/static/js/socket_client.js"></script>
-<script src="/static/js/sound_engine.js"></script>
-<script>
-    const token = localStorage.getItem('token');
-    const sessionIdDisplay = document.getElementById('sessionIdDisplay');
-    const chatHistory = document.getElementById('chatHistory');
-    const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
-    // Timer Vars
-    let timerLimit = 120;
-    let timerRemaining = 120;
-    let timerInterval = null;
+                <!-- Main Chat Area -->
+                <div class="flex-1 flex flex-col border-l border-green-900/30 bg-black relative">
+                    <!-- Chat History -->
+                    <div id="chatHistory" class="flex-1 p-4 overflow-y-auto space-y-4 custom-scrollbar pb-20">
+                        <!-- Messages go here -->
+                    </div>
 
-    function startTimer() {
-        clearInterval(timerInterval);
-        timerRemaining = timerLimit;
-        updateTimerUI();
+                    <!-- Lock Overlay if needed -->
+                    <div id="lockOverlay"
+                        class="absolute inset-x-0 bottom-0 top-0 bg-black/80 z-20 flex items-center justify-center hidden">
+                        <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-2xl">
+                            ⚠️ TRANSMISSION BLOCKED ⚠️
+                        </div>
+                    </div>
 
-        document.getElementById('timerText').innerText = "ODPOČET AKTIVNÍ";
-        document.getElementById('lockOverlay').classList.add('hidden');
-        document.getElementById('msgInput').disabled = false;
+                    <!-- Input Area -->
+                    <div class="p-4 border-t border-gray-800 bg-black relative z-30">
+                        <form id="chatForm" class="flex gap-2">
+                            <input type="text" id="msgInput"
+                                class="flex-1 bg-black border border-pink-700 text-pink-400 p-2 focus:outline-none focus:border-pink-400 font-mono"
+                                placeholder="Inject response..." autocomplete="off">
+                            <button type="submit"
+                                class="bg-pink-900 hover:bg-pink-700 text-white px-6 py-2 border border-pink-600 font-bold transition">
+                                TRANSMIT
+                            </button>
+                        </form>
+                    </div>
+                </div>
 
-        timerInterval = setInterval(() => {
-            timerRemaining--;
-            updateTimerUI();
-            if (timerRemaining <= 0) {
-                clearInterval(timerInterval);
-                lockInput();
-            }
-        }, 1000);
-    }
+            </div>
+            {% endblock %}
 
-    function stopTimer() {
-        clearInterval(timerInterval);
-        timerRemaining = timerLimit;
-        updateTimerUI();
-        document.getElementById('timerText').innerText = "STANDBY";
-        document.getElementById('lockOverlay').classList.add('hidden'); // Ensure unlocked
-        document.getElementById('msgInput').disabled = false;
-    }
+            {% block scripts %}
+            <script src="/static/js/socket_client.js"></script>
+            <script src="/static/js/sound_engine.js"></script>
+            <script>
+                const token = localStorage.getItem('token');
+                const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+                const chatHistory = document.getElementById('chatHistory');
+                const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
-    function updateTimerUI() {
-        const bar = document.getElementById('timerBar');
-        const pct = Math.max(0, (timerRemaining / timerLimit) * 100);
-        bar.style.width = pct + "%";
+                // Timer Vars
+                let timerLimit = 120;
+                let timerRemaining = 120;
+                let timerInterval = null;
 
-        if (pct < 25) {
-            bar.classList.remove('bg-yellow-500');
-            bar.classList.add('bg-red-500');
-        } else {
-            bar.classList.remove('bg-red-500');
-            bar.classList.add('bg-yellow-500');
-        }
-    }
+                function startTimer() {
+                    clearInterval(timerInterval);
+                    timerRemaining = timerLimit;
+                    updateTimerUI();
 
-    function lockInput() {
-        document.getElementById('lockOverlay').classList.remove('hidden');
-        document.getElementById('msgInput').disabled = true;
-        sfx.playError();
-    }
+                    document.getElementById('timerText').innerText = "ODPOČET AKTIVNÍ";
+                    document.getElementById('lockOverlay').classList.add('hidden');
+                    document.getElementById('msgInput').disabled = false;
 
-    // Initialize Socket
-    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
-    const client = new SocketClient(wsUrl, (data) => {
-        // Handle Game Updates vs Chat
-        if (data.type === 'gamestate_update') {
-            applyTemperature(data.temperature || data.chernobyl || 0);
-            if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
-
-            if (data.shift !== undefined) {
-                document.getElementById('shiftDisplay').innerText = data.shift;
-            }
-            if (data.agent_window !== undefined) timerLimit = data.agent_window;
-
-        } else if (data.type === 'optimizing_start') {
-            showOptimizingLoader();
-        } else if (data.type === 'optimizer_feedback') {
-            appendOptimizerFeedback(data);
-            if (window.sfx) window.sfx.playError();
-        } else if (data.type === 'typing_sync') {
-            // Mirroring Logic
-            if (data.tabId !== tabId) {
-                const input = document.getElementById('msgInput');
-                if (input.value !== data.content) {
-                    input.value = data.content;
+                    timerInterval = setInterval(() => {
+                        timerRemaining--;
+                        updateTimerUI();
+                        if (timerRemaining <= 0) {
+                            clearInterval(timerInterval);
+                            lockInput();
+                        }
+                    }, 1000);
                 }
-            }
-        } else {
-            // Standard messages
-            if (data.session_id) {
-                sessionIdDisplay.innerText = "S" + data.session_id;
-            }
-            appendMessage(data);
-            const currentUsername = "{{ user.username }}";
-            if (data.sender !== currentUsername) {
-                sfx.playReceive();
-                if (data.role === 'user') startTimer();
-            }
-        }
-    });
 
-    client.connect(token);
+                function stopTimer() {
+                    clearInterval(timerInterval);
+                    timerRemaining = timerLimit;
+                    updateTimerUI();
+                    document.getElementById('timerText').innerText = "STOPPED";
+                }
 
-    // Input Mirroring
-    document.getElementById('msgInput').addEventListener('input', (e) => {
-        client.send({
-            type: 'typing_sync',
-            content: e.target.value,
-            tabId: tabId
-        });
-    });
+                function lockInput() {
+                    document.getElementById('lockOverlay').classList.remove('hidden');
+                    document.getElementById('msgInput').disabled = true;
+                    document.getElementById('timerText').innerText = "BLOCKED";
+                }
 
-    document.getElementById('chatForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('msgInput');
-        const text = input.value.trim();
-        if (text) {
-            client.send({ content: text });
-            // Sync clear
-            client.send({ type: 'typing_sync', content: "", tabId: tabId });
+                function updateTimerUI() {
+                    const bar = document.getElementById('timerBar');
+                    const pct = (timerRemaining / timerLimit) * 100;
+                    bar.style.width = pct + '%';
 
-            appendMessage({
-                sender: '{{ user.username }}',
-                role: 'agent',
-                content: text
-            });
-            input.value = '';
-            sfx.playSend();
-            stopTimer(); // Agent responded
-        }
-    });
+                    if (pct < 20) {
+                        bar.className = 'h-full bg-red-600 w-full transition-all duration-1000 linear animate-pulse';
+                    } else {
+                        bar.className = 'h-full bg-yellow-500 w-full transition-all duration-1000 linear';
+                    }
+                }
 
-    // Typing SFX
-    document.getElementById('msgInput').addEventListener('keydown', () => {
-        sfx.playType();
-    });
+                // --- SOCKET LOGIC ---
+                let currentSessionId = null;
 
-    // Auto Logic
-    let isAutopilotOn = false;
-    const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
+                const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+                const client = new SocketClient(wsUrl, (data) => {
+                    if (data.type === 'gamestate_update') {
+                        if (data.shift !== undefined) document.getElementById('shiftDisplay').innerText = data.shift;
+                        if (data.temperature !== undefined && document.getElementById('tempDisplay')) {
+                            document.getElementById('tempDisplay').innerText = data.temperature;
+                        }
+                        if (data.session_id) {
+                            currentSessionId = data.session_id;
+                            sessionIdDisplay.innerText = "S" + data.session_id;
+                        }
+                        if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
+                        if (data.agent_window !== undefined) timerLimit = data.agent_window;
 
-    function toggleAuto() {
-        isAutopilotOn = !isAutopilotOn;
-        client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
-        updateAutoBtnUI(isAutopilotOn);
-        if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
-        else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
-    }
+                    } else if (data.type === 'optimizing_start') {
+                        showOptimizingLoader();
+                    } else if (data.type === 'optimizer_feedback') {
+                        appendOptimizerFeedback(data);
+                        if (window.sfx) window.sfx.playError();
+                    } else if (data.type === 'typing_sync') {
+                        // Mirroring Logic
+                        if (data.tabId !== tabId) {
+                            const input = document.getElementById('msgInput');
+                            if (input.value !== data.content) {
+                                input.value = data.content;
+                            }
+                        }
+                    } else if (data.type === 'system_alert') {
+                        // Show system alert overlay (failover, reset, etc.)
+                        showSystemAlert(data.content);
+                    } else if (data.type === 'typing_start') {
+                        showTypingIndicator(true);
+                    } else if (data.type === 'typing_stop') {
+                        showTypingIndicator(false);
+                    } else {
+                        // Standard messages
+                        showTypingIndicator(false); // Clear on new message
+                        if (data.session_id) {
+                            sessionIdDisplay.innerText = "S" + data.session_id;
+                        }
+                        appendMessage(data);
+                        const currentUsername = "{{ user.username }}";
+                        if (data.sender !== currentUsername) {
+                            if (window.sfx) window.sfx.playReceive();
+                            // Reset timer only if User message (not echo)
+                            if (data.role === 'user') startTimer();
+                        } else {
+                            // Sent by me (or autopilot)
+                            stopTimer();
+                        }
+                    }
+                }, (status) => {
+                    console.log("WS Status", status);
+                });
 
-    function updateAutoBtnUI(isOn) {
-        if (isOn) {
-            autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
-            autoBtn.classList.replace('text-pink-500', 'text-white');
-            autoBtn.classList.add('bg-pink-600');
-            autoBtn.classList.remove('hover:bg-pink-900');
-        } else {
-            autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
-            autoBtn.classList.replace('text-white', 'text-pink-500');
-            autoBtn.classList.remove('bg-pink-600');
-            autoBtn.classList.add('hover:bg-pink-900');
-        }
-    }
+                client.connect(token);
 
-    function showOptimizingLoader() {
-        // Lock Input
-        const input = document.getElementById('msgInput');
-        input.disabled = true;
-        input.placeholder = ">> OPTIMIZING <<";
+                // Input Mirroring
+                document.getElementById('msgInput').addEventListener('input', (e) => {
+                    client.send({
+                        type: 'typing_sync',
+                        content: e.target.value,
+                        tabId: tabId
+                    });
+                });
 
-        const chatBox = document.getElementById('chatHistory');
-        const div = document.createElement('div');
-        div.id = 'optimizingLoader';
-        div.className = 'chat-bubble agent opacity-50 animate-pulse text-xs border border-pink-500 bg-pink-900/50';
-        div.innerText = '⚙️ NEURAL REWRITING IN PROGRESS...';
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
+                document.getElementById('chatForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const input = document.getElementById('msgInput');
+                    const text = input.value.trim();
+                    if (text) {
+                        client.send({ content: text });
+                        // Sync clear
+                        client.send({ type: 'typing_sync', content: "", tabId: tabId });
 
-    function handleOptimizerPreview(data) {
-        const loader = document.getElementById('optimizingLoader');
-        if (loader) loader.remove();
+                        appendMessage({
+                            sender: '{{ user.username }}',
+                            role: 'agent',
+                            content: text
+                        });
+                        input.value = '';
+                        sfx.playSend();
+                        stopTimer(); // Agent responded
+                    }
+                });
 
-        // Show Modal or Inline Confirm? Inline is safer for terminal.
-        const chatBox = document.getElementById('chatHistory');
-        const div = document.createElement('div');
-        div.id = 'optimizerConfirmBox';
-        div.className = 'border border-pink-500 bg-black p-4 text-sm mb-4';
+                // Typing SFX
+                document.getElementById('msgInput').addEventListener('keydown', () => {
+                    sfx.playType();
+                });
 
-        div.innerHTML = `
+                // Auto Logic
+                let isAutopilotOn = false;
+                const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
+
+                function toggleAuto() {
+                    isAutopilotOn = !isAutopilotOn;
+                    client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
+                    updateAutoBtnUI(isAutopilotOn);
+                    if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
+                    else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
+                }
+
+                function updateAutoBtnUI(isOn) {
+                    if (isOn) {
+                        autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
+                        autoBtn.classList.replace('text-pink-500', 'text-white');
+                        autoBtn.classList.add('bg-pink-600');
+                        autoBtn.classList.remove('hover:bg-pink-900');
+                    } else {
+                        autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
+                        autoBtn.classList.replace('text-white', 'text-pink-500');
+                        autoBtn.classList.remove('bg-pink-600');
+                        autoBtn.classList.add('hover:bg-pink-900');
+                    }
+                }
+
+                function showOptimizingLoader() {
+                    // Lock Input
+                    const input = document.getElementById('msgInput');
+                    input.disabled = true;
+                    input.placeholder = ">> OPTIMIZING <<";
+
+                    const chatBox = document.getElementById('chatHistory');
+                    const div = document.createElement('div');
+                    div.id = 'optimizingLoader';
+                    div.className = 'chat-bubble agent opacity-50 animate-pulse text-xs border border-pink-500 bg-pink-900/50';
+                    div.innerText = '⚙️ NEURAL REWRITING IN PROGRESS...';
+                    chatBox.appendChild(div);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+                // System Alert handler (failover, reset, etc.)
+                function showSystemAlert(content) {
+                    const overlay = document.createElement('div');
+                    overlay.id = 'systemAlertOverlay';
+                    overlay.className = 'fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-8';
+                    overlay.innerHTML = `
+            <div class="border-2 border-yellow-500 bg-black p-8 max-w-lg text-center animate-pulse">
+                <div class="text-yellow-500 text-4xl mb-4">⚠️</div>
+                <div class="text-yellow-300 text-lg font-mono whitespace-pre-line">${content}</div>
+                <button onclick="document.getElementById('systemAlertOverlay').remove()" 
+                    class="mt-6 border border-yellow-500 text-yellow-500 px-6 py-2 hover:bg-yellow-900 transition font-mono">
+                    [ ROZUMÍM ]
+                </button>
+            </div>
+        `;
+                    document.body.appendChild(overlay);
+                    setTimeout(() => {
+                        const el = document.getElementById('systemAlertOverlay');
+                        if (el) el.remove();
+                    }, 10000);
+                    if (window.sfx) sfx.playError();
+                }
+
+                function handleOptimizerPreview(data) {
+                    const loader = document.getElementById('optimizingLoader');
+                    if (loader) loader.remove();
+
+                    // Show Modal or Inline Confirm? Inline is safer for terminal.
+                    const chatBox = document.getElementById('chatHistory');
+                    const div = document.createElement('div');
+                    div.id = 'optimizerConfirmBox';
+                    div.className = 'border border-pink-500 bg-black p-4 text-sm mb-4';
+
+                    div.innerHTML = `
             <div class="text-pink-300 font-bold mb-2">⚡ OPTIMIZATION COMPLETE</div>
             <div class="mb-2 text-gray-500 line-through text-xs">'${data.original}'</div>
             <div class="mb-4 text-green-400 font-bold text-lg">"${data.rewritten}"</div>
@@ -366,81 +424,149 @@
                 </button>
             </div>
         `;
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
+                    chatBox.appendChild(div);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
 
-    // Make global so onclick works
-    window.confirmOptimization = function (text) {
-        const box = document.getElementById('optimizerConfirmBox');
-        if (box) box.remove();
+                // Make global so onclick works
+                window.confirmOptimization = function (text) {
+                    const box = document.getElementById('optimizerConfirmBox');
+                    if (box) box.remove();
 
-        // Send Confirm
-        client.send({
-            content: text,
-            confirm_opt: true
-        });
+                    // Send Confirm
+                    client.send({
+                        content: text,
+                        confirm_opt: true
+                    });
 
-        // Optimistically append (or wait for echo? Echo is safer)
-        const input = document.getElementById('msgInput');
-        input.disabled = false;
-        input.placeholder = "Inject response...";
-        input.focus();
-    };
+                    // Optimistically append (or wait for echo? Echo is safer)
+                    const input = document.getElementById('msgInput');
+                    input.disabled = false;
+                    input.placeholder = "Inject response...";
+                    input.focus();
+                };
 
-    window.cancelOptimization = function (original) {
-        const box = document.getElementById('optimizerConfirmBox');
-        if (box) box.remove();
+                window.cancelOptimization = function (original) {
+                    const box = document.getElementById('optimizerConfirmBox');
+                    if (box) box.remove();
 
-        const input = document.getElementById('msgInput');
-        input.disabled = false;
-        input.value = original; // Restore
-        input.placeholder = "Inject response...";
-        input.focus();
-    };
+                    const input = document.getElementById('msgInput');
+                    input.disabled = false;
+                    input.value = original; // Restore
+                    input.placeholder = "Inject response...";
+                    input.focus();
+                };
 
-    function appendOptimizerFeedback(data) {
-        // Deprecated by Preview Flow? Keep for legacy or if confirmed elsewhere?
-        // Scenario 1 implies manual confirm. So this might not trigger if we verify correctly.
-        // But if backend sends it, show it.
-    }
+                function appendOptimizerFeedback(data) {
+                    // Deprecated by Preview Flow? Keep for legacy or if confirmed elsewhere?
+                    // Scenario 1 implies manual confirm. So this might not trigger if we verify correctly.
+                    // But if backend sends it, show it.
+                }
 
-    function appendMessage(data) {
-        if (!data.content) return;
-        const div = document.createElement('div');
-        div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
+                function appendMessage(data) {
+                    if (!data.content) return;
+                    const div = document.createElement('div');
+                    div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
 
-        const sender = document.createElement('span');
-        sender.className = 'sender';
-        sender.innerText = data.sender.toUpperCase();
+                    const sender = document.createElement('span');
+                    sender.className = 'sender';
+                    sender.innerText = data.sender.toUpperCase();
 
-        const content = document.createElement('div');
-        content.innerText = data.content;
+                    const content = document.createElement('div');
+                    content.innerText = data.content;
 
-        div.appendChild(sender);
-        div.appendChild(content);
+                    div.appendChild(sender);
+                    div.appendChild(content);
 
-        chatHistory.appendChild(div);
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
+                    chatHistory.appendChild(div);
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                }
 
-    function applyTemperature(temp) {
-        document.body.classList.remove('instability-low', 'instability-med', 'instability-high');
+                function applyTemperature(temp) {
+                    document.body.classList.remove('instability-low', 'instability-med', 'instability-high');
 
-        if (temp > 100 && temp <= 250) document.body.classList.add('instability-low');
-        if (temp > 250 && temp <= 350) document.body.classList.add('instability-med');
-        if (temp > 350) {
-            document.body.classList.add('instability-high');
-            sfx.playError();
-        }
+                    if (temp > 100 && temp <= 250) document.body.classList.add('instability-low');
+                    if (temp > 250 && temp <= 350) document.body.classList.add('instability-med');
+                    if (temp > 350) {
+                        document.body.classList.add('instability-high');
+                        sfx.playError();
+                    }
 
-        const ind = document.getElementById('overloadSignal');
-        if (ind) {
-            if (temp > 350) ind.classList.remove('hidden');
-            else ind.classList.add('hidden');
-        }
-    }
+                    const ind = document.getElementById('overloadSignal');
+                    if (ind) {
+                        if (temp > 350) ind.classList.remove('hidden');
+                        else ind.classList.add('hidden');
+                    }
+                }
 
-    // Helper for applying HyperVis (Already there)
-</script>
-{% endblock %}
+                // Helper for applying HyperVis (Already there)
+                // --- HYPER LOCK LOGIC ---
+                function toggleAutopilot() {
+                    const toggle = document.getElementById('autopilotToggle');
+                    const active = toggle.checked;
+
+                    if (active) {
+                        // Activate Lock Immediately
+                        document.getElementById('hyperLockOverlay').classList.remove('hidden');
+                        // Send Command
+                        client.send({ type: 'autopilot_toggle', active: true });
+                    } else {
+                        client.send({ type: 'autopilot_toggle', active: false });
+                    }
+                }
+
+                function attemptUnlock() {
+                    const pass = document.getElementById('unlockPass').value;
+                    const currentUsername = "{{ user.username }}"; // e.g. agent1
+                    // Simple password check: same as username or master
+                    if (pass === currentUsername || pass === "master_control_666") {
+                        // Unlock
+                        document.getElementById('hyperLockOverlay').classList.add('hidden');
+                        document.getElementById('autopilotToggle').checked = false;
+                        document.getElementById('unlockPass').value = "";
+                        client.send({ type: 'autopilot_toggle', active: false });
+                    } else {
+                        alert("ACCESS DENIED");
+                        if (window.sfx) sfx.playError();
+                    }
+                }
+
+                // Handle server updates for Hyper Mode (if needed? Only Autopilot matters here)
+                // Actually, gamestate_update sends hyper_mode (visibility), not autopilot status.
+                // Autopilot status is local? Or shared? Ideally shared if multiple tabs.
+                // For now, assume local initiative, but ideally we should sync.
+
+                // --- TYPING INDICATOR ---
+                const inputField = document.getElementById('msgInput');
+                let typingTimeout = null;
+
+                inputField.addEventListener('input', () => {
+                    if (!typingTimeout) {
+                        client.send({ type: 'typing_start', session_id: currentSessionId });
+                    }
+                    clearTimeout(typingTimeout);
+                    typingTimeout = setTimeout(() => {
+                        client.send({ type: 'typing_stop', session_id: currentSessionId });
+                        typingTimeout = null;
+                    }, 1000); // Stop after 1s of silence
+                });
+
+                function showTypingIndicator(show) {
+                    const hist = document.getElementById('chatHistory');
+                    let indicator = document.getElementById('typingIndicator');
+
+                    if (show) {
+                        if (!indicator) {
+                            indicator = document.createElement('div');
+                            indicator.id = 'typingIndicator';
+                            indicator.className = 'text-xs text-green-500 italic ml-2 animate-pulse';
+                            indicator.innerText = ">> USER IS TYPING...";
+                            hist.appendChild(indicator);
+                            hist.scrollTop = hist.scrollHeight;
+                        }
+                    } else {
+                        if (indicator) indicator.remove();
+                    }
+                }
+            </script>
+            {% endblock %}

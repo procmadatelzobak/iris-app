@@ -192,8 +192,16 @@
             showToast("✅ ANOMALY LOGGED", "success");
         } else if (data.type === 'optimizing_start') {
             handleOptimizingStart();
+        } else if (data.type === 'system_alert') {
+            // Show system alert overlay (failover, reset, etc.)
+            showSystemAlert(data.content);
+        } else if (data.type === 'typing_start') {
+            showTypingIndicator(true);
+        } else if (data.type === 'typing_stop') {
+            showTypingIndicator(false);
         } else {
             // Assume Chat
+            showTypingIndicator(false); // Clear indicator on new message
             appendMessage(data);
             const currentUsername = "{{ user.username }}";
             if (data.sender !== currentUsername) {
@@ -219,6 +227,34 @@
         d.innerText = ">> INCOMING TRANSMISSION [PROCESSING]...";
         hist.appendChild(d);
         hist.scrollTop = hist.scrollHeight;
+    }
+
+    // System Alert handler (failover, reset, etc.)
+    function showSystemAlert(content) {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'systemAlertOverlay';
+        overlay.className = 'fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-8';
+        overlay.innerHTML = `
+            <div class="border-2 border-yellow-500 bg-black p-8 max-w-lg text-center animate-pulse">
+                <div class="text-yellow-500 text-4xl mb-4">⚠️</div>
+                <div class="text-yellow-300 text-lg font-mono whitespace-pre-line">${content}</div>
+                <button onclick="document.getElementById('systemAlertOverlay').remove()" 
+                    class="mt-6 border border-yellow-500 text-yellow-500 px-6 py-2 hover:bg-yellow-900 transition font-mono">
+                    [ ROZUMÍM ]
+                </button>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            const el = document.getElementById('systemAlertOverlay');
+            if (el) el.remove();
+        }, 10000);
+
+        // Play alert sound
+        if (window.sfx) sfx.playError();
     }
 
     function requestTask() {
@@ -380,23 +416,48 @@
         }
     }
 
-    // Bubble Logic for Party Mode
-    function createBubbles() {
-        if (document.getElementById('bubble-style')) return;
-        const cont = document.getElementById('bubbleContainer');
-        setInterval(() => {
-            if (!document.body.classList.contains('theme-party')) return;
-            const b = document.createElement('div');
-            b.className = 'bubble';
-            const size = Math.random() * 50 + 20;
-            b.style.width = size + 'px';
-            b.style.height = size + 'px';
-            b.style.left = Math.random() * 100 + 'vw';
-            b.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            cont.appendChild(b);
-            setTimeout(() => b.remove(), 10000);
-        }, 500);
+    // --- TYPING INDICATOR ---
+    const inputField = document.getElementById('msgInput');
+    let typingTimeout = null;
+
+    // Sender (User -> Agent)
+    inputField.addEventListener('input', () => {
+        if (!typingTimeout) {
+            client.send({ type: 'typing_start' });
+        }
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            client.send({ type: 'typing_stop' });
+            typingTimeout = null;
+        }, 1000);
+    });
+
+    // Receiver (Agent typing)
+    function handleTypingSync(data) {
+        // Legacy syncing
     }
+
+    // New Typing Indicator
+    function showTypingIndicator(show) {
+        const hist = document.getElementById('chatHistory');
+        let indicator = document.getElementById('typingIndicator');
+
+        if (show) {
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'typingIndicator';
+                indicator.className = 'text-xs text-pink-500 italic ml-2 animate-pulse';
+                indicator.innerText = ">> AGENT PÍŠE...";
+                hist.appendChild(indicator);
+                hist.scrollTop = hist.scrollHeight;
+            }
+        } else {
+            if (indicator) indicator.remove();
+        }
+    }
+
+    // Listen for typing events in handleMessage (need to update handleMessage)
+
 
     function removeBubbles() {
         document.getElementById('bubbleContainer').innerHTML = '';

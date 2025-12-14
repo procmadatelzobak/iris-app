@@ -141,13 +141,27 @@ Pro každého uživatele můžete:
 
 ## 6. Výkonné protokoly
 
-### 6.1 SYSTEM RESET
-- Resetuje:
-  - Všechny kredity na 100
-  - Smaže všechny úkoly
-  - Smaže všechny logy
-  - Resetuje gamestate (teplota, power, atd.)
-- **NEsmaže** databázi uživatelů
+### 6.1 SYSTEM RESET (Soft Reset)
+
+Tlačítko pro herní reset, které simuluje **failover na záložní server**.
+
+**Co se resetuje:**
+- Teplota systému (vrací se na výchozí hodnotu)
+- Vlastní názvy tlačítek a textů na dashboardech správců
+- Vizuální efekty (glitch, hyper mód)
+
+**Co zůstává zachováno:**
+- Kredity uživatelů
+- Power nastavení (kapacita, zatížení)
+- Hodnota shiftu
+- Databáze uživatelů a úkolů
+
+**Systémová zpráva:**
+Všem uživatelům (Users, Agents, Admins) se zobrazí overlay s textem:
+> ⚠️ SYSTÉM REINICIALIZOVÁN ⚠️
+> Došlo k přepnutí na záložní server v rámci failover protokolu.
+> Všechny relace byly obnoveny. Pokračujte v práci.
+
 - Vyžaduje potvrzení textem "NUKE"
 
 ### 6.2 RESTART SERVER
@@ -156,7 +170,7 @@ Pro každého uživatele můžete:
 - Všichni uživatelé budou odpojeni (~5s)
 - Po restartu se musí znovu přihlásit
 
-### 6.3 FACTORY RESET
+### 6.3 FACTORY RESET (Hard Reset)
 - Smaže soubor `data/iris.db`
 - Restartuje server
 - Databáze se znovu vytvoří z `data/default_scenario.json`

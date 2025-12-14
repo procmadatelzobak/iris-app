@@ -97,9 +97,26 @@ def seed_data():
                 db.add(user)
 
         db.commit()
+        
+        # Print ROOT credentials
+        root_cfg = scenario['users']['root'] if scenario else {"username": "root", "password": "master_control_666"}
+        print("=" * 50)
+        print("🔐 ROOT PŘIHLAŠOVACÍ ÚDAJE:")
+        print(f"   Uživatel: {root_cfg['username']}")
+        print(f"   Heslo:    {root_cfg['password']}")
+        print("=" * 50)
+        
+        # Load test_mode from scenario
+        if scenario and 'system' in scenario:
+            from .logic.gamestate import gamestate
+            gamestate.test_mode = scenario['system'].get('test_mode', False)
+            if gamestate.test_mode:
+                print("✅ Test Mode: AKTIVNÍ (rychlé přihlášení povoleno)")
+        
         print("Seeding complete.")
     except Exception as e:
         print(f"Seeding failed: {e}")
         db.rollback()
     finally:
         db.close()
+
