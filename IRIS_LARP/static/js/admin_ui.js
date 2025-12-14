@@ -389,7 +389,7 @@ window.triggerReset = function() {
 // --- ECONOMY ---
 window.refreshEconomy = async function() {
     try {
-        const res = await fetch('/api/admin/data/users');
+        const res = await fetch('/api/admin/data/users', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
         const users = await res.json();
         const tbody = document.getElementById('economyTableBody');
         if (!tbody) return;
@@ -436,7 +436,7 @@ window.ecoAction = async function(type, userId) {
 
     await fetch(`/api/admin/economy/${type}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify(payload)
     });
 
@@ -447,7 +447,7 @@ window.setStatus = async function(userId, status) {
     try {
         const res = await fetch('/api/admin/economy/set_status', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getAuthToken()}` },
             body: JSON.stringify({ user_id: userId, status: status })
         });
         if (res.ok) {
@@ -462,7 +462,7 @@ window.setStatus = async function(userId, status) {
 window.refreshTasks = async function() {
     if (window.currentView !== 'tasks') return;
     try {
-        const res = await fetch('/api/admin/tasks');
+        const res = await fetch('/api/admin/tasks', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
         const tasks = await res.json();
 
         const pendingDiv = document.getElementById('pendingTasksCtx');
@@ -507,7 +507,7 @@ window.approveTask = async function(id) {
     const rew = rewEl ? rewEl.value : 100;
     await fetch('/api/admin/tasks/approve', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify({ task_id: id, reward: parseInt(rew) })
     });
     refreshTasks();
@@ -518,7 +518,7 @@ window.payTask = async function(id) {
     const rate = ratEl ? ratEl.value : 100;
     await fetch('/api/admin/tasks/pay', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify({ task_id: id, rating: parseInt(rate) })
     });
     refreshTasks();
