@@ -11,4 +11,8 @@
 | 2025-12-14 | "Build embeddable lore web viewer and wire it into ROOT dashboard" | Phase 32 | Implemented lore web, integration pending verification. |
 | 2025-12-14 | "Full censorship panic mode documentation" | Phase 32 | Documentation updated for Panic Mode controls and indicators. |
 | 2025-12-14 | "Admin tasks dashboard empty while user sees pending task" | Phase 32 | Investigation and fix in progress. |
+
 | 2025-12-14 | "Zavést odpočet na odpověď agenta, chybu po vypršení a admin nastavení" | Phase 33 | Countdown, UI indicator, and admin control added (tests pending). |
+
+| 2025-12-14 | "Agent terminal still shows English strings (hyper-mode, inject response, transmit)" | Phase 33 | Localization tightened and wired through translation system. |
+
