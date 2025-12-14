@@ -27,5 +27,20 @@ class Settings:
     
     # Game Logic
     TOTAL_SESSIONS: int = 8
+    
+    def __init__(self):
+        # Security Check for SECRET_KEY
+        iris_env = os.getenv("IRIS_ENV", "development")
+        if self.SECRET_KEY == "insecure-change-me-for-production":
+            if iris_env == "production":
+                raise ValueError(
+                    "FATAL: Running in production with insecure default SECRET_KEY! "
+                    "Set a secure SECRET_KEY environment variable."
+                )
+            else:
+                print("\n" + "=" * 60)
+                print("⚠️  WARN: Running with insecure default SECRET_KEY!")
+                print("   Set SECRET_KEY env variable for production use.")
+                print("=" * 60 + "\n")
 
 settings = Settings()

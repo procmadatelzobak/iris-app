@@ -1,5 +1,5 @@
 # IRIS LARP - Complete Feature List
-**Version:** Phase 25.0  
+**Version:** Phase 31.0  
 **Last Updated:** 2025-12-14
 
 ---
@@ -344,6 +344,20 @@
 - ✅ **Broadcast Optimization**: Only send on state change
 - ✅ **Session Management**: Efficient WebSocket connection pooling
 
+### State Persistence (Phase 31)
+- ✅ **GameState Export/Import**: Serialize and restore critical state
+- ✅ **Auto-Save on Shutdown**: State saved to `data/gamestate_dump.json`
+- ✅ **Auto-Restore on Startup**: State loaded from JSON file
+- ✅ **Error Recovery**: Game loop continues after exceptions
+
+### Security (Phase 31)
+- ✅ **SECRET_KEY Validation**: Warning in dev, error in production
+- ✅ **Production Mode Check**: `IRIS_ENV=production` requires secure key
+
+### Documentation (Phase 31)
+- ✅ **In-App Manuals**: Markdown viewer with role-based styling
+- ✅ **DEPLOYMENT.md**: Single-worker requirement documented
+
 ---
 
 ## Feature Status Legend
@@ -354,5 +368,5 @@
 
 ---
 
-**Total Features**: 150+  
-**Last Major Update**: Phase 30 (UI Fixes, LLM Configuration Documentation)
+**Total Features**: 160+  
+**Last Major Update**: Phase 31 (System Hardening, State Persistence)

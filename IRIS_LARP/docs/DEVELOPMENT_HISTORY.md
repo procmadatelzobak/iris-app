@@ -1,7 +1,7 @@
 # IRIS LARP - Development History
 **Project**: Interactive Role-playing Information System  
 **Timeline**: November 2024 - December 2024  
-**Current Phase**: 25
+**Current Phase**: 31
 
 ---
 
@@ -123,6 +123,38 @@
 **Sprint 4: Test Suite A**
 - ⏳ End-to-end test execution
 - ⏳ Gap analysis and fixes
+
+### Phase 30: UI Fixes & Documentation Viewer
+**Focus**: Bug fixes and context-aware documentation
+
+**Bug Fixes**:
+- ✅ Fixed "Rewrite Reality" (Edit Mode) toggle not turning off
+- ✅ Fixed unresponsive admin dashboard controls (sliders, mode switches)
+- ✅ Added visual feedback for mode button states
+
+**Features**:
+- ✅ In-app documentation viewer with Markdown rendering
+- ✅ Role-based styling (User green, Agent pink, Admin gold)
+- ✅ MANUÁL and SYSTEM DOCS buttons in all terminals
+
+### Phase 31: System Hardening & State Persistence (CURRENT)
+**Focus**: Reliability, security, and deployment readiness
+
+**State Persistence**:
+- ✅ `export_state()` / `import_state()` methods in GameState
+- ✅ Auto-save on shutdown to `data/gamestate_dump.json`
+- ✅ Auto-restore on startup
+
+**Error Handling**:
+- ✅ Game loop wrapped in try-except (never crashes)
+- ✅ 5-second pause on error to prevent log flood
+
+**Security**:
+- ✅ SECRET_KEY validation in config
+- ✅ Production mode blocks default key
+
+**Documentation**:
+- ✅ DEPLOYMENT.md created with single-worker requirement
 
 ---
 
@@ -336,6 +368,6 @@
 
 ---
 
-**Document Version**: Phase 25.0  
+**Document Version**: Phase 31.0  
 **Last Updated**: 2025-12-14  
 **Status**: Living Document

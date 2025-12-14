@@ -15,11 +15,28 @@ async def lifespan(app: FastAPI):
     init_db()
     seed_data()
     
-    # Background Task
-    import asyncio
+    # --- STATE PERSISTENCE: Load on Startup ---
+    import json
+    from pathlib import Path
     from .logic.gamestate import gamestate
     from .logic.routing import routing_logic
-    import json
+    
+    data_dir = Path(__file__).resolve().parent.parent / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    state_file = data_dir / "gamestate_dump.json"
+    
+    if state_file.exists():
+        try:
+            with open(state_file, "r") as f:
+                state_data = json.load(f)
+            gamestate.import_state(state_data)
+            print("INFO: GameState restored from gamestate_dump.json")
+        except Exception as e:
+            print(f"WARN: Could not restore GameState: {e}")
+    
+    # Background Task
+    import asyncio
+    import traceback
     
     async def game_loop():
         last_val = -1
@@ -28,66 +45,81 @@ async def lifespan(app: FastAPI):
         last_overload = False
         
         while True:
-            await asyncio.sleep(1)
-            
-            # 0. Check for agent response timeouts
-            import time
-            current_time = time.time()
-            timeout_window = gamestate.agent_response_window
-            
-            # Copy keys to avoid modification during iteration
-            pending_sessions = list(routing_logic.pending_responses.keys())
-            for session_id in pending_sessions:
-                start_time = routing_logic.pending_responses.get(session_id)
-                if start_time and (current_time - start_time) >= timeout_window:
-                    # Timeout occurred - send error to user and block agent
-                    await routing_logic.send_timeout_error_to_user(session_id)
-                    await routing_logic.send_timeout_to_agent(session_id)
-                    routing_logic.mark_session_timeout(session_id)
-            
-            # 1. Tick Chernobyl
-            new_val = gamestate.process_tick()
-            
-            # 2. Calc Load
-            counts = routing_logic.get_active_counts()
-            is_low_latency = gamestate.agent_response_window <= 30
-            current_load = gamestate.calc_load(
-                active_terminals=counts["users"],
-                active_autopilots=counts["autopilots"],
-                low_latency_active=is_low_latency
-            )
-            
-            # 3. Check Overload
-            is_overloaded = gamestate.check_overload()
-            
-            # 4. Broadcast
-            # Detect changes (Optimization: only send if changed)
-            if (int(new_val) != int(last_val) or 
-                current_load != last_load or 
-                gamestate.treasury_balance != last_treasury or
-                is_overloaded != last_overload):
+            try:
+                await asyncio.sleep(1)
                 
-                await routing_logic.broadcast_global(json.dumps({
-                    "type": "gamestate_update",
-                    "temperature": new_val,
-                    "shift": gamestate.global_shift_offset,
-                    "power_load": current_load,
-                    "power_capacity": gamestate.power_capacity,
-                    "treasury": gamestate.treasury_balance,
-                    "is_overloaded": is_overloaded,
-                    "agent_window": gamestate.agent_response_window,
-                    "hyper_mode": gamestate.hyper_visibility_mode.value
-                }))
+                # 0. Check for agent response timeouts
+                import time
+                current_time = time.time()
+                timeout_window = gamestate.agent_response_window
                 
-                last_val = new_val
-                last_load = current_load
-                last_treasury = gamestate.treasury_balance
-                last_overload = is_overloaded
+                # Copy keys to avoid modification during iteration
+                pending_sessions = list(routing_logic.pending_responses.keys())
+                for session_id in pending_sessions:
+                    start_time = routing_logic.pending_responses.get(session_id)
+                    if start_time and (current_time - start_time) >= timeout_window:
+                        # Timeout occurred - send error to user and block agent
+                        await routing_logic.send_timeout_error_to_user(session_id)
+                        await routing_logic.send_timeout_to_agent(session_id)
+                        routing_logic.mark_session_timeout(session_id)
+                
+                # 1. Tick Chernobyl
+                new_val = gamestate.process_tick()
+                
+                # 2. Calc Load
+                counts = routing_logic.get_active_counts()
+                is_low_latency = gamestate.agent_response_window <= 30
+                current_load = gamestate.calc_load(
+                    active_terminals=counts["users"],
+                    active_autopilots=counts["autopilots"],
+                    low_latency_active=is_low_latency
+                )
+                
+                # 3. Check Overload
+                is_overloaded = gamestate.check_overload()
+                
+                # 4. Broadcast
+                # Detect changes (Optimization: only send if changed)
+                if (int(new_val) != int(last_val) or 
+                    current_load != last_load or 
+                    gamestate.treasury_balance != last_treasury or
+                    is_overloaded != last_overload):
+                    
+                    await routing_logic.broadcast_global(json.dumps({
+                        "type": "gamestate_update",
+                        "temperature": new_val,
+                        "shift": gamestate.global_shift_offset,
+                        "power_load": current_load,
+                        "power_capacity": gamestate.power_capacity,
+                        "treasury": gamestate.treasury_balance,
+                        "is_overloaded": is_overloaded,
+                        "agent_window": gamestate.agent_response_window,
+                        "hyper_mode": gamestate.hyper_visibility_mode.value
+                    }))
+                    
+                    last_val = new_val
+                    last_load = current_load
+                    last_treasury = gamestate.treasury_balance
+                    last_overload = is_overloaded
+                    
+            except Exception as e:
+                print(f"ERROR in game_loop: {e}")
+                traceback.print_exc()
+                await asyncio.sleep(5)  # Pause before retrying to prevent log flood
+                continue
                 
     task = asyncio.create_task(game_loop())
     yield
-    # Shutdown
+    
+    # --- STATE PERSISTENCE: Save on Shutdown ---
     task.cancel()
+    try:
+        state_data = gamestate.export_state()
+        with open(state_file, "w") as f:
+            json.dump(state_data, f, indent=2)
+        print("INFO: GameState saved to gamestate_dump.json")
+    except Exception as e:
+        print(f"ERROR: Could not save GameState: {e}")
 
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=lifespan)
 
