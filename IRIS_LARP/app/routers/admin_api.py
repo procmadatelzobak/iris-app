@@ -60,12 +60,13 @@ class KeyUpdate(BaseModel):
 
 @router.get("/llm/keys")
 async def get_keys(admin=Depends(get_current_root)):
-    db = SessionLocal()
+    # Read from Settings (Env) only
+    from ..config import settings
     keys = {}
     for provider in LLMProvider:
         key_name = f"{provider.value.upper()}_API_KEY"
-        config = db.query(SystemConfig).filter(SystemConfig.key == key_name).first()
-        val = config.value if config else ""
+        val = getattr(settings, key_name, "")
+        
         # Mask
         if val and len(val) > 8:
             keys[provider.value] = f"{val[:4]}...{val[-4:]}"
@@ -73,22 +74,14 @@ async def get_keys(admin=Depends(get_current_root)):
             keys[provider.value] = "****"
         else:
             keys[provider.value] = None
-    db.close()
     return keys
 
 @router.post("/llm/keys")
 async def set_key(update: KeyUpdate, admin=Depends(get_current_root)):
-    db = SessionLocal()
-    key_name = f"{update.provider.value.upper()}_API_KEY"
-    config = db.query(SystemConfig).filter(SystemConfig.key == key_name).first()
-    if not config:
-        config = SystemConfig(key=key_name, value=update.key)
-        db.add(config)
-    else:
-        config.value = update.key
-    db.commit()
-    db.close()
-    return {"status": "updated", "provider": update.provider}
+    raise HTTPException(
+        status_code=403, 
+        detail="API Key management via API is disabled for security. Please update the .env file directly and restart the server."
+    )
 
 # --- ECONOMY & TASKS ---
 from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog, StatusLevel

@@ -14,8 +14,10 @@ class LLMProvider(str, Enum):
 
 class LLMConfig(BaseModel):
     provider: LLMProvider = LLMProvider.OPENROUTER
-    model_name: str = "google/gemini-2.0-flash-lite-preview-02-05:free"
+    model_name: str = "google/gemini-2.5-flash-lite"
     system_prompt: str = "You are a helpful assistant."
+
+
 
 class LLMService:
     def __init__(self):
@@ -23,20 +25,10 @@ class LLMService:
         pass
 
     def _get_key(self, provider: LLMProvider) -> Optional[str]:
-        db = SessionLocal()
-        try:
-            key_name = f"{provider.value.upper()}_API_KEY"
-            # Prioritize DB
-            config = db.query(SystemConfig).filter(SystemConfig.key == key_name).first()
-            if config:
-                return config.value
-            # Fallback to Settings (Env)
-            return getattr(settings, key_name, None)
-        except Exception as e:
-            print(f"Error fetching key for {provider}: {e}")
-            return None
-        finally:
-            db.close()
+        # STRICT SECURITY: Keys are loaded ONLY from environment variables (.env)
+        # We do not load from DB to prevent persistence in potentially unencrypted storage.
+        key_name = f"{provider.value.upper()}_API_KEY"
+        return getattr(settings, key_name, None)
 
     def list_models(self, provider: LLMProvider) -> List[str]:
         api_key = self._get_key(provider)
@@ -98,7 +90,7 @@ class LLMService:
         full_user_prompt = f"TASK PROMPT: {prompt}\nUSER SUBMISSION: {submission}\n\nRate the submission from 0 to 100 based on creativity and relevance. Return ONLY the number."
         
         try:
-            temp_config = LLMConfig(provider=LLMProvider.OPENROUTER, model_name="google/gemini-2.0-flash-lite-preview-02-05:free")
+            temp_config = LLMConfig(provider=LLMProvider.OPENROUTER, model_name="google/gemini-2.5-flash-lite")
             resp = self.generate_response(temp_config, [{"role": "user", "content": full_user_prompt}])
             clean_resp = ''.join(filter(str.isdigit, resp))
             return int(clean_resp) if clean_resp else 50
@@ -118,10 +110,10 @@ class LLMService:
 
         effective_config = config or LLMConfig(
             provider=LLMProvider.OPENROUTER,
-            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a text rewriter. You strictly follow instructions."
         )
-
+        
         history = [{"role": "user", "content": prompt_content}]
 
         return self.generate_response(effective_config, history)
@@ -152,7 +144,7 @@ class LLMService:
 
         effective_config = config or LLMConfig(
             provider=LLMProvider.OPENROUTER,
-            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            model_name="google/gemini-2.5-flash-lite",
             system_prompt="Jsi asistent pro generování pracovních úkolů v korporátním prostředí."
         )
 

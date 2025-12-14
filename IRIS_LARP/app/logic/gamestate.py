@@ -76,12 +76,12 @@ class GameState:
         )
         self.llm_config_hyper = LLMConfig(
             provider=LLMProvider.OPENROUTER,
-            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are an AI assistant."
         )
         self.llm_config_optimizer = LLMConfig(
             provider=LLMProvider.OPENROUTER,
-            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a precise rewriter. Follow all instructions."
         )
 
@@ -185,12 +185,12 @@ class GameState:
         )
         self.llm_config_hyper = LLMConfig(
             provider=LLMProvider.OPENROUTER,
-            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are an AI assistant."
         )
         self.llm_config_optimizer = LLMConfig(
             provider=LLMProvider.OPENROUTER,
-            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a precise rewriter. Follow all instructions."
         )
         # Reset custom labels (translation overrides)
