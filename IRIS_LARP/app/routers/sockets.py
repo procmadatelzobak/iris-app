@@ -3,8 +3,9 @@ from typing import Annotated
 from ..logic.routing import routing_logic
 from ..logic.gamestate import gamestate
 from ..dependencies import get_current_user
-from ..database import User, UserRole
+from ..database import User, UserRole, ChatLog, SessionLocal
 from ..config import settings
+from ..logic.llm_core import llm_service
 import json
 from jose import jwt, JWTError
 
@@ -48,6 +49,57 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             return int(match.group())
         return 0 # Fallback
 
+    async def generate_panic_reply(session_id: int, fallback: str = "") -> str:
+        """Return censorship-safe reply using the dedicated panic LLM config."""
+        db_local = SessionLocal()
+        prompt_text = fallback
+        try:
+            last_user = db_local.query(ChatLog).join(User).filter(
+                ChatLog.session_id == session_id,
+                User.role == UserRole.USER
+            ).order_by(ChatLog.timestamp.desc()).first()
+            if last_user and last_user.content:
+                prompt_text = last_user.content
+        except Exception:
+            pass
+        finally:
+            db_local.close()
+
+        try:
+            return llm_service.generate_response(
+                gamestate.llm_config_panic,
+                [{"role": "user", "content": prompt_text or "Panic mode aktivní."}]
+            )
+        except Exception:
+            return "PANIC MODE: Odpověď nahrazena."
+
+    async def broadcast_panic_reply(session_id: int, reply_text: str):
+        """Persist and broadcast a panic-mode replacement reply."""
+        db_local = SessionLocal()
+        agent_username = f"agent{(session_id - 1 - gamestate.global_shift_offset) % settings.TOTAL_SESSIONS + 1}"
+        try:
+            agent_user = db_local.query(User).filter(User.username == agent_username).first()
+            log_entry = ChatLog(
+                session_id=session_id,
+                sender_id=agent_user.id if agent_user else None,
+                content=reply_text,
+                is_optimized=True
+            )
+            db_local.add(log_entry)
+            db_local.commit()
+
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
+                "sender": agent_user.username if agent_user else "LLM_AGENT",
+                "role": "agent",
+                "content": reply_text,
+                "session_id": session_id,
+                "id": log_entry.id if log_entry.id else None,
+                "panic": True
+            }))
+            routing_logic.clear_pending_response(session_id)
+        finally:
+            db_local.close()
+
     # Connect
     agent_logical_id = get_logical_id(user.username, user.role.value) if user.role == UserRole.AGENT else None
 
@@ -78,7 +130,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
 
     
     # Send History on Connect (User/Agent logic)
-    from ..database import SessionLocal, ChatLog
     db = SessionLocal()
     try:
         # Determine which Session to load
@@ -202,6 +253,11 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     agent_index = agent_logical_id - 1
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
+
+                    if session_id in gamestate.panic_agent_sessions:
+                        reply_text = await generate_panic_reply(session_id, content or "")
+                        await broadcast_panic_reply(session_id, reply_text)
+                        continue
 
                     # Enforce prompt-first: agent cannot message without an active user prompt
                     if session_id not in routing_logic.pending_responses:
@@ -448,6 +504,12 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         continue
 
                     session_id = get_logical_id(user.username, "user")
+
+                    if session_id in gamestate.panic_user_sessions:
+                        reply_text = await generate_panic_reply(session_id, content or "")
+                        await broadcast_panic_reply(session_id, reply_text)
+                        continue
+
                     # Save User Message
                     log = ChatLog(session_id=session_id, sender_id=user.id, content=content)
                     db_save.add(log)

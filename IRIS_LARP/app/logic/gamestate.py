@@ -84,12 +84,20 @@ class GameState:
             model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a precise rewriter. Follow all instructions."
         )
+        self.llm_config_panic = LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name="google/gemini-2.5-flash-lite",
+            system_prompt="You are a safety filter. Replace any outgoing message with a concise, neutral response that addresses the user's last prompt. Do not echo unsafe text."
+        )
 
         self.test_mode = False # v1.9 Test Mode
         
         # Translation System
         self.language_mode = "cz"  # "cz" or "czech-iris"
         self.custom_labels = {}  # Admin-defined custom labels
+        # Panic Mode (Full Censorship) per session
+        self.panic_user_sessions = set()
+        self.panic_agent_sessions = set()
         
         self.initialized = True
         
@@ -193,6 +201,13 @@ class GameState:
             model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a precise rewriter. Follow all instructions."
         )
+        self.llm_config_panic = LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name="google/gemini-2.5-flash-lite",
+            system_prompt="You are a safety filter. Replace any outgoing message with a concise, neutral response that addresses the user's last prompt. Do not echo unsafe text."
+        )
+        self.panic_user_sessions = set()
+        self.panic_agent_sessions = set()
         # Reset custom labels (translation overrides)
         self.custom_labels = {}
 

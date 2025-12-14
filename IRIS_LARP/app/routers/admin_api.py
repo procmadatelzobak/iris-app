@@ -24,7 +24,8 @@ async def get_llm_config(admin=Depends(get_current_admin)):
         "optimizer": {
             **gamestate.llm_config_optimizer.dict(),
             "prompt": gamestate.optimizer_prompt
-        }
+        },
+        "panic": gamestate.llm_config_panic
     }
 
 class OptimizerConfigPayload(BaseModel):
@@ -47,6 +48,8 @@ async def set_llm_config(config_type: str, payload: dict = Body(...), admin=Depe
             system_prompt=parsed.system_prompt
         )
         gamestate.optimizer_prompt = parsed.prompt
+    elif config_type == "panic":
+        gamestate.llm_config_panic = LLMConfig(**payload)
     else:
         raise HTTPException(status_code=400, detail="Invalid config type")
     return {"status": "ok", "config_type": config_type}
@@ -86,6 +89,50 @@ async def set_key(update: KeyUpdate, admin=Depends(get_current_root)):
 # --- ECONOMY & TASKS ---
 from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog, StatusLevel
 from ..logic.routing import routing_logic
+from pydantic import Field
+
+class PanicToggle(BaseModel):
+    session_id: int = Field(..., ge=1)
+    target: str
+    enabled: bool
+
+@router.get("/panic/state")
+async def get_panic_state(admin=Depends(get_current_root)):
+    return {
+        "user": sorted(list(gamestate.panic_user_sessions)),
+        "agent": sorted(list(gamestate.panic_agent_sessions))
+    }
+
+@router.post("/panic/toggle")
+async def toggle_panic_mode(payload: PanicToggle, admin=Depends(get_current_root)):
+    target = payload.target.lower()
+    if target == "user":
+        if payload.enabled:
+            gamestate.panic_user_sessions.add(payload.session_id)
+        else:
+            gamestate.panic_user_sessions.discard(payload.session_id)
+    elif target == "agent":
+        if payload.enabled:
+            gamestate.panic_agent_sessions.add(payload.session_id)
+        else:
+            gamestate.panic_agent_sessions.discard(payload.session_id)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid panic target")
+
+    import json
+    await routing_logic.broadcast_to_admins(json.dumps({
+        "type": "panic_update",
+        "user": sorted(list(gamestate.panic_user_sessions)),
+        "agent": sorted(list(gamestate.panic_agent_sessions))
+    }))
+
+    return {
+        "status": "ok",
+        "state": {
+            "user": sorted(list(gamestate.panic_user_sessions)),
+            "agent": sorted(list(gamestate.panic_agent_sessions))
+        }
+    }
 
 class EconomyAction(BaseModel):
     user_id: int
@@ -735,4 +782,3 @@ subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.d
     subprocess.Popen([sys.executable, '-c', reset_script], start_new_session=True)
     
     return {"status": "resetting", "message": "Database will be deleted and server restarted in ~5 seconds"}
-

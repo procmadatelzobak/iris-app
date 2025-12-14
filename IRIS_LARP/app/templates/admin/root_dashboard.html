@@ -583,6 +583,7 @@
     // --- STATE ---
     let currentView = 'dashboard';
     let rootState = {};
+    let panicState = { user: [], agent: [] };
 
     // --- SOCKET ---
     const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
@@ -686,6 +687,14 @@
             document.getElementById('valShift').innerText = data.shift;
             document.getElementById('bigShift').innerText = data.shift;
             document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
+        }
+        if (data.type === 'panic_update') {
+            panicState = {
+                user: data.user || [],
+                agent: data.agent || []
+            };
+            updatePanicUI();
+            return;
         }
         if (data.type === 'message') {
             // Update Panopticon
@@ -1139,16 +1148,85 @@
 
         for (let i = 1; i <= 8; i++) {
             grid.innerHTML += `
-                <div class="border border-gray-800 bg-black flex flex-col h-40">
+                <div id="panic-card-${i}" class="border border-gray-800 bg-black flex flex-col h-40">
                     <div class="bg-gray-900 px-2 py-1 text-xs text-gray-500 flex justify-between">
                         <span>SESSION ${i}</span>
                         <span id="label-sess-${i}">Active</span>
+                    </div>
+                    <div class="px-2 py-1 text-[10px] text-gray-400 flex items-center gap-3 border-b border-gray-800">
+                        <label class="flex items-center gap-1">
+                            <input type="checkbox" id="panic-user-${i}" onchange="togglePanic(${i}, 'user', this.checked)" />
+                            Uživatel
+                        </label>
+                        <label class="flex items-center gap-1">
+                            <input type="checkbox" id="panic-agent-${i}" onchange="togglePanic(${i}, 'agent', this.checked)" />
+                            Agent
+                        </label>
+                        <span id="panic-label-${i}" class="text-red-400 font-bold hidden">PANICKÝ MÓD</span>
                     </div>
                     <div class="flex-1 overflow-y-auto p-1 font-mono text-[10px]" id="rootChat-${i}"></div>
                 </div>
             `;
         }
     }
+
+    async function loadPanicState() {
+        try {
+            const res = await fetch('/api/admin/panic/state', { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                panicState = await res.json();
+                updatePanicUI();
+            }
+        } catch (e) {
+            console.warn('Panic state load failed', e);
+        }
+    }
+
+    function updatePanicUI() {
+        for (let i = 1; i <= 8; i++) {
+            const userBox = document.getElementById(`panic-user-${i}`);
+            const agentBox = document.getElementById(`panic-agent-${i}`);
+            const label = document.getElementById(`panic-label-${i}`);
+            const card = document.getElementById(`panic-card-${i}`);
+            const userActive = (panicState.user || []).includes(i);
+            const agentActive = (panicState.agent || []).includes(i);
+            if (userBox) userBox.checked = userActive;
+            if (agentBox) agentBox.checked = agentActive;
+            if (label) {
+                if (userActive || agentActive) label.classList.remove('hidden');
+                else label.classList.add('hidden');
+            }
+            if (card) {
+                if (userActive || agentActive) {
+                    card.classList.add('border-red-600', 'shadow', 'shadow-red-500/30');
+                } else {
+                    card.classList.remove('border-red-600', 'shadow', 'shadow-red-500/30');
+                }
+            }
+        }
+    }
+
+    window.togglePanic = async (sessionId, target, enabled) => {
+        try {
+            const res = await fetch('/api/admin/panic/toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ session_id: sessionId, target, enabled })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.state) panicState = data.state;
+                updatePanicUI();
+            } else {
+                alert('Nepodařilo se aktualizovat panic mode');
+            }
+        } catch (e) {
+            console.error('Panic toggle failed', e);
+        }
+    };
 
     // --- LANGUAGE SETTINGS ---
     window.setLanguageMode = async (mode) => {
@@ -1222,6 +1300,7 @@
 
     // Call on init
     setTimeout(loadLanguageSettings, 1200);
+    setTimeout(loadPanicState, 1400);
 
 </script>
 {% endblock %}
