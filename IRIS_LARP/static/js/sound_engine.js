@@ -1,8 +1,8 @@
 class SoundEngine {
     constructor() {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        this.enabled = true;
-        this.masterVolume = 0.3;
+        this.enabled = localStorage.getItem('sfx_enabled') !== 'false';
+        this.masterVolume = parseFloat(localStorage.getItem('sfx_volume') || '0.3');
     }
 
     enable() {
@@ -10,10 +10,34 @@ class SoundEngine {
             this.ctx.resume();
         }
         this.enabled = true;
+        localStorage.setItem('sfx_enabled', 'true');
     }
 
     disable() {
         this.enabled = false;
+        localStorage.setItem('sfx_enabled', 'false');
+    }
+
+    toggleMute() {
+        if (this.enabled) {
+            this.disable();
+        } else {
+            this.enable();
+        }
+        return this.enabled;
+    }
+
+    setVolume(vol) {
+        this.masterVolume = Math.max(0, Math.min(1, vol));
+        localStorage.setItem('sfx_volume', this.masterVolume.toString());
+    }
+
+    getVolume() {
+        return this.masterVolume;
+    }
+
+    isEnabled() {
+        return this.enabled;
     }
 
     // Basic oscillator beep
@@ -68,3 +92,10 @@ const sfx = new SoundEngine();
 // Enable audio on first interaction
 document.addEventListener('click', () => sfx.enable(), { once: true });
 document.addEventListener('keydown', () => sfx.enable(), { once: true });
+
+// Global function for volume control from UI
+window.setSfxVolume = (vol) => sfx.setVolume(vol);
+window.toggleSfxMute = () => sfx.toggleMute();
+window.getSfxVolume = () => sfx.getVolume();
+window.isSfxEnabled = () => sfx.isEnabled();
+

@@ -12,6 +12,7 @@
 | [UZIVATELSKA_PRIRUCKA.md](./UZIVATELSKA_PRIRUCKA.md) | Hráči LARP | Kompletní návod pro Subjekty, Agenty a Správce |
 | [PRIRUCKA_ROOT.md](./PRIRUCKA_ROOT.md) | Gamemaster | Příručka pro hlavního organizátora (ROOT konzole) |
 | [PRIRUCKA_SYSTEMOVY_INZENYR.md](./PRIRUCKA_SYSTEMOVY_INZENYR.md) | IT/Technika | Instalace, provoz, údržba, řešení problémů |
+| [ARCHITEKTURA.md](./ARCHITEKTURA.md) | Systémový architekt | Technický popis celého systému, protokoly, API |
 
 ---
 

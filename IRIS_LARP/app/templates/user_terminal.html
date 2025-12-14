@@ -55,6 +55,15 @@
 <!-- Party Bubble Container (JS will inject bubbles if party mode) -->
 <div id="bubbleContainer"></div>
 
+<!-- Volume Control -->
+<div class="fixed top-4 right-32 z-50 flex items-center gap-2">
+    <button onclick="toggleVolume()" id="volumeBtn" class="theme-btn border text-xs shadow-lg px-2 py-1">
+        <i class="fas fa-volume-up" id="volumeIcon"></i>
+    </button>
+    <input type="range" min="0" max="100" value="30" id="volumeSlider" class="w-16 h-2 accent-green-500 cursor-pointer"
+        onchange="updateVolume(this.value)" title="Hlasitost zvuků">
+</div>
+
 <!-- Logout Button -->
 <a href="/auth/logout" class="fixed top-4 right-4 z-50 theme-btn border hover:bg-red-900 text-xs shadow-lg">
     <i class="fas fa-sign-out-alt"></i> ODHLÁSIT
@@ -395,6 +404,32 @@
 
     // Init Bubbles check
     if (document.body.classList.contains('theme-party')) createBubbles();
+
+    // === VOLUME CONTROLS ===
+    function toggleVolume() {
+        const enabled = window.toggleSfxMute();
+        const icon = document.getElementById('volumeIcon');
+        if (enabled) {
+            icon.className = 'fas fa-volume-up';
+        } else {
+            icon.className = 'fas fa-volume-mute';
+        }
+    }
+
+    function updateVolume(val) {
+        window.setSfxVolume(val / 100);
+    }
+
+    // Init volume UI
+    document.addEventListener('DOMContentLoaded', () => {
+        const slider = document.getElementById('volumeSlider');
+        const icon = document.getElementById('volumeIcon');
+        if (slider) {
+            slider.value = window.getSfxVolume() * 100;
+        }
+        if (icon && !window.isSfxEnabled()) {
+            icon.className = 'fas fa-volume-mute';
+        }
+    });
 </script>
 {% endblock %}
-```
