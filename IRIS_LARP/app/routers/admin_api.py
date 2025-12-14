@@ -258,13 +258,18 @@ async def set_optimizer_prompt(prompt: str = Body(..., embed=True), admin=Depend
 @router.get("/controls/state")
 async def get_control_state(admin=Depends(get_current_admin)):
     """Get current state of all admin controls"""
+    import time
     return {
         "optimizer_active": gamestate.optimizer_active,
         "agent_response_window": gamestate.agent_response_window,
         "hyper_visibility_mode": gamestate.hyper_visibility_mode.value,
         "temperature": gamestate.temperature,
         "power_capacity": gamestate.power_capacity,
-        "shift_offset": gamestate.global_shift_offset
+        "power_load": gamestate.power_load,
+        "power_boost_end_time": gamestate.power_boost_end_time,
+        "server_time": time.time(),
+        "shift_offset": gamestate.global_shift_offset,
+        "is_overloaded": gamestate.is_overloaded
     }
 
 # v1.4 Endpoints

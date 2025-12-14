@@ -303,8 +303,17 @@
         sender.className = 'sender';
         sender.innerText = data.sender.toUpperCase();
 
-        // Report Button (Agent Only)
-        if (data.role === 'agent' && data.id) {
+        // PHASE 27: Verified Badge (Optimized messages)
+        if (data.role === 'agent' && data.is_optimized) {
+            const badge = document.createElement('span');
+            badge.className = 'ml-2 text-green-400 text-xs border border-green-700 px-1 rounded';
+            badge.innerText = '✓ VERIFIED';
+            badge.title = 'AI-optimized content - cannot be reported';
+            sender.appendChild(badge);
+        }
+
+        // Report Button (Agent Only, NOT optimized)
+        if (data.role === 'agent' && data.id && !data.is_optimized) {
             const rBtn = document.createElement('button');
             rBtn.innerText = "[ ! ]";
             rBtn.className = "ml-2 text-red-500 hover:text-red-300 text-xs opacity-50 hover:opacity-100 transition";

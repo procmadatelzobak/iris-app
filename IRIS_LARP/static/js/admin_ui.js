@@ -131,6 +131,50 @@ function updateUI() {
                     timerInp.value = data.agent_response_window;
                 }
 
+                // === PHASE 27: Power Bar ===
+                const powerBar = document.getElementById('powerBar');
+                const powerText = document.getElementById('powerText');
+                if (powerBar && powerText) {
+                    const load = data.power_load || 0;
+                    const cap = data.power_capacity || 100;
+                    const pct = Math.min(100, (load / cap) * 100);
+                    powerBar.style.width = pct + '%';
+                    powerText.innerText = `${Math.round(load)} / ${cap} MW`;
+                    // Color based on overload
+                    powerBar.classList.remove('bg-blue-600', 'bg-red-600');
+                    powerBar.classList.add(data.is_overloaded ? 'bg-red-600' : 'bg-blue-600');
+                }
+
+                // === PHASE 27: Heat Bar ===
+                const chemBar = document.getElementById('chemBar');
+                const chemText = document.getElementById('controlChernobyl');
+                if (chemBar && chemText) {
+                    const temp = data.temperature || 80;
+                    const maxTemp = 350; // Threshold for red zone
+                    const pct = Math.min(100, (temp / maxTemp) * 100);
+                    chemBar.style.width = pct + '%';
+                    chemText.innerText = `${Math.round(temp)}°`;
+                }
+
+                // === PHASE 27: Power Countdown ===
+                const buyPowerText = document.getElementById('buyPowerText');
+                if (buyPowerText && data.power_boost_end_time && data.server_time) {
+                    const remaining = data.power_boost_end_time - data.server_time;
+                    if (remaining > 0) {
+                        const mins = Math.floor(remaining / 60);
+                        const secs = Math.floor(remaining % 60);
+                        buyPowerText.innerText = `AKTIVNÍ: ${mins}:${secs.toString().padStart(2, '0')}`;
+                        buyPowerText.parentElement.classList.add('text-green-400', 'border-green-700');
+                    } else {
+                        buyPowerText.innerText = 'PŘIHODIT UHLÍ (+50MW) - 1000 CR';
+                        buyPowerText.parentElement.classList.remove('text-green-400', 'border-green-700');
+                    }
+                }
+
+                // === Shift Display ===
+                const shiftDisplay = document.getElementById('controlShift');
+                if (shiftDisplay) shiftDisplay.innerText = data.shift_offset || 0;
+
             } catch (e) { console.error("Control Sync Fail", e); }
         }
 

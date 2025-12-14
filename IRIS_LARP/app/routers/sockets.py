@@ -231,7 +231,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "role": "agent",
                         "content": final_content,
                         "session_id": session_id,
-                        "id": log.id 
+                        "id": log.id,
+                        "is_optimized": log.is_optimized  # PHASE 27: Report immunity flag
                     }))
                     
                     # No feedback needed if confirmed, client knows.

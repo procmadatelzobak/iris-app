@@ -33,22 +33,23 @@
 - [x] **Logic**: Centralized `economy.py` processor [DONE]
 | **Phase 19** | AI Optimizer & Economy | [DONE] |
 | **Phase 20** | Root Control & Fixes | [DONE] |
-| **Phase 21** | UI Feedback & Lore | [IN_PROGRESS] |
+| **Phase 21** | UI Feedback & Lore | [DONE] |
+| **Phase 27** | UI Polish (Heat Bar, Countdown, Badges) | [DONE] |
 
 ## Feature Status (v1.7 UI & Lore)
 
 ### Temperature System
-- [ ] **Logic**: Rename `chernobyl` -> `temperature` [PLAN]
-- [ ] **Constants**: `TEMP_MIN`, `TEMP_THRESHOLD`, `TEMP_RESET_VALUE` [PLAN]
-- [ ] **UI**: Heat Bar (0-350 scale) [PLAN]
+- [x] **Logic**: Rename `chernobyl` -> `temperature` [DONE]
+- [x] **Constants**: `TEMP_MIN`, `TEMP_THRESHOLD`, `TEMP_RESET_VALUE` [DONE]
+- [x] **UI**: Heat Bar (0-350 scale) [DONE]
 
 ### Optimizer Feedback
-- [ ] **Agent UX**: "Optimizing..." loader [PLAN]
-- [ ] **User UX**: Immunity to Reports (Verified Content) [PLAN]
+- [x] **Agent UX**: "Optimizing..." loader [DONE]
+- [x] **User UX**: Immunity to Reports (Verified Content) [DONE]
 
 ### Power Timer
-- [ ] **Logic**: Track `power_boost_end_time` [PLAN]
-- [ ] **UI**: Persistent countdown on Buy button [PLAN]
+- [x] **Logic**: Track `power_boost_end_time` [DONE]
+- [x] **UI**: Persistent countdown on Buy button [DONE]
 
 ## Feature Status (v1.6 Root Control)
 
