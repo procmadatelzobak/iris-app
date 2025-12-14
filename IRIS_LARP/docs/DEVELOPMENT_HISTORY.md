@@ -1,7 +1,7 @@
 # IRIS LARP - Development History
 **Project**: Interactive Role-playing Information System  
 **Timeline**: November 2024 - December 2024  
-**Current Phase**: 32
+**Current Phase**: 33
 
 ---
 
@@ -177,6 +177,23 @@
 **Root Configuration**:
 - ✅ Economy tab for reward amounts per status level
 - ✅ `update_reward_config()` method in GameState
+
+### Phase 33: Automated E2E Test Suite A (CURRENT)
+**Focus**: Playwright-based automated testing
+
+**Test Infrastructure**:
+- ✅ `tests/e2e/conftest.py` with server fixture
+- ✅ pytest-playwright integration
+- ✅ Clean DB seeding before tests
+
+**Test Coverage**:
+- ✅ Block 0-7 of TEST_SUITE_A.md
+- ✅ Login flows, task lifecycle, optimizer
+- ✅ Purgatory mode (debt/redemption)
+- ✅ UI assertions (toasts, overlays, buttons)
+
+**Run Scripts**:
+- ✅ `run_suite_a.sh` (headed + CI modes)
 
 ---
 

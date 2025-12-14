@@ -365,6 +365,12 @@
 - ✅ **Economy Integration**: Credits to user, tax to treasury
 - ✅ **Root Reward Config**: Configurable rewards per status level
 
+### E2E Testing (Phase 33)
+- ✅ **Playwright Integration**: Full browser automation
+- ✅ **Test Suite A**: 8-block story test (login→task→purgatory)
+- ✅ **Server Fixture**: Auto-start uvicorn with seeded DB
+- ✅ **Run Script**: Headed and CI modes
+
 ---
 
 ## Feature Status Legend
@@ -375,5 +381,5 @@
 
 ---
 
-**Total Features**: 165+  
-**Last Major Update**: Phase 32 (Advanced Task Lifecycle, LLM Generation, Grading)
+**Total Features**: 170+  
+**Last Major Update**: Phase 33 (E2E Testing, Playwright Integration)
