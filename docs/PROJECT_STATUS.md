@@ -117,6 +117,10 @@
 
 - [x] **Task visibility**: Admin task dashboard now uses authenticated API calls, reliable status strings, and live websocket refresh when new submissions arrive.
 
+## Phase 33 - Agent Terminal Localization
+
+- [x] **Agent terminal localization**: Hyper-mode description, transmission lock overlay, and send controls now pull Czech translations via the translation system; timer states and placeholders stay localized across state changes.
+
 ## Uncertainties
 - [ ] None currently.
 

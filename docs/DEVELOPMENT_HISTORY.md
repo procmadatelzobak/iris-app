@@ -49,3 +49,23 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 
 ### Outcome
 - Testing not run (UI-level change only); manual verification recommended during next session
+
+=======
+
+## [2025-12-14] Phase 33 - Agent Terminal Localization
+### Prompt
+- Agent terminal shows English strings for hyper-mode description, input placeholder, and transmit controls; route them through the translation system and provide Czech text.
+
+### Plan
+- [x] Audit agent terminal template for hard-coded English strings and add translation keys where missing.
+- [x] Update Czech translation entries to provide proper Czech phrasing for agent terminal UI elements.
+- [x] Connect dynamic timer states, placeholders, and typing indicator text to a translation-aware helper.
+- [x] Reconcile project documentation and logs for the localization fixes.
+
+### Outcome
+- Agent terminal UI elements (hyper-mode description, disconnect links, transmit controls, lock overlay) now use translation keys with Czech defaults.
+- Timer states, typing indicator, and placeholders use a translation helper so state changes stay localized.
+- Czech translation dictionary refreshed with localized phrasing and a typing indicator entry.
+
+### Tests
+- Not run (UI localization change; no automated coverage in container).

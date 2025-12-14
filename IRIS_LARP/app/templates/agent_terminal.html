@@ -71,32 +71,31 @@
 {% block content %}
 <div class="crt-overlay"></div>
 <!-- Overload Signal -->
-<div id="overloadSignal"
+<div id="overloadSignal" data-key="agent_terminal.overload_warning"
     class="fixed top-1 right-1 border border-red-600 bg-red-900/80 text-white font-bold px-2 py-1 text-[10px] z-50 animate-pulse hidden">
-    ⚠ SYSTEM OVERLOAD ⚠
+    ⚠ SYSTÉMOVÉ PŘETÍŽENÍ ⚠
 </div>
 
 <!-- Logout Button -->
-<a href="/auth/logout"
+<a href="/auth/logout" data-key="agent_terminal.disconnect"
     class="fixed top-1 right-32 z-50 border border-pink-500 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
-    [ DISCONNECT ]
+    [ ODPOJIT ]
 </a>
 
 <div class="flex h-screen bg-black font-mono overflow-hidden w-full">
 
     <!-- HYPER LOCK SCREEN OVERLAY -->
     <div id="hyperLockOverlay" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col items-center justify-center">
-        <div class="text-pink-500 text-2xl font-bold mb-2 animate-pulse">HYPER-VISIBILITY ACTIVE</div>
-        <div class="text-pink-800 font-mono mb-4 text-sm">NEURAL LINK ESTABLISHED // MANUAL OVERRIDE REQUIRED</div>
+        <div class="text-pink-500 text-2xl font-bold mb-2 animate-pulse" data-key="agent_terminal.hyper_lock_title">HYPER-VISIBILITY AKTIVNÍ</div>
+        <div class="text-pink-800 font-mono mb-4 text-sm" data-key="agent_terminal.hyper_lock_message">NEURÁLNÍ SPOJENÍ NAVÁZÁNO // JE NUTNÝ MANUÁLNÍ OVERRIDE</div>
         <div class="flex flex-col gap-2 w-56">
-            <input type="password" id="unlockPass" placeholder="ENTER OVERRIDE CODE"
+            <input type="password" id="unlockPass" placeholder="ZADEJTE OVLÁDACÍ KÓD"
                 class="bg-black border border-pink-900 text-center text-white p-1.5 text-sm focus:border-pink-500 outline-none">
             <button onclick="attemptUnlock()"
-                class="bg-pink-900 text-white border border-pink-500 p-1.5 text-sm hover:bg-pink-700">
-                DEACTIVATE HYPER
+                class="bg-pink-900 text-white border border-pink-500 p-1.5 text-sm hover:bg-pink-700" data-key="agent_terminal.deactivate_hyper">
+                DEAKTIVOVAT HYPER
             </button>
-            <a href="/auth/logout" class="text-center text-gray-500 text-[10px] hover:text-white mt-2">[ EMERGENCY
-                DISCONNECT ]</a>
+            <a href="/auth/logout" class="text-center text-gray-500 text-[10px] hover:text-white mt-2" data-key="agent_terminal.emergency_disconnect">[ NOUZOVÉ ODPOJENÍ ]</a>
         </div>
     </div>
 
@@ -104,16 +103,16 @@
     <div class="w-1/5 flex flex-col gap-2 p-2 border-r border-pink-900/30">
         <!-- Status Card -->
         <div class="bg-black/60 border border-pink-800 relative p-2">
-            <h3 class="text-pink-500 border-b border-pink-900 mb-1 font-bold text-xs">STATUS</h3>
+            <h3 class="text-pink-500 border-b border-pink-900 mb-1 font-bold text-xs" data-key="agent_terminal.status">STAV</h3>
             <div class="grid grid-cols-1 gap-1 text-[10px] font-mono text-pink-300">
                 <div>AGENT: <span class="text-white font-bold">{{ user.username|upper }}</span></div>
-                <div>SESSION ID: <span id="sessionIdDisplay" class="text-white">...</span></div>
-                <div>LLM: <span id="llmStatus" class="text-green-500">ONLINE</span></div>
+                <div><span data-key="agent_terminal.session_id">ID RELACE</span>: <span id="sessionIdDisplay" class="text-white">...</span></div>
+                <div><span data-key="agent_terminal.llm_status">LLM</span>: <span id="llmStatus" class="text-green-500" data-key="agent_terminal.llm_online">ONLINE</span></div>
             </div>
 
             <div class="mt-2 pt-2 border-t border-pink-900">
                 <div class="flex justify-between items-center mb-1">
-                    <span class="text-pink-500 font-bold text-[10px]">HYPER-MODE</span>
+                    <span class="text-pink-500 font-bold text-[10px]" data-key="agent_terminal.hyper_mode">HYPER-MÓD</span>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="autopilotToggle" class="sr-only peer" onchange="toggleAutopilot()">
                         <div
@@ -121,8 +120,8 @@
                         </div>
                     </label>
                 </div>
-                <div class="text-[8px] text-pink-800 leading-tight">
-                    ACTIVATE AUTOMATED NEURAL RESPONSE. USER INPUT WILL BE LOCKED.
+                <div class="text-[8px] text-pink-800 leading-tight" data-key="agent_terminal.hyper_description">
+                    Aktivuje automatickou neurální odpověď. Vstup uživatele bude uzamčen.
                 </div>
             </div>
         </div>
@@ -134,7 +133,7 @@
                 <div id="timerBar" class="h-full bg-yellow-500 transition-all duration-1000 linear" style="width: 100%;">
                 </div>
             </div>
-            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-1">ČEKÁM NA UŽIVATELE</div>
+            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-1" data-key="agent_terminal.timer_waiting">ČEKÁM NA UŽIVATELE</div>
         </div>
     </div>
 
@@ -148,8 +147,8 @@
         <!-- Lock Overlay if needed -->
         <div id="lockOverlay"
             class="absolute inset-x-0 bottom-0 top-0 bg-black/80 z-20 flex items-center justify-center hidden">
-            <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-lg">
-                ⚠️ TRANSMISSION BLOCKED ⚠️
+            <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-lg" data-key="agent_terminal.transmission_blocked">
+                ⚠️ PŘENOS BLOKOVÁN ⚠️
             </div>
         </div>
 
@@ -158,10 +157,10 @@
             <form id="chatForm" class="flex gap-2">
                 <input type="text" id="msgInput"
                     class="flex-1 bg-black border border-pink-700 text-pink-400 p-1.5 text-sm focus:outline-none focus:border-pink-400 font-mono"
-                    placeholder="Inject response..." autocomplete="off">
+                    placeholder="Vložte odpověď..." autocomplete="off">
                 <button type="submit"
-                    class="bg-pink-900 hover:bg-pink-700 text-white px-4 py-1.5 text-sm border border-pink-600 font-bold transition">
-                    TRANSMIT
+                    class="bg-pink-900 hover:bg-pink-700 text-white px-4 py-1.5 text-sm border border-pink-600 font-bold transition" data-key="agent_terminal.transmit_button">
+                    ODESLAT
                 </button>
             </form>
         </div>
@@ -179,17 +178,52 @@
         const chatHistory = document.getElementById('chatHistory');
         const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
+        const t = (key, fallback) => {
+            const manager = window.translationManager;
+            if (manager && manager.initialized) {
+                const value = manager.get(key);
+                if (value && value !== key) return value;
+            }
+            return fallback;
+        };
+
+        function setTimerText(key, fallback) {
+            const el = document.getElementById('timerText');
+            if (el) el.innerText = t(key, fallback);
+        }
+
+        function applyLocalizedText() {
+            const input = document.getElementById('msgInput');
+            if (input) input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
+
+            const unlock = document.getElementById('unlockPass');
+            if (unlock) unlock.placeholder = t('agent_terminal.override_placeholder', 'Zadejte ovládací kód');
+
+            const lockLabel = document.querySelector('#lockOverlay [data-key="agent_terminal.transmission_blocked"]');
+            if (lockLabel) lockLabel.innerText = t('agent_terminal.transmission_blocked', '⚠️ PŘENOS BLOKOVÁN ⚠️');
+
+            setTimerText('agent_terminal.timer_waiting', 'ČEKÁM NA UŽIVATELE');
+        }
+
         // Timer Vars
         let timerLimit = 120;
         let timerRemaining = 120;
         let timerInterval = null;
+
+        applyLocalizedText();
+        const translationReady = setInterval(() => {
+            if (window.translationManager && window.translationManager.initialized) {
+                applyLocalizedText();
+                clearInterval(translationReady);
+            }
+        }, 200);
 
         function startTimer() {
             clearInterval(timerInterval);
             timerRemaining = timerLimit;
             updateTimerUI();
 
-            document.getElementById('timerText').innerText = "ODPOČET AKTIVNÍ";
+            setTimerText('agent_terminal.timer_active', 'ODPOČET AKTIVNÍ');
             document.getElementById('lockOverlay').classList.add('hidden');
             document.getElementById('msgInput').disabled = false;
 
@@ -207,13 +241,13 @@
             clearInterval(timerInterval);
             timerRemaining = timerLimit;
             updateTimerUI();
-            document.getElementById('timerText').innerText = "STOPPED";
+            setTimerText('agent_terminal.timer_stopped', 'ZASTAVENO');
         }
 
         function lockInput() {
             document.getElementById('lockOverlay').classList.remove('hidden');
             document.getElementById('msgInput').disabled = true;
-            document.getElementById('timerText').innerText = "BLOCKED";
+            setTimerText('agent_terminal.timer_blocked', 'BLOKOVÁNO');
         }
 
         function updateTimerUI() {
@@ -238,6 +272,7 @@
                 if (window.translationManager) {
                     window.translationManager.handleTranslationUpdate(data);
                 }
+                applyLocalizedText();
                 return;
             }
             
@@ -272,7 +307,7 @@
             } else if (data.type === 'session_timeout') {
                 // Session timed out - lock input and show error
                 lockInput();
-                document.getElementById('timerText').innerText = "TIMEOUT - ČEKEJTE NA UŽIVATELE";
+                setTimerText('agent_terminal.timer_timeout', 'ČAS VYPRŠEL - ČEKEJTE NA UŽIVATELE');
                 if (window.sfx) window.sfx.playError();
             } else if (data.type === 'error') {
                 // General error message from server
@@ -446,7 +481,7 @@
             // Optimistically append (or wait for echo? Echo is safer)
             const input = document.getElementById('msgInput');
             input.disabled = false;
-            input.placeholder = "Inject response...";
+            input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
             input.focus();
         };
 
@@ -457,7 +492,7 @@
             const input = document.getElementById('msgInput');
             input.disabled = false;
             input.value = original; // Restore
-            input.placeholder = "Inject response...";
+            input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
             input.focus();
         };
 
@@ -530,7 +565,7 @@
                 document.getElementById('unlockPass').value = "";
                 client.send({ type: 'autopilot_toggle', active: false });
             } else {
-                alert("ACCESS DENIED");
+                alert('PŘÍSTUP ODEPŘEN');
                 if (window.sfx) sfx.playError();
             }
         }
@@ -564,7 +599,7 @@
                     indicator = document.createElement('div');
                     indicator.id = 'typingIndicator';
                     indicator.className = 'text-[10px] text-green-500 italic ml-1 animate-pulse';
-                    indicator.innerText = ">> USER IS TYPING...";
+                    indicator.innerText = t('agent_terminal.typing_indicator', '>> UŽIVATEL PÍŠE...');
                     hist.appendChild(indicator);
                     hist.scrollTop = hist.scrollHeight;
                 }
