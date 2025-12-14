@@ -17,6 +17,7 @@
 
 | 2025-12-15 | n/a (UI/websocket) | Task workflow + reward presets | Not Run | Task dashboards and submission modal updated; requires manual end-to-end check. |
 | 2025-12-14 | `python3 -m compileall app` | FastAPI import verification | **PASS** | Ensured admin_api imports compile without runtime NameError. |
+| 2025-12-14 | `python3 -m compileall app` | Websocket gamestate scope | **PASS** | Verified sockets router compiles after removing local gamestate shadowing. |
 
 
 ## Manual Verification Required

@@ -303,7 +303,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     # Task Request
                     if cmd_type == "task_request":
                         from ..database import Task, TaskStatus
-                        from ..logic.gamestate import gamestate
                         # Log
                         from ..database import SessionLocal, SystemLog
                         db_log = SessionLocal()
