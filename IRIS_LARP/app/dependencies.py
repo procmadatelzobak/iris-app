@@ -1,21 +1,12 @@
 from typing import Generator, Annotated
-from fastapi import Depends, HTTPException, status
+from datetime import datetime, timedelta
+import bcrypt
+from fastapi import Depends, HTTPException, status, Cookie, Request
 from fastapi.security import OAuth2PasswordBearer
+from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from .database import SessionLocal, User, UserRole
 from .config import settings
-from jose import jwt, JWTError
-
-# DB Dependency
-def get_db() -> Generator:
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-import bcrypt
-from jose import jwt, JWTError
 
 # DB Dependency
 def get_db() -> Generator:
@@ -35,14 +26,11 @@ def get_password_hash(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def create_access_token(data: dict):
-    from datetime import datetime, timedelta
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
-
-from fastapi import Cookie, Request
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     try:
