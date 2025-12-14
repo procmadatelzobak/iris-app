@@ -115,8 +115,14 @@ async def bonus_user(action: EconomyAction, admin=Depends(get_current_admin)):
     user = db.query(User).filter(User.id == action.user_id).first()
     if user:
         user.credits += action.amount
+        
+        # Auto-lock if negative
+        if user.credits < 0 and not user.is_locked:
+            user.is_locked = True
+            await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": true}}')
+        
         # Auto-unlock if positive
-        if user.credits >= 0 and user.is_locked:
+        elif user.credits >= 0 and user.is_locked:
             user.is_locked = False
             await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": false}}')
             
