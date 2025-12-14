@@ -136,7 +136,17 @@ def clear_cache():
     _translations_cache = {}
 
 
-# Future: Add functions for:
-# - Database integration for custom labels
-# - WebSocket broadcast for real-time updates
-# - Validation of translation keys against HTML templates
+# TODO: Add database integration for custom labels
+# - Create CustomLabel model with key/value fields
+# - Add CRUD operations for custom labels
+# - Integrate with get_translation() function
+#
+# TODO: Add WebSocket broadcast for real-time updates
+# - Implement broadcast_translation_update(key, value)
+# - Implement broadcast_language_change(language_mode)
+# - Implement broadcast_translation_reset()
+#
+# TODO: Add validation of translation keys against HTML templates
+# - Parse HTML templates for data-key attributes
+# - Compare against available translation keys
+# - Generate report of missing translations

@@ -315,11 +315,23 @@ function handleLabelClick(e) {
     const key = element.getAttribute('data-key');
     const currentValue = element.textContent.trim();
     
-    const newValue = prompt(`Nový text pro "${key}":`, currentValue);
+    // Note: Use a proper modal dialog instead of prompt() in production
+    // to avoid XSS risks and provide better UX
+    const newValue = prompt(`Nový text pro klíč:`, currentValue);
     
     if (newValue && newValue !== currentValue) {
-        window.translationManager.saveCustomLabel(key, newValue);
+        // Sanitize input before sending to server
+        const sanitized = sanitizeInput(newValue);
+        window.translationManager.saveCustomLabel(key, sanitized);
     }
+}
+
+function sanitizeInput(input) {
+    // Basic sanitization - server-side validation is still required
+    return input
+        .trim()
+        .substring(0, 200)  // Limit length
+        .replace(/[<>]/g, '');  // Remove potential HTML tags
 }
 ```
 

@@ -4,7 +4,19 @@ Run with: python test_translations.py
 """
 
 import json
+import sys
 from pathlib import Path
+
+# Setup import path for __init__ module
+def setup_import():
+    """Helper to setup module imports for standalone test execution."""
+    translations_dir = Path(__file__).parent
+    if str(translations_dir) not in sys.path:
+        sys.path.insert(0, str(translations_dir))
+    return __import__('__init__')
+
+# Setup once at module level
+translations_module = setup_import()
 
 def test_json_validity():
     """Test that JSON files are valid."""
@@ -85,10 +97,6 @@ def test_key_structure():
 def test_sample_translations():
     """Test that we can access sample translations."""
     print("Testing sample translations...")
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent))
-    import __init__ as translations_module
-    
     # Load translations
     czech = translations_module.load_translations("czech")
     
@@ -113,10 +121,6 @@ def test_sample_translations():
 def test_czech_iris_mode():
     """Test czech-iris mode fallback."""
     print("Testing czech-iris mode...")
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent))
-    import __init__ as translations_module
-    
     # Test that iris-specific keys work
     result = translations_module.get_translation("admin_dashboard.hub_station_1", "czech-iris")
     print(f"  ✓ czech-iris mode: admin_dashboard.hub_station_1 = '{result}'")
@@ -131,10 +135,6 @@ def test_czech_iris_mode():
 def test_custom_overrides():
     """Test custom admin override priority."""
     print("Testing custom admin overrides...")
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent))
-    import __init__ as translations_module
-    
     custom_labels = {
         "admin_dashboard.hub_station_1": "CUSTOM STATION NAME"
     }
