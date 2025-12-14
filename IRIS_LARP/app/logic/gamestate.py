@@ -212,6 +212,21 @@ class GameState:
 
         return mapping.get(str(level_value), self.task_reward_default)
 
+    def update_reward_config(self, config: dict):
+        """Update task reward configuration from Root dashboard."""
+        if "task_reward_default" in config:
+            self.task_reward_default = int(config["task_reward_default"])
+        if "task_reward_low" in config:
+            self.task_reward_low = int(config["task_reward_low"])
+        if "task_reward_mid" in config:
+            self.task_reward_mid = int(config["task_reward_mid"])
+        if "task_reward_high" in config:
+            self.task_reward_high = int(config["task_reward_high"])
+        if "task_reward_party" in config:
+            self.task_reward_party = int(config["task_reward_party"])
+        if "tax_rate" in config:
+            self.tax_rate = float(config["tax_rate"])
+
     def export_state(self) -> dict:
         """Export critical state for persistence across restarts."""
         return {

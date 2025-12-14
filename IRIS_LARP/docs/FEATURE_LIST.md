@@ -358,6 +358,13 @@
 - ✅ **In-App Manuals**: Markdown viewer with role-based styling
 - ✅ **DEPLOYMENT.md**: Single-worker requirement documented
 
+### Task Lifecycle (Phase 32)
+- ✅ **LLM Task Generation**: Auto-generates descriptions based on user status
+- ✅ **Grading Modal**: Split view (prompt | submission) for admin review
+- ✅ **Rating Modifiers**: 0% / 50% / 100% / 200% options
+- ✅ **Economy Integration**: Credits to user, tax to treasury
+- ✅ **Root Reward Config**: Configurable rewards per status level
+
 ---
 
 ## Feature Status Legend
@@ -368,5 +375,5 @@
 
 ---
 
-**Total Features**: 160+  
-**Last Major Update**: Phase 31 (System Hardening, State Persistence)
+**Total Features**: 165+  
+**Last Major Update**: Phase 32 (Advanced Task Lifecycle, LLM Generation, Grading)

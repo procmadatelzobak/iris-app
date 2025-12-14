@@ -699,10 +699,8 @@ window.refreshTasks = async function () {
                 `;
                 if (activeDiv) activeDiv.appendChild(el);
             } else if (t.status === 'submitted') {
-                const currentRating = (t.rating === 0 || t.rating) ? t.rating : 100;
-                const ratingButtons = [0, 50, 100, 200].map(val => `
-                    <button class="btn-action text-yellow-400 rating-btn" data-rating-group="${t.id}" data-value="${val}" onclick="setTaskRating(${t.id}, ${val}, this)">${val}%</button>
-                `).join('');
+                el.className = "bg-gray-900 border border-green-700 p-3 text-sm space-y-2 cursor-pointer hover:bg-gray-800 transition";
+                el.onclick = () => openGradingModal(t);
 
                 el.innerHTML = `
                     <div class="flex justify-between items-start">
@@ -710,18 +708,12 @@ window.refreshTasks = async function () {
                             <div class="text-green-400 font-bold">ODEVZDÁNO #${t.id} (Uživatel ${t.user_id})</div>
                             ${rewardInfo}
                         </div>
-                        <span class="text-xs text-gray-500">vyber 0/50/100/200</span>
+                        <span class="text-xs text-green-500 animate-pulse">🔍 KLIKNI PRO HODNOCENÍ</span>
                     </div>
                     ${promptInfo}
-                    <div class="text-white border-l-2 border-gray-500 pl-2 my-1 whitespace-pre-wrap">${t.submission || '(prázdné)'}</div>
-                    <input type="hidden" id="rat-${t.id}" value="${currentRating}">
-                    <div class="mt-2 flex gap-2 items-center flex-wrap">
-                        ${ratingButtons}
-                        <button class="btn-action text-yellow-500" onclick="payTask(${t.id})">VYPLATIT</button>
-                    </div>
+                    <div class="text-white border-l-2 border-gray-500 pl-2 my-1 whitespace-pre-wrap line-clamp-3">${(t.submission || '(prázdné)').substring(0, 100)}${t.submission && t.submission.length > 100 ? '...' : ''}</div>
                 `;
                 if (submitDiv) submitDiv.appendChild(el);
-                setTaskRating(t.id, currentRating);
             } else if (t.status === 'paid') {
                 el.innerHTML = `
                     <div class="text-gray-300 font-bold">HOTOVO #${t.id} (Uživatel ${t.user_id})</div>
@@ -781,6 +773,68 @@ window.setTaskRating = function (taskId, value, btn) {
     if (btn) {
         btn.blur();
     }
+};
+
+// --- GRADING MODAL (Phase 32) ---
+let currentGradingTask = null;
+
+window.openGradingModal = function (task) {
+    currentGradingTask = task;
+
+    document.getElementById('gradeTaskPrompt').textContent = task.prompt || '(Bez zadání)';
+    document.getElementById('gradeTaskSubmission').textContent = task.submission || '(Prázdná odpověď)';
+    document.getElementById('gradeUsername').textContent = `User ${task.user_id}`;
+    document.getElementById('gradeReward').textContent = task.reward || '0';
+
+    document.getElementById('gradingModal').classList.remove('hidden');
+};
+
+window.closeGradingModal = function () {
+    document.getElementById('gradingModal').classList.add('hidden');
+    currentGradingTask = null;
+};
+
+window.gradeTask = async function (ratingModifier) {
+    if (!currentGradingTask) {
+        console.error('No task selected for grading');
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/admin/tasks/grade', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAuthToken()}`
+            },
+            body: JSON.stringify({
+                task_id: currentGradingTask.id,
+                rating_modifier: ratingModifier
+            })
+        });
+
+        if (res.ok) {
+            const result = await res.json();
+            showAdminToast(`Úkol ohodnocen: ${result.net_reward || 0} CR (${ratingModifier * 100}%)`);
+            closeGradingModal();
+            refreshTasks();
+        } else {
+            const err = await res.json();
+            showAdminToast(`Chyba: ${err.detail || 'Nepodařilo se ohodnotit'}`, 'error');
+        }
+    } catch (e) {
+        console.error('Grade task error:', e);
+        showAdminToast('Chyba při ohodnocení úkolu', 'error');
+    }
+};
+
+// Helper for toast notifications
+window.showAdminToast = window.showAdminToast || function (message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded shadow-lg z-50 ${type === 'error' ? 'bg-red-600' : 'bg-green-600'} text-white`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
 };
 
 // --- WEBSOCKET & MONITOR ---

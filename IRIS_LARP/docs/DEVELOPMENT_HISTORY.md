@@ -1,7 +1,7 @@
 # IRIS LARP - Development History
 **Project**: Interactive Role-playing Information System  
 **Timeline**: November 2024 - December 2024  
-**Current Phase**: 31
+**Current Phase**: 32
 
 ---
 
@@ -137,7 +137,7 @@
 - ✅ Role-based styling (User green, Agent pink, Admin gold)
 - ✅ MANUÁL and SYSTEM DOCS buttons in all terminals
 
-### Phase 31: System Hardening & State Persistence (CURRENT)
+### Phase 31: System Hardening & State Persistence
 **Focus**: Reliability, security, and deployment readiness
 
 **State Persistence**:
@@ -155,6 +155,28 @@
 
 **Documentation**:
 - ✅ DEPLOYMENT.md created with single-worker requirement
+
+### Phase 32: Advanced Task Lifecycle & Economy (CURRENT)
+**Focus**: Complete task system with LLM generation and grading
+
+**LLM Task Generation**:
+- ✅ `generate_task_description()` in llm_core.py
+- ✅ Auto-generates task based on user status level
+- ✅ Fallback to default prompt if LLM unavailable
+
+**Grading System**:
+- ✅ `/tasks/grade` endpoint with rating_modifier (0.0/0.5/1.0/2.0)
+- ✅ Admin grading modal with split view (prompt | submission)
+- ✅ 4 rating buttons: ⛔0%, ⚠️50%, ✅100%, 🌟200%
+
+**Economy Integration**:
+- ✅ Reward calculated: `reward_offered * rating_modifier`
+- ✅ Tax deducted and added to treasury
+- ✅ ChatLog and SystemLog entries created
+
+**Root Configuration**:
+- ✅ Economy tab for reward amounts per status level
+- ✅ `update_reward_config()` method in GameState
 
 ---
 

@@ -246,44 +246,123 @@ async def get_tasks(admin=Depends(get_current_admin)):
 async def approve_task(action: TaskAction, admin=Depends(get_current_admin)):
     db = SessionLocal()
     task = db.query(Task).filter(Task.id == action.task_id).first()
-    if task:
-        reward_value = action.reward if action.reward is not None else task.reward_offered
+    if not task:
+        db.close()
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    user = task.user
+    
+    # Calculate reward based on user status level
+    reward_value = action.reward if action.reward is not None else None
+    if reward_value is None or reward_value <= 0:
+        level = user.status_level if user and user.status_level else StatusLevel.LOW
+        reward_value = gamestate.get_default_task_reward(level)
+    
+    # Generate task description via LLM if not provided
+    prompt_content = action.prompt_content
+    if not prompt_content or prompt_content.strip() == "" or prompt_content == "Waiting for assignment...":
+        from ..logic.llm_core import llm_service
+        user_profile = {
+            "username": user.username if user else "unknown",
+            "status_level": user.status_level.value if user and user.status_level else "low",
+            "credits": user.credits if user else 0
+        }
         try:
-            reward_value = int(reward_value)
-        except Exception:
-            reward_value = task.reward_offered
-
-        fallback_reward = task.reward_offered
-        try:
-            # If reward is unset/zero, fall back to root defaults by user level
-            from ..database import StatusLevel
-            if (fallback_reward is None or fallback_reward <= 0) and task.user:
-                level = task.user.status_level if task.user.status_level else StatusLevel.LOW
-                fallback_reward = gamestate.get_default_task_reward(level)
-        except Exception:
-            fallback_reward = task.reward_offered or reward_value
-
-        task.status = TaskStatus.ACTIVE
-        task.reward_offered = reward_value if reward_value is not None else fallback_reward
-
-        # v2.0 Edit on Approve
-        if action.prompt_content:
-            task.prompt_desc = action.prompt_content
-
-        db.commit()
-        # Notify User
-        await routing_logic.broadcast_to_session(
-            task.user_id,
-            json.dumps({
-                "type": "task_update",
-                "id": task.id,
-                "status": "active",
-                "reward": task.reward_offered,
-                "prompt": task.prompt_desc
-            })
-        )
+            prompt_content = await llm_service.generate_task_description(user_profile)
+        except Exception as e:
+            print(f"LLM task generation failed: {e}")
+            prompt_content = "Proveďte analýzu aktuálního stavu systému a navrhněte zlepšení."
+    
+    task.status = TaskStatus.ACTIVE
+    task.reward_offered = reward_value
+    task.prompt_desc = prompt_content
+    
+    db.commit()
+    
+    # Log
+    db_log = SessionLocal()
+    db_log.add(SystemLog(event_type="TASK", message=f"Task #{task.id} approved for {user.username if user else 'unknown'}, reward: {reward_value}"))
+    db_log.commit()
+    db_log.close()
+    
+    # Notify User
+    await routing_logic.broadcast_to_session(
+        task.user_id,
+        json.dumps({
+            "type": "task_update",
+            "id": task.id,
+            "task_id": task.id,
+            "status": "active",
+            "reward": task.reward_offered,
+            "prompt": task.prompt_desc,
+            "description": task.prompt_desc
+        })
+    )
     db.close()
-    return {"status": "approved"}
+    return {"status": "approved", "task_id": task.id, "reward": reward_value}
+
+class GradeAction(BaseModel):
+    task_id: int
+    rating_modifier: float  # 0.0, 0.5, 1.0, 2.0
+
+@router.post("/tasks/grade")
+async def grade_task(action: GradeAction, admin=Depends(get_current_admin)):
+    """Grade a submitted task with rating modifier (0.0, 0.5, 1.0, 2.0)"""
+    allowed_modifiers = {0.0, 0.5, 1.0, 2.0}
+    modifier = action.rating_modifier if action.rating_modifier in allowed_modifiers else 1.0
+    
+    # Convert modifier to percentage for existing economy logic
+    rating_percent = int(modifier * 100)
+    
+    from ..logic.economy import process_task_payment
+    result = process_task_payment(action.task_id, rating_percent)
+    
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    
+    # Get task for logging
+    db = SessionLocal()
+    task = db.query(Task).filter(Task.id == action.task_id).first()
+    user = task.user if task else None
+    
+    # Log to SystemLog
+    db.add(SystemLog(
+        event_type="ECONOMY", 
+        message=f"Task #{action.task_id} graded at {rating_percent}%. User {user.username if user else 'unknown'} received {result.get('net_reward', 0)} credits. Tax: {result.get('tax_collected', 0)}"
+    ))
+    
+    # Create ChatLog entry for user
+    if user:
+        from ..database import ChatLog
+        task_name = task.prompt_desc[:50] if task and task.prompt_desc else "Úkol"
+        db.add(ChatLog(
+            session_id=user.id,
+            sender_id=user.id,
+            content=f"📋 Úkol '{task_name}...' vyhodnocen. Odměna: {result.get('net_reward', 0)} kreditů ({rating_percent}%)."
+        ))
+    
+    db.commit()
+    db.close()
+    
+    # Broadcast to user
+    await routing_logic.broadcast_to_session(result.get("user_id", action.task_id), json.dumps({
+        "type": "task_update",
+        "task_id": action.task_id,
+        "status": "paid",
+        "payout": result.get("actual_reward"),
+        "net_reward": result.get("net_reward"),
+        "rating": rating_percent
+    }))
+    
+    # Also send economy update
+    await routing_logic.broadcast_to_session(result.get("user_id", action.task_id), json.dumps({
+        "type": "economy_update",
+        "credits": result.get("net_reward", 0),
+        "msg": f"Odměna za úkol: +{result.get('net_reward', 0)} CR"
+    }))
+    
+    await routing_logic.broadcast_to_admins(json.dumps({"type": "admin_refresh_tasks"}))
+    return result
 
 @router.post("/tasks/pay")
 async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
