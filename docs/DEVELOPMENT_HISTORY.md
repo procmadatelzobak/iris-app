@@ -37,7 +37,7 @@
 
 ### Tests
 - Not run (UI/docs-only change; no automated coverage available for the static embed).
-=======
+
 
 ## [2025-12-14] Phase 32
 ### Input
@@ -69,7 +69,7 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 ### Outcome
 - Testing not run (UI-level change only); manual verification recommended during next session
 
-=======
+
 
 ## [2025-12-14] Phase 33 - Agent Terminal Localization
 ### Prompt
@@ -89,6 +89,7 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 ### Tests
 - Not run (UI localization change; no automated coverage in container).
 
+
 ## [2025-12-14] Phase 33 - Agent Terminal Layout & Visibility
 ### Prompt
 - User reports that agent terminals do not show incoming user messages and the vertical status panel is too narrow and underused.
@@ -105,3 +106,44 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 
 ### Tests
 - Not run (websocket mapping and UI layout updates; requires manual terminal verification).
+
+
+## [2025-12-15] Phase 33 - Economy Dashboard Authorization
+### Prompt
+- Admin economy dashboard (Station 3) shows no user entries; confirm whether configuration is missing and ensure values are prepopulated.
+
+### Plan
+- [x] Add bearer-token authorization to Station 3 economy fetches and actions so admin calls reach the protected API.
+- [x] Add bearer-token authorization to ROOT dashboard economy calls (user list and credit adjustments).
+- [x] Reconcile documentation for the fix and note testing status.
+
+### Outcome
+- Economy dashboards now send admin bearer tokens for user listing, credit adjustments, and status changes, restoring visible user data and enabling actions.
+- ROOT dashboard global and per-user economy controls now authenticate correctly against protected endpoints.
+
+### Tests
+- Not run (JavaScript/authentication wiring change; manual UI verification required).
+
+## [2025-12-15] Phase 31 - Enhanced LLM Configuration UI
+### Prompt
+- ROOT dashboard CONFIG tab currently configures only one AI. Need separate per-role LLM setup (task intake, soft/optimizer, hyper) with provider selection, model listing via API keys (.env or UI), and system prompts for each LLM profile.
+
+### Plan
+- [x] Review existing ROOT config UI and admin API endpoints for LLM configuration and key management.
+- [x] Extend backend state/endpoints to store optimizer LLM settings (provider, model, prompt) alongside task and hyper configs.
+- [x] Redesign ROOT CONFIG tab with per-role cards (task, soft/optimizer, hyper) supporting provider selection, dynamic model lists, custom system prompts, and API key updates (OpenAI/OpenRouter/Gemini).
+- [x] Update project status/docs and note any tests executed.
+
+### Progress Notes
+- Added persistent `llm_config_optimizer` to game state with reset defaults and plumbed optimizer rewrites to use configurable provider/model/system prompt.
+- Extended admin LLM config API to include optimizer payloads (provider/model/system prompt + rewrite prompt) and updated config fetch to expose all roles.
+- Rebuilt ROOT CONFIG tab into three dedicated LLM cards with provider pickers, live model refreshers, custom prompts, and manual model inputs; API key saver now supports Gemini keys and masked retrieval.
+
+### Outcome
+- Per-role LLM settings (task, optimizer, hyper) can be independently configured from the ROOT dashboard using live model lists per provider and stored prompts; backend rewrites now honor optimizer config.
+- Documentation (PROJECT_STATUS, PROMPT_LOG) updated to reflect the completed LLM configuration UI and Gemini key field.
+
+### Tests
+- Not run (UI/API wiring change; manual verification recommended for model listing with real API keys).
+
+

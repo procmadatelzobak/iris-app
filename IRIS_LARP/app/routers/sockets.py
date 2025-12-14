@@ -233,7 +233,11 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
 
                             from ..logic.llm_core import llm_service
                             try:
-                                rewritten = await llm_service.rewrite_message(content, gamestate.optimizer_prompt)
+                                rewritten = await llm_service.rewrite_message(
+                                    content,
+                                    gamestate.optimizer_prompt,
+                                    gamestate.llm_config_optimizer
+                                )
                                 if rewritten and rewritten.strip():
                                     # v2.0: Send PREVIEW to Agent, do not broadcast/save yet
                                     await websocket.send_text(json.dumps({
