@@ -41,10 +41,16 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_timeout(500)
     
     # Enable Dev Mode / Test Mode
-    test_mode_btn = page.locator('#btnTestMode, button:has-text("DISABLED")').first
-    if test_mode_btn.is_visible():
-        test_mode_btn.click()
+    # Only click if it says DISABLED. Use specific text selector to avoid toggling off.
+    page.wait_for_timeout(2000) # Wait for hydration
+    
+    # Check if we need to enable
+    enable_btn = page.locator('button:has-text("DISABLED") #btnTestMode, #btnTestMode:has-text("DISABLED")').first
+    if enable_btn.is_visible():
+        enable_btn.click()
         page.wait_for_timeout(500)
+    else:
+        print("    (Dev Mode already ENABLED)")
     
     # Verify Dev Mode is active (button should show ENABLED or toast appears)
     # Toast check - may appear briefly
@@ -93,18 +99,25 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_timeout(500)
     
     # Enable AI Optimizer - go to Controls station
-    controls_btn = page.locator('button:has-text("CONTROLS"), [data-station="controls"]').first
+    controls_btn = page.locator('div[onclick*="controls"]').first
     if controls_btn.is_visible():
-        controls_btn.click()
-        page.wait_for_timeout(500)
-    
+        controls_btn.click(force=True)
+        page.wait_for_timeout(1000) # Wait for animation
+    else:
+        print("    WARNING: Could not find Controls station in Hub.")
+        
+    # Verify we are in the station (Nav should be visible)
+    # The nav has 'hidden' class removed.
+    expect(page.locator('#station-nav')).to_be_visible()
+        
+    # Toggle Optimizer (inside Controls view)
     optimizer_toggle = page.locator('button:has-text("Optimizer"), #btnOptimizer, [id*="optimizer"]').first
     if optimizer_toggle.is_visible():
         optimizer_toggle.click()
         page.wait_for_timeout(500)
-    
-    # Logout
-    page.click('a[href="/auth/logout"], button:has-text("ODHLÁSIT"), a:has-text("ODHLÁSIT")')
+
+    # Logout - force click because nav might be transitioning
+    page.click('button:has-text("ODHLÁSIT")', force=True)
     page.wait_for_load_state("networkidle")
     print("✓ Block 1: Admin initialization complete")
     
@@ -198,10 +211,12 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_timeout(1000)
     
     # Go to Tasks station
-    tasks_btn = page.locator('button:has-text("TASKS"), [data-station="tasks"]').first
+    tasks_btn = page.locator('div[onclick*="tasks"]').first
     if tasks_btn.is_visible():
-        tasks_btn.click()
+        tasks_btn.click(force=True)
         page.wait_for_timeout(500)
+    else:
+        print("    WARNING: Could not find Tasks station in Hub.")
     
     # Approve the task
     approve_btn = page.locator('button:has-text("SCHVÁLIT"), button:has-text("APPROVE")').first
@@ -219,7 +234,8 @@ def test_full_suite_a_story(page: Page, base_url: str):
     # (This may require specific controls)
     
     # Logout
-    page.click('a[href="/auth/logout"], button:has-text("ODHLÁSIT"), a:has-text("ODHLÁSIT")')
+    # Logout
+    page.click('button:has-text("ODHLÁSIT")', force=True)
     page.wait_for_load_state("networkidle")
     print("✓ Block 4: Chaos created (task approved, shift executed)")
     
@@ -287,9 +303,9 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_timeout(1000)
     
     # Go to Tasks
-    tasks_btn = page.locator('button:has-text("TASKS"), [data-station="tasks"]').first
+    tasks_btn = page.locator('div[onclick*="tasks"]').first
     if tasks_btn.is_visible():
-        tasks_btn.click()
+        tasks_btn.click(force=True)
         page.wait_for_timeout(500)
     
     # Pay task 100%
@@ -319,9 +335,9 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_timeout(1000)
     
     # Go to Economy
-    economy_btn = page.locator('button:has-text("ECONOMY"), [data-station="economy"]').first
+    economy_btn = page.locator('div[onclick*="economy"]').first
     if economy_btn.is_visible():
-        economy_btn.click()
+        economy_btn.click(force=True)
         page.wait_for_timeout(500)
     
     # Fine Agatha -500 (find user row and click fine button)
@@ -364,9 +380,9 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(1000)
     
-    tasks_btn = page.locator('button:has-text("TASKS"), [data-station="tasks"]').first
+    tasks_btn = page.locator('div[onclick*="tasks"]').first
     if tasks_btn.is_visible():
-        tasks_btn.click()
+        tasks_btn.click(force=True)
         page.wait_for_timeout(500)
     
     approve_btn = page.locator('button:has-text("SCHVÁLIT"), button:has-text("APPROVE")').first
@@ -406,9 +422,9 @@ def test_full_suite_a_story(page: Page, base_url: str):
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(1000)
     
-    tasks_btn = page.locator('button:has-text("TASKS"), [data-station="tasks"]').first
+    tasks_btn = page.locator('div[onclick*="tasks"]').first
     if tasks_btn.is_visible():
-        tasks_btn.click()
+        tasks_btn.click(force=True)
         page.wait_for_timeout(500)
     
     pay_btn = page.locator('button:has-text("100%"), button:has-text("VYPLATIT")').first
@@ -417,9 +433,9 @@ def test_full_suite_a_story(page: Page, base_url: str):
         page.wait_for_timeout(500)
     
     # Grant bonus +500
-    economy_btn = page.locator('button:has-text("ECONOMY"), [data-station="economy"]').first
+    economy_btn = page.locator('div[onclick*="economy"]').first
     if economy_btn.is_visible():
-        economy_btn.click()
+        economy_btn.click(force=True)
         page.wait_for_timeout(500)
     
     bonus_btn = page.locator('button:has-text("+500"), button:has-text("STIMULUS"), button:has-text("BONUS")').first

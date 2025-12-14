@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 class TestServer:
     """Manages test server lifecycle."""
     
-    def __init__(self, host: str = "127.0.0.1", port: int = 8001):
+    def __init__(self, host: str = "127.0.0.1", port: int = 8002):
         self.host = host
         self.port = port
         self.thread = None
