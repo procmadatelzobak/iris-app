@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
-from typing import List, Dict
+from typing import List, Dict, Optional
+import json
 from ..dependencies import get_current_admin, get_current_root
 from ..logic.llm_core import llm_service, LLMConfig, LLMProvider
 from ..logic.gamestate import gamestate
@@ -86,7 +87,7 @@ async def set_key(update: KeyUpdate, admin=Depends(get_current_root)):
     return {"status": "updated", "provider": update.provider}
 
 # --- ECONOMY & TASKS ---
-from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog
+from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog, StatusLevel
 from ..logic.routing import routing_logic
 
 class EconomyAction(BaseModel):
@@ -214,8 +215,8 @@ async def reset_economy(admin=Depends(get_current_admin)):
 # Tasks
 class TaskAction(BaseModel):
     task_id: int
-    reward: int = 0 # For approval
-    rating: int = 0 # For payment (0-100)
+    reward: Optional[int] = None # For approval
+    rating: int = 0 # For payment (0-200)
     prompt_content: str = None # v2.0 Task Editing
 
 @router.get("/tasks")
@@ -231,7 +232,8 @@ async def get_tasks(admin=Depends(get_current_admin)):
             "prompt": t.prompt_desc,
             "status": t.status.value if hasattr(t.status, "value") else str(t.status),
             "reward": t.reward_offered,
-            "submission": t.submission_content
+            "submission": t.submission_content,
+            "rating": t.final_rating
         })
     db.close()
     return res
@@ -241,25 +243,62 @@ async def approve_task(action: TaskAction, admin=Depends(get_current_admin)):
     db = SessionLocal()
     task = db.query(Task).filter(Task.id == action.task_id).first()
     if task:
+        reward_value = action.reward if action.reward is not None else task.reward_offered
+        try:
+            reward_value = int(reward_value)
+        except Exception:
+            reward_value = task.reward_offered
+
+        fallback_reward = task.reward_offered
+        try:
+            # If reward is unset/zero, fall back to root defaults by user level
+            from ..database import StatusLevel
+            if (fallback_reward is None or fallback_reward <= 0) and task.user:
+                level = task.user.status_level if task.user.status_level else StatusLevel.LOW
+                fallback_reward = gamestate.get_default_task_reward(level)
+        except Exception:
+            fallback_reward = task.reward_offered or reward_value
+
         task.status = TaskStatus.ACTIVE
-        task.reward_offered = action.reward
-        
+        task.reward_offered = reward_value if reward_value is not None else fallback_reward
+
         # v2.0 Edit on Approve
         if action.prompt_content:
             task.prompt_desc = action.prompt_content
-            
+
         db.commit()
         # Notify User
-        await routing_logic.broadcast_to_session(task.user_id, f'{{"type": "task_update", "id": {task.id}, "status": "active", "reward": {action.reward}, "prompt": "{task.prompt_desc}"}}')
+        await routing_logic.broadcast_to_session(
+            task.user_id,
+            json.dumps({
+                "type": "task_update",
+                "id": task.id,
+                "status": "active",
+                "reward": task.reward_offered,
+                "prompt": task.prompt_desc
+            })
+        )
     db.close()
     return {"status": "approved"}
 
 @router.post("/tasks/pay")
 async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
     from ..logic.economy import process_task_payment
-    result = process_task_payment(action.task_id, action.rating)
+    allowed = {0, 50, 100, 200}
+    rating = action.rating if action.rating in allowed else 100
+    result = process_task_payment(action.task_id, rating)
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
+    # Broadcast updates
+    await routing_logic.broadcast_to_session(result.get("user_id", action.task_id), json.dumps({
+        "type": "task_update",
+        "task_id": action.task_id,
+        "status": "paid",
+        "payout": result.get("actual_reward"),
+        "net_reward": result.get("net_reward"),
+        "rating": rating
+    }))
+    await routing_logic.broadcast_to_admins(json.dumps({"type": "admin_refresh_tasks"}))
     return result
 
 # v1.5 AI Optimizer
@@ -367,13 +406,20 @@ class SystemConstants(BaseModel):
     temp_threshold: float = 350.0
     temp_reset_val: float = 80.0
     temp_min: float = 20.0
-    
+
     # Costs
     cost_base: float = 10.0
     cost_user: float = 5.0
     cost_autopilot: float = 10.0
     cost_low_latency: float = 30.0
     cost_optimizer: float = 15.0
+
+    # Task Rewards
+    task_reward_default: int = 100
+    task_reward_low: int = 75
+    task_reward_mid: int = 125
+    task_reward_high: int = 175
+    task_reward_party: int = 200
 
 @router.post("/root/update_constants")
 async def update_constants(data: SystemConstants, admin=Depends(get_current_root)):
@@ -392,6 +438,13 @@ async def update_constants(data: SystemConstants, admin=Depends(get_current_root
     gamestate.COST_PER_AUTOPILOT = data.cost_autopilot
     gamestate.COST_LOW_LATENCY = data.cost_low_latency
     gamestate.COST_OPTIMIZER_ACTIVE = data.cost_optimizer
+
+    # Task Rewards
+    gamestate.task_reward_default = data.task_reward_default
+    gamestate.task_reward_low = data.task_reward_low
+    gamestate.task_reward_mid = data.task_reward_mid
+    gamestate.task_reward_high = data.task_reward_high
+    gamestate.task_reward_party = data.task_reward_party
 
     # Log Action
     from ..database import SessionLocal, SystemLog
@@ -430,6 +483,13 @@ async def get_root_state(admin=Depends(get_current_root)):
             "autopilot": gamestate.COST_PER_AUTOPILOT,
             "low_latency": gamestate.COST_LOW_LATENCY,
             "optimizer": gamestate.COST_OPTIMIZER_ACTIVE
+        },
+        "task_rewards": {
+            "default": gamestate.task_reward_default,
+            "low": gamestate.task_reward_low,
+            "mid": gamestate.task_reward_mid,
+            "high": gamestate.task_reward_high,
+            "party": gamestate.task_reward_party
         }
     }
 

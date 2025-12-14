@@ -46,6 +46,13 @@ class GameState:
         # v1.5 Economy Defaults
         self.treasury_balance = 500
         self.tax_rate = 0.20 # 20%
+
+        # Task Rewards (Root configurable)
+        self.task_reward_default = 100
+        self.task_reward_low = 75
+        self.task_reward_mid = 125
+        self.task_reward_high = 175
+        self.task_reward_party = 200
         
         # v1.4 Timer
         self.agent_response_window = 120 
@@ -164,6 +171,12 @@ class GameState:
         self.COST_PER_AUTOPILOT = 10.0
         self.COST_LOW_LATENCY = 30.0
         self.COST_OPTIMIZER_ACTIVE = 15.0
+        # Task rewards
+        self.task_reward_default = 100
+        self.task_reward_low = 75
+        self.task_reward_mid = 125
+        self.task_reward_high = 175
+        self.task_reward_party = 200
         # Reset LLM configs
         self.llm_config_task = LLMConfig(
             provider=LLMProvider.OPENAI,
@@ -182,5 +195,21 @@ class GameState:
         )
         # Reset custom labels (translation overrides)
         self.custom_labels = {}
+
+    def get_default_task_reward(self, status_level):
+        """Return the baseline task reward for a given user status level."""
+        try:
+            level_value = getattr(status_level, "value", status_level)
+        except Exception:
+            level_value = status_level
+
+        mapping = {
+            "low": self.task_reward_low,
+            "mid": self.task_reward_mid,
+            "high": self.task_reward_high,
+            "party": self.task_reward_party,
+        }
+
+        return mapping.get(str(level_value), self.task_reward_default)
 
 gamestate = GameState()

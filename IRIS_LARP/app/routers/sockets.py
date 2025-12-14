@@ -121,24 +121,30 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
         
         # Send initial status for User
         if user.role == UserRole.USER:
-             await websocket.send_text(json.dumps({
+            await websocket.send_text(json.dumps({
                 "type": "user_status",
                 "credits": user.credits,
                 "is_locked": user.is_locked,
                 "shift": gamestate.global_shift_offset
             }))
 
-             # Check for active task
-             from ..database import Task, TaskStatus
-             active_task = db.query(Task).filter(Task.user_id == user.id, Task.status.in_([TaskStatus.PENDING_APPROVAL, TaskStatus.ACTIVE])).first()
-             if active_task:
-                 await websocket.send_text(json.dumps({
-                     "type": "task_update",
-                     "is_active": True,
-                     "status": active_task.status.value,
-                     "description": active_task.prompt_desc,
-                     "reward": active_task.reward_offered
-                 }))
+            # Check for active or submitted task
+            from ..database import Task, TaskStatus
+            active_task = db.query(Task).filter(
+                Task.user_id == user.id,
+                Task.status.in_([TaskStatus.PENDING_APPROVAL, TaskStatus.ACTIVE, TaskStatus.SUBMITTED, TaskStatus.PAID, TaskStatus.COMPLETED])
+            ).first()
+            if active_task:
+                await websocket.send_text(json.dumps({
+                    "type": "task_update",
+                    "is_active": True,
+                    "task_id": active_task.id,
+                    "status": active_task.status.value,
+                    "description": active_task.prompt_desc,
+                    "reward": active_task.reward_offered,
+                    "submission": active_task.submission_content,
+                    "rating": getattr(active_task, "final_rating", None)
+                }))
         
         # Send initial status for Agent
         if user.role == UserRole.AGENT:
@@ -297,18 +303,24 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     # Task Request
                     if cmd_type == "task_request":
                         from ..database import Task, TaskStatus
+                        from ..logic.gamestate import gamestate
                         # Log
-                        from ..database import SessionLocal, SystemLog 
+                        from ..database import SessionLocal, SystemLog
                         db_log = SessionLocal()
                         db_log.add(SystemLog(event_type="ACTION", message=f"{user.username} requested task"))
                         db_log.commit()
                         db_log.close()
-                        existing = db_save.query(Task).filter(Task.user_id == user.id, Task.status.in_([TaskStatus.PENDING_APPROVAL, TaskStatus.ACTIVE])).first()
+                        existing = db_save.query(Task).filter(Task.user_id == user.id, Task.status.in_([
+                            TaskStatus.PENDING_APPROVAL,
+                            TaskStatus.ACTIVE,
+                            TaskStatus.SUBMITTED
+                        ])).first()
                         if not existing:
+                            default_reward = gamestate.get_default_task_reward(user.status_level)
                             new_task = Task(
                                 user_id=user.id,
                                 prompt_desc="Waiting for assignment...",
-                                reward_offered=0,
+                                reward_offered=default_reward,
                                 status=TaskStatus.PENDING_APPROVAL
                             )
                             db_save.add(new_task)
@@ -318,7 +330,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             await websocket.send_text(json.dumps({
                                 "type": "task_update",
                                 "is_active": True,
-                                "status": "pending_approval"
+                                "status": "pending_approval",
+                                "reward": default_reward,
+                                "description": new_task.prompt_desc
                             }))
 
                             # Notify Admins
@@ -331,6 +345,55 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             db_log.add(SystemLog(event_type="TASK", message=f"{user.username} requested task"))
                             db_log.commit()
                             db_log.close()
+                        continue
+
+                    if cmd_type == "task_submit":
+                        from ..database import Task, TaskStatus, SessionLocal, SystemLog
+
+                        submission_text = (msg_data.get("content") or "").strip()
+                        requested_id = msg_data.get("task_id")
+
+                        if not submission_text:
+                            await websocket.send_text(json.dumps({
+                                "type": "task_error",
+                                "message": "Odevzdání je prázdné."
+                            }))
+                            continue
+
+                        query = db_save.query(Task).filter(Task.user_id == user.id, Task.status == TaskStatus.ACTIVE)
+                        if requested_id:
+                            query = query.filter(Task.id == requested_id)
+
+                        current_task = query.first()
+
+                        if not current_task:
+                            await websocket.send_text(json.dumps({
+                                "type": "task_error",
+                                "message": "Nemáš aktivní úkol k odevzdání."
+                            }))
+                            continue
+
+                        current_task.submission_content = submission_text
+                        current_task.status = TaskStatus.SUBMITTED
+                        db_save.commit()
+
+                        await websocket.send_text(json.dumps({
+                            "type": "task_update",
+                            "task_id": current_task.id,
+                            "status": "submitted",
+                            "submission": submission_text,
+                            "description": current_task.prompt_desc,
+                            "reward": current_task.reward_offered
+                        }))
+
+                        await routing_logic.broadcast_to_admins(json.dumps({
+                            "type": "admin_refresh_tasks"
+                        }))
+
+                        db_log = SessionLocal()
+                        db_log.add(SystemLog(event_type="TASK", message=f"{user.username} submitted task #{current_task.id}"))
+                        db_log.commit()
+                        db_log.close()
                         continue
 
                     # v1.7 Report Logic

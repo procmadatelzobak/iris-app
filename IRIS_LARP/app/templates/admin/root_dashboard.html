@@ -447,6 +447,34 @@
                         CREDITS</button>
                 </div>
 
+                <div class="god-title mt-4">TASK REWARD RULES</div>
+                <p class="text-xs text-gray-400 mb-3">Výchozí odměny se aplikují při vyžádání úkolu podle levelu uživatele.</p>
+                <div class="grid grid-cols-5 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-500">Výchozí</label>
+                        <input id="rewardDefault" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">LOW</label>
+                        <input id="rewardLow" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">MID</label>
+                        <input id="rewardMid" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">HIGH</label>
+                        <input id="rewardHigh" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">PARTY</label>
+                        <input id="rewardParty" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+                    </div>
+                </div>
+                <div class="flex justify-end mt-3">
+                    <button class="btn-god" onclick="saveTaskRewards()">ULOŽIT ODMĚNY</button>
+                </div>
+
                 <div class="god-title mt-8">INDIVIDUAL EDITOR</div>
                 <table class="w-full text-left text-sm border border-gray-800">
                     <thead class="bg-gray-900 text-yellow-600">
@@ -524,6 +552,7 @@
 
         // --- STATE ---
         let currentView = 'dashboard';
+        let rootState = {};
 
         // --- SOCKET ---
         const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
@@ -539,24 +568,73 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
+                rootState = data;
                 document.getElementById('inTax').value = data.tax_rate;
                 document.getElementById('inPower').value = data.power_cap;
+
+                if (data.task_rewards) {
+                    document.getElementById('rewardDefault').value = data.task_rewards.default;
+                    document.getElementById('rewardLow').value = data.task_rewards.low;
+                    document.getElementById('rewardMid').value = data.task_rewards.mid;
+                    document.getElementById('rewardHigh').value = data.task_rewards.high;
+                    document.getElementById('rewardParty').value = data.task_rewards.party;
+                }
             } catch (e) { console.error(e); }
         }
 
-        window.applySystemConstants = async () => {
-            const tax = parseFloat(document.getElementById('inTax').value);
-            const power = parseFloat(document.getElementById('inPower').value);
+        function buildConstantsPayload() {
+            const rewards = rootState.task_rewards || {};
+            const costs = rootState.costs || {};
+            return {
+                tax_rate: parseFloat(document.getElementById('inTax').value),
+                power_cap: parseFloat(document.getElementById('inPower').value),
+                temp_threshold: rootState.temp_threshold || 350,
+                temp_reset_val: rootState.temp_reset_val || 80,
+                temp_min: rootState.temp_min || 20,
+                cost_base: costs.base || 10,
+                cost_user: costs.user || 5,
+                cost_autopilot: costs.autopilot || 10,
+                cost_low_latency: costs.low_latency || 30,
+                cost_optimizer: costs.optimizer || 15,
+                task_reward_default: parseInt(document.getElementById('rewardDefault').value || rewards.default || 0),
+                task_reward_low: parseInt(document.getElementById('rewardLow').value || rewards.low || 0),
+                task_reward_mid: parseInt(document.getElementById('rewardMid').value || rewards.mid || 0),
+                task_reward_high: parseInt(document.getElementById('rewardHigh').value || rewards.high || 0),
+                task_reward_party: parseInt(document.getElementById('rewardParty').value || rewards.party || 0),
+            };
+        }
 
+        window.applySystemConstants = async () => {
+            const payload = buildConstantsPayload();
             await fetch('/api/admin/root/update_constants', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ tax_rate: tax, power_cap: power })
+                body: JSON.stringify(payload)
             });
             alert("PHYSICS UPDATED");
+        };
+
+        window.saveTaskRewards = async () => {
+            const payload = buildConstantsPayload();
+            await fetch('/api/admin/root/update_constants', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+            alert('Odměny pro úkoly aktualizovány');
+            rootState.task_rewards = {
+                default: payload.task_reward_default,
+                low: payload.task_reward_low,
+                mid: payload.task_reward_mid,
+                high: payload.task_reward_high,
+                party: payload.task_reward_party
+            };
         };
 
         function handlePayload(data) {

@@ -649,36 +649,85 @@ window.refreshTasks = async function() {
         const tasks = await res.json();
 
         const pendingDiv = document.getElementById('pendingTasksCtx');
+        const activeDiv = document.getElementById('activeTasksCtx');
         const submitDiv = document.getElementById('submittedTasksCtx');
+        const paidDiv = document.getElementById('paidTasksCtx');
 
-        if (pendingDiv) pendingDiv.innerHTML = '';
-        if (submitDiv) submitDiv.innerHTML = '';
+        [pendingDiv, activeDiv, submitDiv, paidDiv].forEach(div => {
+            if (div) div.innerHTML = '';
+        });
 
         tasks.forEach(t => {
             const el = document.createElement('div');
-            el.className = "bg-gray-900 border border-gray-700 p-2 text-sm";
+            el.className = "bg-gray-900 border border-gray-700 p-3 text-sm space-y-2";
+
+            const rewardInfo = t.reward !== undefined && t.reward !== null ? `<span class="text-yellow-400 text-xs">Odměna: ${t.reward} CR</span>` : '';
+            const promptInfo = t.prompt ? `<div class="text-gray-300 italic">„${t.prompt}“</div>` : '<div class="text-gray-600 italic">(bez popisu)</div>';
 
             if (t.status === 'pending_approval') {
                 el.innerHTML = `
-                    <div class="text-blue-400 font-bold">TASK #${t.id} (User ${t.user_id})</div>
-                    <div class="text-gray-300 italic">"${t.prompt}"</div>
-                    <div class="mt-2 flex gap-2">
-                        <input type="number" placeholder="Reward" class="w-20 bg-black text-white p-1" id="rew-${t.id}">
-                        <button class="btn-action text-green-500" onclick="approveTask(${t.id})">APPROVE</button>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-blue-400 font-bold">ŽÁDOST #${t.id} (Uživatel ${t.user_id})</div>
+                            ${promptInfo}
+                        </div>
+                        ${rewardInfo}
+                    </div>
+                    <div class="mt-2 grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs text-gray-500">Odměna</label>
+                            <input type="number" value="${t.reward || ''}" placeholder="${t.reward || 0}" class="w-full bg-black text-white p-1" id="rew-${t.id}">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500">Zadání pro uživatele</label>
+                            <textarea rows="2" class="w-full bg-black text-white p-1" id="prompt-${t.id}">${t.prompt || ''}</textarea>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex gap-2 justify-end">
+                        <button class="btn-action text-green-500" onclick="approveTask(${t.id})">SCHVÁLIT</button>
                     </div>
                 `;
                 if (pendingDiv) pendingDiv.appendChild(el);
-            } else if (t.status === 'submitted') {
+            } else if (t.status === 'active') {
                 el.innerHTML = `
-                    <div class="text-green-400 font-bold">SUBMISSION #${t.id} (User ${t.user_id})</div>
-                    <div class="text-gray-400 text-xs">OFFER: ${t.reward} CR</div>
-                    <div class="text-white border-l-2 border-gray-500 pl-2 my-1">${t.submission}</div>
-                    <div class="mt-2 flex gap-2">
-                        <input type="range" min="0" max="200" value="100" class="w-24" id="rat-${t.id}">
-                        <button class="btn-action text-yellow-500" onclick="payTask(${t.id})">PAY</button>
+                    <div class="text-yellow-400 font-bold">AKTIVNÍ #${t.id} (Uživatel ${t.user_id})</div>
+                    ${promptInfo}
+                    ${rewardInfo}
+                    <div class="text-xs text-gray-500">Čeká na odevzdání uživatele.</div>
+                `;
+                if (activeDiv) activeDiv.appendChild(el);
+            } else if (t.status === 'submitted') {
+                const currentRating = (t.rating === 0 || t.rating) ? t.rating : 100;
+                const ratingButtons = [0, 50, 100, 200].map(val => `
+                    <button class="btn-action text-yellow-400 rating-btn" data-rating-group="${t.id}" data-value="${val}" onclick="setTaskRating(${t.id}, ${val}, this)">${val}%</button>
+                `).join('');
+
+                el.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-green-400 font-bold">ODEVZDÁNO #${t.id} (Uživatel ${t.user_id})</div>
+                            ${rewardInfo}
+                        </div>
+                        <span class="text-xs text-gray-500">vyber 0/50/100/200</span>
+                    </div>
+                    ${promptInfo}
+                    <div class="text-white border-l-2 border-gray-500 pl-2 my-1 whitespace-pre-wrap">${t.submission || '(prázdné)'}</div>
+                    <input type="hidden" id="rat-${t.id}" value="${currentRating}">
+                    <div class="mt-2 flex gap-2 items-center flex-wrap">
+                        ${ratingButtons}
+                        <button class="btn-action text-yellow-500" onclick="payTask(${t.id})">VYPLATIT</button>
                     </div>
                 `;
                 if (submitDiv) submitDiv.appendChild(el);
+                setTaskRating(t.id, currentRating);
+            } else if (t.status === 'paid') {
+                el.innerHTML = `
+                    <div class="text-gray-300 font-bold">HOTOVO #${t.id} (Uživatel ${t.user_id})</div>
+                    ${promptInfo}
+                    ${t.submission ? `<div class="text-white border-l-2 border-gray-700 pl-2">${t.submission}</div>` : ''}
+                    <div class="text-xs text-gray-400">Hodnocení: ${t.rating || 0}% | Nabídka: ${t.reward || 0} CR</div>
+                `;
+                if (paidDiv) paidDiv.appendChild(el);
             }
         });
 
@@ -687,30 +736,49 @@ window.refreshTasks = async function() {
 
 window.approveTask = async function(id) {
     const rewEl = document.getElementById(`rew-${id}`);
-    const rew = rewEl ? rewEl.value : 100;
+    const promptEl = document.getElementById(`prompt-${id}`);
+    const rew = rewEl ? rewEl.value : null;
+    const promptContent = promptEl ? promptEl.value : null;
     await fetch('/api/admin/tasks/approve', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${getAuthToken()}`
         },
-        body: JSON.stringify({ task_id: id, reward: parseInt(rew) })
+        body: JSON.stringify({ task_id: id, reward: rew !== null ? parseInt(rew) : null, prompt_content: promptContent })
     });
     refreshTasks();
 };
 
 window.payTask = async function(id) {
     const ratEl = document.getElementById(`rat-${id}`);
-    const rate = ratEl ? ratEl.value : 100;
+    const rate = ratEl ? parseInt(ratEl.value) : 100;
     await fetch('/api/admin/tasks/pay', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${getAuthToken()}`
         },
-        body: JSON.stringify({ task_id: id, rating: parseInt(rate) })
+        body: JSON.stringify({ task_id: id, rating: rate })
     });
     refreshTasks();
+};
+
+window.setTaskRating = function(taskId, value, btn) {
+    const hidden = document.getElementById(`rat-${taskId}`);
+    if (hidden) hidden.value = value;
+    document.querySelectorAll(`.rating-btn[data-rating-group='${taskId}']`).forEach(el => {
+        if (parseInt(el.dataset.value) === value) {
+            el.classList.add('border-yellow-400');
+            el.classList.remove('border-gray-700');
+        } else {
+            el.classList.remove('border-yellow-400');
+            el.classList.add('border-gray-700');
+        }
+    });
+    if (btn) {
+        btn.blur();
+    }
 };
 
 // --- WEBSOCKET & MONITOR ---
