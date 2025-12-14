@@ -7,3 +7,4 @@
 | 2025-12-13 | "Phase 16 Specification: AI Optimizer & Economy Rebalance" | Phase 19 | Started implementation of Optimizer/Eco update. |
 | 2025-12-13 | "Phase 20 Specification: Critical Fixes & Root Control Implementation" | Phase 20 | Started Phase 20 (Fixes + Root Control). |
 | 2025-12-13 | "Phase 21 Specification: UI Feedback, Temperature System & Lore Integration" | Phase 21 | Started Phase 21 (Temp Refactor, UI Feedback). |
+| 2025-12-14 | "Full censorship panic mode documentation" | Phase 32 | Documentation updated for Panic Mode controls and indicators. |
