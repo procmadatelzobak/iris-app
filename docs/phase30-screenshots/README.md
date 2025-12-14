@@ -8,14 +8,17 @@ This directory contains screenshots from the Phase 30 development stage of the I
 - `00_login_screen.png` - Main login page
 
 ### User Terminals (user1-6)
+Prefix `10-15` - Each user has a unique number
 - `10_user_user1_terminal.png` through `15_user_user6_terminal.png`
 - Each shows the user interface for respective users
 
 ### Agent Terminals (agent1-2)
+Prefix `20-21` - Each agent has a unique number
 - `20_agent_agent1_terminal.png` - Agent 1 terminal
 - `21_agent_agent2_terminal.png` - Agent 2 terminal
 
 ### Admin Dashboard (admin1, admin2)
+Prefix `30` for admin1, `31` for admin2 - grouped by admin user
 For each admin user:
 - `*_admin_*_hub.png` - Main HUB view with 4 stations
 - `*_admin_*_monitor_all.png` - UMYVADLO (Monitoring) - All view
@@ -70,6 +73,14 @@ Total: 30 screenshots
 | 52  | 52_root_economy.png | Root - Economy |
 | 53  | 53_root_chronos.png | Root - Chronos |
 | 54  | 54_root_panopticon.png | Root - Panopticon |
+
+## Naming Convention
+Screenshots are named with a prefix number that groups them by role:
+- `00` - Login/authentication screens
+- `10-15` - User terminals (one per user)
+- `20-21` - Agent terminals (one per agent)
+- `30-31` - Admin dashboards (grouped by admin, with suffix for specific view)
+- `50-54` - Root dashboard tabs
 
 ## Generation Date
 December 14, 2025
