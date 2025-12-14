@@ -535,7 +535,9 @@
 
         async function fetchRootState() {
             try {
-                const res = await fetch('/api/admin/root/state');
+                const res = await fetch('/api/admin/root/state', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const data = await res.json();
                 document.getElementById('inTax').value = data.tax_rate;
                 document.getElementById('inPower').value = data.power_cap;
@@ -548,7 +550,10 @@
 
             await fetch('/api/admin/root/update_constants', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ tax_rate: tax, power_cap: power })
             });
             alert("PHYSICS UPDATED");
@@ -630,7 +635,10 @@
             for (const u of users) {
                 await fetch('/api/admin/economy/bonus', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({ user_id: u.id, amount: amt, reason: "GOD STIMULUS" })
                 });
             }
@@ -978,7 +986,9 @@
 
         // --- ECONOMY TABLE ---
         async function fetchUsers() {
-            const res = await fetch('/api/admin/data/users');
+            const res = await fetch('/api/admin/data/users', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             return await res.json();
         }
 
@@ -1005,7 +1015,10 @@
         window.ecoAction = async (type, uid, amt) => {
             await fetch(`/api/admin/economy/${type}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ user_id: uid, amount: amt, reason: "ROOT" })
             });
             refreshEconomy();
