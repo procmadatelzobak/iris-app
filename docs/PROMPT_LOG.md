@@ -16,3 +16,5 @@
 
 | 2025-12-14 | "Agent terminal still shows English strings (hyper-mode, inject response, transmit)" | Phase 33 | Localization tightened and wired through translation system. |
 
+| 2025-12-15 | "V dashboardu STANICE 3: EKONOMIKA nejsou vidět žádné hodnoty." | Phase 33 | Station 3 economy views now authorize API calls and display seeded users. |
+

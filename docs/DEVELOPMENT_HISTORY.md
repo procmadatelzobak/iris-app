@@ -88,3 +88,19 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 
 ### Tests
 - Not run (UI localization change; no automated coverage in container).
+
+## [2025-12-15] Phase 33 - Economy Dashboard Authorization
+### Prompt
+- Admin economy dashboard (Station 3) shows no user entries; confirm whether configuration is missing and ensure values are prepopulated.
+
+### Plan
+- [x] Add bearer-token authorization to Station 3 economy fetches and actions so admin calls reach the protected API.
+- [x] Add bearer-token authorization to ROOT dashboard economy calls (user list and credit adjustments).
+- [x] Reconcile documentation for the fix and note testing status.
+
+### Outcome
+- Economy dashboards now send admin bearer tokens for user listing, credit adjustments, and status changes, restoring visible user data and enabling actions.
+- ROOT dashboard global and per-user economy controls now authenticate correctly against protected endpoints.
+
+### Tests
+- Not run (JavaScript/authentication wiring change; manual UI verification required).

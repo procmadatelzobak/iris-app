@@ -558,7 +558,9 @@ window.triggerReset = function() {
 // --- ECONOMY ---
 window.refreshEconomy = async function() {
     try {
-        const res = await fetch('/api/admin/data/users');
+        const res = await fetch('/api/admin/data/users', {
+            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+        });
         const users = await res.json();
         const tbody = document.getElementById('economyTableBody');
         if (!tbody) return;
@@ -605,7 +607,10 @@ window.ecoAction = async function(type, userId) {
 
     await fetch(`/api/admin/economy/${type}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`
+        },
         body: JSON.stringify(payload)
     });
 
@@ -616,7 +621,10 @@ window.setStatus = async function(userId, status) {
     try {
         const res = await fetch('/api/admin/economy/set_status', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAuthToken()}`
+            },
             body: JSON.stringify({ user_id: userId, status: status })
         });
         if (res.ok) {
