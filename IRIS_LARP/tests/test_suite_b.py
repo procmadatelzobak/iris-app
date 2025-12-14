@@ -7,6 +7,7 @@ Designed for execution by GitHub Copilot Agent.
 
 import pytest
 import json
+import time
 from unittest.mock import AsyncMock, patch
 from fastapi.testclient import TestClient
 from app.main import app
@@ -735,7 +736,6 @@ class TestWebSocketCommunication:
             ws.send_json({"content": "Suite B Test Message"})
             
             # Give it a moment to process
-            import time
             time.sleep(0.1)
 
         # Verify message was stored in database
@@ -762,7 +762,6 @@ class TestWebSocketCommunication:
             ws.send_json({"type": "task_request"})
             
             # Give it a moment to process
-            import time
             time.sleep(0.1)
 
         # Verify task was created in database
@@ -791,7 +790,6 @@ class TestWebSocketCommunication:
             ws.receive_json()  # user_status
             ws.send_json({"type": "report_message", "id": log_id})
             
-            import time
             time.sleep(0.1)
 
         # Temperature should NOT have increased (optimized message = immune)
@@ -808,7 +806,6 @@ class TestWebSocketCommunication:
             ws.receive_json()  # init
             ws.send_json({"type": "shift_command"})
             
-            import time
             time.sleep(0.1)
 
         # Verify shift was incremented
@@ -825,7 +822,6 @@ class TestWebSocketCommunication:
             ws.receive_json()  # init
             ws.send_json({"type": "test_mode_toggle", "enabled": True})
             
-            import time
             time.sleep(0.1)
 
         assert gamestate.test_mode is True, "Test mode should be enabled"
@@ -1168,7 +1164,3 @@ class TestIntegrationScenarios:
         gamestate.set_shift(1)
         await routing_logic.broadcast_to_session(1, "Shift 1 message")
         assert "Shift 1 message" not in ws_agent1.sent  # Agent 1 is now on Session 2
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
