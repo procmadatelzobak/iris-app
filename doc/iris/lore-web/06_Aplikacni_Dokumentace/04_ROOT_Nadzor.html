@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOT Nadzor – Fáze 34</title>
+    <link rel="stylesheet" href="/lore-web/style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">HLINÍK Lore Web</div>
+    <nav class="nav-links">
+        <a href="/lore-web/index.html">Master Index</a>
+        <a href="/lore-web/01_Lore_a_Narrativ/01_Svet_a_Identita_Firmy.html">Lore</a>
+        <a href="/lore-web/02_Role_a_Sociologie/01_Profily_Roli.html">Role</a>
+        <a href="/lore-web/03_Herni_Mechaniky/01_Systemy_a_Kriticka_Situace.html">Mechaniky</a>
+        <a href="/lore-web/06_Aplikacni_Dokumentace/00_Aplikacni_Index.html">Aplikace</a>
+        <a href="/lore-web/04_Technicka_Specifikace/01_Architektura_Systemu.html">Technika</a>
+        <a href="/lore-web/05_Produkce_a_Vizual/01_Design_Manual.html">Vizuál</a>
+    </nav>
+</header>
+<main class="content">
+    <section class="card">
+        <h1>ROOT Nadzor – vývojářské a krizové nástroje</h1>
+        <p>ROOT rozhraní je elitní dashboard s pěti panely. Umožňuje ladit AI, manipulovat časem a spouštět nouzové procedury.</p>
+    </section>
+
+    <section class="card">
+        <h2>1) Dashboard</h2>
+        <ul>
+            <li><strong>Systémový status:</strong> Zobrazuje Shift, online uživatele, teplotu a výkon. Vše se streamuje z game loopu (broadcast).</li>
+            <li><strong>Výkonné protokoly:</strong> Force Shift, Global Broadcast, System Reset (NUKE) a Reload UI. Každý příkaz jde přes API s okamžitým websocket eventem.</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2>2) CONFIG (Developer Tools)</h2>
+        <ul>
+            <li><strong>Test Mode:</strong> Přepínač zobrazí tlačítka pro rychlé přihlášení na login stránce a předvyplní hesla.</li>
+            <li><strong>AI Configuration:</strong> Nastavení optimizer promptu a výběr modelu pro Autopilota/Hyper (string). Uloží se do GameState a promítne do agentních terminálů.</li>
+            <li><strong>API klíče:</strong> Pole pro OpenAI a OpenRouter. Gemini klíč se zatím v UI nenastavuje, ale backend jej umí načíst z env proměnné.</li>
+            <li><strong>System Information:</strong> Verze appky, počet uživatelů, typ databáze.</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2>3) Economy</h2>
+        <ul>
+            <li><strong>Globální stimuly:</strong> +100/+1000 všem uživatelům. Tlačítko „Taxation“ odečte 100 kreditů (danění).</li>
+            <li><strong>Reset kreditů:</strong> Vrátí všechny zůstatky na default, odblokuje Purgatory.</li>
+            <li><strong>Individuální editor:</strong> Ruční změna bilance a status levelu konkrétního hráče.</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2>4) Chronos (časová manipulace)</h2>
+        <ul>
+            <li><strong>Jump to Shift:</strong> Nastaví globální offset na konkrétní číslo (0–7). Okamžitě přemapuje agenty.</li>
+            <li><strong>Temperature Override:</strong> Posuvník 0–200 % navýší/poníží ochlazování a umožní rychlé spuštění glitch efektů.</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2>5) Panopticon</h2>
+        <ul>
+            <li><strong>Grid všech relací:</strong> 8×8 pohled na uživatelské a agentní zprávy bez filtrování viditelnosti.</li>
+            <li><strong>Status ikony:</strong> Ikony pro lock, úkoly a overload, aby ROOT viděl, kde zasáhnout.</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2>Další kapitoly</h2>
+        <p>Pro sdílenou logiku nahlédni do <a href="/lore-web/06_Aplikacni_Dokumentace/05_Systemove_Funkce_a_Toky.html">Systémových funkcí</a> nebo zpět na <a href="/lore-web/06_Aplikacni_Dokumentace/03_Admin_HUB.html">Admin HUB</a>.</p>
+    </section>
+</main>
+</body>
+</html>
