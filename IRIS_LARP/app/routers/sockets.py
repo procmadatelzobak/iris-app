@@ -122,7 +122,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
              await websocket.send_text(json.dumps({
                 "type": "user_status",
                 "credits": user.credits,
-                "is_locked": user.is_locked
+                "is_locked": user.is_locked,
+                "shift": gamestate.global_shift_offset
             }))
 
              # Check for active task
@@ -136,6 +137,15 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                      "description": active_task.prompt_desc,
                      "reward": active_task.reward_offered
                  }))
+        
+        # Send initial status for Agent
+        if user.role == UserRole.AGENT:
+            await websocket.send_text(json.dumps({
+                "type": "gamestate_update",
+                "shift": gamestate.global_shift_offset,
+                "temperature": gamestate.temperature,
+                "session_id": session_id_to_load
+            }))
     except Exception as e:
         print(f"Error loading history: {e}")
     finally:
