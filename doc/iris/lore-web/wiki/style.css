@@ -779,6 +779,16 @@ a:hover {
     margin-bottom: var(--space-lg);
 }
 
+.manual-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.manual-actions .btn-primary,
+.manual-actions .btn-secondary {
+    flex: 1;
+}
+
 .manual-viewer {
     display: none;
     background: var(--bg-card);

@@ -1,6 +1,6 @@
 /**
  * IRIS Organizer Wiki - Main Application
- * Phase 34 HLINÍK
+ * IRIS 4.0 aktuální k HLINIK Phase 34
  */
 
 // ============================================
@@ -402,7 +402,7 @@ function showBriefing(roleId) {
                     ${getRoleTypeLabel(role.type)}
                 </span>
                 <span style="color: var(--text-muted); font-size: 0.85rem;">
-                    Phase 34 HLINÍK
+                    IRIS 4.0 | HLINIK Phase 34
                 </span>
             </div>
         </div>
@@ -499,7 +499,7 @@ const manualContent = {
         title: 'Příručka pro Uživatele (Subjekty)',
         content: `
             <h1>IRIS Systém - Příručka pro Uživatele</h1>
-            <p><strong>Verze:</strong> Phase 34 HLINÍK</p>
+            <p><strong>Dokumentace:</strong> IRIS 4.0 aktuální k HLINIK Phase 34</p>
             
             <h2>1. Úvod</h2>
             <p>IRIS je komunikační systém pro LARP hru, kde vy jako subjekt (uživatel) komunikujete s agentem prostřednictvím terminálu. Systém simuluje dystopickou korporátní AI infrastrukturu.</p>
@@ -545,7 +545,7 @@ const manualContent = {
         title: 'Příručka pro Agenty (Operátory)',
         content: `
             <h1>IRIS Systém - Příručka pro Agenty</h1>
-            <p><strong>Verze:</strong> Phase 34 HLINÍK</p>
+            <p><strong>Dokumentace:</strong> IRIS 4.0 aktuální k HLINIK Phase 34</p>
             
             <h2>1. Úvod</h2>
             <p>Jako <strong>Agent (Operátor)</strong> jste odpovědní za komunikaci se subjekty (běžnými hráči). Odpovídáte na jejich zprávy a pomáháte jim v rámci herního světa.</p>
@@ -589,7 +589,7 @@ const manualContent = {
         title: 'Příručka pro Správce (Adminy)',
         content: `
             <h1>IRIS Systém - Příručka pro Správce</h1>
-            <p><strong>Verze:</strong> Phase 34 HLINÍK</p>
+            <p><strong>Dokumentace:</strong> IRIS 4.0 aktuální k HLINIK Phase 34</p>
             
             <h2>1. Úvod</h2>
             <p>Jako <strong>Správce (Admin)</strong> ovládáte herní mechaniky, schvalujete úkoly a dohlížíte na průběh hry.</p>
@@ -630,7 +630,7 @@ const manualContent = {
         title: 'Příručka pro ROOT (Gamemaster)',
         content: `
             <h1>IRIS Systém - Příručka pro ROOT</h1>
-            <p><strong>Verze:</strong> Phase 34 HLINÍK</p>
+            <p><strong>Dokumentace:</strong> IRIS 4.0 aktuální k HLINIK Phase 34</p>
             
             <h2>1. Přístup do ROOT konzole</h2>
             <table>
@@ -721,3 +721,253 @@ window.closeBriefing = closeBriefing;
 window.printBriefing = printBriefing;
 window.showManual = showManual;
 window.closeManual = closeManual;
+window.exportBriefingPDF = exportBriefingPDF;
+window.exportManualPDF = exportManualPDF;
+
+// ============================================
+// PDF EXPORT FUNCTIONS
+// ============================================
+
+let currentBriefingRoleId = null;
+let currentManualType = null;
+
+// Store current role when showing briefing
+const originalShowBriefing = showBriefing;
+window.showBriefing = function (roleId) {
+    currentBriefingRoleId = roleId;
+    originalShowBriefing(roleId);
+};
+
+// Store current manual when showing
+const originalShowManual = showManual;
+window.showManual = function (type) {
+    currentManualType = type;
+    originalShowManual(type);
+};
+
+function exportBriefingPDF() {
+    if (!currentBriefingRoleId) {
+        alert('Nejdříve otevřete briefing');
+        return;
+    }
+
+    const role = rolesData.find(r => r.id === currentBriefingRoleId);
+    if (!role) return;
+
+    // Create printable content
+    const printContent = generateBriefingHTML(role);
+    openPrintWindow(printContent, `Briefing_${role.id}_${role.name.replace(/\s+/g, '_')}`);
+}
+
+function exportManualPDF(type) {
+    const manual = manualContent[type];
+    if (!manual) return;
+
+    const printContent = generateManualHTML(manual);
+    openPrintWindow(printContent, `Prirucka_${type}`);
+}
+
+function generateBriefingHTML(role) {
+    const roleRelations = getRelationsForRole(role.id);
+
+    return `
+        <!DOCTYPE html>
+        <html lang="cs">
+        <head>
+            <meta charset="UTF-8">
+            <title>Briefing: ${role.name} (${role.id})</title>
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { 
+                    font-family: 'Segoe UI', Arial, sans-serif; 
+                    padding: 40px; 
+                    max-width: 800px; 
+                    margin: 0 auto;
+                    line-height: 1.6;
+                    color: #222;
+                }
+                .header { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    align-items: center; 
+                    border-bottom: 3px solid #d4af37; 
+                    padding-bottom: 15px; 
+                    margin-bottom: 25px; 
+                }
+                .header h1 { font-size: 1.8rem; color: #333; }
+                .badge { 
+                    background: #d4af37; 
+                    color: #000; 
+                    padding: 5px 12px; 
+                    border-radius: 4px; 
+                    font-weight: bold;
+                    font-size: 0.85rem;
+                }
+                .version { color: #666; font-size: 0.85rem; }
+                h2 { 
+                    color: #d4af37; 
+                    margin: 25px 0 10px 0; 
+                    font-size: 1.2rem;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 5px;
+                }
+                p { margin: 10px 0; }
+                ul { margin: 10px 0 10px 25px; }
+                li { margin: 5px 0; }
+                .ability-box { 
+                    background: #e8f5e9; 
+                    border-left: 4px solid #4caf50; 
+                    padding: 15px; 
+                    margin: 15px 0; 
+                }
+                .relation-box { 
+                    background: #fff8e1; 
+                    border-left: 4px solid #ff9800; 
+                    padding: 12px; 
+                    margin: 10px 0; 
+                }
+                .footer { 
+                    margin-top: 30px; 
+                    padding-top: 15px; 
+                    border-top: 1px solid #ddd; 
+                    font-size: 0.8rem; 
+                    color: #666; 
+                }
+                @media print {
+                    body { padding: 20px; }
+                    .header { page-break-after: avoid; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <div>
+                    <h1>BRIEFING: ${role.name} (${role.id})</h1>
+                    <span class="version">IRIS 4.0 | HLINIK Phase 34</span>
+                </div>
+                <span class="badge">${getRoleTypeLabel(role.type).toUpperCase()}</span>
+            </div>
+            
+            <h2>👤 Archetyp</h2>
+            <p><strong>${role.archetype}</strong></p>
+            <p>${role.description}</p>
+            
+            <h2>🎯 Cíle mise</h2>
+            <ul>
+                ${role.goals.map(g => `<li>${g}</li>`).join('')}
+            </ul>
+            
+            <h2>⚡ Speciální schopnost</h2>
+            <div class="ability-box">
+                ${role.ability}
+            </div>
+            
+            <h2>🔗 Vazby a tajemství</h2>
+            ${roleRelations.length > 0
+            ? roleRelations.map(rel => `
+                    <div class="relation-box">
+                        <strong>Vztah k ${rel.target}:</strong> ${rel.desc}
+                    </div>
+                `).join('')
+            : '<p><em>Žádné specifické vazby na začátku hry.</em></p>'
+        }
+            
+            <div class="footer">
+                <p>Dokument podléhá NDA. | IRIS 4.0 | HLINIK Phase 34</p>
+            </div>
+        </body>
+        </html>
+    `;
+}
+
+function generateManualHTML(manual) {
+    return `
+        <!DOCTYPE html>
+        <html lang="cs">
+        <head>
+            <meta charset="UTF-8">
+            <title>${manual.title}</title>
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { 
+                    font-family: 'Segoe UI', Arial, sans-serif; 
+                    padding: 40px; 
+                    max-width: 800px; 
+                    margin: 0 auto;
+                    line-height: 1.6;
+                    color: #222;
+                }
+                h1 { 
+                    border-bottom: 3px solid #d4af37; 
+                    padding-bottom: 15px; 
+                    margin-bottom: 25px; 
+                    font-size: 1.8rem;
+                }
+                h2 { 
+                    color: #d4af37; 
+                    margin: 25px 0 10px 0; 
+                    font-size: 1.3rem;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 5px;
+                }
+                h3 { 
+                    margin: 20px 0 10px 0; 
+                    font-size: 1.1rem;
+                    color: #444;
+                }
+                p { margin: 10px 0; }
+                ul { margin: 10px 0 10px 25px; }
+                li { margin: 5px 0; }
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin: 15px 0; 
+                }
+                th, td { 
+                    border: 1px solid #ddd; 
+                    padding: 10px; 
+                    text-align: left; 
+                }
+                th { 
+                    background: #f5f5f5; 
+                    color: #333;
+                    font-weight: 600;
+                }
+                .footer { 
+                    margin-top: 30px; 
+                    padding-top: 15px; 
+                    border-top: 1px solid #ddd; 
+                    font-size: 0.8rem; 
+                    color: #666; 
+                }
+                @media print {
+                    body { padding: 20px; }
+                }
+            </style>
+        </head>
+        <body>
+            ${manual.content}
+            <div class="footer">
+                <p>IRIS 4.0 | HLINIK Phase 34 | Organizátorská Wiki</p>
+            </div>
+        </body>
+        </html>
+    `;
+}
+
+function openPrintWindow(htmlContent, filename) {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+        alert('Povolení blokátoru vyskakovacích oken. Povolte pop-up okna pro tuto stránku.');
+        return;
+    }
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+
+    // Wait for content to load then print
+    printWindow.onload = function () {
+        printWindow.focus();
+        printWindow.print();
+    };
+}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLINÍK | Organizátorská Wiki | Phase 34</title>
+    <title>IRIS 4.0 | Organizátorská Wiki | HLINIK Phase 34</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,8 +18,8 @@
     <header class="main-header">
         <div class="brand">
             <span class="logo">◈</span>
-            <span class="brand-text">HLINÍK</span>
-            <span class="version-badge">Phase 34</span>
+            <span class="brand-text">IRIS 4.0</span>
+            <span class="version-badge">HLINIK Phase 34</span>
         </div>
         <nav class="main-nav" id="mainNav">
             <a href="#dashboard" class="nav-link active" data-section="dashboard">
@@ -63,7 +63,7 @@
         <section id="section-dashboard" class="content-section active">
             <div class="section-header">
                 <h1>Dashboard</h1>
-                <p class="section-subtitle">Přehled projektu HLINÍK pro organizátory</p>
+                <p class="section-subtitle">IRIS 4.0 – Organizátorská wiki aktuální k HLINIK Phase 34</p>
             </div>
 
             <div class="stats-grid">
@@ -112,8 +112,8 @@
                     <h3>📐 Verze a stav</h3>
                     <div class="version-info">
                         <div class="version-item">
-                            <span class="label">Verze hry:</span>
-                            <span class="value">Phase 34 HLINÍK</span>
+                            <span class="label">Dokumentace:</span>
+                            <span class="value">IRIS 4.0 aktuální k HLINIK Phase 34</span>
                         </div>
                         <div class="version-item">
                             <span class="label">Počet rolí:</span>
@@ -210,28 +210,40 @@
                     <div class="manual-icon">👥</div>
                     <h3>Příručka pro Uživatele</h3>
                     <p>Základní návod pro subjekty - komunikace, úkoly, kredity.</p>
-                    <button class="btn-primary" onclick="showManual('user')">Zobrazit</button>
+                    <div class="manual-actions">
+                        <button class="btn-primary" onclick="showManual('user')">Zobrazit</button>
+                        <button class="btn-secondary" onclick="exportManualPDF('user')">PDF</button>
+                    </div>
                 </div>
 
                 <div class="manual-card" data-manual="agent">
                     <div class="manual-icon">🤖</div>
                     <h3>Příručka pro Agenty</h3>
                     <p>Návod pro operátory - odpovídání, autopilot, timeouty.</p>
-                    <button class="btn-primary" onclick="showManual('agent')">Zobrazit</button>
+                    <div class="manual-actions">
+                        <button class="btn-primary" onclick="showManual('agent')">Zobrazit</button>
+                        <button class="btn-secondary" onclick="exportManualPDF('agent')">PDF</button>
+                    </div>
                 </div>
 
                 <div class="manual-card" data-manual="admin">
                     <div class="manual-icon">👔</div>
                     <h3>Příručka pro Správce</h3>
                     <p>Game Master guide - stanice, ekonomika, monitoring.</p>
-                    <button class="btn-primary" onclick="showManual('admin')">Zobrazit</button>
+                    <div class="manual-actions">
+                        <button class="btn-primary" onclick="showManual('admin')">Zobrazit</button>
+                        <button class="btn-secondary" onclick="exportManualPDF('admin')">PDF</button>
+                    </div>
                 </div>
 
                 <div class="manual-card" data-manual="root">
                     <div class="manual-icon">🔐</div>
                     <h3>Příručka pro ROOT</h3>
                     <p>Hlavní organizátor - globální ovládání, AI konfigurace.</p>
-                    <button class="btn-primary" onclick="showManual('root')">Zobrazit</button>
+                    <div class="manual-actions">
+                        <button class="btn-primary" onclick="showManual('root')">Zobrazit</button>
+                        <button class="btn-secondary" onclick="exportManualPDF('root')">PDF</button>
+                    </div>
                 </div>
             </div>
 
@@ -304,7 +316,8 @@
                 <article class="lore-article">
                     <h2>PROJEKT HLINÍK: Pozadí</h2>
                     <p class="lead">Hra je ostrou satirou na technologický sektor, "Gig Economy" a korporátní kulturu
-                        <em>"Fake it till you make it"</em>.</p>
+                        <em>"Fake it till you make it"</em>.
+                    </p>
 
                     <h3>Firma HLINÍK a syn s.r.o.</h3>
                     <p>Startup založený synovcem nejmenovaného oligarchy. Prodává "revoluční AI asistenta" IRIS, který
@@ -360,6 +373,7 @@
                 <!-- Dynamicky naplněno -->
             </div>
             <div class="modal-footer">
+                <button class="btn-secondary" onclick="exportBriefingPDF()">📄 Export PDF</button>
                 <button class="btn-secondary" onclick="printBriefing()">🖨️ Tisk</button>
                 <button class="btn-primary" onclick="closeBriefing()">Zavřít</button>
             </div>
