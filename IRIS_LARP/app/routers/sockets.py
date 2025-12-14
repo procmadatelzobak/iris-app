@@ -423,6 +423,15 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             "temperature": gamestate.temperature
                         }))
                     
+                    elif cmd_type == "set_shift_command":
+                        target = msg_data.get("value", 0)
+                        new_shift = gamestate.set_shift(int(target))
+                        await routing_logic.broadcast_global(json.dumps({
+                            "type": "gamestate_update", 
+                            "shift": new_shift,
+                            "temperature": gamestate.temperature
+                        }))
+                    
                     elif cmd_type == "temperature_command": # Renamed from chernobyl_command
                         level = msg_data.get("value", 0) 
                         gamestate.set_temperature(float(level))

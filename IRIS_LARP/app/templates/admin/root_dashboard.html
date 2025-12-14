@@ -448,10 +448,13 @@
     };
 
     window.setShift = () => {
-        // We probably don't have a "Jump to Shift" command in backend yet, only "increment".
-        // Use loop to increment? Risk of race conditions.
-        // Better: Add SetShift command.
-        alert("Backend 'Set Shift' command not available. Use Force Shift.");
+        const target = document.getElementById('targetShift').value;
+        if (target === '' || isNaN(parseInt(target))) {
+            alert('Enter a valid shift value (0-7)');
+            return;
+        }
+        client.send({ type: 'set_shift_command', value: parseInt(target) });
+        document.getElementById('bigShift').innerText = target;
     };
 
     window.sendChernobylLevel = (val) => {
