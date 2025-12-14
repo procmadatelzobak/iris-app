@@ -146,6 +146,23 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 ### Tests
 - Not run (UI/API wiring change; manual verification recommended for model listing with real API keys).
 
+## [2025-12-14] Phase 34 - FastAPI Startup Fix
+### Prompt
+- Server crashes on startup with `NameError: name 'BaseModel' is not defined` coming from `app/routers/admin_api.py`.
+
+### Plan
+- [x] Reproduce the startup failure and trace the missing BaseModel import.
+- [x] Reorder admin API imports so BaseModel is defined before use.
+- [x] Run a lightweight verification to ensure the module imports cleanly.
+- [x] Update documentation, status, and capture the login screen after verifying the server boots.
+
+### Outcome
+- Reordered `BaseModel` import to the module top so all Pydantic models initialize before class definitions, preventing the startup NameError.
+- Documentation reconciled for Phase 34 and status logs updated; login page captured post-fix.
+
+### Tests
+- `python3 -m compileall app` (**PASS**) — Verified modules compile without import errors.
+
 
 ## [2025-12-15] Phase 33 - Task Workflow & Reward Controls
 ### Prompt

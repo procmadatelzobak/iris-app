@@ -14,7 +14,9 @@
 
 | 2025-12-15 | n/a (UI/API wiring) | ROOT LLM configuration per role | Not Run | Manual check needed with real API keys for model discovery and saves. |
 
+
 | 2025-12-15 | n/a (UI/websocket) | Task workflow + reward presets | Not Run | Task dashboards and submission modal updated; requires manual end-to-end check. |
+| 2025-12-14 | `python3 -m compileall app` | FastAPI import verification | **PASS** | Ensured admin_api imports compile without runtime NameError. |
 
 
 ## Manual Verification Required
