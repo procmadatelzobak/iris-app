@@ -45,7 +45,10 @@
     "lockout_title": "COMMUNICATION OFFLINE",
     "lockout_message": "DEBT RECOVERY REQUIRED. COMPLETE TASKS.",
     "incoming_transmission": ">> INCOMING TRANSMISSION [PROCESSING]...",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "agent_timeout_error": "Agent neodpověděl včas. Odpověď vypršela.",
+    "agent_timeout_toast": "⚠️ TIMEOUT: Agent neodpověděl",
+    "waiting_for_agent": "ČEKÁM NA ODPOVĚĎ AGENTA..."
   },
   "agent_terminal": {
     "disconnect": "[ DISCONNECT ]",
@@ -67,6 +70,9 @@
     "timer_active": "ODPOČET AKTIVNÍ",
     "timer_stopped": "STOPPED",
     "timer_blocked": "BLOCKED",
+    "timer_waiting": "ČEKÁM NA UŽIVATELE",
+    "timer_timeout": "TIMEOUT - ČEKEJTE NA UŽIVATELE",
+    "response_expired": "Odpověď vypršela. Čekejte na novou zprávu od uživatele.",
     "shift_display": "SHIFT",
     "temp_display": "TEMP"
   },

@@ -205,6 +205,16 @@
             showToast("✅ ANOMALY LOGGED", "success");
         } else if (data.type === 'optimizing_start') {
             handleOptimizingStart();
+        } else if (data.type === 'agent_timeout') {
+            // Agent didn't respond in time - show error message
+            hideAgentRespondingIndicator();
+            appendMessage({
+                sender: 'SYSTEM',
+                role: 'system',
+                content: data.content || 'Agent neodpověděl včas. Odpověď vypršela.'
+            });
+            if (window.sfx) sfx.playError();
+            showToast("⚠️ TIMEOUT: Agent neodpověděl", "error");
         } else if (data.type === 'system_alert') {
             // Show system alert overlay (failover, reset, etc.)
             showSystemAlert(data.content);
@@ -409,7 +419,13 @@
 
         if (!data.content) return; // Skip non-content messages
         const div = document.createElement('div');
-        div.className = `chat-bubble ${data.role === 'user' ? 'user self-end' : 'agent self-start'}`;
+        
+        // Handle system messages (timeouts, errors) with distinct styling
+        if (data.role === 'system') {
+            div.className = 'chat-bubble system self-center w-full text-center border-2 border-red-500 bg-red-900/30 text-red-300';
+        } else {
+            div.className = `chat-bubble ${data.role === 'user' ? 'user self-end' : 'agent self-start'}`;
+        }
 
         // Sender label
         const sender = document.createElement('span');

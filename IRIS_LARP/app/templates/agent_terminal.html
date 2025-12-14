@@ -269,6 +269,15 @@
             } else if (data.type === 'system_alert') {
                 // Show system alert overlay (failover, reset, etc.)
                 showSystemAlert(data.content);
+            } else if (data.type === 'session_timeout') {
+                // Session timed out - lock input and show error
+                lockInput();
+                document.getElementById('timerText').innerText = "TIMEOUT - ČEKEJTE NA UŽIVATELE";
+                if (window.sfx) window.sfx.playError();
+            } else if (data.type === 'error') {
+                // General error message from server
+                showSystemAlert(data.msg || 'Chyba');
+                if (window.sfx) window.sfx.playError();
             } else if (data.type === 'typing_start') {
                 showTypingIndicator(true);
             } else if (data.type === 'typing_stop') {

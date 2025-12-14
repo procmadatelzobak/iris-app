@@ -14,8 +14,15 @@ class ConnectionManager:
         
         # Autopilot State
         self.active_autopilots: Dict[int, bool] = {} # AgentID -> True/False
+        self.hyper_histories: Dict[int, List] = {}  # AgentID -> conversation history for autopilot
         # v1.4 Timer State
         self.session_last_msg_time: Dict[int, float] = {} # SessionID -> timestamp
+        
+        # Pending response tracking: session_id -> timestamp when user sent message
+        # Used to track if agent needs to respond within timeout window
+        self.pending_responses: Dict[int, float] = {}  # SessionID -> timestamp
+        # Sessions that have timed out (agent can no longer respond)
+        self.timed_out_sessions: Dict[int, float] = {}  # SessionID -> timeout timestamp
 
     async def connect(self, websocket: WebSocket, role: UserRole, user_id: int):
         await websocket.accept()
@@ -53,6 +60,73 @@ class ConnectionManager:
     def update_session_activity(self, session_id: int):
         import time
         self.session_last_msg_time[session_id] = time.time()
+
+    def start_pending_response(self, session_id: int):
+        """Mark that a user message was sent and we're waiting for agent response."""
+        import time
+        self.pending_responses[session_id] = time.time()
+        # Clear any previous timeout for this session
+        if session_id in self.timed_out_sessions:
+            del self.timed_out_sessions[session_id]
+
+    def clear_pending_response(self, session_id: int):
+        """Agent responded in time, clear the pending state."""
+        if session_id in self.pending_responses:
+            del self.pending_responses[session_id]
+
+    def mark_session_timeout(self, session_id: int):
+        """Mark session as timed out - agent can no longer respond."""
+        import time
+        if session_id in self.pending_responses:
+            del self.pending_responses[session_id]
+        self.timed_out_sessions[session_id] = time.time()
+
+    def is_session_timed_out(self, session_id: int) -> bool:
+        """Check if session is currently in timed-out state."""
+        return session_id in self.timed_out_sessions
+
+    def clear_session_timeout(self, session_id: int):
+        """Clear timeout state when user sends a new message."""
+        if session_id in self.timed_out_sessions:
+            del self.timed_out_sessions[session_id]
+
+    async def send_timeout_error_to_user(self, session_id: int):
+        """Send timeout error message to user for a specific session."""
+        import json
+        user_id = session_id  # Session ID matches User ID
+        if user_id in self.user_connections:
+            error_msg = json.dumps({
+                "type": "agent_timeout",
+                "content": "Agent neodpověděl včas. Odpověď vypršela.",
+                "session_id": session_id
+            })
+            for connection in self.user_connections[user_id]:
+                try:
+                    await connection.send_text(error_msg)
+                except:
+                    pass
+
+    async def send_timeout_to_agent(self, session_id: int):
+        """Send timeout notification to agent for a specific session."""
+        import json
+        shift = gamestate.global_shift_offset
+        total = settings.TOTAL_SESSIONS
+        
+        for agent_id, connections in self.agent_connections.items():
+            agent_index = agent_id - 1
+            session_index = (agent_index + shift) % total
+            current_session_id = session_index + 1
+            
+            if current_session_id == session_id:
+                timeout_msg = json.dumps({
+                    "type": "session_timeout",
+                    "session_id": session_id
+                })
+                for connection in connections:
+                    try:
+                        await connection.send_text(timeout_msg)
+                    except:
+                        pass
 
     async def broadcast_to_session(self, session_id: int, message: str):
         # 1. Send to USER bound to this session
