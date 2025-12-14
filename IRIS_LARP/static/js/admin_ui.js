@@ -5,7 +5,6 @@
 const sessionGrid = document.getElementById('sessionGrid');
 const shiftValue = document.getElementById('shiftValue');
 const onlineCount = document.getElementById('onlineCount');
-const token = localStorage.getItem('token');
 let currentShift = 0;
 let onlineUsers = new Set();
 let onlineAgents = new Set();
@@ -19,6 +18,16 @@ function getCookie(name) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
+}
+
+// Get authentication token (from localStorage or cookie)
+function getAuthToken() {
+    let token = localStorage.getItem('token');
+    if (!token) {
+        token = getCookie('access_token');
+        if (token && token.startsWith('"')) token = token.slice(1, -1);
+    }
+    return token;
 }
 
 // --- GLOBAL STATE ---
@@ -183,7 +192,7 @@ window.switchMonitorTab = function(tab) {
 // --- STATE SYNC ---
 window.loadControlState = async function() {
     try {
-        const res = await fetch('/api/admin/controls/state', { headers: { 'Authorization': `Bearer ${token}` } });
+        const res = await fetch('/api/admin/controls/state', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
         if (!res.ok) return;
         const data = await res.json();
 
@@ -517,11 +526,7 @@ window.payTask = async function(id) {
 
 // --- WEBSOCKET & MONITOR ---
 function initWebSocket() {
-    let wsToken = localStorage.getItem('token');
-    if (!wsToken) {
-        wsToken = getCookie('access_token');
-        if (wsToken && wsToken.startsWith('"')) wsToken = wsToken.slice(1, -1);
-    }
+    const wsToken = getAuthToken();
 
     console.log("Connecting with token:", wsToken ? "FOUND" : "MISSING");
 
@@ -640,7 +645,7 @@ window.buyPower = async function() {
     try {
         const res = await fetch('/api/admin/power/buy', {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
         });
         if (res.ok) {
             const data = await res.json();
@@ -715,7 +720,7 @@ async function saveLabelsToServer(labels) {
         await fetch('/api/admin/labels', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${getAuthToken()}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ labels: labels })
@@ -726,7 +731,7 @@ async function saveLabelsToServer(labels) {
 async function loadLabels() {
     try {
         const res = await fetch('/api/admin/labels', {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
         });
         if (res.ok) {
             const data = await res.json();
@@ -769,7 +774,7 @@ window.saveConfig = async function(type) {
 // --- SYSTEM LOGS ---
 window.refreshSystemLogs = async function() {
     try {
-        const res = await fetch('/api/admin/system_logs', { headers: { 'Authorization': `Bearer ${token}` } });
+        const res = await fetch('/api/admin/system_logs', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
         if (!res.ok) return;
         const logs = await res.json();
 
@@ -803,7 +808,7 @@ window.refreshSystemLogs = async function() {
 
 window.resetSystemLogs = async function() {
     if (!confirm("CLEAR SYSTEM LOGS? CANNOT BE UNDONE.")) return;
-    await fetch('/api/admin/system_logs/reset', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+    await fetch('/api/admin/system_logs/reset', { method: 'POST', headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
     refreshSystemLogs();
 };
 
