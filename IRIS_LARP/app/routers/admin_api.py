@@ -544,8 +544,10 @@ async def factory_reset(admin=Depends(get_current_admin)):
     # Broadcast shutdown warning
     await routing_logic.broadcast_global('{"type": "factory_reset", "message": "System will be wiped and restarted in 5 seconds..."}')
     
-    # Find database path
-    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'iris.db')
+    # Find database path and labels file path
+    data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data')
+    db_path = os.path.join(data_dir, 'iris.db')
+    labels_path = os.path.join(data_dir, 'admin_labels.json')
     
     # Spawn a detached process to delete DB and restart
     reset_script = f"""
@@ -558,6 +560,10 @@ time.sleep(3)
 if os.path.exists('{db_path}'):
     os.remove('{db_path}')
     print('Database deleted.')
+# Delete custom labels file
+if os.path.exists('{labels_path}'):
+    os.remove('{labels_path}')
+    print('Custom labels deleted.')
 os.kill({os.getpid()}, signal.SIGTERM)
 time.sleep(1)
 subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.dirname(os.path.dirname(__file__)))}')

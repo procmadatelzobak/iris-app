@@ -157,6 +157,14 @@
     const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
 
     const client = new SocketClient(wsUrl, (data) => {
+        // Handle translation updates
+        if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
+            if (window.translationManager) {
+                window.translationManager.handleTranslationUpdate(data);
+            }
+            return;
+        }
+        
         // Handle Game Updates vs Chat
         // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
