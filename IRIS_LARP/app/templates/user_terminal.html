@@ -65,6 +65,13 @@
 </div>
 
 <!-- Logout Button -->
+<!-- Manual Button -->
+<a href="/doc/view/user" target="_blank"
+    class="fixed top-4 right-32 z-50 theme-btn border hover:bg-green-900 text-xs shadow-lg mr-20">
+    <i class="fas fa-book"></i> MANUÁL
+</a>
+
+<!-- Logout Button -->
 <a href="/auth/logout" class="fixed top-4 right-4 z-50 theme-btn border hover:bg-red-900 text-xs shadow-lg">
     <i class="fas fa-sign-out-alt"></i> ODHLÁSIT
 </a>
@@ -111,8 +118,7 @@
     </div>
 
     <!-- Task submission modal -->
-    <div id="taskSubmitModal"
-        class="hidden fixed inset-0 bg-black/80 z-30 flex items-center justify-center p-4">
+    <div id="taskSubmitModal" class="hidden fixed inset-0 bg-black/80 z-30 flex items-center justify-center p-4">
         <div class="bg-[#101010] border border-[var(--border-color)] rounded w-full max-w-2xl p-6 shadow-xl">
             <h3 class="text-xl font-bold text-[var(--text-color)] mb-2">Odevzdat úkol</h3>
             <p class="text-xs text-gray-400 mb-3">Vyplň řešení a odešli ho správci ke zhodnocení.</p>
@@ -188,7 +194,7 @@
             }
             return;
         }
-        
+
         // Handle Game Updates vs Chat
         // Handle Game Updates vs Chat
         if (data.type === 'gamestate_update') {
@@ -445,7 +451,7 @@
         const text = input.value.trim();
         if (text) {
             client.send({ content: text });
-            
+
             // Show user's own message immediately (local echo)
             appendMessage({
                 sender: '{{ user.username }}',
@@ -460,7 +466,7 @@
             sfx.playSend(); // Local feedback
         }
     });
-    
+
     // Agent responding indicator with countdown
     function ensureAgentIndicator() {
         const hist = document.getElementById('chatHistory');
@@ -538,14 +544,14 @@
         if (data.role === 'agent') {
             hideAgentRespondingIndicator();
         }
-        
+
         // Remove loading
         const loader = document.getElementById('opt-loading');
         if (loader) loader.remove();
 
         if (!data.content) return; // Skip non-content messages
         const div = document.createElement('div');
-        
+
         // Handle system messages (timeouts, errors) with distinct styling
         if (data.role === 'system') {
             div.className = 'chat-bubble system self-center w-full text-center border-2 border-red-500 bg-red-900/30 text-red-300';

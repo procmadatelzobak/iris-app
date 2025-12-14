@@ -150,6 +150,12 @@
                 class="px-4 font-mono text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-yellow-600 animate-pulse">
                 ROOT ACCESS GRANTED
             </div>
+            <a href="/doc/view/root" target="_blank"
+                class="border border-yellow-500 text-yellow-500 hover:bg-yellow-900 px-2 py-1 text-xs font-mono transition">[
+                MANUÁL ]</a>
+            <a href="/doc/view/system" target="_blank"
+                class="border border-blue-500 text-blue-500 hover:bg-blue-900 px-2 py-1 text-xs font-mono transition">[
+                SYSTEM DOCS ]</a>
             <a href="/auth/logout"
                 class="border border-red-500 text-red-500 hover:bg-red-900 px-3 py-1 text-sm font-mono transition">
                 [ ODHLÁSIT ]
@@ -226,858 +232,882 @@
 
     <!-- VIEW: CONFIG -->
     <div id="view-config" class="view-container hidden">
-            <!-- Test Mode Panel -->
-            <div class="god-panel">
-                <div class="god-title">🔧 DEVELOPER MODE</div>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-lg font-bold">Quick Login Buttons</div>
-                            <div class="text-sm text-gray-500">Enable passwordless login for testing (shows user buttons
-                                on
-                                login screen)</div>
-                        </div>
-                        <button id="btnTestMode" class="btn-god px-8" onclick="toggleTestMode()">
-                            <span id="testModeLabel">DISABLED</span>
-                        </button>
+        <!-- Test Mode Panel -->
+        <div class="god-panel">
+            <div class="god-title">🔧 DEVELOPER MODE</div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-lg font-bold">Quick Login Buttons</div>
+                        <div class="text-sm text-gray-500">Enable passwordless login for testing (shows user buttons
+                            on
+                            login screen)</div>
                     </div>
-                    <div id="testModeStatus" class="text-sm text-gray-600 italic"></div>
+                    <button id="btnTestMode" class="btn-god px-8" onclick="toggleTestMode()">
+                        <span id="testModeLabel">DISABLED</span>
+                    </button>
                 </div>
+                <div id="testModeStatus" class="text-sm text-gray-600 italic"></div>
             </div>
+        </div>
 
-            <!-- Language Settings Panel -->
-            <div class="god-panel mt-6">
-                <div class="god-title">🌍 NASTAVENÍ JAZYKA</div>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-lg font-bold">Režim Jazyka Systému</div>
-                            <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní</div>
+        <!-- Language Settings Panel -->
+        <div class="god-panel mt-6">
+            <div class="god-title">🌍 NASTAVENÍ JAZYKA</div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-lg font-bold">Režim Jazyka Systému</div>
+                        <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní</div>
+                    </div>
+                    <select id="languageModeSelect" class="bg-black border border-gray-700 p-2 text-white min-w-48"
+                        onchange="setLanguageMode(this.value)">
+                        <option value="cz">Čeština (výchozí)</option>
+                        <option value="czech-iris">Čeština + IRIS Terminologie</option>
+                    </select>
+                </div>
+                <div class="text-xs text-gray-500 border-t border-gray-800 pt-2 mt-2">
+                    <strong>Čeština:</strong> Standardní české překlady pro všechny uživatele<br>
+                    <strong>Čeština + IRIS:</strong> LARP-specifická terminologie pro správce (UMYVADLO, BAHNO, atd.)
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                    <div>
+                        <div class="text-sm font-bold">Vlastní Přejmenování Textů</div>
+                        <div class="text-xs text-gray-500">Správci mohou přejmenovat texty v UI pomocí editačního režimu
                         </div>
-                        <select id="languageModeSelect" 
-                                class="bg-black border border-gray-700 p-2 text-white min-w-48"
-                                onchange="setLanguageMode(this.value)">
-                            <option value="cz">Čeština (výchozí)</option>
-                            <option value="czech-iris">Čeština + IRIS Terminologie</option>
+                    </div>
+                    <button class="btn-god px-4" onclick="resetAllLabels()">
+                        RESETOVAT VŠECHNY VLASTNÍ TEXTY
+                    </button>
+                </div>
+                <div id="languageStatus" class="text-sm text-gray-600 italic"></div>
+            </div>
+        </div>
+
+        <!-- LLM Configuration -->
+        <div class="god-panel mt-6">
+            <div class="god-title">🤖 AI CONFIGURATION</div>
+            <p class="text-sm text-gray-400 mb-4">Oddělené profily pro jednotlivé LLM role (úkoly, soft/optimizer, HYPER
+                autopilot). Každá karta umožní vybrat poskytovatele, dostupný model, systémový prompt a uložit vlastní
+                volbu.</p>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="border border-gray-800 bg-black p-3 space-y-3">
+                    <div class="text-lg font-bold text-yellow-400">🗒️ LLM PRO ZADÁVÁNÍ ÚKOLŮ</div>
+                    <div class="text-xs text-gray-500">Hodnotí a přijímá úkoly (Task Evaluator).</div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
+                        <select id="taskProvider" class="w-full bg-black border border-gray-700 p-2 text-white"
+                            onchange="onProviderChanged('task')">
+                            <option value="openai">OpenAI</option>
+                            <option value="openrouter">OpenRouter</option>
+                            <option value="gemini">Gemini</option>
                         </select>
                     </div>
-                    <div class="text-xs text-gray-500 border-t border-gray-800 pt-2 mt-2">
-                        <strong>Čeština:</strong> Standardní české překlady pro všechny uživatele<br>
-                        <strong>Čeština + IRIS:</strong> LARP-specifická terminologie pro správce (UMYVADLO, BAHNO, atd.)
-                    </div>
-                    <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                        <div>
-                            <div class="text-sm font-bold">Vlastní Přejmenování Textů</div>
-                            <div class="text-xs text-gray-500">Správci mohou přejmenovat texty v UI pomocí editačního režimu</div>
+                    <div class="flex gap-2 items-end">
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
+                            <select id="taskModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white"
+                                onchange="onModelSelected('task')">
+                                <option value="">Načítám...</option>
+                            </select>
                         </div>
-                        <button class="btn-god px-4" onclick="resetAllLabels()">
-                            RESETOVAT VŠECHNY VLASTNÍ TEXTY
-                        </button>
+                        <button class="btn-god px-3" onclick="refreshModels('task')">Obnovit</button>
                     </div>
-                    <div id="languageStatus" class="text-sm text-gray-600 italic"></div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
+                        <input id="taskModelInput"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="např. gpt-4o" />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">System prompt</label>
+                        <textarea id="taskSystemPrompt" rows="3"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="Jak má LLM hodnotit úkoly"></textarea>
+                    </div>
+                    <button class="btn-god w-full" onclick="saveLLMConfig('task')">ULOŽIT TASK LLM</button>
+                </div>
+
+                <div class="border border-gray-800 bg-black p-3 space-y-3">
+                    <div class="text-lg font-bold text-yellow-400">🌿 SOFT REŽIM / OPTIMIZER</div>
+                    <div class="text-xs text-gray-500">Přepisuje odpovědi dle instrukcí (mírnější tón).</div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
+                        <select id="optimizerProvider" class="w-full bg-black border border-gray-700 p-2 text-white"
+                            onchange="onProviderChanged('optimizer')">
+                            <option value="openai">OpenAI</option>
+                            <option value="openrouter">OpenRouter</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 items-end">
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
+                            <select id="optimizerModelSelect"
+                                class="w-full bg-black border border-gray-700 p-2 text-white"
+                                onchange="onModelSelected('optimizer')">
+                                <option value="">Načítám...</option>
+                            </select>
+                        </div>
+                        <button class="btn-god px-3" onclick="refreshModels('optimizer')">Obnovit</button>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
+                        <input id="optimizerModelInput"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="např. mistralai/..." />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">System prompt</label>
+                        <textarea id="optimizerSystemPrompt" rows="3"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="Jak má přepisovat odpovědi"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Rewrite instrukce</label>
+                        <textarea id="optimizerInstruction" rows="3"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="Např. formální tón, stručnost..."></textarea>
+                    </div>
+                    <button class="btn-god w-full" onclick="saveLLMConfig('optimizer')">ULOŽIT SOFT LLM</button>
+                </div>
+
+                <div class="border border-gray-800 bg-black p-3 space-y-3">
+                    <div class="text-lg font-bold text-yellow-400">🚀 HYPER / AUTOPILOT</div>
+                    <div class="text-xs text-gray-500">Plně automatické odpovědi (Autopilot/HYPER režim).</div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
+                        <select id="hyperProvider" class="w-full bg-black border border-gray-700 p-2 text-white"
+                            onchange="onProviderChanged('hyper')">
+                            <option value="openai">OpenAI</option>
+                            <option value="openrouter">OpenRouter</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 items-end">
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
+                            <select id="hyperModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white"
+                                onchange="onModelSelected('hyper')">
+                                <option value="">Načítám...</option>
+                            </select>
+                        </div>
+                        <button class="btn-god px-3" onclick="refreshModels('hyper')">Obnovit</button>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
+                        <input id="hyperModelInput"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="např. google/..." />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">System prompt</label>
+                        <textarea id="hyperSystemPrompt" rows="3"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="Jak má autopilot reagovat"></textarea>
+                    </div>
+                    <button class="btn-god w-full" onclick="saveLLMConfig('hyper')">ULOŽIT HYPER LLM</button>
                 </div>
             </div>
 
-            <!-- LLM Configuration -->
-            <div class="god-panel mt-6">
-                <div class="god-title">🤖 AI CONFIGURATION</div>
-                <p class="text-sm text-gray-400 mb-4">Oddělené profily pro jednotlivé LLM role (úkoly, soft/optimizer, HYPER autopilot). Každá karta umožní vybrat poskytovatele, dostupný model, systémový prompt a uložit vlastní volbu.</p>
+            <!-- API Keys Section -->
+            <div class="mt-4 pt-4 border-t border-gray-700">
+                <div class="text-sm text-yellow-500 mb-3">🔑 API KEYS (uloženo v .env)</div>
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="border border-gray-800 bg-black p-3 space-y-3">
-                        <div class="text-lg font-bold text-yellow-400">🗒️ LLM PRO ZADÁVÁNÍ ÚKOLŮ</div>
-                        <div class="text-xs text-gray-500">Hodnotí a přijímá úkoly (Task Evaluator).</div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
-                            <select id="taskProvider" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onProviderChanged('task')">
-                                <option value="openai">OpenAI</option>
-                                <option value="openrouter">OpenRouter</option>
-                                <option value="gemini">Gemini</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-2 items-end">
-                            <div class="flex-1">
-                                <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
-                                <select id="taskModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onModelSelected('task')">
-                                    <option value="">Načítám...</option>
-                                </select>
-                            </div>
-                            <button class="btn-god px-3" onclick="refreshModels('task')">Obnovit</button>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
-                            <input id="taskModelInput" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="např. gpt-4o" />
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">System prompt</label>
-                            <textarea id="taskSystemPrompt" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Jak má LLM hodnotit úkoly"></textarea>
-                        </div>
-                        <button class="btn-god w-full" onclick="saveLLMConfig('task')">ULOŽIT TASK LLM</button>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">OPENAI API KEY</label>
+                        <input type="password" id="openaiKey"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="sk-..." autocomplete="off">
                     </div>
-
-                    <div class="border border-gray-800 bg-black p-3 space-y-3">
-                        <div class="text-lg font-bold text-yellow-400">🌿 SOFT REŽIM / OPTIMIZER</div>
-                        <div class="text-xs text-gray-500">Přepisuje odpovědi dle instrukcí (mírnější tón).</div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
-                            <select id="optimizerProvider" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onProviderChanged('optimizer')">
-                                <option value="openai">OpenAI</option>
-                                <option value="openrouter">OpenRouter</option>
-                                <option value="gemini">Gemini</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-2 items-end">
-                            <div class="flex-1">
-                                <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
-                                <select id="optimizerModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onModelSelected('optimizer')">
-                                    <option value="">Načítám...</option>
-                                </select>
-                            </div>
-                            <button class="btn-god px-3" onclick="refreshModels('optimizer')">Obnovit</button>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
-                            <input id="optimizerModelInput" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="např. mistralai/..." />
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">System prompt</label>
-                            <textarea id="optimizerSystemPrompt" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Jak má přepisovat odpovědi"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Rewrite instrukce</label>
-                            <textarea id="optimizerInstruction" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Např. formální tón, stručnost..."></textarea>
-                        </div>
-                        <button class="btn-god w-full" onclick="saveLLMConfig('optimizer')">ULOŽIT SOFT LLM</button>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">OPENROUTER API KEY</label>
+                        <input type="password" id="openrouterKey"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="sk-or-..." autocomplete="off">
                     </div>
-
-                    <div class="border border-gray-800 bg-black p-3 space-y-3">
-                        <div class="text-lg font-bold text-yellow-400">🚀 HYPER / AUTOPILOT</div>
-                        <div class="text-xs text-gray-500">Plně automatické odpovědi (Autopilot/HYPER režim).</div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
-                            <select id="hyperProvider" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onProviderChanged('hyper')">
-                                <option value="openai">OpenAI</option>
-                                <option value="openrouter">OpenRouter</option>
-                                <option value="gemini">Gemini</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-2 items-end">
-                            <div class="flex-1">
-                                <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
-                                <select id="hyperModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onModelSelected('hyper')">
-                                    <option value="">Načítám...</option>
-                                </select>
-                            </div>
-                            <button class="btn-god px-3" onclick="refreshModels('hyper')">Obnovit</button>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
-                            <input id="hyperModelInput" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="např. google/..." />
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">System prompt</label>
-                            <textarea id="hyperSystemPrompt" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Jak má autopilot reagovat"></textarea>
-                        </div>
-                        <button class="btn-god w-full" onclick="saveLLMConfig('hyper')">ULOŽIT HYPER LLM</button>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">GEMINI API KEY</label>
+                        <input type="password" id="geminiKey"
+                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                            placeholder="AIza..." autocomplete="off">
                     </div>
                 </div>
-
-                <!-- API Keys Section -->
-                <div class="mt-4 pt-4 border-t border-gray-700">
-                    <div class="text-sm text-yellow-500 mb-3">🔑 API KEYS (uloženo v .env)</div>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">OPENAI API KEY</label>
-                            <input type="password" id="openaiKey"
-                                class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
-                                placeholder="sk-..." autocomplete="off">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">OPENROUTER API KEY</label>
-                            <input type="password" id="openrouterKey"
-                                class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
-                                placeholder="sk-or-..." autocomplete="off">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">GEMINI API KEY</label>
-                            <input type="password" id="geminiKey"
-                                class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
-                                placeholder="AIza..." autocomplete="off">
-                        </div>
-                    </div>
-                    <div class="text-xs text-gray-600 mt-2 italic flex items-center justify-between">
-                        <span>⚠️ Klíče se ukládají do .env/SystemConfig na serveru. Většinou vyžadují restart serveru.</span>
-                        <button class="btn-god px-4" onclick="saveApiKeys()">ULOŽIT API KEYS</button>
-                    </div>
+                <div class="text-xs text-gray-600 mt-2 italic flex items-center justify-between">
+                    <span>⚠️ Klíče se ukládají do .env/SystemConfig na serveru. Většinou vyžadují restart
+                        serveru.</span>
+                    <button class="btn-god px-4" onclick="saveApiKeys()">ULOŽIT API KEYS</button>
                 </div>
             </div>
+        </div>
 
-            <!--System Info -->
-            <div class="god-panel mt-6">
-                <div class="god-title">ℹ️ SYSTEM INFORMATION</div>
-                <div class="grid grid-cols-3 gap-4 text-sm font-mono">
-                    <div>
-                        <div class="text-gray-500">Version</div>
-                        <div class="text-white">Phase 25.0</div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">Total Users</div>
-                        <div class="text-white" id="sysUserCount">--</div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">Database</div>
-                        <div class="text-white">SQLite (iris.db)</div>
-                    </div>
+        <!--System Info -->
+        <div class="god-panel mt-6">
+            <div class="god-title">ℹ️ SYSTEM INFORMATION</div>
+            <div class="grid grid-cols-3 gap-4 text-sm font-mono">
+                <div>
+                    <div class="text-gray-500">Version</div>
+                    <div class="text-white">Phase 25.0</div>
+                </div>
+                <div>
+                    <div class="text-gray-500">Total Users</div>
+                    <div class="text-white" id="sysUserCount">--</div>
+                </div>
+                <div>
+                    <div class="text-gray-500">Database</div>
+                    <div class="text-white">SQLite (iris.db)</div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- VIEW: ECONOMY -->
-    <div id="view-economy" class="view-container hidden">
-            <div class="god-panel">
-                <div class="god-title">GLOBAL ECONOMY MANIPULATION</div>
-                <div class="grid grid-cols-4 gap-4 mb-6">
-                    <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(100)">STIMULUS
-                        (+100)</button>
-                    <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(1000)">LARGE STIMULUS
-                        (+1000)</button>
-                    <button class="btn-god text-red-500 border-red-500" onclick="injectGlobal(-100)">TAXATION
-                        (-100)</button>
-                    <button class="btn-god text-red-500 border-red-500" onclick="resetEconomy()">RESET ALL
-                        CREDITS</button>
-                </div>
+<!-- VIEW: ECONOMY -->
+<div id="view-economy" class="view-container hidden">
+    <div class="god-panel">
+        <div class="god-title">GLOBAL ECONOMY MANIPULATION</div>
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(100)">STIMULUS
+                (+100)</button>
+            <button class="btn-god text-green-400 border-green-400" onclick="injectGlobal(1000)">LARGE STIMULUS
+                (+1000)</button>
+            <button class="btn-god text-red-500 border-red-500" onclick="injectGlobal(-100)">TAXATION
+                (-100)</button>
+            <button class="btn-god text-red-500 border-red-500" onclick="resetEconomy()">RESET ALL
+                CREDITS</button>
+        </div>
 
-                <div class="god-title mt-4">TASK REWARD RULES</div>
-                <p class="text-xs text-gray-400 mb-3">Výchozí odměny se aplikují při vyžádání úkolu podle levelu uživatele.</p>
-                <div class="grid grid-cols-5 gap-3">
-                    <div>
-                        <label class="text-xs text-gray-500">Výchozí</label>
-                        <input id="rewardDefault" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-500">LOW</label>
-                        <input id="rewardLow" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-500">MID</label>
-                        <input id="rewardMid" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-500">HIGH</label>
-                        <input id="rewardHigh" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-500">PARTY</label>
-                        <input id="rewardParty" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
-                    </div>
-                </div>
-                <div class="flex justify-end mt-3">
-                    <button class="btn-god" onclick="saveTaskRewards()">ULOŽIT ODMĚNY</button>
-                </div>
+        <div class="god-title mt-4">TASK REWARD RULES</div>
+        <p class="text-xs text-gray-400 mb-3">Výchozí odměny se aplikují při vyžádání úkolu podle levelu uživatele.</p>
+        <div class="grid grid-cols-5 gap-3">
+            <div>
+                <label class="text-xs text-gray-500">Výchozí</label>
+                <input id="rewardDefault" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+            </div>
+            <div>
+                <label class="text-xs text-gray-500">LOW</label>
+                <input id="rewardLow" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+            </div>
+            <div>
+                <label class="text-xs text-gray-500">MID</label>
+                <input id="rewardMid" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+            </div>
+            <div>
+                <label class="text-xs text-gray-500">HIGH</label>
+                <input id="rewardHigh" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+            </div>
+            <div>
+                <label class="text-xs text-gray-500">PARTY</label>
+                <input id="rewardParty" type="number" class="w-full bg-black border border-gray-700 p-2 text-white" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button class="btn-god" onclick="saveTaskRewards()">ULOŽIT ODMĚNY</button>
+        </div>
 
-                <div class="god-title mt-8">INDIVIDUAL EDITOR</div>
-                <table class="w-full text-left text-sm border border-gray-800">
-                    <thead class="bg-gray-900 text-yellow-600">
-                        <tr>
-                            <th>USER</th>
-                            <th>CREDITS</th>
-                            <th>STATUS</th>
-                            <th>ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rootEcoTable"></tbody>
-                </table>
+        <div class="god-title mt-8">INDIVIDUAL EDITOR</div>
+        <table class="w-full text-left text-sm border border-gray-800">
+            <thead class="bg-gray-900 text-yellow-600">
+                <tr>
+                    <th>USER</th>
+                    <th>CREDITS</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody id="rootEcoTable"></tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<!-- VIEW: TIME (CHRONOS) -->
+<div id="view-time" class="view-container hidden">
+    <div class="god-panel w-1/2 mx-auto">
+        <div class="god-title">TIME MANIPULATION</div>
+        <div class="text-center mb-8">
+            <div class="text-6xl font-bold mb-2 text-white" id="bigShift">0</div>
+            <div class="text-sm text-gray-500">CURRENT SHIFT OFFSET</div>
+        </div>
+
+        <div class="space-y-4">
+            <input type="number" id="targetShift" class="w-full bg-gray-900 border border-yellow-700 p-2 text-white"
+                placeholder="Target Shift (0-7)">
+            <button class="btn-god w-full" onclick="setShift()">JUMP TO SHIFT</button>
+        </div>
+
+        <div class="mt-8 border-t border-gray-800 pt-4">
+            <label class="block mb-2 text-red-500">CHERNOBYL OVERRIDE</label>
+            <input type="range" min="0" max="200" value="0" class="w-full accent-red-600"
+                oninput="sendChernobylLevel(this.value)">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0%</span>
+                <span>100%</span>
+                <span>MELTDOWN</span>
             </div>
         </div>
     </div>
+</div>
+</div>
 
-    <!-- VIEW: TIME (CHRONOS) -->
-    <div id="view-time" class="view-container hidden">
-            <div class="god-panel w-1/2 mx-auto">
-                <div class="god-title">TIME MANIPULATION</div>
-                <div class="text-center mb-8">
-                    <div class="text-6xl font-bold mb-2 text-white" id="bigShift">0</div>
-                    <div class="text-sm text-gray-500">CURRENT SHIFT OFFSET</div>
-                </div>
-
-                <div class="space-y-4">
-                    <input type="number" id="targetShift"
-                        class="w-full bg-gray-900 border border-yellow-700 p-2 text-white"
-                        placeholder="Target Shift (0-7)">
-                    <button class="btn-god w-full" onclick="setShift()">JUMP TO SHIFT</button>
-                </div>
-
-                <div class="mt-8 border-t border-gray-800 pt-4">
-                    <label class="block mb-2 text-red-500">CHERNOBYL OVERRIDE</label>
-                    <input type="range" min="0" max="200" value="0" class="w-full accent-red-600"
-                        oninput="sendChernobylLevel(this.value)">
-                    <div class="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>0%</span>
-                        <span>100%</span>
-                        <span>MELTDOWN</span>
-                    </div>
-                </div>
-            </div>
+<!-- VIEW: LORE (Documentation) -->
+<div id="view-lore" class="view-container hidden">
+    <div class="god-panel">
+        <div class="god-title">LORE ARCHIVE</div>
+        <p class="text-sm text-gray-400 mb-4">Integrovaný prohlížeč načítá pouze obsah z adresáře /doc/iris/lore-web/.
+        </p>
+        <div class="lore-embed">
+            <iframe class="lore-frame" src="/lore-web/index.html" title="HLINÍK Lore Web" loading="lazy"></iframe>
         </div>
     </div>
+</div>
 
-    <!-- VIEW: LORE (Documentation) -->
-    <div id="view-lore" class="view-container hidden">
-        <div class="god-panel">
-            <div class="god-title">LORE ARCHIVE</div>
-            <p class="text-sm text-gray-400 mb-4">Integrovaný prohlížeč načítá pouze obsah z adresáře /doc/iris/lore-web/.</p>
-            <div class="lore-embed">
-                <iframe class="lore-frame" src="/lore-web/index.html" title="HLINÍK Lore Web" loading="lazy"></iframe>
-            </div>
-        </div>
+<!-- VIEW: SURVEILLANCE -->
+<div id="view-surveillance" class="view-container hidden">
+    <div class="god-title">PANOPTICON 8x8</div>
+    <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
+        <!-- 8 Sessions -->
     </div>
-
-    <!-- VIEW: SURVEILLANCE -->
-    <div id="view-surveillance" class="view-container hidden">
-        <div class="god-title">PANOPTICON 8x8</div>
-        <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
-            <!-- 8 Sessions -->
-        </div>
-    </div>
+</div>
 
 </div>
 {% endblock %}
 
-    {% block scripts %}
-    <script src="/static/js/socket_client.js"></script>
-    <script>
-        // Root UI Logic - Simplified/Inline
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = '/';
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
+<script>
+    // Root UI Logic - Simplified/Inline
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = '/';
 
-        // --- STATE ---
-        let currentView = 'dashboard';
-        let rootState = {};
+    // --- STATE ---
+    let currentView = 'dashboard';
+    let rootState = {};
 
-        // --- SOCKET ---
-        const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
-        const client = new SocketClient(wsUrl, handlePayload, (s) => { console.log("WS", s) });
-        client.connect(token);
+    // --- SOCKET ---
+    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+    const client = new SocketClient(wsUrl, handlePayload, (s) => { console.log("WS", s) });
+    client.connect(token);
 
-        // Init Constants
-        setTimeout(() => fetchRootState(), 1000);
+    // Init Constants
+    setTimeout(() => fetchRootState(), 1000);
 
-        async function fetchRootState() {
-            try {
-                const res = await fetch('/api/admin/root/state', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                rootState = data;
-                document.getElementById('inTax').value = data.tax_rate;
-                document.getElementById('inPower').value = data.power_cap;
-
-                if (data.task_rewards) {
-                    document.getElementById('rewardDefault').value = data.task_rewards.default;
-                    document.getElementById('rewardLow').value = data.task_rewards.low;
-                    document.getElementById('rewardMid').value = data.task_rewards.mid;
-                    document.getElementById('rewardHigh').value = data.task_rewards.high;
-                    document.getElementById('rewardParty').value = data.task_rewards.party;
-                }
-            } catch (e) { console.error(e); }
-        }
-
-        function buildConstantsPayload() {
-            const rewards = rootState.task_rewards || {};
-            const costs = rootState.costs || {};
-            return {
-                tax_rate: parseFloat(document.getElementById('inTax').value),
-                power_cap: parseFloat(document.getElementById('inPower').value),
-                temp_threshold: rootState.temp_threshold || 350,
-                temp_reset_val: rootState.temp_reset_val || 80,
-                temp_min: rootState.temp_min || 20,
-                cost_base: costs.base || 10,
-                cost_user: costs.user || 5,
-                cost_autopilot: costs.autopilot || 10,
-                cost_low_latency: costs.low_latency || 30,
-                cost_optimizer: costs.optimizer || 15,
-                task_reward_default: parseInt(document.getElementById('rewardDefault').value || rewards.default || 0),
-                task_reward_low: parseInt(document.getElementById('rewardLow').value || rewards.low || 0),
-                task_reward_mid: parseInt(document.getElementById('rewardMid').value || rewards.mid || 0),
-                task_reward_high: parseInt(document.getElementById('rewardHigh').value || rewards.high || 0),
-                task_reward_party: parseInt(document.getElementById('rewardParty').value || rewards.party || 0),
-            };
-        }
-
-        window.applySystemConstants = async () => {
-            const payload = buildConstantsPayload();
-            await fetch('/api/admin/root/update_constants', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-            alert("PHYSICS UPDATED");
-        };
-
-        window.saveTaskRewards = async () => {
-            const payload = buildConstantsPayload();
-            await fetch('/api/admin/root/update_constants', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-            alert('Odměny pro úkoly aktualizovány');
-            rootState.task_rewards = {
-                default: payload.task_reward_default,
-                low: payload.task_reward_low,
-                mid: payload.task_reward_mid,
-                high: payload.task_reward_high,
-                party: payload.task_reward_party
-            };
-        };
-
-        function handlePayload(data) {
-            logEvent(data.type);
-            
-            // Handle translation updates
-            if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
-                if (window.translationManager) {
-                    window.translationManager.handleTranslationUpdate(data);
-                }
-                if (data.type === 'language_change') {
-                    const select = document.getElementById('languageModeSelect');
-                    if (select) select.value = data.language_mode;
-                }
-                return;
-            }
-            
-            if (data.type === 'gamestate_update') {
-                document.getElementById('valShift').innerText = data.shift;
-                document.getElementById('bigShift').innerText = data.shift;
-                document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
-            }
-            if (data.type === 'message') {
-                // Update Panopticon
-                const sessId = data.session_id || 1;
-                const chatDiv = document.getElementById(`rootChat-${sessId}`);
-                if (chatDiv) {
-                    const row = document.createElement('div');
-                    row.className = `text-xs mb-1 ${data.role === 'agent' ? 'text-pink-400' : 'text-green-400'}`;
-                    row.innerText = `${data.sender}: ${data.content}`;
-                    chatDiv.appendChild(row);
-                    chatDiv.scrollTop = chatDiv.scrollHeight;
-                }
-            }
-        }
-
-        function logEvent(type) {
-            // Filter out noisy gamestate_update messages
-            if (type === 'gamestate_update') return;
-
-            const div = document.createElement('div');
-            div.innerText = `${new Date().toLocaleTimeString()} - ${type}`;
-            const logStream = document.getElementById('logStream');
-            logStream.prepend(div);
-
-            // Keep log size manageable (max 50 entries)
-            while (logStream.children.length > 50) {
-                logStream.removeChild(logStream.lastChild);
-            }
-        }
-
-        // --- NAVIGATION ---
-        window.switchView = function (view) {
-            document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
-            document.getElementById(`view-${view}`).classList.remove('hidden');
-            document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
-            document.getElementById(`nav-${view}`).classList.add('active');
-            currentView = view;
-
-            if (view === 'economy') refreshEconomy();
-            if (view === 'surveillance') initGrid();
-        }
-
-        // --- ACTIONS ---
-        window.triggerShift = () => client.send({ type: 'shift_command' });
-        window.injectGlobal = async (amt) => {
-            if (!confirm(`Inject ${amt} credits to ALL users?`)) return;
-            // Need new API for this? Or loop in JS?
-            // Loop in JS is slow. Better API.
-            // For now, let's just use loop as iterating 8 users is fine.
-            // But better implementation: Backend endpoint.
-            // Let's assume we have /api/admin/economy/global_bonus
-            // I will create that if needed. For now, loop frontend?
-            // We can just reuse `ecoAction` inside a loop from the table data.
-            const users = await fetchUsers();
-            for (const u of users) {
-                await fetch('/api/admin/economy/bonus', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ user_id: u.id, amount: amt, reason: "GOD STIMULUS" })
-                });
-            }
-            alert("EXECUTION COMPLETE");
-            refreshEconomy();
-        };
-
-        window.resetEconomy = async () => {
-            // Loop set to 100? or 0?
-            alert("Not implemented yet - Requires specific endpoint to be safe.");
-        };
-
-        window.broadcastMsg = () => {
-            const msg = prompt("GLOBAL MESSAGE:");
-            if (msg) client.send({ type: 'admin_broadcast', content: msg });
-            // Note: sockets.py needs to handle 'admin_broadcast' or similar. 
-            // Existing logic supports 'broadcast_global' via python but not direct socket cmd for admin maybe?
-            // I'll check sockets.py later.
-        };
-
-        window.triggerReset = () => {
-            if (prompt("TYPE 'NUKE' TO CONFIRM") === 'NUKE') {
-                client.send({ type: 'reset_game' });
-            }
-        };
-
-        window.restartServer = async () => {
-            if (!confirm("RESTART SERVER? All connections will be dropped temporarily.")) return;
-            try {
-                const res = await fetch('/api/admin/root/restart', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                alert(data.message);
-                setTimeout(() => location.reload(), 5000);
-            } catch (e) {
-                alert("Restart failed: " + e);
-            }
-        };
-
-        window.factoryReset = async () => {
-            if (prompt("THIS WILL DELETE ALL DATA AND RESTART WITH DEFAULTS.\nType 'FACTORY RESET' to confirm:") !== 'FACTORY RESET') return;
-            try {
-                const res = await fetch('/api/admin/root/factory_reset', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                alert(data.message);
-                setTimeout(() => location.reload(), 8000);
-            } catch (e) {
-                alert("Factory reset failed: " + e);
-            }
-        };
-
-        window.setShift = () => {
-            const target = document.getElementById('targetShift').value;
-            if (target === '' || isNaN(parseInt(target))) {
-                alert('Enter a valid shift value (0-7)');
-                return;
-            }
-            client.send({ type: 'set_shift_command', value: parseInt(target) });
-            document.getElementById('bigShift').innerText = target;
-        };
-
-        window.sendChernobylLevel = (val) => {
-            client.send({ type: 'chernobyl_command', level: parseInt(val) });
-            document.getElementById('valChernobyl').innerText = val + "%";
-        }
-
-        // --- TEST MODE TOGGLE ---
-        let testModeActive = false;
-
-        window.toggleTestMode = async () => {
-            testModeActive = !testModeActive;
-
-            // Send WebSocket command
-            client.send({
-                type: 'test_mode_toggle',
-                enabled: testModeActive
-            });
-
-            updateTestModeUI();
-        };
-
-        function updateTestModeUI() {
-            const btn = document.getElementById('btnTestMode');
-            const label = document.getElementById('testModeLabel');
-            const status = document.getElementById('testModeStatus');
-
-            if (testModeActive) {
-                label.innerText = 'ENABLED';
-                btn.classList.add('border-green-500', 'text-green-500');
-                btn.classList.remove('border-gray-700');
-                status.innerText = '✅ Quick login buttons will appear on login screen';
-                status.classList.remove('text-gray-600');
-                status.classList.add('text-green-500');
-            } else {
-                label.innerText = 'DISABLED';
-                btn.classList.remove('border-green-500', 'text-green-500');
-                btn.classList.add('border-gray-700');
-                status.innerText = '❌ Standard password input required';
-                status.classList.remove('text-green-500');
-                status.classList.add('text-gray-600');
-            }
-        }
-
-        // --- AI CONFIGURATION ---
-        const llmRoles = {
-            task: {
-                providerId: 'taskProvider',
-                modelSelectId: 'taskModelSelect',
-                modelInputId: 'taskModelInput',
-                promptId: 'taskSystemPrompt'
-            },
-            optimizer: {
-                providerId: 'optimizerProvider',
-                modelSelectId: 'optimizerModelSelect',
-                modelInputId: 'optimizerModelInput',
-                promptId: 'optimizerSystemPrompt',
-                instructionId: 'optimizerInstruction'
-            },
-            hyper: {
-                providerId: 'hyperProvider',
-                modelSelectId: 'hyperModelSelect',
-                modelInputId: 'hyperModelInput',
-                promptId: 'hyperSystemPrompt'
-            }
-        };
-
-        function getAuthHeaders() {
-            return { 'Authorization': `Bearer ${token}` };
-        }
-
-        window.onProviderChanged = (role) => {
-            refreshModels(role);
-        }
-
-        window.onModelSelected = (role) => {
-            const config = llmRoles[role];
-            const select = document.getElementById(config.modelSelectId);
-            const input = document.getElementById(config.modelInputId);
-            if (select && input) {
-                input.value = select.value;
-            }
-        }
-
-        window.refreshModels = async (role, selectedModel = '') => {
-            const config = llmRoles[role];
-            if (!config) return;
-
-            const provider = document.getElementById(config.providerId)?.value;
-            const select = document.getElementById(config.modelSelectId);
-            const input = document.getElementById(config.modelInputId);
-
-            if (!provider || !select) return;
-            select.innerHTML = `<option value="">Načítám...</option>`;
-
-            try {
-                const res = await fetch(`/api/admin/llm/models/${provider}`, { headers: getAuthHeaders() });
-                const models = await res.json();
-                select.innerHTML = '';
-
-                if (models.length === 0) {
-                    const opt = document.createElement('option');
-                    opt.value = '';
-                    opt.innerText = 'Žádné modely (zadejte ručně)';
-                    select.appendChild(opt);
-                }
-
-                models.forEach(m => {
-                    const opt = document.createElement('option');
-                    opt.value = m;
-                    opt.innerText = m;
-                    select.appendChild(opt);
-                });
-
-                if (selectedModel && models.includes(selectedModel)) {
-                    select.value = selectedModel;
-                }
-            } catch (e) {
-                console.error('Model fetch failed', e);
-                select.innerHTML = '<option value="">Chyba načítání</option>';
-            }
-
-            if (input) {
-                input.value = selectedModel || select.value || '';
-            }
-        }
-
-        function applyConfigToUI(role, cfg) {
-            const config = llmRoles[role];
-            if (!config || !cfg) return;
-
-            const providerSelect = document.getElementById(config.providerId);
-            const promptField = document.getElementById(config.promptId);
-            const modelInput = document.getElementById(config.modelInputId);
-
-            if (providerSelect && cfg.provider) providerSelect.value = cfg.provider;
-            if (promptField && cfg.system_prompt !== undefined) promptField.value = cfg.system_prompt || '';
-            if (modelInput && cfg.model_name) modelInput.value = cfg.model_name;
-
-            refreshModels(role, cfg.model_name || '');
-
-            if (config.instructionId && cfg.prompt !== undefined) {
-                const instructionField = document.getElementById(config.instructionId);
-                if (instructionField) instructionField.value = cfg.prompt || '';
-            }
-        }
-
-        function gatherRoleConfig(role) {
-            const cfg = llmRoles[role];
-            const provider = document.getElementById(cfg.providerId)?.value;
-            const select = document.getElementById(cfg.modelSelectId);
-            const input = document.getElementById(cfg.modelInputId);
-            const systemPrompt = document.getElementById(cfg.promptId)?.value || '';
-            const modelName = (input?.value || '').trim() || (select?.value || '').trim();
-
-            return { provider, modelName, systemPrompt };
-        }
-
-        window.saveLLMConfig = async (role) => {
-            const cfg = llmRoles[role];
-            if (!cfg) return;
-            const { provider, modelName, systemPrompt } = gatherRoleConfig(role);
-            if (!provider || !modelName) {
-                alert('Vyplňte poskytovatele i model.');
-                return;
-            }
-
-            const payload = {
-                provider,
-                model_name: modelName,
-                system_prompt: systemPrompt
-            };
-
-            if (cfg.instructionId) {
-                payload.prompt = document.getElementById(cfg.instructionId)?.value || '';
-            }
-
-            try {
-                const res = await fetch(`/api/admin/llm/config/${role}`, {
-                    method: 'POST',
-                    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!res.ok) throw new Error(await res.text());
-                alert('✅ LLM konfigurace uložena');
-            } catch (e) {
-                console.error(e);
-                alert('❌ Uložení se nezdařilo');
-            }
-        };
-
-        async function loadLLMConfig() {
-            try {
-                const res = await fetch('/api/admin/llm/config', { headers: getAuthHeaders() });
-                const data = await res.json();
-                applyConfigToUI('task', data.task);
-                applyConfigToUI('hyper', data.hyper);
-                applyConfigToUI('optimizer', data.optimizer);
-            } catch (e) {
-                console.error('Config load failed', e);
-            }
-        }
-
-        async function loadApiKeys() {
-            try {
-                const res = await fetch('/api/admin/llm/keys', { headers: getAuthHeaders() });
-                const data = await res.json();
-                const placeholders = {
-                    openai: 'sk-...',
-                    openrouter: 'sk-or-...',
-                    gemini: 'AIza...'
-                };
-                [['openai', 'openaiKey'], ['openrouter', 'openrouterKey'], ['gemini', 'geminiKey']]
-                    .forEach(([provider, inputId]) => {
-                        const input = document.getElementById(inputId);
-                        if (!input) return;
-                        input.value = '';
-                        input.placeholder = data?.[provider] || placeholders[provider];
-                    });
-            } catch (e) {
-                console.error('Key fetch failed', e);
-            }
-        }
-
-        window.saveApiKeys = async () => {
-            const providers = ['openai', 'openrouter', 'gemini'];
-            const updates = [];
-
-            providers.forEach((provider) => {
-                const input = document.getElementById(`${provider}Key`);
-                if (input && input.value.trim()) {
-                    updates.push({ provider, key: input.value.trim() });
-                }
-            });
-
-            if (updates.length === 0) {
-                alert('Zadejte alespoň jeden API klíč.');
-                return;
-            }
-
-            try {
-                for (const upd of updates) {
-                    const res = await fetch('/api/admin/llm/keys', {
-                        method: 'POST',
-                        headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
-                        body: JSON.stringify(upd)
-                    });
-                    if (!res.ok) throw new Error(await res.text());
-                }
-                alert('✅ API klíče uloženy');
-                loadApiKeys();
-            } catch (e) {
-                console.error(e);
-                alert('❌ Uložení klíčů selhalo');
-            }
-        }
-
-        async function hydrateTestMode() {
-            try {
-                const res = await fetch('/api/admin/root/ai_config', { headers: getAuthHeaders() });
-                const data = await res.json();
-                if (data.test_mode !== undefined) {
-                    testModeActive = data.test_mode;
-                    updateTestModeUI();
-                }
-                const optimizerField = document.getElementById('optimizerInstruction');
-                if (optimizerField && !optimizerField.value && data.optimizer_prompt) {
-                    optimizerField.value = data.optimizer_prompt;
-                }
-            } catch (e) {
-                console.error('Test mode hydrate failed', e);
-            }
-        }
-
-        // Call on init
-        setTimeout(() => {
-            loadLLMConfig();
-            loadApiKeys();
-            hydrateTestMode();
-        }, 1000);
-
-        // --- ECONOMY TABLE ---
-        async function fetchUsers() {
-            const res = await fetch('/api/admin/data/users', {
+    async function fetchRootState() {
+        try {
+            const res = await fetch('/api/admin/root/state', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            return await res.json();
+            const data = await res.json();
+            rootState = data;
+            document.getElementById('inTax').value = data.tax_rate;
+            document.getElementById('inPower').value = data.power_cap;
+
+            if (data.task_rewards) {
+                document.getElementById('rewardDefault').value = data.task_rewards.default;
+                document.getElementById('rewardLow').value = data.task_rewards.low;
+                document.getElementById('rewardMid').value = data.task_rewards.mid;
+                document.getElementById('rewardHigh').value = data.task_rewards.high;
+                document.getElementById('rewardParty').value = data.task_rewards.party;
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    function buildConstantsPayload() {
+        const rewards = rootState.task_rewards || {};
+        const costs = rootState.costs || {};
+        return {
+            tax_rate: parseFloat(document.getElementById('inTax').value),
+            power_cap: parseFloat(document.getElementById('inPower').value),
+            temp_threshold: rootState.temp_threshold || 350,
+            temp_reset_val: rootState.temp_reset_val || 80,
+            temp_min: rootState.temp_min || 20,
+            cost_base: costs.base || 10,
+            cost_user: costs.user || 5,
+            cost_autopilot: costs.autopilot || 10,
+            cost_low_latency: costs.low_latency || 30,
+            cost_optimizer: costs.optimizer || 15,
+            task_reward_default: parseInt(document.getElementById('rewardDefault').value || rewards.default || 0),
+            task_reward_low: parseInt(document.getElementById('rewardLow').value || rewards.low || 0),
+            task_reward_mid: parseInt(document.getElementById('rewardMid').value || rewards.mid || 0),
+            task_reward_high: parseInt(document.getElementById('rewardHigh').value || rewards.high || 0),
+            task_reward_party: parseInt(document.getElementById('rewardParty').value || rewards.party || 0),
+        };
+    }
+
+    window.applySystemConstants = async () => {
+        const payload = buildConstantsPayload();
+        await fetch('/api/admin/root/update_constants', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+        alert("PHYSICS UPDATED");
+    };
+
+    window.saveTaskRewards = async () => {
+        const payload = buildConstantsPayload();
+        await fetch('/api/admin/root/update_constants', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+        alert('Odměny pro úkoly aktualizovány');
+        rootState.task_rewards = {
+            default: payload.task_reward_default,
+            low: payload.task_reward_low,
+            mid: payload.task_reward_mid,
+            high: payload.task_reward_high,
+            party: payload.task_reward_party
+        };
+    };
+
+    function handlePayload(data) {
+        logEvent(data.type);
+
+        // Handle translation updates
+        if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
+            if (window.translationManager) {
+                window.translationManager.handleTranslationUpdate(data);
+            }
+            if (data.type === 'language_change') {
+                const select = document.getElementById('languageModeSelect');
+                if (select) select.value = data.language_mode;
+            }
+            return;
         }
 
-        async function refreshEconomy() {
-            const users = await fetchUsers();
-            const tbody = document.getElementById('rootEcoTable');
-            tbody.innerHTML = '';
-            users.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-gray-800 hover:bg-gray-900";
-                tr.innerHTML = `
+        if (data.type === 'gamestate_update') {
+            document.getElementById('valShift').innerText = data.shift;
+            document.getElementById('bigShift').innerText = data.shift;
+            document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
+        }
+        if (data.type === 'message') {
+            // Update Panopticon
+            const sessId = data.session_id || 1;
+            const chatDiv = document.getElementById(`rootChat-${sessId}`);
+            if (chatDiv) {
+                const row = document.createElement('div');
+                row.className = `text-xs mb-1 ${data.role === 'agent' ? 'text-pink-400' : 'text-green-400'}`;
+                row.innerText = `${data.sender}: ${data.content}`;
+                chatDiv.appendChild(row);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }
+        }
+    }
+
+    function logEvent(type) {
+        // Filter out noisy gamestate_update messages
+        if (type === 'gamestate_update') return;
+
+        const div = document.createElement('div');
+        div.innerText = `${new Date().toLocaleTimeString()} - ${type}`;
+        const logStream = document.getElementById('logStream');
+        logStream.prepend(div);
+
+        // Keep log size manageable (max 50 entries)
+        while (logStream.children.length > 50) {
+            logStream.removeChild(logStream.lastChild);
+        }
+    }
+
+    // --- NAVIGATION ---
+    window.switchView = function (view) {
+        document.querySelectorAll('.view-container').forEach(e => e.classList.add('hidden'));
+        document.getElementById(`view-${view}`).classList.remove('hidden');
+        document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
+        document.getElementById(`nav-${view}`).classList.add('active');
+        currentView = view;
+
+        if (view === 'economy') refreshEconomy();
+        if (view === 'surveillance') initGrid();
+    }
+
+    // --- ACTIONS ---
+    window.triggerShift = () => client.send({ type: 'shift_command' });
+    window.injectGlobal = async (amt) => {
+        if (!confirm(`Inject ${amt} credits to ALL users?`)) return;
+        // Need new API for this? Or loop in JS?
+        // Loop in JS is slow. Better API.
+        // For now, let's just use loop as iterating 8 users is fine.
+        // But better implementation: Backend endpoint.
+        // Let's assume we have /api/admin/economy/global_bonus
+        // I will create that if needed. For now, loop frontend?
+        // We can just reuse `ecoAction` inside a loop from the table data.
+        const users = await fetchUsers();
+        for (const u of users) {
+            await fetch('/api/admin/economy/bonus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ user_id: u.id, amount: amt, reason: "GOD STIMULUS" })
+            });
+        }
+        alert("EXECUTION COMPLETE");
+        refreshEconomy();
+    };
+
+    window.resetEconomy = async () => {
+        // Loop set to 100? or 0?
+        alert("Not implemented yet - Requires specific endpoint to be safe.");
+    };
+
+    window.broadcastMsg = () => {
+        const msg = prompt("GLOBAL MESSAGE:");
+        if (msg) client.send({ type: 'admin_broadcast', content: msg });
+        // Note: sockets.py needs to handle 'admin_broadcast' or similar. 
+        // Existing logic supports 'broadcast_global' via python but not direct socket cmd for admin maybe?
+        // I'll check sockets.py later.
+    };
+
+    window.triggerReset = () => {
+        if (prompt("TYPE 'NUKE' TO CONFIRM") === 'NUKE') {
+            client.send({ type: 'reset_game' });
+        }
+    };
+
+    window.restartServer = async () => {
+        if (!confirm("RESTART SERVER? All connections will be dropped temporarily.")) return;
+        try {
+            const res = await fetch('/api/admin/root/restart', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            alert(data.message);
+            setTimeout(() => location.reload(), 5000);
+        } catch (e) {
+            alert("Restart failed: " + e);
+        }
+    };
+
+    window.factoryReset = async () => {
+        if (prompt("THIS WILL DELETE ALL DATA AND RESTART WITH DEFAULTS.\nType 'FACTORY RESET' to confirm:") !== 'FACTORY RESET') return;
+        try {
+            const res = await fetch('/api/admin/root/factory_reset', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            alert(data.message);
+            setTimeout(() => location.reload(), 8000);
+        } catch (e) {
+            alert("Factory reset failed: " + e);
+        }
+    };
+
+    window.setShift = () => {
+        const target = document.getElementById('targetShift').value;
+        if (target === '' || isNaN(parseInt(target))) {
+            alert('Enter a valid shift value (0-7)');
+            return;
+        }
+        client.send({ type: 'set_shift_command', value: parseInt(target) });
+        document.getElementById('bigShift').innerText = target;
+    };
+
+    window.sendChernobylLevel = (val) => {
+        client.send({ type: 'chernobyl_command', level: parseInt(val) });
+        document.getElementById('valChernobyl').innerText = val + "%";
+    }
+
+    // --- TEST MODE TOGGLE ---
+    let testModeActive = false;
+
+    window.toggleTestMode = async () => {
+        testModeActive = !testModeActive;
+
+        // Send WebSocket command
+        client.send({
+            type: 'test_mode_toggle',
+            enabled: testModeActive
+        });
+
+        updateTestModeUI();
+    };
+
+    function updateTestModeUI() {
+        const btn = document.getElementById('btnTestMode');
+        const label = document.getElementById('testModeLabel');
+        const status = document.getElementById('testModeStatus');
+
+        if (testModeActive) {
+            label.innerText = 'ENABLED';
+            btn.classList.add('border-green-500', 'text-green-500');
+            btn.classList.remove('border-gray-700');
+            status.innerText = '✅ Quick login buttons will appear on login screen';
+            status.classList.remove('text-gray-600');
+            status.classList.add('text-green-500');
+        } else {
+            label.innerText = 'DISABLED';
+            btn.classList.remove('border-green-500', 'text-green-500');
+            btn.classList.add('border-gray-700');
+            status.innerText = '❌ Standard password input required';
+            status.classList.remove('text-green-500');
+            status.classList.add('text-gray-600');
+        }
+    }
+
+    // --- AI CONFIGURATION ---
+    const llmRoles = {
+        task: {
+            providerId: 'taskProvider',
+            modelSelectId: 'taskModelSelect',
+            modelInputId: 'taskModelInput',
+            promptId: 'taskSystemPrompt'
+        },
+        optimizer: {
+            providerId: 'optimizerProvider',
+            modelSelectId: 'optimizerModelSelect',
+            modelInputId: 'optimizerModelInput',
+            promptId: 'optimizerSystemPrompt',
+            instructionId: 'optimizerInstruction'
+        },
+        hyper: {
+            providerId: 'hyperProvider',
+            modelSelectId: 'hyperModelSelect',
+            modelInputId: 'hyperModelInput',
+            promptId: 'hyperSystemPrompt'
+        }
+    };
+
+    function getAuthHeaders() {
+        return { 'Authorization': `Bearer ${token}` };
+    }
+
+    window.onProviderChanged = (role) => {
+        refreshModels(role);
+    }
+
+    window.onModelSelected = (role) => {
+        const config = llmRoles[role];
+        const select = document.getElementById(config.modelSelectId);
+        const input = document.getElementById(config.modelInputId);
+        if (select && input) {
+            input.value = select.value;
+        }
+    }
+
+    window.refreshModels = async (role, selectedModel = '') => {
+        const config = llmRoles[role];
+        if (!config) return;
+
+        const provider = document.getElementById(config.providerId)?.value;
+        const select = document.getElementById(config.modelSelectId);
+        const input = document.getElementById(config.modelInputId);
+
+        if (!provider || !select) return;
+        select.innerHTML = `<option value="">Načítám...</option>`;
+
+        try {
+            const res = await fetch(`/api/admin/llm/models/${provider}`, { headers: getAuthHeaders() });
+            const models = await res.json();
+            select.innerHTML = '';
+
+            if (models.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.innerText = 'Žádné modely (zadejte ručně)';
+                select.appendChild(opt);
+            }
+
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.innerText = m;
+                select.appendChild(opt);
+            });
+
+            if (selectedModel && models.includes(selectedModel)) {
+                select.value = selectedModel;
+            }
+        } catch (e) {
+            console.error('Model fetch failed', e);
+            select.innerHTML = '<option value="">Chyba načítání</option>';
+        }
+
+        if (input) {
+            input.value = selectedModel || select.value || '';
+        }
+    }
+
+    function applyConfigToUI(role, cfg) {
+        const config = llmRoles[role];
+        if (!config || !cfg) return;
+
+        const providerSelect = document.getElementById(config.providerId);
+        const promptField = document.getElementById(config.promptId);
+        const modelInput = document.getElementById(config.modelInputId);
+
+        if (providerSelect && cfg.provider) providerSelect.value = cfg.provider;
+        if (promptField && cfg.system_prompt !== undefined) promptField.value = cfg.system_prompt || '';
+        if (modelInput && cfg.model_name) modelInput.value = cfg.model_name;
+
+        refreshModels(role, cfg.model_name || '');
+
+        if (config.instructionId && cfg.prompt !== undefined) {
+            const instructionField = document.getElementById(config.instructionId);
+            if (instructionField) instructionField.value = cfg.prompt || '';
+        }
+    }
+
+    function gatherRoleConfig(role) {
+        const cfg = llmRoles[role];
+        const provider = document.getElementById(cfg.providerId)?.value;
+        const select = document.getElementById(cfg.modelSelectId);
+        const input = document.getElementById(cfg.modelInputId);
+        const systemPrompt = document.getElementById(cfg.promptId)?.value || '';
+        const modelName = (input?.value || '').trim() || (select?.value || '').trim();
+
+        return { provider, modelName, systemPrompt };
+    }
+
+    window.saveLLMConfig = async (role) => {
+        const cfg = llmRoles[role];
+        if (!cfg) return;
+        const { provider, modelName, systemPrompt } = gatherRoleConfig(role);
+        if (!provider || !modelName) {
+            alert('Vyplňte poskytovatele i model.');
+            return;
+        }
+
+        const payload = {
+            provider,
+            model_name: modelName,
+            system_prompt: systemPrompt
+        };
+
+        if (cfg.instructionId) {
+            payload.prompt = document.getElementById(cfg.instructionId)?.value || '';
+        }
+
+        try {
+            const res = await fetch(`/api/admin/llm/config/${role}`, {
+                method: 'POST',
+                headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error(await res.text());
+            alert('✅ LLM konfigurace uložena');
+        } catch (e) {
+            console.error(e);
+            alert('❌ Uložení se nezdařilo');
+        }
+    };
+
+    async function loadLLMConfig() {
+        try {
+            const res = await fetch('/api/admin/llm/config', { headers: getAuthHeaders() });
+            const data = await res.json();
+            applyConfigToUI('task', data.task);
+            applyConfigToUI('hyper', data.hyper);
+            applyConfigToUI('optimizer', data.optimizer);
+        } catch (e) {
+            console.error('Config load failed', e);
+        }
+    }
+
+    async function loadApiKeys() {
+        try {
+            const res = await fetch('/api/admin/llm/keys', { headers: getAuthHeaders() });
+            const data = await res.json();
+            const placeholders = {
+                openai: 'sk-...',
+                openrouter: 'sk-or-...',
+                gemini: 'AIza...'
+            };
+            [['openai', 'openaiKey'], ['openrouter', 'openrouterKey'], ['gemini', 'geminiKey']]
+                .forEach(([provider, inputId]) => {
+                    const input = document.getElementById(inputId);
+                    if (!input) return;
+                    input.value = '';
+                    input.placeholder = data?.[provider] || placeholders[provider];
+                });
+        } catch (e) {
+            console.error('Key fetch failed', e);
+        }
+    }
+
+    window.saveApiKeys = async () => {
+        const providers = ['openai', 'openrouter', 'gemini'];
+        const updates = [];
+
+        providers.forEach((provider) => {
+            const input = document.getElementById(`${provider}Key`);
+            if (input && input.value.trim()) {
+                updates.push({ provider, key: input.value.trim() });
+            }
+        });
+
+        if (updates.length === 0) {
+            alert('Zadejte alespoň jeden API klíč.');
+            return;
+        }
+
+        try {
+            for (const upd of updates) {
+                const res = await fetch('/api/admin/llm/keys', {
+                    method: 'POST',
+                    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                    body: JSON.stringify(upd)
+                });
+                if (!res.ok) throw new Error(await res.text());
+            }
+            alert('✅ API klíče uloženy');
+            loadApiKeys();
+        } catch (e) {
+            console.error(e);
+            alert('❌ Uložení klíčů selhalo');
+        }
+    }
+
+    async function hydrateTestMode() {
+        try {
+            const res = await fetch('/api/admin/root/ai_config', { headers: getAuthHeaders() });
+            const data = await res.json();
+            if (data.test_mode !== undefined) {
+                testModeActive = data.test_mode;
+                updateTestModeUI();
+            }
+            const optimizerField = document.getElementById('optimizerInstruction');
+            if (optimizerField && !optimizerField.value && data.optimizer_prompt) {
+                optimizerField.value = data.optimizer_prompt;
+            }
+        } catch (e) {
+            console.error('Test mode hydrate failed', e);
+        }
+    }
+
+    // Call on init
+    setTimeout(() => {
+        loadLLMConfig();
+        loadApiKeys();
+        hydrateTestMode();
+    }, 1000);
+
+    // --- ECONOMY TABLE ---
+    async function fetchUsers() {
+        const res = await fetch('/api/admin/data/users', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        return await res.json();
+    }
+
+    async function refreshEconomy() {
+        const users = await fetchUsers();
+        const tbody = document.getElementById('rootEcoTable');
+        tbody.innerHTML = '';
+        users.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-800 hover:bg-gray-900";
+            tr.innerHTML = `
                  <td class="p-2 font-bold">${u.username}</td>
                  <td class="p-2 text-yellow-500">${u.credits}</td>
                  <td class="p-2">${u.status_level}</td>
@@ -1086,29 +1116,29 @@
                      <button onclick="ecoAction('fine', ${u.id}, 100)" class="text-red-500 text-xs">[-100]</button>
                  </td>
              `;
-                tbody.appendChild(tr);
-            });
-        }
+            tbody.appendChild(tr);
+        });
+    }
 
-        window.ecoAction = async (type, uid, amt) => {
-            await fetch(`/api/admin/economy/${type}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ user_id: uid, amount: amt, reason: "ROOT" })
-            });
-            refreshEconomy();
-        }
+    window.ecoAction = async (type, uid, amt) => {
+        await fetch(`/api/admin/economy/${type}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ user_id: uid, amount: amt, reason: "ROOT" })
+        });
+        refreshEconomy();
+    }
 
-        // --- GRID ---
-        function initGrid() {
-            const grid = document.getElementById('rootGrid');
-            if (grid.children.length > 0) return; // already init
+    // --- GRID ---
+    function initGrid() {
+        const grid = document.getElementById('rootGrid');
+        if (grid.children.length > 0) return; // already init
 
-            for (let i = 1; i <= 8; i++) {
-                grid.innerHTML += `
+        for (let i = 1; i <= 8; i++) {
+            grid.innerHTML += `
                 <div class="border border-gray-800 bg-black flex flex-col h-40">
                     <div class="bg-gray-900 px-2 py-1 text-xs text-gray-500 flex justify-between">
                         <span>SESSION ${i}</span>
@@ -1117,81 +1147,81 @@
                     <div class="flex-1 overflow-y-auto p-1 font-mono text-[10px]" id="rootChat-${i}"></div>
                 </div>
             `;
-            }
         }
+    }
 
-        // --- LANGUAGE SETTINGS ---
-        window.setLanguageMode = async (mode) => {
-            const status = document.getElementById('languageStatus');
-            try {
-                const res = await fetch('/api/translations/language', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ language_mode: mode })
-                });
-                
-                if (res.ok) {
-                    status.innerText = '✅ Jazyk úspěšně změněn na: ' + (mode === 'cz' ? 'Čeština' : 'Čeština + IRIS');
-                    status.classList.remove('text-gray-600', 'text-red-500');
-                    status.classList.add('text-green-500');
-                } else {
-                    const data = await res.json();
-                    status.innerText = '❌ Chyba: ' + (data.detail || 'Nepodařilo se změnit jazyk');
-                    status.classList.remove('text-gray-600', 'text-green-500');
-                    status.classList.add('text-red-500');
-                }
-            } catch (e) {
-                status.innerText = '❌ Chyba připojení';
+    // --- LANGUAGE SETTINGS ---
+    window.setLanguageMode = async (mode) => {
+        const status = document.getElementById('languageStatus');
+        try {
+            const res = await fetch('/api/translations/language', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ language_mode: mode })
+            });
+
+            if (res.ok) {
+                status.innerText = '✅ Jazyk úspěšně změněn na: ' + (mode === 'cz' ? 'Čeština' : 'Čeština + IRIS');
+                status.classList.remove('text-gray-600', 'text-red-500');
+                status.classList.add('text-green-500');
+            } else {
+                const data = await res.json();
+                status.innerText = '❌ Chyba: ' + (data.detail || 'Nepodařilo se změnit jazyk');
                 status.classList.remove('text-gray-600', 'text-green-500');
                 status.classList.add('text-red-500');
             }
-        };
+        } catch (e) {
+            status.innerText = '❌ Chyba připojení';
+            status.classList.remove('text-gray-600', 'text-green-500');
+            status.classList.add('text-red-500');
+        }
+    };
 
-        window.resetAllLabels = async () => {
-            if (!confirm('Opravdu chcete resetovat všechny vlastní texty? Tuto akci nelze vrátit zpět.')) return;
-            
-            const status = document.getElementById('languageStatus');
-            try {
-                const res = await fetch('/api/translations/reset-labels', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if (res.ok) {
-                    status.innerText = '✅ Všechny vlastní texty byly resetovány';
-                    status.classList.remove('text-gray-600', 'text-red-500');
-                    status.classList.add('text-green-500');
-                } else {
-                    status.innerText = '❌ Nepodařilo se resetovat texty';
-                    status.classList.remove('text-gray-600', 'text-green-500');
-                    status.classList.add('text-red-500');
-                }
-            } catch (e) {
-                status.innerText = '❌ Chyba připojení';
+    window.resetAllLabels = async () => {
+        if (!confirm('Opravdu chcete resetovat všechny vlastní texty? Tuto akci nelze vrátit zpět.')) return;
+
+        const status = document.getElementById('languageStatus');
+        try {
+            const res = await fetch('/api/translations/reset-labels', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                status.innerText = '✅ Všechny vlastní texty byly resetovány';
+                status.classList.remove('text-gray-600', 'text-red-500');
+                status.classList.add('text-green-500');
+            } else {
+                status.innerText = '❌ Nepodařilo se resetovat texty';
+                status.classList.remove('text-gray-600', 'text-green-500');
+                status.classList.add('text-red-500');
             }
-        };
+        } catch (e) {
+            status.innerText = '❌ Chyba připojení';
+        }
+    };
 
-        // Load current language setting
-        window.loadLanguageSettings = async () => {
-            try {
-                const res = await fetch('/api/translations/language-options', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    const select = document.getElementById('languageModeSelect');
-                    if (select && data.current) {
-                        select.value = data.current;
-                    }
+    // Load current language setting
+    window.loadLanguageSettings = async () => {
+        try {
+            const res = await fetch('/api/translations/language-options', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const select = document.getElementById('languageModeSelect');
+                if (select && data.current) {
+                    select.value = data.current;
                 }
-            } catch (e) { console.warn("Language settings load failed"); }
-        };
+            }
+        } catch (e) { console.warn("Language settings load failed"); }
+    };
 
-        // Call on init
-        setTimeout(loadLanguageSettings, 1200);
+    // Call on init
+    setTimeout(loadLanguageSettings, 1200);
 
-    </script>
-    {% endblock %}
+</script>
+{% endblock %}

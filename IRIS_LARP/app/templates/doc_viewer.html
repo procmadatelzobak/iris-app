@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #050505;
+            font-family: 'Courier New', monospace;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Themes */
+        .theme-green {
+            color: #4ade80;
+            border-color: #4ade80;
+        }
+
+        .theme-green a {
+            color: #86efac;
+        }
+
+        .theme-green h1,
+        .theme-green h2,
+        .theme-green h3 {
+            color: #22c55e;
+            border-bottom-color: #15803d;
+        }
+
+        .theme-pink {
+            color: #f472b6;
+            border-color: #f472b6;
+        }
+
+        .theme-pink a {
+            color: #fbcfe8;
+        }
+
+        .theme-pink h1,
+        .theme-pink h2,
+        .theme-pink h3 {
+            color: #db2777;
+            border-bottom-color: #be185d;
+        }
+
+        .theme-gold {
+            color: #facc15;
+            border-color: #facc15;
+        }
+
+        .theme-gold a {
+            color: #fef08a;
+        }
+
+        .theme-gold h1,
+        .theme-gold h2,
+        .theme-gold h3 {
+            color: #eab308;
+            border-bottom-color: #a16207;
+        }
+
+        /* Markdown Styles */
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            border-bottom: 2px solid;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid;
+            padding-bottom: 0.2rem;
+        }
+
+        .markdown-body p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body ol {
+            list-style-type: decimal;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body strong {
+            font-weight: bold;
+            opacity: 1;
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            border: 1px solid;
+            margin: 1rem 0;
+            opacity: 0.8;
+        }
+
+        .markdown-body code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .markdown-body pre {
+            background: #111;
+            padding: 1rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            border: 1px solid;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: black;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: currentColor;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body class="theme-{{ theme }}">
+
+    <button onclick="window.close()" class="close-btn theme-{{ theme }}">
+        [ ZAVŘÍT ]
+    </button>
+
+    <div class="max-w-4xl mx-auto markdown-body">
+        {{ content | safe }}
+    </div>
+
+</body>
+
+</html>

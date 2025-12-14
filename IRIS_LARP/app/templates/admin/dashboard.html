@@ -181,8 +181,16 @@
         <div id="mon-content-logs" class="mon-tab hidden flex flex-col h-full">
             <div class="flex justify-between mb-2">
                 <h3 class="text-gray-400 editable-label" data-key="hdr_log_full">HLINÍK SYSTÉMOVÝ LOG</h3>
-                <button class="text-xs text-red-500 border border-red-900 px-2 hover:bg-red-900 editable-label"
-                    data-key="btn_reset_log" onclick="resetSystemLogs()">VYMAZAT HISTORII</button>
+                <div class="flex items-center gap-4">
+                    <button class="text-xs text-red-500 border border-red-900 px-2 hover:bg-red-900 editable-label"
+                        data-key="btn_reset_log" onclick="resetSystemLogs()">VYMAZAT HISTORII</button>
+                    <a href="/doc/view/admin" target="_blank"
+                        class="border border-yellow-500 text-yellow-500 hover:bg-yellow-900 px-2 py-1 text-xs font-mono transition">[
+                        MANUÁL ]</a>
+                    <a href="/doc/view/system" target="_blank"
+                        class="border border-blue-500 text-blue-500 hover:bg-blue-900 px-2 py-1 text-xs font-mono transition">[
+                        SYSTEM DOCS ]</a>
+                </div>
             </div>
             <div id="fullLog"
                 class="flex-1 overflow-y-auto bg-black border border-gray-800 p-4 font-mono text-sm text-green-300">
@@ -219,7 +227,8 @@
                     <span>15s</span>
                     <span>300s</span>
                 </div>
-                <button class="w-full chernobyl-btn py-2 mt-4 border-green-900 text-green-400 hover:bg-green-900 transition"
+                <button
+                    class="w-full chernobyl-btn py-2 mt-4 border-green-900 text-green-400 hover:bg-green-900 transition"
                     onclick="saveResponseTimer()">[ ULOŽIT LIMIT ]</button>
                 <div class="text-[10px] text-gray-500 mt-2">Úprava se projeví okamžitě na agentovi i uživateli.</div>
             </div>

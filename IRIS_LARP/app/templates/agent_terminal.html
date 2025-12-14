@@ -76,6 +76,12 @@
     ⚠ SYSTÉMOVÉ PŘETÍŽENÍ ⚠
 </div>
 
+<!-- Manual Button -->
+<a href="/doc/view/agent" target="_blank"
+    class="fixed top-1 right-56 z-50 border border-pink-500 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
+    [ MANUÁL ]
+</a>
+
 <!-- Logout Button -->
 <a href="/auth/logout" data-key="agent_terminal.disconnect"
     class="fixed top-1 right-32 z-50 border border-pink-500 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
@@ -86,16 +92,20 @@
 
     <!-- HYPER LOCK SCREEN OVERLAY -->
     <div id="hyperLockOverlay" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col items-center justify-center">
-        <div class="text-pink-500 text-2xl font-bold mb-2 animate-pulse" data-key="agent_terminal.hyper_lock_title">HYPER-VISIBILITY AKTIVNÍ</div>
-        <div class="text-pink-800 font-mono mb-4 text-sm" data-key="agent_terminal.hyper_lock_message">NEURÁLNÍ SPOJENÍ NAVÁZÁNO // JE NUTNÝ MANUÁLNÍ OVERRIDE</div>
+        <div class="text-pink-500 text-2xl font-bold mb-2 animate-pulse" data-key="agent_terminal.hyper_lock_title">
+            HYPER-VISIBILITY AKTIVNÍ</div>
+        <div class="text-pink-800 font-mono mb-4 text-sm" data-key="agent_terminal.hyper_lock_message">NEURÁLNÍ SPOJENÍ
+            NAVÁZÁNO // JE NUTNÝ MANUÁLNÍ OVERRIDE</div>
         <div class="flex flex-col gap-2 w-56">
             <input type="password" id="unlockPass" placeholder="ZADEJTE OVLÁDACÍ KÓD"
                 class="bg-black border border-pink-900 text-center text-white p-1.5 text-sm focus:border-pink-500 outline-none">
             <button onclick="attemptUnlock()"
-                class="bg-pink-900 text-white border border-pink-500 p-1.5 text-sm hover:bg-pink-700" data-key="agent_terminal.deactivate_hyper">
+                class="bg-pink-900 text-white border border-pink-500 p-1.5 text-sm hover:bg-pink-700"
+                data-key="agent_terminal.deactivate_hyper">
                 DEAKTIVOVAT HYPER
             </button>
-            <a href="/auth/logout" class="text-center text-gray-500 text-[10px] hover:text-white mt-2" data-key="agent_terminal.emergency_disconnect">[ NOUZOVÉ ODPOJENÍ ]</a>
+            <a href="/auth/logout" class="text-center text-gray-500 text-[10px] hover:text-white mt-2"
+                data-key="agent_terminal.emergency_disconnect">[ NOUZOVÉ ODPOJENÍ ]</a>
         </div>
     </div>
 
@@ -104,21 +114,26 @@
         <div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1">
             <!-- Status Card -->
             <div class="bg-black/60 border border-pink-800 relative p-3 flex flex-col gap-2">
-                <h3 class="text-pink-500 border-b border-pink-900 pb-1 font-bold text-xs" data-key="agent_terminal.status">STAV</h3>
+                <h3 class="text-pink-500 border-b border-pink-900 pb-1 font-bold text-xs"
+                    data-key="agent_terminal.status">STAV</h3>
                 <div class="grid grid-cols-1 gap-1 text-[10px] font-mono text-pink-300">
                     <div>AGENT: <span class="text-white font-bold">{{ user.username|upper }}</span></div>
-                    <div><span data-key="agent_terminal.session_id">ID RELACE</span>: <span id="sessionIdDisplay" class="text-white">...</span></div>
+                    <div><span data-key="agent_terminal.session_id">ID RELACE</span>: <span id="sessionIdDisplay"
+                            class="text-white">...</span></div>
                     <div>SHIFT: <span id="shiftDisplay" class="text-white">...</span></div>
                     <div>TEPLOTA: <span id="tempDisplay" class="text-white">...</span>°C</div>
                     <div>OKNO: <span id="responseWindowDisplay" class="text-white">120s</span></div>
-                    <div><span data-key="agent_terminal.llm_status">LLM</span>: <span id="llmStatus" class="text-green-500" data-key="agent_terminal.llm_online">ONLINE</span></div>
+                    <div><span data-key="agent_terminal.llm_status">LLM</span>: <span id="llmStatus"
+                            class="text-green-500" data-key="agent_terminal.llm_online">ONLINE</span></div>
                 </div>
 
                 <div class="mt-2 pt-2 border-t border-pink-900">
                     <div class="flex justify-between items-center mb-1">
-                        <span class="text-pink-500 font-bold text-[10px]" data-key="agent_terminal.hyper_mode">HYPER-MÓD</span>
+                        <span class="text-pink-500 font-bold text-[10px]"
+                            data-key="agent_terminal.hyper_mode">HYPER-MÓD</span>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="autopilotToggle" class="sr-only peer" onchange="toggleAutopilot()">
+                            <input type="checkbox" id="autopilotToggle" class="sr-only peer"
+                                onchange="toggleAutopilot()">
                             <div
                                 class="w-8 h-4 bg-pink-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-500">
                             </div>
@@ -138,10 +153,12 @@
                 <span class="text-[9px] text-pink-300">limit: <span id="timerLimitDisplay">120s</span></span>
             </div>
             <div class="h-3 bg-gray-900 border border-pink-900 relative overflow-hidden">
-                <div id="timerBar" class="h-full bg-yellow-500 transition-all duration-1000 linear" style="width: 100%;">
+                <div id="timerBar" class="h-full bg-yellow-500 transition-all duration-1000 linear"
+                    style="width: 100%;">
                 </div>
             </div>
-            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-2" data-key="agent_terminal.timer_waiting">ČEKÁM NA UŽIVATELE</div>
+            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-2"
+                data-key="agent_terminal.timer_waiting">ČEKÁM NA UŽIVATELE</div>
         </div>
     </div>
 
@@ -155,7 +172,8 @@
         <!-- Lock Overlay if needed -->
         <div id="lockOverlay"
             class="absolute inset-x-0 bottom-0 top-0 bg-black/80 z-20 flex items-center justify-center hidden">
-            <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-lg" data-key="agent_terminal.transmission_blocked">
+            <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-lg"
+                data-key="agent_terminal.transmission_blocked">
                 ⚠️ PŘENOS BLOKOVÁN ⚠️
             </div>
         </div>
@@ -167,7 +185,8 @@
                     class="flex-1 bg-black border border-pink-700 text-pink-400 p-1.5 text-sm focus:outline-none focus:border-pink-400 font-mono"
                     placeholder="Vložte odpověď..." autocomplete="off">
                 <button type="submit"
-                    class="bg-pink-900 hover:bg-pink-700 text-white px-4 py-1.5 text-sm border border-pink-600 font-bold transition" data-key="agent_terminal.transmit_button">
+                    class="bg-pink-900 hover:bg-pink-700 text-white px-4 py-1.5 text-sm border border-pink-600 font-bold transition"
+                    data-key="agent_terminal.transmit_button">
                     ODESLAT
                 </button>
             </form>
@@ -175,275 +194,275 @@
     </div>
 
 </div>
-    {% endblock %}
+{% endblock %}
 
-    {% block scripts %}
-    <script src="/static/js/socket_client.js"></script>
-    <script src="/static/js/sound_engine.js"></script>
-    <script>
-        const token = localStorage.getItem('token');
-        const sessionIdDisplay = document.getElementById('sessionIdDisplay');
-        const chatHistory = document.getElementById('chatHistory');
-        const timerLimitDisplay = document.getElementById('timerLimitDisplay');
-        const responseWindowDisplay = document.getElementById('responseWindowDisplay');
-        const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
+{% block scripts %}
+<script src="/static/js/socket_client.js"></script>
+<script src="/static/js/sound_engine.js"></script>
+<script>
+    const token = localStorage.getItem('token');
+    const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+    const chatHistory = document.getElementById('chatHistory');
+    const timerLimitDisplay = document.getElementById('timerLimitDisplay');
+    const responseWindowDisplay = document.getElementById('responseWindowDisplay');
+    const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
-        const t = (key, fallback) => {
-            const manager = window.translationManager;
-            if (manager && manager.initialized) {
-                const value = manager.get(key);
-                if (value && value !== key) return value;
-            }
-            return fallback;
-        };
+    const t = (key, fallback) => {
+        const manager = window.translationManager;
+        if (manager && manager.initialized) {
+            const value = manager.get(key);
+            if (value && value !== key) return value;
+        }
+        return fallback;
+    };
 
-        function setTimerText(key, fallback) {
-            const el = document.getElementById('timerText');
-            if (el) el.innerText = t(key, fallback);
+    function setTimerText(key, fallback) {
+        const el = document.getElementById('timerText');
+        if (el) el.innerText = t(key, fallback);
+    }
+
+    function applyLocalizedText() {
+        const input = document.getElementById('msgInput');
+        if (input) input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
+
+        const unlock = document.getElementById('unlockPass');
+        if (unlock) unlock.placeholder = t('agent_terminal.override_placeholder', 'Zadejte ovládací kód');
+
+        const lockLabel = document.querySelector('#lockOverlay [data-key="agent_terminal.transmission_blocked"]');
+        if (lockLabel) lockLabel.innerText = t('agent_terminal.transmission_blocked', '⚠️ PŘENOS BLOKOVÁN ⚠️');
+
+        setTimerText('agent_terminal.timer_waiting', 'ČEKÁM NA UŽIVATELE');
+    }
+
+    // Timer Vars
+    let timerLimit = 120;
+    let timerRemaining = 120;
+    let timerInterval = null;
+
+    function updateTimerLimitUI(newLimit) {
+        if (typeof newLimit === 'number') {
+            timerLimit = newLimit;
+            timerRemaining = Math.min(timerRemaining, timerLimit);
         }
 
-        function applyLocalizedText() {
-            const input = document.getElementById('msgInput');
-            if (input) input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
+        if (timerLimitDisplay) timerLimitDisplay.innerText = `${timerLimit}s`;
+        if (responseWindowDisplay) responseWindowDisplay.innerText = `${timerLimit}s`;
+        updateTimerUI();
+    }
 
-            const unlock = document.getElementById('unlockPass');
-            if (unlock) unlock.placeholder = t('agent_terminal.override_placeholder', 'Zadejte ovládací kód');
-
-            const lockLabel = document.querySelector('#lockOverlay [data-key="agent_terminal.transmission_blocked"]');
-            if (lockLabel) lockLabel.innerText = t('agent_terminal.transmission_blocked', '⚠️ PŘENOS BLOKOVÁN ⚠️');
-
-            setTimerText('agent_terminal.timer_waiting', 'ČEKÁM NA UŽIVATELE');
+    applyLocalizedText();
+    const translationReady = setInterval(() => {
+        if (window.translationManager && window.translationManager.initialized) {
+            applyLocalizedText();
+            clearInterval(translationReady);
         }
+    }, 200);
 
-        // Timer Vars
-        let timerLimit = 120;
-        let timerRemaining = 120;
-        let timerInterval = null;
+    updateTimerLimitUI(timerLimit);
 
-        function updateTimerLimitUI(newLimit) {
-            if (typeof newLimit === 'number') {
-                timerLimit = newLimit;
-                timerRemaining = Math.min(timerRemaining, timerLimit);
-            }
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerRemaining = timerLimit;
+        updateTimerUI();
 
-            if (timerLimitDisplay) timerLimitDisplay.innerText = `${timerLimit}s`;
-            if (responseWindowDisplay) responseWindowDisplay.innerText = `${timerLimit}s`;
+        setTimerText('agent_terminal.timer_active', 'ODPOČET AKTIVNÍ');
+        document.getElementById('lockOverlay').classList.add('hidden');
+        document.getElementById('msgInput').disabled = false;
+
+        timerInterval = setInterval(() => {
+            timerRemaining--;
             updateTimerUI();
-        }
-
-        applyLocalizedText();
-        const translationReady = setInterval(() => {
-            if (window.translationManager && window.translationManager.initialized) {
-                applyLocalizedText();
-                clearInterval(translationReady);
-            }
-        }, 200);
-
-        updateTimerLimitUI(timerLimit);
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            timerRemaining = timerLimit;
-            updateTimerUI();
-
-            setTimerText('agent_terminal.timer_active', 'ODPOČET AKTIVNÍ');
-            document.getElementById('lockOverlay').classList.add('hidden');
-            document.getElementById('msgInput').disabled = false;
-
-            timerInterval = setInterval(() => {
-                timerRemaining--;
-                updateTimerUI();
-                if (timerRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    lockInput();
-                }
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-            timerRemaining = timerLimit;
-            updateTimerUI();
-            setTimerText('agent_terminal.timer_stopped', 'ZASTAVENO');
-        }
-
-        function lockInput() {
-            document.getElementById('lockOverlay').classList.remove('hidden');
-            document.getElementById('msgInput').disabled = true;
-            setTimerText('agent_terminal.timer_blocked', 'BLOKOVÁNO');
-        }
-
-        function updateTimerUI() {
-            const bar = document.getElementById('timerBar');
-            const pct = (timerRemaining / timerLimit) * 100;
-            bar.style.width = pct + '%';
-
-            if (pct < 20) {
-                bar.className = 'h-full bg-red-600 w-full transition-all duration-1000 linear animate-pulse';
-            } else {
-                bar.className = 'h-full bg-yellow-500 w-full transition-all duration-1000 linear';
-            }
-        }
-
-        // --- SOCKET LOGIC ---
-        let currentSessionId = null;
-
-        const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
-        const client = new SocketClient(wsUrl, (data) => {
-            // Handle translation updates
-            if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
-                if (window.translationManager) {
-                    window.translationManager.handleTranslationUpdate(data);
-                }
-                applyLocalizedText();
-                return;
-            }
-            
-            if (data.type === 'gamestate_update') {
-                if (data.shift !== undefined) document.getElementById('shiftDisplay').innerText = data.shift;
-                if (data.temperature !== undefined && document.getElementById('tempDisplay')) {
-                    document.getElementById('tempDisplay').innerText = data.temperature;
-                }
-                if (data.session_id) {
-                    currentSessionId = data.session_id;
-                    sessionIdDisplay.innerText = "S" + data.session_id;
-                }
-                if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
-                if (data.agent_window !== undefined) updateTimerLimitUI(data.agent_window);
-
-            } else if (data.type === 'optimizing_start') {
-                showOptimizingLoader();
-            } else if (data.type === 'optimizer_feedback') {
-                appendOptimizerFeedback(data);
-                if (window.sfx) window.sfx.playError();
-            } else if (data.type === 'typing_sync') {
-                // Mirroring Logic
-                if (data.tabId !== tabId) {
-                    const input = document.getElementById('msgInput');
-                    if (input.value !== data.content) {
-                        input.value = data.content;
-                    }
-                }
-            } else if (data.type === 'system_alert') {
-                // Show system alert overlay (failover, reset, etc.)
-                showSystemAlert(data.content);
-            } else if (data.type === 'session_timeout') {
-                // Session timed out - lock input and show error
+            if (timerRemaining <= 0) {
+                clearInterval(timerInterval);
                 lockInput();
-                setTimerText('agent_terminal.timer_timeout', 'ČAS VYPRŠEL - ČEKEJTE NA UŽIVATELE');
-                if (window.sfx) window.sfx.playError();
-            } else if (data.type === 'error') {
-                // General error message from server
-                showSystemAlert(data.msg || 'Chyba');
-                if (window.sfx) window.sfx.playError();
-            } else if (data.type === 'typing_start') {
-                showTypingIndicator(true);
-            } else if (data.type === 'typing_stop') {
-                showTypingIndicator(false);
-            } else {
-                // Standard messages
-                showTypingIndicator(false); // Clear on new message
-                if (data.session_id) {
-                    sessionIdDisplay.innerText = "S" + data.session_id;
-                }
-                appendMessage(data);
-                const currentUsername = "{{ user.username }}";
-                if (data.sender !== currentUsername) {
-                    if (window.sfx) window.sfx.playReceive();
-                    // Reset timer only if User message (not echo)
-                    if (data.role === 'user') startTimer();
-                } else {
-                    // Sent by me (or autopilot)
-                    stopTimer();
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerRemaining = timerLimit;
+        updateTimerUI();
+        setTimerText('agent_terminal.timer_stopped', 'ZASTAVENO');
+    }
+
+    function lockInput() {
+        document.getElementById('lockOverlay').classList.remove('hidden');
+        document.getElementById('msgInput').disabled = true;
+        setTimerText('agent_terminal.timer_blocked', 'BLOKOVÁNO');
+    }
+
+    function updateTimerUI() {
+        const bar = document.getElementById('timerBar');
+        const pct = (timerRemaining / timerLimit) * 100;
+        bar.style.width = pct + '%';
+
+        if (pct < 20) {
+            bar.className = 'h-full bg-red-600 w-full transition-all duration-1000 linear animate-pulse';
+        } else {
+            bar.className = 'h-full bg-yellow-500 w-full transition-all duration-1000 linear';
+        }
+    }
+
+    // --- SOCKET LOGIC ---
+    let currentSessionId = null;
+
+    const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
+    const client = new SocketClient(wsUrl, (data) => {
+        // Handle translation updates
+        if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
+            if (window.translationManager) {
+                window.translationManager.handleTranslationUpdate(data);
+            }
+            applyLocalizedText();
+            return;
+        }
+
+        if (data.type === 'gamestate_update') {
+            if (data.shift !== undefined) document.getElementById('shiftDisplay').innerText = data.shift;
+            if (data.temperature !== undefined && document.getElementById('tempDisplay')) {
+                document.getElementById('tempDisplay').innerText = data.temperature;
+            }
+            if (data.session_id) {
+                currentSessionId = data.session_id;
+                sessionIdDisplay.innerText = "S" + data.session_id;
+            }
+            if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
+            if (data.agent_window !== undefined) updateTimerLimitUI(data.agent_window);
+
+        } else if (data.type === 'optimizing_start') {
+            showOptimizingLoader();
+        } else if (data.type === 'optimizer_feedback') {
+            appendOptimizerFeedback(data);
+            if (window.sfx) window.sfx.playError();
+        } else if (data.type === 'typing_sync') {
+            // Mirroring Logic
+            if (data.tabId !== tabId) {
+                const input = document.getElementById('msgInput');
+                if (input.value !== data.content) {
+                    input.value = data.content;
                 }
             }
-        }, (status) => {
-            console.log("WS Status", status);
+        } else if (data.type === 'system_alert') {
+            // Show system alert overlay (failover, reset, etc.)
+            showSystemAlert(data.content);
+        } else if (data.type === 'session_timeout') {
+            // Session timed out - lock input and show error
+            lockInput();
+            setTimerText('agent_terminal.timer_timeout', 'ČAS VYPRŠEL - ČEKEJTE NA UŽIVATELE');
+            if (window.sfx) window.sfx.playError();
+        } else if (data.type === 'error') {
+            // General error message from server
+            showSystemAlert(data.msg || 'Chyba');
+            if (window.sfx) window.sfx.playError();
+        } else if (data.type === 'typing_start') {
+            showTypingIndicator(true);
+        } else if (data.type === 'typing_stop') {
+            showTypingIndicator(false);
+        } else {
+            // Standard messages
+            showTypingIndicator(false); // Clear on new message
+            if (data.session_id) {
+                sessionIdDisplay.innerText = "S" + data.session_id;
+            }
+            appendMessage(data);
+            const currentUsername = "{{ user.username }}";
+            if (data.sender !== currentUsername) {
+                if (window.sfx) window.sfx.playReceive();
+                // Reset timer only if User message (not echo)
+                if (data.role === 'user') startTimer();
+            } else {
+                // Sent by me (or autopilot)
+                stopTimer();
+            }
+        }
+    }, (status) => {
+        console.log("WS Status", status);
+    });
+
+    client.connect(token);
+
+    // Input Mirroring
+    document.getElementById('msgInput').addEventListener('input', (e) => {
+        client.send({
+            type: 'typing_sync',
+            content: e.target.value,
+            tabId: tabId
         });
+    });
 
-        client.connect(token);
+    document.getElementById('chatForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (text) {
+            client.send({ content: text });
+            // Sync clear
+            client.send({ type: 'typing_sync', content: "", tabId: tabId });
 
-        // Input Mirroring
-        document.getElementById('msgInput').addEventListener('input', (e) => {
-            client.send({
-                type: 'typing_sync',
-                content: e.target.value,
-                tabId: tabId
+            appendMessage({
+                sender: '{{ user.username }}',
+                role: 'agent',
+                content: text
             });
-        });
-
-        document.getElementById('chatForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const input = document.getElementById('msgInput');
-            const text = input.value.trim();
-            if (text) {
-                client.send({ content: text });
-                // Sync clear
-                client.send({ type: 'typing_sync', content: "", tabId: tabId });
-
-                appendMessage({
-                    sender: '{{ user.username }}',
-                    role: 'agent',
-                    content: text
-                });
-                input.value = '';
-                sfx.playSend();
-                stopTimer(); // Agent responded
-            }
-        });
-
-        // Typing SFX
-        document.getElementById('msgInput').addEventListener('keydown', () => {
-            sfx.playType();
-        });
-
-        // Auto Logic
-        let isAutopilotOn = false;
-        const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
-
-        function toggleAuto() {
-            isAutopilotOn = !isAutopilotOn;
-            client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
-            updateAutoBtnUI(isAutopilotOn);
-            if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
-            else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
+            input.value = '';
+            sfx.playSend();
+            stopTimer(); // Agent responded
         }
+    });
 
-        function updateAutoBtnUI(isOn) {
-            if (isOn) {
-                autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
-                autoBtn.classList.replace('text-pink-500', 'text-white');
-                autoBtn.classList.add('bg-pink-600');
-                autoBtn.classList.remove('hover:bg-pink-900');
-            } else {
-                autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
-                autoBtn.classList.replace('text-white', 'text-pink-500');
-                autoBtn.classList.remove('bg-pink-600');
-                autoBtn.classList.add('hover:bg-pink-900');
-            }
+    // Typing SFX
+    document.getElementById('msgInput').addEventListener('keydown', () => {
+        sfx.playType();
+    });
+
+    // Auto Logic
+    let isAutopilotOn = false;
+    const autoBtn = document.querySelector('button[onclick="toggleAuto()"]');
+
+    function toggleAuto() {
+        isAutopilotOn = !isAutopilotOn;
+        client.send({ type: 'autopilot_toggle', status: isAutopilotOn });
+        updateAutoBtnUI(isAutopilotOn);
+        if (isAutopilotOn) sfx.playTone(600, 'square', 0.1, 0.1);
+        else sfx.playTone(300, 'sawtooth', 0.1, 0.1);
+    }
+
+    function updateAutoBtnUI(isOn) {
+        if (isOn) {
+            autoBtn.innerText = "[ AUTOPILOT: ENGAGED ]";
+            autoBtn.classList.replace('text-pink-500', 'text-white');
+            autoBtn.classList.add('bg-pink-600');
+            autoBtn.classList.remove('hover:bg-pink-900');
+        } else {
+            autoBtn.innerText = "[ TOGGLE AUTOPILOT ]";
+            autoBtn.classList.replace('text-white', 'text-pink-500');
+            autoBtn.classList.remove('bg-pink-600');
+            autoBtn.classList.add('hover:bg-pink-900');
         }
+    }
 
-        function showOptimizingLoader() {
-            // Lock Input
-            const input = document.getElementById('msgInput');
-            input.disabled = true;
-            input.placeholder = ">> PROBÍHÁ OPTIMALIZACE ODPOVĚDI <<";
+    function showOptimizingLoader() {
+        // Lock Input
+        const input = document.getElementById('msgInput');
+        input.disabled = true;
+        input.placeholder = ">> PROBÍHÁ OPTIMALIZACE ODPOVĚDI <<";
 
-            const chatBox = document.getElementById('chatHistory');
-            const div = document.createElement('div');
-            div.id = 'optimizingLoader';
-            div.className = 'chat-bubble agent opacity-50 animate-pulse text-[10px] border border-pink-500 bg-pink-900/50';
-            div.innerText = '⚙️ PROBÍHÁ OPTIMALIZACE ODPOVĚDI...';
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        const chatBox = document.getElementById('chatHistory');
+        const div = document.createElement('div');
+        div.id = 'optimizingLoader';
+        div.className = 'chat-bubble agent opacity-50 animate-pulse text-[10px] border border-pink-500 bg-pink-900/50';
+        div.innerText = '⚙️ PROBÍHÁ OPTIMALIZACE ODPOVĚDI...';
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        // System Alert handler (failover, reset, etc.)
-        function showSystemAlert(content) {
-            const overlay = document.createElement('div');
-            overlay.id = 'systemAlertOverlay';
-            overlay.className = 'fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4';
-            overlay.innerHTML = `
+    // System Alert handler (failover, reset, etc.)
+    function showSystemAlert(content) {
+        const overlay = document.createElement('div');
+        overlay.id = 'systemAlertOverlay';
+        overlay.className = 'fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4';
+        overlay.innerHTML = `
             <div class="border-2 border-yellow-500 bg-black p-4 max-w-md text-center animate-pulse">
                 <div class="text-yellow-500 text-2xl mb-2">⚠️</div>
                 <div class="text-yellow-300 text-sm font-mono whitespace-pre-line">${content}</div>
@@ -453,25 +472,25 @@
                 </button>
             </div>
         `;
-            document.body.appendChild(overlay);
-            setTimeout(() => {
-                const el = document.getElementById('systemAlertOverlay');
-                if (el) el.remove();
-            }, 10000);
-            if (window.sfx) sfx.playError();
-        }
+        document.body.appendChild(overlay);
+        setTimeout(() => {
+            const el = document.getElementById('systemAlertOverlay');
+            if (el) el.remove();
+        }, 10000);
+        if (window.sfx) sfx.playError();
+    }
 
-        function handleOptimizerPreview(data) {
-            const loader = document.getElementById('optimizingLoader');
-            if (loader) loader.remove();
+    function handleOptimizerPreview(data) {
+        const loader = document.getElementById('optimizingLoader');
+        if (loader) loader.remove();
 
-            // Show Modal or Inline Confirm? Inline is safer for terminal.
-            const chatBox = document.getElementById('chatHistory');
-            const div = document.createElement('div');
-            div.id = 'optimizerConfirmBox';
-            div.className = 'border border-pink-500 bg-black p-2 text-xs mb-2';
+        // Show Modal or Inline Confirm? Inline is safer for terminal.
+        const chatBox = document.getElementById('chatHistory');
+        const div = document.createElement('div');
+        div.id = 'optimizerConfirmBox';
+        div.className = 'border border-pink-500 bg-black p-2 text-xs mb-2';
 
-            div.innerHTML = `
+        div.innerHTML = `
             <div class="text-pink-300 font-bold mb-1 text-[10px]">⚡ OPTIMIZATION COMPLETE</div>
             <div class="mb-1 text-gray-500 line-through text-[9px]">'${data.original}'</div>
             <div class="mb-2 text-green-400 font-bold text-sm">"${data.rewritten}"</div>
@@ -486,149 +505,149 @@
                 </button>
             </div>
         `;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        // Make global so onclick works
-        window.confirmOptimization = function (text) {
-            const box = document.getElementById('optimizerConfirmBox');
-            if (box) box.remove();
+    // Make global so onclick works
+    window.confirmOptimization = function (text) {
+        const box = document.getElementById('optimizerConfirmBox');
+        if (box) box.remove();
 
-            // Send Confirm
-            client.send({
-                content: text,
-                confirm_opt: true
-            });
-
-            // Optimistically append (or wait for echo? Echo is safer)
-            const input = document.getElementById('msgInput');
-            input.disabled = false;
-            input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
-            input.focus();
-        };
-
-        window.cancelOptimization = function (original) {
-            const box = document.getElementById('optimizerConfirmBox');
-            if (box) box.remove();
-
-            const input = document.getElementById('msgInput');
-            input.disabled = false;
-            input.value = original; // Restore
-            input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
-            input.focus();
-        };
-
-        function appendOptimizerFeedback(data) {
-            // Deprecated by Preview Flow? Keep for legacy or if confirmed elsewhere?
-            // Scenario 1 implies manual confirm. So this might not trigger if we verify correctly.
-            // But if backend sends it, show it.
-        }
-
-        function appendMessage(data) {
-            if (!data.content) return;
-            const div = document.createElement('div');
-            div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
-
-            const sender = document.createElement('span');
-            sender.className = 'sender';
-            sender.innerText = data.sender.toUpperCase();
-
-            const content = document.createElement('div');
-            content.innerText = data.content;
-
-            div.appendChild(sender);
-            div.appendChild(content);
-
-            chatHistory.appendChild(div);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
-
-        function applyTemperature(temp) {
-            document.body.classList.remove('instability-low', 'instability-med', 'instability-high');
-
-            if (temp > 100 && temp <= 250) document.body.classList.add('instability-low');
-            if (temp > 250 && temp <= 350) document.body.classList.add('instability-med');
-            if (temp > 350) {
-                document.body.classList.add('instability-high');
-                sfx.playError();
-            }
-
-            const ind = document.getElementById('overloadSignal');
-            if (ind) {
-                if (temp > 350) ind.classList.remove('hidden');
-                else ind.classList.add('hidden');
-            }
-        }
-
-        // Helper for applying HyperVis (Already there)
-        // --- HYPER LOCK LOGIC ---
-        function toggleAutopilot() {
-            const toggle = document.getElementById('autopilotToggle');
-            const active = toggle.checked;
-
-            if (active) {
-                // Activate Lock Immediately
-                document.getElementById('hyperLockOverlay').classList.remove('hidden');
-                // Send Command
-                client.send({ type: 'autopilot_toggle', active: true });
-            } else {
-                client.send({ type: 'autopilot_toggle', active: false });
-            }
-        }
-
-        function attemptUnlock() {
-            const pass = document.getElementById('unlockPass').value;
-            const currentUsername = "{{ user.username }}"; // e.g. agent1
-            // Simple password check: same as username or master
-            if (pass === currentUsername || pass === "master_control_666") {
-                // Unlock
-                document.getElementById('hyperLockOverlay').classList.add('hidden');
-                document.getElementById('autopilotToggle').checked = false;
-                document.getElementById('unlockPass').value = "";
-                client.send({ type: 'autopilot_toggle', active: false });
-            } else {
-                alert('PŘÍSTUP ODEPŘEN');
-                if (window.sfx) sfx.playError();
-            }
-        }
-
-        // Handle server updates for Hyper Mode (if needed? Only Autopilot matters here)
-        // Actually, gamestate_update sends hyper_mode (visibility), not autopilot status.
-        // Autopilot status is local? Or shared? Ideally shared if multiple tabs.
-        // For now, assume local initiative, but ideally we should sync.
-
-        // --- TYPING INDICATOR ---
-        const inputField = document.getElementById('msgInput');
-        let typingTimeout = null;
-
-        inputField.addEventListener('input', () => {
-            if (!typingTimeout) {
-                client.send({ type: 'typing_start', session_id: currentSessionId });
-            }
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => {
-                client.send({ type: 'typing_stop', session_id: currentSessionId });
-                typingTimeout = null;
-            }, 1000); // Stop after 1s of silence
+        // Send Confirm
+        client.send({
+            content: text,
+            confirm_opt: true
         });
 
-        function showTypingIndicator(show) {
-            const hist = document.getElementById('chatHistory');
-            let indicator = document.getElementById('typingIndicator');
+        // Optimistically append (or wait for echo? Echo is safer)
+        const input = document.getElementById('msgInput');
+        input.disabled = false;
+        input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
+        input.focus();
+    };
 
-            if (show) {
-                if (!indicator) {
-                    indicator = document.createElement('div');
-                    indicator.id = 'typingIndicator';
-                    indicator.className = 'text-[10px] text-green-500 italic ml-1 animate-pulse';
-                    indicator.innerText = t('agent_terminal.typing_indicator', '>> UŽIVATEL PÍŠE...');
-                    hist.appendChild(indicator);
-                    hist.scrollTop = hist.scrollHeight;
-                }
-            } else {
-                if (indicator) indicator.remove();
-            }
+    window.cancelOptimization = function (original) {
+        const box = document.getElementById('optimizerConfirmBox');
+        if (box) box.remove();
+
+        const input = document.getElementById('msgInput');
+        input.disabled = false;
+        input.value = original; // Restore
+        input.placeholder = t('agent_terminal.message_placeholder', 'Vložte odpověď...');
+        input.focus();
+    };
+
+    function appendOptimizerFeedback(data) {
+        // Deprecated by Preview Flow? Keep for legacy or if confirmed elsewhere?
+        // Scenario 1 implies manual confirm. So this might not trigger if we verify correctly.
+        // But if backend sends it, show it.
+    }
+
+    function appendMessage(data) {
+        if (!data.content) return;
+        const div = document.createElement('div');
+        div.className = `chat-bubble ${data.role === 'user' ? 'user self-start w-3/4' : 'agent self-end w-3/4'}`;
+
+        const sender = document.createElement('span');
+        sender.className = 'sender';
+        sender.innerText = data.sender.toUpperCase();
+
+        const content = document.createElement('div');
+        content.innerText = data.content;
+
+        div.appendChild(sender);
+        div.appendChild(content);
+
+        chatHistory.appendChild(div);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function applyTemperature(temp) {
+        document.body.classList.remove('instability-low', 'instability-med', 'instability-high');
+
+        if (temp > 100 && temp <= 250) document.body.classList.add('instability-low');
+        if (temp > 250 && temp <= 350) document.body.classList.add('instability-med');
+        if (temp > 350) {
+            document.body.classList.add('instability-high');
+            sfx.playError();
         }
-    </script>
-    {% endblock %}
+
+        const ind = document.getElementById('overloadSignal');
+        if (ind) {
+            if (temp > 350) ind.classList.remove('hidden');
+            else ind.classList.add('hidden');
+        }
+    }
+
+    // Helper for applying HyperVis (Already there)
+    // --- HYPER LOCK LOGIC ---
+    function toggleAutopilot() {
+        const toggle = document.getElementById('autopilotToggle');
+        const active = toggle.checked;
+
+        if (active) {
+            // Activate Lock Immediately
+            document.getElementById('hyperLockOverlay').classList.remove('hidden');
+            // Send Command
+            client.send({ type: 'autopilot_toggle', active: true });
+        } else {
+            client.send({ type: 'autopilot_toggle', active: false });
+        }
+    }
+
+    function attemptUnlock() {
+        const pass = document.getElementById('unlockPass').value;
+        const currentUsername = "{{ user.username }}"; // e.g. agent1
+        // Simple password check: same as username or master
+        if (pass === currentUsername || pass === "master_control_666") {
+            // Unlock
+            document.getElementById('hyperLockOverlay').classList.add('hidden');
+            document.getElementById('autopilotToggle').checked = false;
+            document.getElementById('unlockPass').value = "";
+            client.send({ type: 'autopilot_toggle', active: false });
+        } else {
+            alert('PŘÍSTUP ODEPŘEN');
+            if (window.sfx) sfx.playError();
+        }
+    }
+
+    // Handle server updates for Hyper Mode (if needed? Only Autopilot matters here)
+    // Actually, gamestate_update sends hyper_mode (visibility), not autopilot status.
+    // Autopilot status is local? Or shared? Ideally shared if multiple tabs.
+    // For now, assume local initiative, but ideally we should sync.
+
+    // --- TYPING INDICATOR ---
+    const inputField = document.getElementById('msgInput');
+    let typingTimeout = null;
+
+    inputField.addEventListener('input', () => {
+        if (!typingTimeout) {
+            client.send({ type: 'typing_start', session_id: currentSessionId });
+        }
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            client.send({ type: 'typing_stop', session_id: currentSessionId });
+            typingTimeout = null;
+        }, 1000); // Stop after 1s of silence
+    });
+
+    function showTypingIndicator(show) {
+        const hist = document.getElementById('chatHistory');
+        let indicator = document.getElementById('typingIndicator');
+
+        if (show) {
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'typingIndicator';
+                indicator.className = 'text-[10px] text-green-500 italic ml-1 animate-pulse';
+                indicator.innerText = t('agent_terminal.typing_indicator', '>> UŽIVATEL PÍŠE...');
+                hist.appendChild(indicator);
+                hist.scrollTop = hist.scrollHeight;
+            }
+        } else {
+            if (indicator) indicator.remove();
+        }
+    }
+</script>
+{% endblock %}

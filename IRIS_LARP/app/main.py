@@ -3,7 +3,8 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
-from .routers import auth, sockets, admin_api, translations
+import os
+from .routers import auth, sockets, admin_api, translations, docs
 from .database import init_db
 from .config import settings
 from .seed import seed_data
@@ -99,6 +100,8 @@ lore_web_dir = base_dir.parent / "doc" / "iris" / "lore-web"
 if lore_web_dir.exists():
     app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir)), name="lore-web")
 
+app.mount("/docs/images", StaticFiles(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs", "images")), name="docs_images")
+
 # Templates
 templates = Jinja2Templates(directory="app/templates")
 
@@ -107,6 +110,7 @@ app.include_router(auth.router)
 app.include_router(sockets.router)
 app.include_router(admin_api.router)
 app.include_router(translations.router)
+app.include_router(docs.router)
 
 @app.get("/")
 async def root(request: Request):
