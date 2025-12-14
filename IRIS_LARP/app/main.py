@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -91,6 +92,12 @@ app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=li
 
 # Static Files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+base_dir = Path(__file__).resolve().parent.parent
+lore_web_dir = base_dir.parent / "doc" / "iris" / "lore-web"
+
+if lore_web_dir.exists():
+    app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir)), name="lore-web")
 
 # Templates
 templates = Jinja2Templates(directory="app/templates")
