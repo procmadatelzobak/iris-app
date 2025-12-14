@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    /* Terminal-style documentation browser */
+    body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    }
+    
+    .docs-sidebar {
+        width: 300px;
+        border-right: 1px solid currentColor;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+    
+    .docs-main {
+        flex: 1;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+    
+    .doc-link {
+        display: block;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.2s;
+    }
+    
+    .doc-link:hover {
+        background: rgba(255,255,255,0.1);
+        padding-left: 1.5rem;
+    }
+    
+    .section-header {
+        padding: 0.75rem 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: rgba(0,0,0,0.5);
+        border-bottom: 2px solid currentColor;
+    }
+    
+    .folder-item {
+        padding: 0.5rem 1rem 0.5rem 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    /* CRT effect */
+    .crt-effect {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.1) 0px,
+            rgba(0, 0, 0, 0.1) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        z-index: 1000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="crt-effect"></div>
+
+<div class="min-h-screen {{ theme.bg }} {{ theme.text }} font-mono">
+    <!-- Header -->
+    <div class="z-50 {{ theme.bg }} border-b {{ theme.border }} p-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <span class="text-2xl font-bold">📚</span>
+            <h1 class="text-xl font-bold uppercase tracking-widest">{{ title }}</h1>
+        </div>
+        <div class="flex gap-4">
+            <a href="/docs/manual" target="_blank" class="border {{ theme.border }} px-3 py-1 hover:bg-white/10 transition">
+                [ PŘÍRUČKA ]
+            </a>
+            <button onclick="window.close()" class="border {{ theme.border }} px-3 py-1 hover:bg-white/10 transition">
+                [ ZAVŘÍT ]
+            </button>
+        </div>
+    </div>
+    
+    <!-- Content Area -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="docs-sidebar">
+            {% for item in docs_index %}
+                {% if item.type == 'section' %}
+                    <div class="section-header">{{ item.title }}</div>
+                {% elif item.type == 'file' %}
+                    <a href="/docs/view/{{ item.path }}" target="_blank" class="doc-link {{ theme.accent }}">
+                        📄 {{ item.title }}
+                    </a>
+                {% elif item.type == 'folder' %}
+                    <div class="folder-item opacity-70">
+                        📁 {{ item.title }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <!-- Main Content -->
+        <div class="docs-main p-8">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold mb-8 {{ theme.accent }}">Vítejte v dokumentaci IRIS</h2>
+                
+                <div class="space-y-6 opacity-80">
+                    <p>Tato dokumentace obsahuje všechny informace potřebné pro správu a provoz systému IRIS.</p>
+                    
+                    <div class="border {{ theme.border }} p-4 rounded">
+                        <h3 class="font-bold mb-2">📖 Uživatelské příručky</h3>
+                        <p class="text-sm opacity-70">Návody pro jednotlivé role - uživatele, agenty, správce a ROOT.</p>
+                    </div>
+                    
+                    <div class="border {{ theme.border }} p-4 rounded">
+                        <h3 class="font-bold mb-2">🎭 IRIS Lore</h3>
+                        <p class="text-sm opacity-70">Herní příběh, postavy a světová dokumentace pro LARP.</p>
+                    </div>
+                    
+                    <div class="border {{ theme.border }} p-4 rounded">
+                        <h3 class="font-bold mb-2">⚙️ Technická dokumentace</h3>
+                        <p class="text-sm opacity-70">Specifikace systému, API dokumentace a návody pro správce.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center opacity-50 text-sm">
+                    <p>Klikněte na dokument v levém panelu pro jeho zobrazení.</p>
+                    <p class="mt-2">Dokumenty se otevírají v novém okně.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // No additional scripts needed for now
+</script>
+{% endblock %}

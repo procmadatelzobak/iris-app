@@ -37,6 +37,9 @@ Jako **Subjekt (User)** jste běžný hráč, který:
 Otevřete webový prohlížeč a přejděte na adresu, kterou vám sdělí organizátoři (např. `http://iris.local:8000`).
 
 ### Přihlašovací obrazovka
+
+![Přihlašovací obrazovka](login_screen.png)
+
 1. Do pole **IDENTIFIKÁTOR** zadejte své uživatelské jméno (např. `user1`).
 2. Do pole **HESLO** zadejte své heslo.
 3. Klikněte na tlačítko **[ INICIOVAT RELACI ]**.

@@ -40,6 +40,9 @@ Otevřete webový prohlížeč a přejděte na adresu, kterou vám sdělí organ
 - **Heslo:** sdělí vám organizátoři
 
 ### Přihlašovací obrazovka
+
+![Přihlašovací obrazovka](login_screen.png)
+
 1. Do pole **IDENTIFIKÁTOR** zadejte své uživatelské jméno.
 2. Do pole **HESLO** zadejte své heslo.
 3. Klikněte na tlačítko **[ INICIOVAT RELACI ]**.

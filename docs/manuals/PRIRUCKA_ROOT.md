@@ -24,6 +24,10 @@
 - **Uživatel:** `root`
 - **Heslo:** sdělí vám organizátoři
 
+### Přihlašovací obrazovka
+
+![Přihlašovací obrazovka](login_screen.png)
+
 ### Po přihlášení
 - Uvidíte zlatý dashboard s názvem **IRIS_ROOT_CONTROL**
 - Máte přístup ke všem funkcím systému

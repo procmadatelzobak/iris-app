@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
-from .routers import auth, sockets, admin_api, translations
+from .routers import auth, sockets, admin_api, translations, docs
 from .database import init_db
 from .config import settings
 from .seed import seed_data
@@ -100,6 +100,7 @@ app.include_router(auth.router)
 app.include_router(sockets.router)
 app.include_router(admin_api.router)
 app.include_router(translations.router)
+app.include_router(docs.router)
 
 @app.get("/")
 async def root(request: Request):
