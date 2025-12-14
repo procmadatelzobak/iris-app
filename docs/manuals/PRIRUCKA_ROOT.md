@@ -15,6 +15,10 @@
 5. [Ekonomika](#5-ekonomika)
 6. [Výkonné protokoly](#6-výkonné-protokoly)
 7. [Pokročilé funkce](#7-pokročilé-funkce)
+   1. [Panic Mode (Full Censorship)](#71-panic-mode-full-censorship)
+   2. [Úprava default scenaria](#72-úprava-default-scenaria)
+   3. [Systemd služba](#73-systemd-služba)
+   4. [Logy serveru](#74-logy-serveru)
 
 ---
 
@@ -198,13 +202,30 @@ Všem uživatelům (Users, Agents, Admins) se zobrazí overlay s textem:
 - Restartuje server
 - Databáze se znovu vytvoří z `data/default_scenario.json`
 - **VEŠKERÁ DATA BUDOU ZTRACENA**
-- Vyžaduje potvrzení textem "FACTORY RESET"
 
 ---
 
 ## 7. Pokročilé funkce
 
-### 7.1 Úprava default scenaria
+### 7.1 Panic Mode (Full Censorship)
+
+**Purpose:** Emergency censorship that discards outgoing chat messages from selected participants and replaces them with an LLM-generated response from the dedicated **LLM agent (Cenzura)**.
+
+**Where to find it:** ROOT dashboard → first tab with chat conversations.
+
+**Controls:**
+- Per-conversation toggle for **User** and **Agent** separately (switch sits next to other agent controls on the chat card).
+- Once enabled, any message sent by the toggled side is removed during the optimization process and replaced by the LLM agent reply based on the user request.
+
+**Visual indicators:**
+- On the first tab: the username text for the censored side is color-highlighted to show Panic Mode is active.
+- On the Chats tab overview: the conversation card background gains a highlight and the label **"panický mód zapnut"**.
+
+**Operational notes:**
+- Panic Mode uses the same configuration pattern as other agent slots on the ROOT dashboard.
+- Disable the toggle to restore normal messaging for that participant.
+
+### 7.2 Úprava default scenaria
 
 Soubor `data/default_scenario.json` obsahuje:
 - Počty a hesla uživatelů
@@ -214,7 +235,7 @@ Soubor `data/default_scenario.json` obsahuje:
 
 Po úpravě tohoto souboru proveďte **FACTORY RESET** pro aplikaci změn.
 
-### 7.2 Systemd služba
+### 7.3 Systemd služba
 
 Pro produkční provoz použijte:
 ```bash
@@ -223,7 +244,7 @@ sudo systemctl enable iris
 sudo systemctl start iris
 ```
 
-### 7.3 Logy serveru
+### 7.4 Logy serveru
 
 ```bash
 tail -f server.log
