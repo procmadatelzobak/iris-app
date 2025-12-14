@@ -76,6 +76,11 @@
             <h2 class="text-xl font-bold mb-4 uppercase tracking-wider text-[var(--accent-color)]">
                 <i class="fas fa-id-card"></i> STAV SUBJEKTU
             </h2>
+            <!-- Username Display -->
+            <div class="mb-4 p-2 bg-[rgba(255,255,255,0.1)] rounded border border-[var(--border-color)]">
+                <div class="text-xs opacity-70">UŽIVATEL</div>
+                <div class="font-mono text-lg font-bold mt-1 text-[var(--accent-color)]">{{ user.username|upper }}</div>
+            </div>
             <div class="grid grid-cols-2 gap-4">
                 <div class="p-2 bg-[rgba(255,255,255,0.05)] rounded">
                     <div class="text-xs opacity-70">POSUN SVĚTA</div>
@@ -324,10 +329,54 @@
         const text = input.value.trim();
         if (text) {
             client.send({ content: text });
+            
+            // Show user's own message immediately (local echo)
+            appendMessage({
+                sender: '{{ user.username }}',
+                role: 'user',
+                content: text
+            });
+            
+            // Show agent responding indicator
+            showAgentRespondingIndicator();
+            
             input.value = '';
             sfx.playSend(); // Local feedback
         }
     });
+    
+    // Agent responding indicator
+    let agentRespondingTimeout = null;
+    function showAgentRespondingIndicator() {
+        const hist = document.getElementById('chatHistory');
+        let indicator = document.getElementById('agentRespondingIndicator');
+        
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'agentRespondingIndicator';
+            indicator.className = 'text-sm text-pink-500 italic ml-2 animate-pulse p-2 border border-pink-900 bg-pink-900/20';
+            indicator.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 bg-pink-500 rounded-full animate-ping"></span>
+                    ČEKÁM NA ODPOVĚĎ AGENTA...
+                </div>
+            `;
+            hist.appendChild(indicator);
+            hist.scrollTop = hist.scrollHeight;
+        }
+        
+        // Auto-hide after 2 minutes (agent timeout)
+        clearTimeout(agentRespondingTimeout);
+        agentRespondingTimeout = setTimeout(() => {
+            hideAgentRespondingIndicator();
+        }, 120000);
+    }
+    
+    function hideAgentRespondingIndicator() {
+        const indicator = document.getElementById('agentRespondingIndicator');
+        if (indicator) indicator.remove();
+        clearTimeout(agentRespondingTimeout);
+    }
 
     // Input Mirroring
     const msgInput = document.getElementById('msgInput');
@@ -341,6 +390,11 @@
     });
 
     function appendMessage(data) {
+        // Hide agent responding indicator when we get a response
+        if (data.role === 'agent') {
+            hideAgentRespondingIndicator();
+        }
+        
         // Remove loading
         const loader = document.getElementById('opt-loading');
         if (loader) loader.remove();

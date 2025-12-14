@@ -81,9 +81,35 @@
 ### Persistence
 - [x] **Labels**: Admin labels saved to `data/admin_labels.json` [TESTED]
 
+## Phase 30 - UI Fixes and Improvements
+
+### Login Page
+- [x] **ROOT button**: Moved from admin column to header (right side of "TESTOVACÍ REŽIM: RYCHLÉ PŘIHLÁŠENÍ AKTIVNÍ")
+- [x] **Czech localization**: "TEST MODE: FAST LOGIN ACTIVATE" → "TESTOVACÍ REŽIM: RYCHLÉ PŘIHLÁŠENÍ AKTIVNÍ"
+- [x] **ROOT button text**: "ROOT ACCESS" → "ROOT PŘÍSTUP"
+
+### Admin Dashboard
+- [x] **Dashboard navigation**: Fixed `openStation()` function structure in admin_ui.js
+- [x] **View switching**: All 4 dashboards (Monitor, Controls, Economy, Tasks) now work correctly
+
+### Root Dashboard
+- [x] **Tab navigation**: Fixed nested view structure - views now properly toggle between tabs
+- [x] **All tabs functional**: Dashboard, Config, Economy, Chronos, Panopticon tabs work
+
+### Agent Terminal
+- [x] **Full width layout**: Fixed layout to use full screen width (was only 1/3 before)
+- [x] **Username display**: Added agent username in status panel
+- [x] **Timer bar**: Added response timer bar UI element
+
+### User Terminal
+- [x] **Username display**: Added visible username in left panel
+- [x] **Sent message echo**: User now sees their own sent messages immediately
+- [x] **Agent responding indicator**: Added animated indicator while waiting for agent response
+- [x] **Auto-hide indicator**: Indicator hides when agent responds or after 2 minute timeout
+
 ## Uncertainties
 - [ ] None currently.
 
 ## Next Steps
-- User Acceptance Testing (Manual) of Glitch visuals.
+- User Acceptance Testing (Manual) of all UI changes.
 - Deployment.

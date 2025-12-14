@@ -205,9 +205,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- VIEW: CONFIG -->
-        <div id="view-config" class="view-container hidden">
+    <!-- VIEW: CONFIG -->
+    <div id="view-config" class="view-container hidden">
             <!-- Test Mode Panel -->
             <div class="god-panel">
                 <div class="god-title">🔧 DEVELOPER MODE</div>
@@ -292,9 +293,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- VIEW: ECONOMY -->
-        <div id="view-economy" class="view-container hidden">
+    <!-- VIEW: ECONOMY -->
+    <div id="view-economy" class="view-container hidden">
             <div class="god-panel">
                 <div class="god-title">GLOBAL ECONOMY MANIPULATION</div>
                 <div class="grid grid-cols-4 gap-4 mb-6">
@@ -322,9 +324,10 @@
                 </table>
             </div>
         </div>
+    </div>
 
-        <!-- VIEW: TIME (CHRONOS) -->
-        <div id="view-time" class="view-container hidden">
+    <!-- VIEW: TIME (CHRONOS) -->
+    <div id="view-time" class="view-container hidden">
             <div class="god-panel w-1/2 mx-auto">
                 <div class="god-title">TIME MANIPULATION</div>
                 <div class="text-center mb-8">
@@ -351,17 +354,18 @@
                 </div>
             </div>
         </div>
-
-        <!-- VIEW: SURVEILLANCE -->
-        <div id="view-surveillance" class="view-container hidden">
-            <div class="god-title">PANOPTICON 8x8</div>
-            <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
-                <!-- 8 Sessions -->
-            </div>
-        </div>
-
     </div>
-    {% endblock %}
+
+    <!-- VIEW: SURVEILLANCE -->
+    <div id="view-surveillance" class="view-container hidden">
+        <div class="god-title">PANOPTICON 8x8</div>
+        <div class="grid grid-cols-4 gap-2 h-full pb-20" id="rootGrid">
+            <!-- 8 Sessions -->
+        </div>
+    </div>
+
+</div>
+{% endblock %}
 
     {% block scripts %}
     <script src="/static/js/socket_client.js"></script>
