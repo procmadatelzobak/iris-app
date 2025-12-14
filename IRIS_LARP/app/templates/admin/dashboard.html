@@ -128,8 +128,8 @@
         </div>
 
         <div class="flex gap-4 ml-auto mr-4">
-            <button class="chernobyl-btn px-4 py-1 text-sm editable-label" data-key="btn_labels"
-                onclick="toggleEditMode()">PŘEPSAT REALITU</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm" data-key="btn_labels" onclick="toggleEditMode()">PŘEPSAT
+                REALITU</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-red-500 border-red-800 editable-label"
                 data-key="btn_reset_sys" onclick="triggerReset()">AUTO-DESTRUKCE</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800"
@@ -312,7 +312,7 @@
                     </div>
 
                     <input type="range" class="w-full accent-red-600 bg-gray-800" min="20" max="400"
-                        id="manualChernobyl" onchange="sendChernobylLevel(this.value)">
+                        id="manualChernobyl" oninput="sendChernobylLevel(this.value)">
                     <div class="text-xs text-gray-600 mt-1">MANUÁLNÍ KOREKCE</div>
                 </div>
             </div>

@@ -592,7 +592,13 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         else:
                             gamestate.chernobyl_mode = ChernobylMode.NORMAL
                             
-                        # Broadcast? Usually mode change doesn't need broadcast, just the effect (value change)
+                            gamestate.chernobyl_mode = ChernobylMode.NORMAL
+                            
+                        # Broadcast update
+                        await routing_logic.broadcast_global(json.dumps({
+                            "type": "gamestate_update", 
+                            "chernobyl_mode": gamestate.chernobyl_mode.value
+                        }))
 
                     elif cmd_type == "reset_game":
                         # Soft Reset: Broadcast failover message, reset temp/labels, keep credits/power

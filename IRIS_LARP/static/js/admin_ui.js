@@ -114,9 +114,9 @@ function updateUI() {
 }
 
 // === STATION NAVIGATION ===
-window.openStation = function(name) {
+window.openStation = function (name) {
     console.log("Opening station:", name);
-    
+
     // 1. Hide Hub
     const hubView = document.getElementById('hub-view');
     if (hubView) hubView.classList.add('hidden');
@@ -130,7 +130,7 @@ window.openStation = function(name) {
 
     // 3. Switch View - hide all first
     document.querySelectorAll('.view-container').forEach(el => el.classList.add('hidden'));
-    
+
     // 4. Show target view
     const view = document.getElementById('view-' + name);
     if (view) {
@@ -150,6 +150,7 @@ window.openStation = function(name) {
     window.currentView = name;
 
     // 6. Init specific logic
+    disableEditMode(); // Force exit edit mode on navigation
     if (name === 'economy') refreshEconomy();
     if (name === 'tasks') refreshTasks();
     if (name === 'monitor') {
@@ -158,7 +159,8 @@ window.openStation = function(name) {
     }
 };
 
-window.closeStation = function() {
+window.closeStation = function () {
+    disableEditMode(); // Force exit edit mode
     // 1. Hide Nav & Views
     const stationNav = document.getElementById('station-nav');
     if (stationNav) {
@@ -170,11 +172,11 @@ window.closeStation = function() {
     // 2. Show Hub
     const hubView = document.getElementById('hub-view');
     if (hubView) hubView.classList.remove('hidden');
-    
+
     window.currentView = null;
 };
 
-window.switchMonitorTab = function(tab) {
+window.switchMonitorTab = function (tab) {
     window.currentTab = tab;
     document.querySelectorAll('.mon-tab').forEach(e => e.classList.add('hidden'));
     const tabContent = document.getElementById(`mon-content-${tab}`);
@@ -190,7 +192,7 @@ window.switchMonitorTab = function(tab) {
 };
 
 // --- STATE SYNC ---
-window.loadControlState = async function() {
+window.loadControlState = async function () {
     try {
         const res = await fetch('/api/admin/controls/state', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
         if (!res.ok) return;
@@ -271,12 +273,12 @@ window.loadControlState = async function() {
     } catch (e) { console.error("Control Sync Fail", e); }
 };
 
-window.updateTimerPreview = function(value) {
+window.updateTimerPreview = function (value) {
     const timerDisplay = document.getElementById('timerDisplay');
     if (timerDisplay) timerDisplay.innerText = `${value} s`;
 };
 
-window.saveResponseTimer = async function() {
+window.saveResponseTimer = async function () {
     const timerInp = document.getElementById('timerInput');
     if (!timerInp) return;
     const seconds = parseInt(timerInp.value, 10);
@@ -311,7 +313,7 @@ function startGraphLoop() {
     if (graphLoop) return;
     const canvas = document.getElementById('networkGraph');
     if (!canvas) return;
-    
+
     const fit = () => {
         canvas.width = canvas.parentElement.offsetWidth;
         canvas.height = canvas.parentElement.offsetHeight;
@@ -353,7 +355,7 @@ function startGraphLoop() {
         // User and Agent positions with more dynamic behavior
         for (let i = 1; i <= TOTAL_SESSIONS; i++) {
             const angle = (i - 1) / TOTAL_SESSIONS * Math.PI * 2;
-            
+
             // Users orbit with slight wobble
             const wobble = Math.sin(time * 0.5 + i) * 15;
             const x = cx + Math.cos(angle) * (radius + wobble);
@@ -375,11 +377,11 @@ function startGraphLoop() {
             // Draw connection lines with varying thickness and glow
             const distance = Math.sqrt((x - agX) ** 2 + (y - agY) ** 2);
             const intensity = Math.max(0, 1 - distance / radius);
-            
+
             // Multiple connection lines for depth
             for (let layer = 0; layer < 2; layer++) {
-                ctx.strokeStyle = layer === 0 
-                    ? `rgba(0, 255, 0, ${intensity * 0.4})` 
+                ctx.strokeStyle = layer === 0
+                    ? `rgba(0, 255, 0, ${intensity * 0.4})`
                     : `rgba(0, 255, 0, ${intensity * 0.15})`;
                 ctx.lineWidth = layer === 0 ? 2 : 4;
                 ctx.beginPath();
@@ -434,21 +436,21 @@ function startGraphLoop() {
         // Update and draw particles (batched by color for performance)
         const greenParticles = [];
         const magentaParticles = [];
-        
+
         particles = particles.filter(p => {
             p.x += p.vx;
             p.y += p.vy;
             p.life -= 0.02;
-            
+
             if (p.life <= 0) return false;
-            
+
             // Batch particles by color
             if (p.color[0] === 0) greenParticles.push(p);
             else magentaParticles.push(p);
-            
+
             return true;
         });
-        
+
         // Draw green particles in one batch
         if (greenParticles.length > 0) {
             ctx.shadowBlur = 5;
@@ -460,7 +462,7 @@ function startGraphLoop() {
                 ctx.fill();
             });
         }
-        
+
         // Draw magenta particles in one batch
         if (magentaParticles.length > 0) {
             ctx.shadowBlur = 5;
@@ -477,19 +479,19 @@ function startGraphLoop() {
         // Central core with complex pulsing (optimized with gradient instead of multiple shadow blurs)
         const coreSize = 15 + Math.sin(time * 2) * 5 + Math.cos(time * 3) * 3;
         const coreAlpha = 0.6 + Math.abs(Math.sin(time * 1.5)) * 0.4;
-        
+
         // Use radial gradient for glow effect (more efficient than multiple shadow blurs)
         const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize + 8);
         gradient.addColorStop(0, `rgba(255, 0, 0, ${coreAlpha})`);
         gradient.addColorStop(0.5, `rgba(255, 0, 0, ${coreAlpha * 0.6})`);
         gradient.addColorStop(0.8, `rgba(255, 0, 0, ${coreAlpha * 0.3})`);
         gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
-        
+
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(cx, cy, coreSize + 8, 0, Math.PI * 2);
         ctx.fill();
-        
+
         // Bright center
         ctx.fillStyle = `rgba(255, 100, 0, ${coreAlpha})`;
         ctx.beginPath();
@@ -502,7 +504,7 @@ function startGraphLoop() {
             const wavePhase = (time * 0.5 + w * (Math.PI * 2 / waveCount)) % (Math.PI * 2);
             const waveRadius = (wavePhase / (Math.PI * 2)) * radius * 0.6;
             const waveAlpha = Math.max(0, 1 - wavePhase / (Math.PI * 2));
-            
+
             ctx.strokeStyle = `rgba(255, 255, 0, ${waveAlpha * 0.3})`;
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -521,13 +523,13 @@ function stopGraphLoop() {
 }
 
 // --- CONTROLS ---
-window.triggerShift = function() {
+window.triggerShift = function () {
     if (window.socket) {
         window.socket.send(JSON.stringify({ type: 'shift_command' }));
     }
 };
 
-window.sendChernobylLevel = function(val) {
+window.sendChernobylLevel = function (val) {
     const el = document.getElementById('controlChernobyl');
     if (el) el.innerText = val + "°C";
     if (window.socket) {
@@ -535,19 +537,19 @@ window.sendChernobylLevel = function(val) {
     }
 };
 
-window.setMode = function(mode) {
+window.setMode = function (mode) {
     if (window.socket) {
         window.socket.send(JSON.stringify({ type: 'chernobyl_mode_command', mode: mode }));
     }
 };
 
-window.setHyperVis = function(mode) {
+window.setHyperVis = function (mode) {
     if (window.socket) {
         window.socket.send(JSON.stringify({ type: 'hyper_vis_command', mode: mode }));
     }
 };
 
-window.triggerReset = function() {
+window.triggerReset = function () {
     if (confirm("RESET SYSTEM?")) {
         if (window.socket) {
             window.socket.send(JSON.stringify({ type: 'reset_game' }));
@@ -556,7 +558,7 @@ window.triggerReset = function() {
 };
 
 // --- ECONOMY ---
-window.refreshEconomy = async function() {
+window.refreshEconomy = async function () {
     try {
         const res = await fetch('/api/admin/data/users', {
             headers: { 'Authorization': `Bearer ${getAuthToken()}` }
@@ -595,7 +597,7 @@ window.refreshEconomy = async function() {
     } catch (e) { console.error('Eco fetch fail', e); }
 };
 
-window.ecoAction = async function(type, userId) {
+window.ecoAction = async function (type, userId) {
     let payload = { user_id: userId };
 
     if (type === 'fine' || type === 'bonus') {
@@ -617,7 +619,7 @@ window.ecoAction = async function(type, userId) {
     refreshEconomy();
 };
 
-window.setStatus = async function(userId, status) {
+window.setStatus = async function (userId, status) {
     try {
         const res = await fetch('/api/admin/economy/set_status', {
             method: 'POST',
@@ -636,7 +638,7 @@ window.setStatus = async function(userId, status) {
 };
 
 // --- TASKS ---
-window.refreshTasks = async function() {
+window.refreshTasks = async function () {
     if (window.currentView !== 'tasks') return;
     try {
         const res = await fetch('/api/admin/tasks', {
@@ -734,7 +736,7 @@ window.refreshTasks = async function() {
     } catch (e) { console.error('Task fetch fail', e); }
 };
 
-window.approveTask = async function(id) {
+window.approveTask = async function (id) {
     const rewEl = document.getElementById(`rew-${id}`);
     const promptEl = document.getElementById(`prompt-${id}`);
     const rew = rewEl ? rewEl.value : null;
@@ -750,7 +752,7 @@ window.approveTask = async function(id) {
     refreshTasks();
 };
 
-window.payTask = async function(id) {
+window.payTask = async function (id) {
     const ratEl = document.getElementById(`rat-${id}`);
     const rate = ratEl ? parseInt(ratEl.value) : 100;
     await fetch('/api/admin/tasks/pay', {
@@ -764,7 +766,7 @@ window.payTask = async function(id) {
     refreshTasks();
 };
 
-window.setTaskRating = function(taskId, value, btn) {
+window.setTaskRating = function (taskId, value, btn) {
     const hidden = document.getElementById(`rat-${taskId}`);
     if (hidden) hidden.value = value;
     document.querySelectorAll(`.rating-btn[data-rating-group='${taskId}']`).forEach(el => {
@@ -816,10 +818,16 @@ function handleMessage(data) {
         }
         return;
     }
-    
+
     if (data.type === 'init') {
         renderMonitor(data.active_sessions);
     } else if (data.type === 'gamestate_update') {
+        if (data.chernobyl_mode !== undefined) {
+            updateModeUI(data.chernobyl_mode);
+        }
+        if (data.hyper_mode !== undefined) {
+            setHyperVisUI(data.hyper_mode);
+        }
         if (data.shift !== undefined) {
             currentShift = data.shift;
             const el1 = document.getElementById('monitorShift');
@@ -912,7 +920,7 @@ function updatePowerUI(load, cap, overloaded) {
 // Power Timer
 let powerTimerInterval = null;
 
-window.buyPower = async function() {
+window.buyPower = async function () {
     if (!confirm("BUY +50MW CAPACITY FOR 1000 CREDITS?")) return;
     try {
         const res = await fetch('/api/admin/power/buy', {
@@ -972,35 +980,50 @@ function editModeClickHandler(e) {
     this.focus();
 }
 
-window.toggleEditMode = function() {
-    isEditMode = !isEditMode;
+window.toggleEditMode = function () {
+    if (isEditMode) {
+        disableEditMode();
+    } else {
+        enableEditMode();
+    }
+};
+
+window.enableEditMode = function () {
+    isEditMode = true;
     const els = document.querySelectorAll('.editable-label');
 
-    if (isEditMode) {
-        els.forEach(el => {
-            el.contentEditable = "true";
-            el.style.border = "1px dashed #fff";
-            el.style.backgroundColor = "rgba(0,0,0,0.5)";
-            el.style.cursor = "text";
-            // Add click handler to prevent button actions
-            el.addEventListener('click', editModeClickHandler, true);
-        });
-        alert("EDIT MODE ENGAGED. Click text to edit. Toggle off to save.");
-    } else {
-        const packet = {};
-        els.forEach(el => {
-            el.contentEditable = "false";
-            el.style.border = "none";
-            el.style.backgroundColor = "transparent";
-            el.style.cursor = "";
-            // Remove click handler
-            el.removeEventListener('click', editModeClickHandler, true);
-            const key = el.dataset.key;
-            if (key) packet[key] = el.innerText;
-        });
+    // Show non-blocking toast instead of alert
+    showAdminToast("EDIT MODE ENGAGED. Click text to edit. Click button again to save.");
 
-        saveLabelsToServer(packet);
-    }
+    els.forEach(el => {
+        el.contentEditable = "true";
+        el.style.border = "1px dashed #fff";
+        el.style.backgroundColor = "rgba(0,0,0,0.5)";
+        el.style.cursor = "text";
+        // Add click handler to prevent button actions
+        el.addEventListener('click', editModeClickHandler, true);
+    });
+};
+
+window.disableEditMode = function () {
+    if (!isEditMode) return;
+    isEditMode = false;
+    const els = document.querySelectorAll('.editable-label');
+    const packet = {};
+
+    els.forEach(el => {
+        el.contentEditable = "false";
+        el.style.border = "none";
+        el.style.backgroundColor = "transparent";
+        el.style.cursor = "";
+        // Remove click handler
+        el.removeEventListener('click', editModeClickHandler, true);
+        const key = el.dataset.key;
+        if (key) packet[key] = el.innerText;
+    });
+
+    saveLabelsToServer(packet);
+    showAdminToast("EDIT MODE SAVED.");
 };
 
 async function saveLabelsToServer(labels) {
@@ -1033,7 +1056,7 @@ async function loadLabels() {
 
 // AI Modal
 // --- SYSTEM LOGS ---
-window.refreshSystemLogs = async function() {
+window.refreshSystemLogs = async function () {
     try {
         const res = await fetch('/api/admin/system_logs', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
         if (!res.ok) return;
@@ -1067,7 +1090,7 @@ window.refreshSystemLogs = async function() {
     } catch (e) { console.error("Log fetch failed", e); }
 };
 
-window.resetSystemLogs = async function() {
+window.resetSystemLogs = async function () {
     if (!confirm("CLEAR SYSTEM LOGS? CANNOT BE UNDONE.")) return;
     await fetch('/api/admin/system_logs/reset', { method: 'POST', headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
     refreshSystemLogs();
@@ -1096,13 +1119,83 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Admin UI Loaded");
     initWebSocket();
     initGrid();
-    
+
     // Poll for data
     setInterval(refreshTasks, 5000);
     setInterval(refreshEconomy, 10000);
-    setInterval(window.loadControlState, 5000);
+    setInterval(window.loadControlState, 2000); // Faster poll for responsive feel
     setInterval(refreshSystemLogs, 5000);
-    
+
     window.loadControlState();
     loadLabels();
 });
+
+// Placeholder for updateTemperatureUI, updatePowerUI, setHyperVisUI if not defined elsewhere
+// Assuming these are defined globally or in other parts of the code.
+// If not, they would need to be added here as well.
+function updateTemperatureUI(temp) {
+    const el = document.getElementById('monitorTemp');
+    if (el) el.innerText = temp + "°C";
+}
+
+function updatePowerUI(load, capacity, isOverloaded) {
+    const el = document.getElementById('monitorPower');
+    if (el) {
+        el.innerText = `${load}MW / ${capacity}MW`;
+        if (isOverloaded) {
+            el.classList.add('text-red-500');
+        } else {
+            el.classList.remove('text-red-500');
+        }
+    }
+}
+
+function setHyperVisUI(active) {
+    const el = document.getElementById('hyperVisStatus');
+    if (el) {
+        el.innerText = active ? "ACTIVE" : "INACTIVE";
+        el.classList.toggle('text-green-500', active);
+        el.classList.toggle('text-gray-500', !active);
+    }
+}
+
+function updateModeUI(mode) {
+    const el = document.getElementById('chernobylModeStatus');
+    if (el) {
+        el.innerText = mode ? "ACTIVE" : "INACTIVE";
+        el.classList.toggle('text-red-500', mode);
+        el.classList.toggle('text-gray-500', !mode);
+    }
+}
+
+// Update loadControlState to use new fields
+// Assuming 'token' is available in this scope, e.g., from getAuthToken()
+window.loadControlState = async function () {
+    try {
+        const token = getAuthToken(); // Ensure token is retrieved
+        const res = await fetch('/api/admin/controls/state', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (res.ok) {
+            const data = await res.json();
+            // Standard UI updates
+            updateTemperatureUI(data.temperature);
+            updatePowerUI(data.power_load, data.power_capacity, data.is_overloaded);
+
+            // Mode Updates
+            if (data.chernobyl_mode !== undefined) updateModeUI(data.chernobyl_mode); // Check for undefined to allow false
+            if (data.hyper_visibility_mode !== undefined) setHyperVisUI(data.hyper_visibility_mode);
+
+            // Shift
+            const el1 = document.getElementById('monitorShift');
+            const el2 = document.getElementById('controlShift');
+            if (el1) el1.innerText = "SHIFT: " + data.shift_offset;
+            if (el2) el2.innerText = data.shift_offset;
+
+            // Timer
+            const slider = document.getElementById('timerInput');
+            const disp = document.getElementById('timerDisplay');
+            if (slider && document.activeElement !== slider) slider.value = data.agent_response_window;
+            if (disp) disp.innerText = data.agent_response_window + " s";
+
+        }
+    } catch (e) { console.error(e); }
+};

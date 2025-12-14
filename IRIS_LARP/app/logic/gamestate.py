@@ -212,4 +212,37 @@ class GameState:
 
         return mapping.get(str(level_value), self.task_reward_default)
 
+    def export_state(self) -> dict:
+        """Export critical state for persistence across restarts."""
+        return {
+            "temperature": self.temperature,
+            "global_shift_offset": self.global_shift_offset,
+            "treasury_balance": self.treasury_balance,
+            "chernobyl_mode": self.chernobyl_mode.value,
+            "is_overloaded": self.is_overloaded,
+            "power_capacity": self.power_capacity,
+        }
+
+    def import_state(self, state_data: dict):
+        """Import state from persistence. Uses current values as fallback for missing keys."""
+        if not state_data:
+            return
+        
+        if "temperature" in state_data:
+            self.temperature = float(state_data["temperature"])
+        if "global_shift_offset" in state_data:
+            self.global_shift_offset = int(state_data["global_shift_offset"])
+        if "treasury_balance" in state_data:
+            self.treasury_balance = int(state_data["treasury_balance"])
+        if "chernobyl_mode" in state_data:
+            mode_str = state_data["chernobyl_mode"]
+            try:
+                self.chernobyl_mode = ChernobylMode(mode_str)
+            except ValueError:
+                pass  # Keep default if invalid
+        if "is_overloaded" in state_data:
+            self.is_overloaded = bool(state_data["is_overloaded"])
+        if "power_capacity" in state_data:
+            self.power_capacity = int(state_data["power_capacity"])
+
 gamestate = GameState()

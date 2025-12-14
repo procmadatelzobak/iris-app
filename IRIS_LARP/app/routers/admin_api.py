@@ -324,6 +324,7 @@ async def get_control_state(admin=Depends(get_current_admin)):
         "optimizer_active": gamestate.optimizer_active,
         "agent_response_window": gamestate.agent_response_window,
         "hyper_visibility_mode": gamestate.hyper_visibility_mode.value,
+        "chernobyl_mode": gamestate.chernobyl_mode.value,
         "temperature": gamestate.temperature,
         "power_capacity": gamestate.power_capacity,
         "power_load": gamestate.power_load,
