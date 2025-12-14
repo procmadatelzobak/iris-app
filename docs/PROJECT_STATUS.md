@@ -139,51 +139,40 @@
 
 ## Development Roadmap - Planned Features
 
-### Phase 31 - Enhanced LLM Configuration (PLANNED)
+### Phase 31 - Enhanced LLM Configuration (DONE)
 
-The current ROOT dashboard CONFIG tab provides limited AI configuration. The following features are planned:
+ROOT dashboard CONFIG tab now exposes separate controls for each AI role (task intake, soft/optimizer, HYPER autopilot) with provider/model selection, system prompts, and key management.
 
 #### Per-Role LLM Configuration UI
 Currently, the system has backend support for two LLM configurations in `IRIS_LARP/app/logic/gamestate.py`:
 - `llm_config_task` - LLM for task evaluation (default: GPT-4o)
 - `llm_config_hyper` - LLM for autopilot/HYPER mode (default: Gemini Flash)
 
-**Planned UI enhancements for ROOT CONFIG tab:**
-- [ ] **LLM pro zadávání úkolů (Task Evaluator LLM)**: 
-  - Model selection dropdown
-  - Provider selection (OpenAI/OpenRouter/Gemini)
-  - Custom system prompt input
-- [ ] **HYPER LLM (Autopilot)**: 
-  - Model selection dropdown (currently only shows Autopilot Model)
-  - Provider selection (currently hardcoded to OpenRouter)
-  - Custom system prompt input
-- [ ] **Soft režim (AI Optimizer)**:
-  - Model selection dropdown (currently uses same config as HYPER)
-  - Provider selection
-  - Optimizer prompt (already implemented)
+**UI enhancements now live on ROOT CONFIG tab:**
+- [x] **LLM pro zadávání úkolů (Task Evaluator LLM)**: Provider picker (OpenAI/OpenRouter/Gemini), live model list from API keys, custom system prompt + model ID fields.
+- [x] **HYPER LLM (Autopilot)**: Provider picker, model list per provider, editable system prompt and manual model override.
+- [x] **Soft režim (AI Optimizer)**: Dedicated provider/model/system prompt plus rewrite instruction field, separate from HYPER config.
 
 #### API Keys Management
 - [x] **OpenAI API Key**: Input field in CONFIG tab [DONE]
 - [x] **OpenRouter API Key**: Input field in CONFIG tab [DONE]
-- [ ] **Gemini API Key**: Input field missing in CONFIG tab UI (backend support exists in `config.py`)
+- [x] **Gemini API Key**: Input field now available; saved via admin API and .env/SystemConfig.
 
 #### Backend Status
 | Component | Backend API | UI Implementation |
 |-----------|-------------|-------------------|
-| Task LLM Config | ✅ `POST /api/admin/llm/config/task` | ❌ Not exposed |
-| HYPER LLM Config | ✅ `POST /api/admin/llm/config/hyper` | ⚠️ Partial (model only) |
-| Optimizer Config | ✅ `optimizer_prompt` in gamestate | ✅ Implemented |
-| Gemini API Key | ✅ `GEMINI_API_KEY` in config.py | ❌ Not exposed in UI |
+| Task LLM Config | ✅ `POST /api/admin/llm/config/task` | ✅ Provider/model/prompt UI |
+| HYPER LLM Config | ✅ `POST /api/admin/llm/config/hyper` | ✅ Provider/model/prompt UI |
+| Optimizer Config | ✅ `POST /api/admin/llm/config/optimizer` + prompt storage | ✅ Provider/model/system prompt + instruction UI |
+| Gemini API Key | ✅ `GEMINI_API_KEY` in config.py | ✅ Input + saver on CONFIG tab |
 
 ### Implementation Notes
 
-The LLM configuration APIs are already implemented in `IRIS_LARP/app/routers/admin_api.py`:
-- `GET /api/admin/llm/config` - Returns both task and hyper configs
-- `POST /api/admin/llm/config/{config_type}` - Updates task or hyper config
+LLM configuration APIs (and UI consumers) live in `IRIS_LARP/app/routers/admin_api.py` and `IRIS_LARP/app/templates/admin/root_dashboard.html`:
+- `GET /api/admin/llm/config` - Returns task, hyper, and optimizer configs including prompts
+- `POST /api/admin/llm/config/{config_type}` - Updates task, hyper, or optimizer config
 - `GET /api/admin/llm/models/{provider}` - Lists available models for a provider
 - `POST /api/admin/llm/keys` - Sets API key for a provider (supports all providers including Gemini)
-
-The ROOT dashboard UI (`IRIS_LARP/app/templates/admin/root_dashboard.html`) needs to be updated to expose these existing APIs.
 
 ### Phase 32 - Panic Mode (PLANNED)
 

@@ -88,3 +88,27 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 
 ### Tests
 - Not run (UI localization change; no automated coverage in container).
+
+=======
+
+## [2025-12-15] Phase 31 - Enhanced LLM Configuration UI
+### Prompt
+- ROOT dashboard CONFIG tab currently configures only one AI. Need separate per-role LLM setup (task intake, soft/optimizer, hyper) with provider selection, model listing via API keys (.env or UI), and system prompts for each LLM profile.
+
+### Plan
+- [x] Review existing ROOT config UI and admin API endpoints for LLM configuration and key management.
+- [x] Extend backend state/endpoints to store optimizer LLM settings (provider, model, prompt) alongside task and hyper configs.
+- [x] Redesign ROOT CONFIG tab with per-role cards (task, soft/optimizer, hyper) supporting provider selection, dynamic model lists, custom system prompts, and API key updates (OpenAI/OpenRouter/Gemini).
+- [x] Update project status/docs and note any tests executed.
+
+### Progress Notes
+- Added persistent `llm_config_optimizer` to game state with reset defaults and plumbed optimizer rewrites to use configurable provider/model/system prompt.
+- Extended admin LLM config API to include optimizer payloads (provider/model/system prompt + rewrite prompt) and updated config fetch to expose all roles.
+- Rebuilt ROOT CONFIG tab into three dedicated LLM cards with provider pickers, live model refreshers, custom prompts, and manual model inputs; API key saver now supports Gemini keys and masked retrieval.
+
+### Outcome
+- Per-role LLM settings (task, optimizer, hyper) can be independently configured from the ROOT dashboard using live model lists per provider and stored prompts; backend rewrites now honor optimizer config.
+- Documentation (PROJECT_STATUS, PROMPT_LOG) updated to reflect the completed LLM configuration UI and Gemini key field.
+
+### Tests
+- Not run (UI/API wiring change; manual verification recommended for model listing with real API keys).

@@ -14,18 +14,36 @@ async def list_models(provider: LLMProvider, admin=Depends(get_current_admin)):
 async def get_llm_config(admin=Depends(get_current_admin)):
     return {
         "task": gamestate.llm_config_task,
-        "hyper": gamestate.llm_config_hyper
+        "hyper": gamestate.llm_config_hyper,
+        "optimizer": {
+            **gamestate.llm_config_optimizer.dict(),
+            "prompt": gamestate.optimizer_prompt
+        }
     }
 
+class OptimizerConfigPayload(BaseModel):
+    provider: LLMProvider
+    model_name: str
+    system_prompt: str
+    prompt: str
+
 @router.post("/llm/config/{config_type}")
-async def set_llm_config(config_type: str, config: LLMConfig, admin=Depends(get_current_admin)):
+async def set_llm_config(config_type: str, payload: dict = Body(...), admin=Depends(get_current_admin)):
     if config_type == "task":
-        gamestate.llm_config_task = config
+        gamestate.llm_config_task = LLMConfig(**payload)
     elif config_type == "hyper":
-        gamestate.llm_config_hyper = config
+        gamestate.llm_config_hyper = LLMConfig(**payload)
+    elif config_type == "optimizer":
+        parsed = OptimizerConfigPayload(**payload)
+        gamestate.llm_config_optimizer = LLMConfig(
+            provider=parsed.provider,
+            model_name=parsed.model_name,
+            system_prompt=parsed.system_prompt
+        )
+        gamestate.optimizer_prompt = parsed.prompt
     else:
         raise HTTPException(status_code=400, detail="Invalid config type")
-    return {"status": "ok"}
+    return {"status": "ok", "config_type": config_type}
 
 # API Key Management
 from ..database import SessionLocal, SystemConfig
