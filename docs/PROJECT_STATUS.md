@@ -113,3 +113,53 @@
 ## Next Steps
 - User Acceptance Testing (Manual) of all UI changes.
 - Deployment.
+
+---
+
+## Development Roadmap - Planned Features
+
+### Phase 31 - Enhanced LLM Configuration (PLANNED)
+
+The current ROOT dashboard CONFIG tab provides limited AI configuration. The following features are planned:
+
+#### Per-Role LLM Configuration UI
+Currently, the system has backend support for two LLM configurations in `IRIS_LARP/app/logic/gamestate.py`:
+- `llm_config_task` - LLM for task evaluation (default: GPT-4o)
+- `llm_config_hyper` - LLM for autopilot/HYPER mode (default: Gemini Flash)
+
+**Planned UI enhancements for ROOT CONFIG tab:**
+- [ ] **LLM pro zadávání úkolů (Task Evaluator LLM)**: 
+  - Model selection dropdown
+  - Provider selection (OpenAI/OpenRouter/Gemini)
+  - Custom system prompt input
+- [ ] **HYPER LLM (Autopilot)**: 
+  - Model selection dropdown (currently only shows Autopilot Model)
+  - Provider selection (currently hardcoded to OpenRouter)
+  - Custom system prompt input
+- [ ] **Soft režim (AI Optimizer)**:
+  - Model selection dropdown (currently uses same config as HYPER)
+  - Provider selection
+  - Optimizer prompt (already implemented)
+
+#### API Keys Management
+- [x] **OpenAI API Key**: Input field in CONFIG tab [DONE]
+- [x] **OpenRouter API Key**: Input field in CONFIG tab [DONE]
+- [ ] **Gemini API Key**: Input field missing in CONFIG tab UI (backend support exists in `config.py`)
+
+#### Backend Status
+| Component | Backend API | UI Implementation |
+|-----------|-------------|-------------------|
+| Task LLM Config | ✅ `POST /api/admin/llm/config/task` | ❌ Not exposed |
+| HYPER LLM Config | ✅ `POST /api/admin/llm/config/hyper` | ⚠️ Partial (model only) |
+| Optimizer Config | ✅ `optimizer_prompt` in gamestate | ✅ Implemented |
+| Gemini API Key | ✅ `GEMINI_API_KEY` in config.py | ❌ Not exposed in UI |
+
+### Implementation Notes
+
+The LLM configuration APIs are already implemented in `IRIS_LARP/app/routers/admin_api.py`:
+- `GET /api/admin/llm/config` - Returns both task and hyper configs
+- `POST /api/admin/llm/config/{config_type}` - Updates task or hyper config
+- `GET /api/admin/llm/models/{provider}` - Lists available models for a provider
+- `POST /api/admin/llm/keys` - Sets API key for a provider (supports all providers including Gemini)
+
+The ROOT dashboard UI (`IRIS_LARP/app/templates/admin/root_dashboard.html`) needs to be updated to expose these existing APIs.

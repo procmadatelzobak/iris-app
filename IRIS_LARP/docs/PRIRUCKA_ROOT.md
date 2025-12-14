@@ -79,27 +79,50 @@ Tlačítko **[ APPLY PHYSICS ]** uloží změny.
 
 Kliknutím na záložku **CONFIG** nastavíte AI funkce.
 
-### 3.1 TEST MODE
+### 3.1 TEST MODE (DEVELOPER MODE)
 
 **Tlačítko [ TEST MODE: DISABLED/ENABLED ]**
 - Zapne rychlá přihlašovací tlačítka na login obrazovce
 - Pro testování bez hesel
 
-### 3.2 AI KEYS
+### 3.2 NASTAVENÍ JAZYKA
 
-**API Key**
-- Zadejte OpenRouter/OpenAI API klíč
-- Tlačítko **[ SAVE KEY ]** uloží
+**Režim Jazyka Systému**
+- Čeština (výchozí)
+- Čeština + IRIS Terminologie
 
-### 3.3 Hyper Config
+**Resetovat Vlastní Texty**
+- Vrátí všechny administrátorem upravené texty na výchozí hodnoty
 
-**Model Name**
-- Název modelu pro autopilota (např. `google/gemini-2.0-flash-lite-preview-02-05:free`)
+### 3.3 AI CONFIGURATION
 
-**Optimizer Prompt**
-- Text, podle kterého AI přepisuje zprávy agentů
+#### Aktuálně implementováno:
 
-Tlačítko **[ APPLY ]** uloží nastavení.
+| Nastavení | Stav |
+|-----------|------|
+| **OPTIMIZER PROMPT** | ✅ Funkční - text pro přepisování zpráv |
+| **AUTOPILOT MODEL** | ✅ Funkční - výběr modelu (Gemini 2.0 Flash, Gemini 1.5 Flash, GPT-4o Mini) |
+| **OpenAI API KEY** | ✅ Funkční - vstup pro klíč |
+| **OpenRouter API KEY** | ✅ Funkční - vstup pro klíč |
+| **Gemini API KEY** | ❌ Chybí v UI (backend podporuje) |
+
+#### Plánované funkce (zatím neimplementováno):
+
+| Funkce | Popis |
+|--------|-------|
+| **LLM pro zadávání úkolů** | Samostatná konfigurace modelu pro hodnocení úkolů |
+| **HYPER LLM (Autopilot)** | Rozšířená konfigurace - výběr poskytovatele, vlastní system prompt |
+| **Soft režim (Optimizer)** | Samostatná konfigurace modelu pro přepisování zpráv |
+| **Per-role nastavení** | Možnost nastavit různé LLM pro různé role |
+
+> [!NOTE]
+> Backend API pro konfiguraci jednotlivých LLM rolí existuje (`/api/admin/llm/config/task` a `/api/admin/llm/config/hyper`), ale není zatím zpřístupněno v ROOT dashboard UI.
+
+### 3.4 SYSTEM INFORMATION
+
+**Version** - Aktuální verze systému (Phase 25.0)
+**Total Users** - Počet uživatelů v databázi
+**Database** - Typ databáze (SQLite)
 
 ---
 

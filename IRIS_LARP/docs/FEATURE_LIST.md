@@ -233,21 +233,32 @@
 - ✅ **Multi-Provider Support**:
   - OpenAI (GPT-4o, GPT-4o-mini)
   - OpenRouter (Gemini, various models)
+  - Gemini (Direct API)
 - ✅ **Dynamic API Key Management**: Store keys in database
-- ✅ **Two LLM Configs**:
-  - Task Evaluator (default: GPT-4o)
-  - Hyper/Autopilot (default: Gemini Flash)
+- ⚠️ **Two LLM Configs** (Backend):
+  - Task Evaluator (default: GPT-4o) - API exists, UI not exposed
+  - Hyper/Autopilot (default: Gemini Flash) - Partial UI (model only)
+
+### ROOT Dashboard AI Configuration (CONFIG Tab)
+- ✅ **Optimizer Prompt**: Customizable prompt for message rewriting
+- ⚠️ **Autopilot Model Selection**: Only model name, no provider selection
+- ❌ **Task Evaluator LLM Config**: Not exposed in ROOT UI
+- ❌ **Per-Role LLM Provider Selection**: Not implemented in UI
+- ✅ **OpenAI API Key**: Input field available
+- ✅ **OpenRouter API Key**: Input field available
+- ❌ **Gemini API Key**: Backend support exists, UI input missing
 
 ### Message Optimizer
 - ✅ Rewrites agent messages in custom tone/style
 - ✅ Preview-Confirm-Reject workflow
 - ✅ Configurable system prompt (ROOT/Admin)
 - ✅ Grants report immunity
+- ⚠️ Uses hardcoded model (no separate config from HYPER)
 
 ### Autopilot
 - ✅ AI-driven automatic responses
 - ✅ Maintains per-session context
-- ✅ Configurable model selection
+- ⚠️ Configurable model selection (partial - model only, not provider)
 - ✅ Toggle per agent
 
 ---
@@ -337,11 +348,11 @@
 
 ## Feature Status Legend
 - ✅ **Implemented & Tested**
-- ⚠️ **Implemented, Needs Testing**
+- ⚠️ **Partial Implementation** (Backend exists, UI incomplete)
 - 🔄 **In Progress**
-- ❌ **Planned, Not Started**
+- ❌ **Planned, Not Started** / **Missing**
 
 ---
 
 **Total Features**: 150+  
-**Last Major Update**: Phase 25 (ROOT Console, Purgatory Mode, Test Mode)
+**Last Major Update**: Phase 30 (UI Fixes, LLM Configuration Documentation)
