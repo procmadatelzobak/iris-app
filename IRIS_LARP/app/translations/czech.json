@@ -5,10 +5,10 @@
     "description": "Kompletní České překlady pro celé IRIS UI"
   },
   "login": {
-    "title": "IRIS_SECURITY",
+    "title": "HLINIK",
     "username_label": "IDENTIFIKÁTOR",
     "password_label": "HESLO",
-    "submit_button": "[ INICIOVAT RELACI ]",
+    "submit_button": "[ PŘIHLÁSIT ]",
     "unauthorized_access": "NEOPRÁVNĚNÝ PŘÍSTUP JE TRESTNÝ",
     "protocol": "PROTOKOL V.3.1.2",
     "test_mode_warning": "⚠ TESTOVACÍ REŽIM: RYCHLÉ PŘIHLÁŠENÍ AKTIVNÍ ⚠",
