@@ -1,3 +1,4 @@
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -118,3 +119,11 @@ IRIS_LARP/server.log
 *.tmp
 *.temp
 .DS_Store
+
+__pycache__/
+*.pyc
+*.pyo
+*.db
+.env
+*.log
+*.db
