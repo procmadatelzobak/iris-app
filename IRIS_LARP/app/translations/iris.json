@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "language": "czech-iris",
+    "version": "1.0.0",
+    "description": "IRIS specifické přepisy pro správce - pouze rozdíly oproti czech.json. Toto je LARP-specific slovník pro admin terminologii.",
+    "extends": "czech",
+    "note": "Tento soubor obsahuje pouze klíče, které přepisují základní české překlady. Pro vše ostatní se použije czech.json."
+  },
+  "admin_dashboard": {
+    "hub_station_1": "UMYVADLO",
+    "hub_desc_1": "MONITORING",
+    "hub_station_2": "ROZKOŠ",
+    "hub_desc_2": "KONTROLA",
+    "hub_station_3": "BAHNO",
+    "hub_desc_3": "EKONOMIKA",
+    "hub_station_4": "MRKEV",
+    "hub_desc_4": "ÚKOLY",
+    "btn_labels": "PŘEPSAT REALITU",
+    "btn_ai_cfg": "MODZEK",
+    "btn_reset_sys": "AUTO-DESTRUKCE",
+    "tab_all": "VŠEVIDOUCÍ",
+    "tab_chats": "ŠUM",
+    "tab_logs": "HISTORIE OMYLŮ",
+    "tab_graph": "PAVUČINA",
+    "hdr_log_mini": "HLINÍK LOG",
+    "hdr_log_full": "HLINÍK SYSTÉMOVÝ LOG",
+    "lbl_shift": "POSUN REALITY",
+    "btn_shift": "[ >> ROZTOČIT KOLA OSUDU >> ]",
+    "lbl_energy": "TLAK PÁRY",
+    "btn_buy_power": "PŘIHODIT UHLÍ (+50MW) - 1000 CR",
+    "lbl_temperature": "HLADINA STRESU",
+    "lbl_mode": "RYCHLOST BĚHU",
+    "btn_mode_normal": "NORMÁL",
+    "btn_mode_low": "ÚSPORA",
+    "btn_mode_oc": "PŘETÍŽENÍ",
+    "lbl_vis": "FILTR PRAVDY",
+    "btn_vis_norm": "ŽÁDNÝ",
+    "btn_vis_bb": "ČERNÁ SKŘÍŇKA",
+    "btn_vis_forensic": "FOREZKA",
+    "lbl_treasury": "NÁRODNÍ BANKA BAHNA",
+    "hdr_eco_sub": "EKONOMIKA PODDANÝCH",
+    "btn_refresh_eco": "VYKOPAT POKLAD",
+    "lbl_pending": "MRKEV NA HOLI (ČEKÁ)",
+    "lbl_submitted": "SKLIZEŇ (HOTOVO)",
+    "card_channel": "KANÁL",
+    "card_object": "OBJEKT",
+    "card_shadow": "STÍN"
+  },
+  "editable_labels": {
+    "_note": "Admin může přepsat tyto hodnoty pomocí custom pojmenování. Tyto se ukládají v databázi a mají nejvyšší prioritu."
+  }
+}
