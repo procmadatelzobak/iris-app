@@ -15,4 +15,5 @@
 | 2025-12-14 | "Zavést odpočet na odpověď agenta, chybu po vypršení a admin nastavení" | Phase 33 | Countdown, UI indicator, and admin control added (tests pending). |
 
 | 2025-12-14 | "Agent terminal still shows English strings (hyper-mode, inject response, transmit)" | Phase 33 | Localization tightened and wired through translation system. |
+| 2025-12-14 | "Agent nevidí zprávy od uživatele; rozšiř status panel" | Phase 33 | Routing fixed and agent panel widened. |
 

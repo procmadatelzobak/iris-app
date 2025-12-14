@@ -127,6 +127,11 @@
 
 - [x] **Agent terminal localization**: Hyper-mode description, transmission lock overlay, and send controls now pull Czech translations via the translation system; timer states and placeholders stay localized across state changes.
 
+## Phase 33 - Agent Terminal Layout & Routing Fixes
+
+- [x] **Message delivery**: Agent websocket routing now uses logical agent IDs instead of DB PKs, ensuring mapped sessions receive user prompts.
+- [x] **Sidebar usability**: Agent status panel widened with shift/temperature context and response window indicators to better use vertical space.
+
 
 ## Uncertainties
 - [ ] None currently.

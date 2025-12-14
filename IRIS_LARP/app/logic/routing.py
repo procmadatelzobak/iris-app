@@ -9,6 +9,8 @@ class ConnectionManager:
         # Active connections: {user_id: [WebSocket]}
         self.user_connections: Dict[int, List[WebSocket]] = {}
         self.agent_connections: Dict[int, List[WebSocket]] = {}
+        # Mapping of DB agent IDs to logical routing IDs (agent1 -> 1 regardless of DB PK)
+        self.agent_logical_ids: Dict[int, int] = {}
         # Admin connections are just a list for broadcast
         self.admin_connections: List[WebSocket] = []
         
@@ -24,7 +26,7 @@ class ConnectionManager:
         # Sessions that have timed out (agent can no longer respond)
         self.timed_out_sessions: Dict[int, float] = {}  # SessionID -> timeout timestamp
 
-    async def connect(self, websocket: WebSocket, role: UserRole, user_id: int):
+    async def connect(self, websocket: WebSocket, role: UserRole, user_id: int, logical_id: Optional[int] = None):
         await websocket.accept()
         if role == UserRole.USER:
             if user_id not in self.user_connections:
@@ -34,6 +36,9 @@ class ConnectionManager:
             if user_id not in self.agent_connections:
                 self.agent_connections[user_id] = []
             self.agent_connections[user_id].append(websocket)
+            # Store logical routing id so session mapping is not tied to DB PK ordering
+            if logical_id:
+                self.agent_logical_ids[user_id] = logical_id
         elif role == UserRole.ADMIN:
             self.admin_connections.append(websocket)
 
@@ -50,6 +55,8 @@ class ConnectionManager:
                     self.agent_connections[user_id].remove(websocket)
                     if not self.agent_connections[user_id]:
                         del self.agent_connections[user_id]
+                        if user_id in self.agent_logical_ids:
+                            del self.agent_logical_ids[user_id]
         elif role == UserRole.ADMIN:
             if websocket in self.admin_connections:
                 self.admin_connections.remove(websocket)
@@ -113,7 +120,8 @@ class ConnectionManager:
         total = settings.TOTAL_SESSIONS
         
         for agent_id, connections in self.agent_connections.items():
-            agent_index = agent_id - 1
+            logical_id = self.agent_logical_ids.get(agent_id, agent_id)
+            agent_index = logical_id - 1
             session_index = (agent_index + shift) % total
             current_session_id = session_index + 1
             
@@ -141,7 +149,8 @@ class ConnectionManager:
         total = settings.TOTAL_SESSIONS
         
         for agent_id, connections in self.agent_connections.items():
-            agent_index = agent_id - 1
+            logical_id = self.agent_logical_ids.get(agent_id, agent_id)
+            agent_index = logical_id - 1
             session_index = (agent_index + shift) % total
             current_session_id = session_index + 1
             
