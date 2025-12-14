@@ -107,6 +107,10 @@
 - [x] **Agent responding indicator**: Added animated indicator while waiting for agent response
 - [x] **Auto-hide indicator**: Indicator hides when agent responds or after 2 minute timeout
 
+## Phase 32 - Admin Task Workflow Fixes
+
+- [x] **Task visibility**: Admin task dashboard now uses authenticated API calls, reliable status strings, and live websocket refresh when new submissions arrive.
+
 ## Uncertainties
 - [ ] None currently.
 

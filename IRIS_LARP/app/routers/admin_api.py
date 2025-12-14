@@ -211,7 +211,7 @@ async def get_tasks(admin=Depends(get_current_admin)):
             "id": t.id,
             "user_id": t.user_id,
             "prompt": t.prompt_desc,
-            "status": t.status,
+            "status": t.status.value if hasattr(t.status, "value") else str(t.status),
             "reward": t.reward_offered,
             "submission": t.submission_content
         })

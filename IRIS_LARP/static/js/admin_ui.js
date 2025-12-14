@@ -594,7 +594,13 @@ window.setStatus = async function(userId, status) {
 window.refreshTasks = async function() {
     if (window.currentView !== 'tasks') return;
     try {
-        const res = await fetch('/api/admin/tasks');
+        const res = await fetch('/api/admin/tasks', {
+            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+        });
+        if (!res.ok) {
+            console.error('Task fetch fail', res.status);
+            return;
+        }
         const tasks = await res.json();
 
         const pendingDiv = document.getElementById('pendingTasksCtx');
@@ -639,7 +645,10 @@ window.approveTask = async function(id) {
     const rew = rewEl ? rewEl.value : 100;
     await fetch('/api/admin/tasks/approve', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`
+        },
         body: JSON.stringify({ task_id: id, reward: parseInt(rew) })
     });
     refreshTasks();
@@ -650,7 +659,10 @@ window.payTask = async function(id) {
     const rate = ratEl ? ratEl.value : 100;
     await fetch('/api/admin/tasks/pay', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`
+        },
         body: JSON.stringify({ task_id: id, rating: parseInt(rate) })
     });
     refreshTasks();
@@ -681,6 +693,13 @@ function handleMessage(data) {
     if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
         if (window.translationManager) {
             window.translationManager.handleTranslationUpdate(data);
+        }
+        return;
+    }
+
+    if (data.type === 'admin_refresh_tasks') {
+        if (window.currentView === 'tasks') {
+            refreshTasks();
         }
         return;
     }
