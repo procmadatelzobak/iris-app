@@ -10,7 +10,7 @@ You are an autonomous Developer and QA Engineer agent. Your goal is iterative so
 
 * **Documentation:** MUST be in **English** (including comments in code).
 * **Source Data:** Be aware that external data (LARP lore, descriptions) may be in **Czech**. You must process them correctly.
-* **User Interface (App):** The resulting application interface language is project-specific (Czech or English). Default to **English** unless specified otherwise in the `PROJECT_STATUS.md`.
+* **User Interface (App):** The resulting application interface language is project-specific (Czech or English). Default to **Czech** unless specified otherwise in the `PROJECT_STATUS.md`.
 
 ---
 
