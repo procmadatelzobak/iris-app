@@ -269,6 +269,7 @@ window.loadControlState = async function() {
 // --- NETWORK GRAPH (CANVAS) ---
 let graphLoop = null;
 let particles = [];
+const MAX_PARTICLES = 100; // Limit particle count for performance
 function startGraphLoop() {
     if (graphLoop) return;
     const canvas = document.getElementById('networkGraph');
@@ -350,8 +351,8 @@ function startGraphLoop() {
                 ctx.stroke();
             }
 
-            // Spawn particles along connections
-            if (Math.random() < 0.08) {
+            // Spawn particles along connections (with limit for performance)
+            if (particles.length < MAX_PARTICLES && Math.random() < 0.08) {
                 particles.push({
                     x: x,
                     y: y,
@@ -393,7 +394,10 @@ function startGraphLoop() {
             ctx.fillText(`A${agentId}`, agX + 10, agY + 10);
         }
 
-        // Update and draw particles
+        // Update and draw particles (batched by color for performance)
+        const greenParticles = [];
+        const magentaParticles = [];
+        
         particles = particles.filter(p => {
             p.x += p.vx;
             p.y += p.vy;
@@ -401,31 +405,59 @@ function startGraphLoop() {
             
             if (p.life <= 0) return false;
             
-            ctx.shadowBlur = 5;
-            ctx.shadowColor = `rgb(${p.color[0]}, ${p.color[1]}, ${p.color[2]})`;
-            ctx.fillStyle = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.life})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            // Batch particles by color
+            if (p.color[0] === 0) greenParticles.push(p);
+            else magentaParticles.push(p);
             
             return true;
         });
+        
+        // Draw green particles in one batch
+        if (greenParticles.length > 0) {
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#0f0';
+            greenParticles.forEach(p => {
+                ctx.fillStyle = `rgba(0, 255, 0, ${p.life})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        
+        // Draw magenta particles in one batch
+        if (magentaParticles.length > 0) {
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#f0f';
+            magentaParticles.forEach(p => {
+                ctx.fillStyle = `rgba(255, 0, 255, ${p.life})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        ctx.shadowBlur = 0;
 
-        // Central core with complex pulsing
+        // Central core with complex pulsing (optimized with gradient instead of multiple shadow blurs)
         const coreSize = 15 + Math.sin(time * 2) * 5 + Math.cos(time * 3) * 3;
         const coreAlpha = 0.6 + Math.abs(Math.sin(time * 1.5)) * 0.4;
         
-        // Core glow layers
-        for (let i = 3; i > 0; i--) {
-            ctx.shadowBlur = 20 * i;
-            ctx.shadowColor = '#f00';
-            ctx.fillStyle = `rgba(255, 0, 0, ${coreAlpha / (i + 1)})`;
-            ctx.beginPath();
-            ctx.arc(cx, cy, coreSize + i * 2, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        ctx.shadowBlur = 0;
+        // Use radial gradient for glow effect (more efficient than multiple shadow blurs)
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize + 8);
+        gradient.addColorStop(0, `rgba(255, 0, 0, ${coreAlpha})`);
+        gradient.addColorStop(0.5, `rgba(255, 0, 0, ${coreAlpha * 0.6})`);
+        gradient.addColorStop(0.8, `rgba(255, 0, 0, ${coreAlpha * 0.3})`);
+        gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreSize + 8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Bright center
+        ctx.fillStyle = `rgba(255, 100, 0, ${coreAlpha})`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreSize, 0, Math.PI * 2);
+        ctx.fill();
 
         // Add energy waves from center
         const waveCount = 3;
