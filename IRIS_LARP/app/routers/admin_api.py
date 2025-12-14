@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
 from typing import List, Dict
+from pydantic import BaseModel
 from ..dependencies import get_current_admin, get_current_root
 from ..logic.llm_core import llm_service, LLMConfig, LLMProvider
 from ..logic.gamestate import gamestate
@@ -47,7 +48,6 @@ async def set_llm_config(config_type: str, payload: dict = Body(...), admin=Depe
 
 # API Key Management
 from ..database import SessionLocal, SystemConfig
-from pydantic import BaseModel
 
 class KeyUpdate(BaseModel):
     provider: LLMProvider

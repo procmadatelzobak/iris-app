@@ -2,7 +2,7 @@
 
 **Language Policy:** Documentation (EN), UI (Czech/English Hybrid as per LARP Spec).
 
-## Current Phase: Phase 33 - Agent Response Controls [IN_PROGRESS]
+## Current Phase: Phase 34 - FastAPI Stability Fixes [IN_PROGRESS]
 
 | Phase | Description | Status |
 | :--- | :--- | :--- |
@@ -131,6 +131,10 @@
 
 - [x] **Message delivery**: Agent websocket routing now uses logical agent IDs instead of DB PKs, ensuring mapped sessions receive user prompts.
 - [x] **Sidebar usability**: Agent status panel widened with shift/temperature context and response window indicators to better use vertical space.
+
+## Phase 34 - Server Stability
+
+- [x] **Admin API import order**: Ensure BaseModel is imported before class declarations to prevent startup crashes.
 
 
 ## Uncertainties

@@ -22,4 +22,6 @@
 
 | 2025-12-15 | "V dashboardu STANICE 3: EKONOMIKA nejsou vidět žádné hodnoty." | Phase 33 | Station 3 economy views now authorize API calls and display seeded users. |
 
+| 2025-12-14 | "Uvicorn spadl kvůli BaseModel NameError v admin_api" | Phase 34 | Fix import order to restore FastAPI startup. |
+
 
