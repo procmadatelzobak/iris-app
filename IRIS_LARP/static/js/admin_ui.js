@@ -545,6 +545,14 @@ function initWebSocket() {
 }
 
 function handleMessage(data) {
+    // Handle translation updates (all pages)
+    if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
+        if (window.translationManager) {
+            window.translationManager.handleTranslationUpdate(data);
+        }
+        return;
+    }
+    
     if (data.type === 'init') {
         renderMonitor(data.active_sessions);
     } else if (data.type === 'gamestate_update') {

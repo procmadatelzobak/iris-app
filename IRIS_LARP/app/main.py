@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
-from .routers import auth, sockets, admin_api
+from .routers import auth, sockets, admin_api, translations
 from .database import init_db
 from .config import settings
 from .seed import seed_data
@@ -84,6 +84,7 @@ templates = Jinja2Templates(directory="app/templates")
 app.include_router(auth.router)
 app.include_router(sockets.router)
 app.include_router(admin_api.router)
+app.include_router(translations.router)
 
 @app.get("/")
 async def root(request: Request):

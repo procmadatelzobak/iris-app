@@ -75,6 +75,10 @@ class GameState:
 
         self.test_mode = False # v1.9 Test Mode
         
+        # Translation System
+        self.language_mode = "cz"  # "cz" or "czech-iris"
+        self.custom_labels = {}  # Admin-defined custom labels
+        
         self.initialized = True
         
     def set_temperature(self, value: float):
@@ -154,5 +158,7 @@ class GameState:
         self.COST_PER_AUTOPILOT = 10.0
         self.COST_LOW_LATENCY = 30.0
         self.COST_OPTIMIZER_ACTIVE = 15.0
+        # Reset custom labels (translation overrides)
+        self.custom_labels = {}
 
 gamestate = GameState()

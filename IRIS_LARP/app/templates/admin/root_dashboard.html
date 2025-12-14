@@ -228,6 +228,39 @@
                 </div>
             </div>
 
+            <!-- Language Settings Panel -->
+            <div class="god-panel mt-6">
+                <div class="god-title">🌍 NASTAVENÍ JAZYKA</div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-lg font-bold">Režim Jazyka Systému</div>
+                            <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní</div>
+                        </div>
+                        <select id="languageModeSelect" 
+                                class="bg-black border border-gray-700 p-2 text-white min-w-48"
+                                onchange="setLanguageMode(this.value)">
+                            <option value="cz">Čeština (výchozí)</option>
+                            <option value="czech-iris">Čeština + IRIS Terminologie</option>
+                        </select>
+                    </div>
+                    <div class="text-xs text-gray-500 border-t border-gray-800 pt-2 mt-2">
+                        <strong>Čeština:</strong> Standardní české překlady pro všechny uživatele<br>
+                        <strong>Čeština + IRIS:</strong> LARP-specifická terminologie pro správce (UMYVADLO, BAHNO, atd.)
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                        <div>
+                            <div class="text-sm font-bold">Vlastní Přejmenování Textů</div>
+                            <div class="text-xs text-gray-500">Správci mohou přejmenovat texty v UI pomocí editačního režimu</div>
+                        </div>
+                        <button class="btn-god px-4" onclick="resetAllLabels()">
+                            RESETOVAT VŠECHNY VLASTNÍ TEXTY
+                        </button>
+                    </div>
+                    <div id="languageStatus" class="text-sm text-gray-600 italic"></div>
+                </div>
+            </div>
+
             <!-- LLM Configuration -->
             <div class="god-panel mt-6">
                 <div class="god-title">🤖 AI CONFIGURATION</div>
@@ -408,6 +441,19 @@
 
         function handlePayload(data) {
             logEvent(data.type);
+            
+            // Handle translation updates
+            if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
+                if (window.translationManager) {
+                    window.translationManager.handleTranslationUpdate(data);
+                }
+                if (data.type === 'language_change') {
+                    const select = document.getElementById('languageModeSelect');
+                    if (select) select.value = data.language_mode;
+                }
+                return;
+            }
+            
             if (data.type === 'gamestate_update') {
                 document.getElementById('valShift').innerText = data.shift;
                 document.getElementById('bigShift').innerText = data.shift;
@@ -690,6 +736,79 @@
             `;
             }
         }
+
+        // --- LANGUAGE SETTINGS ---
+        window.setLanguageMode = async (mode) => {
+            const status = document.getElementById('languageStatus');
+            try {
+                const res = await fetch('/api/translations/language', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ language_mode: mode })
+                });
+                
+                if (res.ok) {
+                    status.innerText = '✅ Jazyk úspěšně změněn na: ' + (mode === 'cz' ? 'Čeština' : 'Čeština + IRIS');
+                    status.classList.remove('text-gray-600', 'text-red-500');
+                    status.classList.add('text-green-500');
+                } else {
+                    const data = await res.json();
+                    status.innerText = '❌ Chyba: ' + (data.detail || 'Nepodařilo se změnit jazyk');
+                    status.classList.remove('text-gray-600', 'text-green-500');
+                    status.classList.add('text-red-500');
+                }
+            } catch (e) {
+                status.innerText = '❌ Chyba připojení';
+                status.classList.remove('text-gray-600', 'text-green-500');
+                status.classList.add('text-red-500');
+            }
+        };
+
+        window.resetAllLabels = async () => {
+            if (!confirm('Opravdu chcete resetovat všechny vlastní texty? Tuto akci nelze vrátit zpět.')) return;
+            
+            const status = document.getElementById('languageStatus');
+            try {
+                const res = await fetch('/api/translations/reset-labels', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (res.ok) {
+                    status.innerText = '✅ Všechny vlastní texty byly resetovány';
+                    status.classList.remove('text-gray-600', 'text-red-500');
+                    status.classList.add('text-green-500');
+                } else {
+                    status.innerText = '❌ Nepodařilo se resetovat texty';
+                    status.classList.remove('text-gray-600', 'text-green-500');
+                    status.classList.add('text-red-500');
+                }
+            } catch (e) {
+                status.innerText = '❌ Chyba připojení';
+            }
+        };
+
+        // Load current language setting
+        window.loadLanguageSettings = async () => {
+            try {
+                const res = await fetch('/api/translations/language-options', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const select = document.getElementById('languageModeSelect');
+                    if (select && data.current) {
+                        select.value = data.current;
+                    }
+                }
+            } catch (e) { console.warn("Language settings load failed"); }
+        };
+
+        // Call on init
+        setTimeout(loadLanguageSettings, 1200);
 
     </script>
     {% endblock %}
