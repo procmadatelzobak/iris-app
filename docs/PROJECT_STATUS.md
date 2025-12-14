@@ -123,7 +123,7 @@
 The current ROOT dashboard CONFIG tab provides limited AI configuration. The following features are planned:
 
 #### Per-Role LLM Configuration UI
-Currently, the system has backend support for two LLM configurations in `gamestate.py`:
+Currently, the system has backend support for two LLM configurations in `IRIS_LARP/app/logic/gamestate.py`:
 - `llm_config_task` - LLM for task evaluation (default: GPT-4o)
 - `llm_config_hyper` - LLM for autopilot/HYPER mode (default: Gemini Flash)
 
@@ -156,10 +156,10 @@ Currently, the system has backend support for two LLM configurations in `gamesta
 
 ### Implementation Notes
 
-The LLM configuration APIs are already implemented in `admin_api.py`:
+The LLM configuration APIs are already implemented in `IRIS_LARP/app/routers/admin_api.py`:
 - `GET /api/admin/llm/config` - Returns both task and hyper configs
 - `POST /api/admin/llm/config/{config_type}` - Updates task or hyper config
 - `GET /api/admin/llm/models/{provider}` - Lists available models for a provider
 - `POST /api/admin/llm/keys` - Sets API key for a provider (supports all providers including Gemini)
 
-The ROOT dashboard UI (`root_dashboard.html`) needs to be updated to expose these existing APIs.
+The ROOT dashboard UI (`IRIS_LARP/app/templates/admin/root_dashboard.html`) needs to be updated to expose these existing APIs.
