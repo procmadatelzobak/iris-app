@@ -7,3 +7,4 @@
 | 2025-12-13 | "Phase 16 Specification: AI Optimizer & Economy Rebalance" | Phase 19 | Started implementation of Optimizer/Eco update. |
 | 2025-12-13 | "Phase 20 Specification: Critical Fixes & Root Control Implementation" | Phase 20 | Started Phase 20 (Fixes + Root Control). |
 | 2025-12-13 | "Phase 21 Specification: UI Feedback, Temperature System & Lore Integration" | Phase 21 | Started Phase 21 (Temp Refactor, UI Feedback). |
+| 2025-12-14 | "Admin tasks dashboard empty while user sees pending task" | Phase 32 | Investigation and fix in progress. |
