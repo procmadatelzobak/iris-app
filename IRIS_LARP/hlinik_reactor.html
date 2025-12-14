@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTÉM HLINÍK</title>
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --panel-bg: #1a1a1a;
+            --text-color: #00ff41;
+            --alert-color: #ff3333;
+            --border-color: #333;
+            --font-main: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- UTILITIES --- */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .full-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .border-panel {
+            border: 2px solid var(--border-color);
+            background: var(--panel-bg);
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .glitch-text {
+            text-shadow: 2px 0 var(--border-color), -2px 0 var(--alert-color);
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            z-index: 100;
+            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95)), repeating-linear-gradient(0deg, transparent, transparent 2px, #00ff41 3px, transparent 4px);
+            background-size: 100% 4px;
+        }
+
+        .login-box {
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 10px;
+            margin-bottom: 15px;
+            font-family: inherit;
+            font-size: 1.1em;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: var(--text-color);
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .login-btn:hover {
+            background: #fff;
+        }
+
+        /* --- DASHBOARD --- */
+        #dashboard {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Progress Bar */
+        #temp-bar-container {
+            width: 100%;
+            height: 60px;
+            background: #222;
+            border: 3px solid #555;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #temp-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--text-color), #ffff00, var(--alert-color));
+            transition: width 0.1s linear;
+        }
+
+        .marker {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #fff;
+            z-index: 10;
+        }
+
+        .marker-label {
+            position: absolute;
+            top: 5px;
+            color: #fff;
+            font-size: 0.7em;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px;
+        }
+
+        /* Main Display */
+        .main-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #444;
+            position: relative;
+        }
+
+        #temp-display {
+            font-size: 6em;
+            font-weight: bold;
+            text-shadow: 0 0 20px var(--text-color);
+        }
+
+        #heat-btn {
+            margin-top: 30px;
+            padding: 30px 60px;
+            font-size: 1.5em;
+            background: #330000;
+            color: var(--alert-color);
+            border: 4px solid var(--alert-color);
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--alert-color);
+        }
+
+        #heat-btn:active {
+            background: var(--alert-color);
+            color: #000;
+        }
+
+        /* Code Red Overlay */
+        #code-red-overlay {
+            pointer-events: none;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, rgba(255, 0, 0, 0.6) 100%);
+            animation: pulse-red 0.5s infinite alternate;
+        }
+
+        @keyframes pulse-red {
+            from {
+                opacity: 0.5;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .alarm-text {
+            font-size: 5em;
+            color: var(--alert-color);
+            text-align: center;
+            font-weight: bold;
+            border: 5px solid var(--alert-color);
+            padding: 20px;
+            background: #000;
+        }
+
+        /* Admin Panel */
+        #admin-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .control-group {
+            background: #111;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        .control-group input {
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 5px;
+        }
+
+        /* Log */
+        #log-area {
+            height: 100px;
+            overflow-y: auto;
+            border-top: 1px solid #333;
+            font-size: 0.8em;
+            padding: 5px;
+            color: #666;
+        }
+
+        .log-entry {
+            margin-bottom: 2px;
+        }
+
+        .log-entry.warn {
+            color: var(--alert-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="full-screen flex-center">
+        <div class="login-box border-panel">
+            <h1 class="glitch-text" style="margin-bottom: 40px;">SYSTÉM HLINK</h1>
+            <div id="login-form">
+                <input type="text" class="login-input" placeholder="Uživatel" id="username-input">
+                <input type="password" class="login-input" placeholder="Heslo" id="password-input">
+                <button class="login-btn" onclick="attemptLogin()">PŘIPOJIT K JÁDRU</button>
+            </div>
+            <div id="auth-msg" class="hidden" style="margin-top: 20px; font-size: 1.2em;">AUTHORIZING...</div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="dashboard">
+        <!-- Header & Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <h2 style="margin:0;">Reaktorové Jádro</h2>
+            <div style="font-size: 0.8em; color:#666;">STATUS: <span id="status-text">ONLINE</span></div>
+        </div>
+
+        <div id="temp-bar-container">
+            <div id="temp-bar"></div>
+            <!-- Markers injected by JS -->
+            <div id="marker-alarm" class="marker" style="background: red;">
+                <div class="marker-label">ALARM</div>
+            </div>
+            <div id="marker-restart" class="marker" style="background: white;">
+                <div class="marker-label">RST</div>
+            </div>
+        </div>
+
+        <!-- Center Display -->
+        <div class="main-display">
+            <div id="temp-display">20 °C</div>
+            <button id="heat-btn" onmousedown="startHeating()" onmouseup="stopHeating()" onmouseleave="stopHeating()"
+                ontouchstart="startHeating()" ontouchend="stopHeating()">
+                ZVYŠOVAT TEPLOTU
+            </button>
+        </div>
+
+        <!-- Admin / Root Panel -->
+        <details>
+            <summary style="cursor: pointer; color: #555;">ROOT CONTROLS [ADMIN PANEL]</summary>
+            <div id="admin-panel" style="margin-top: 10px;">
+                <div class="control-group">
+                    <label>Práh Alarmu (Code Red)</label>
+                    <input type="number" id="input-alarm" value="350" onchange="updateSettings()">
+                </div>
+                <div class="control-group">
+                    <label>Práh automatického restartu</label>
+                    <input type="number" id="input-restart" value="500" onchange="updateSettings()">
+                </div>
+                <div class="control-group">
+                    <label>Koeficient chlazení</label>
+                    <input type="number" id="input-cooling" value="0.5" step="0.1" onchange="updateSettings()">
+                </div>
+                <div class="control-group" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="check-autorestart" style="width: auto; margin-right: 10px;"
+                        onchange="updateSettings()">
+                    <label style="margin:0;">Zapnout automatický restart</label>
+                </div>
+            </div>
+        </details>
+
+        <div id="log-area">
+            <div>--- SYSTEM LOG INITIATED ---</div>
+        </div>
+    </div>
+
+    <!-- ALARM OVERLAY -->
+    <div id="code-red-overlay" class="full-screen hidden">
+        <div class="alarm-text">POZOR: CODE RED AKTIVNÍ</div>
+    </div>
+
+    <script>
+        // --- STATE ---
+        let currentTemp = 20.0;
+        let isHeating = false;
+
+        // Settings
+        let settings = {
+            alarmThreshold: 350,
+            restartThreshold: 500,
+            coolingFactor: 0.5,
+            autoRestart: false
+        };
+
+        const MAX_SCALE = 10000;
+        const HEAT_RATE = 2.5; // Temp increase per tick
+
+        // --- ELEMENTS ---
+        const ui = {
+            loginScreen: document.getElementById('login-screen'),
+            loginForm: document.getElementById('login-form'),
+            authMsg: document.getElementById('auth-msg'),
+            dashboard: document.getElementById('dashboard'),
+            tempDisplay: document.getElementById('temp-display'),
+            tempBar: document.getElementById('temp-bar'),
+            markerAlarm: document.getElementById('marker-alarm'),
+            markerRestart: document.getElementById('marker-restart'),
+            overlay: document.getElementById('code-red-overlay'),
+            log: document.getElementById('log-area'),
+            inputs: {
+                alarm: document.getElementById('input-alarm'),
+                restart: document.getElementById('input-restart'),
+                cooling: document.getElementById('input-cooling'),
+                autoRestart: document.getElementById('check-autorestart')
+            }
+        };
+
+        // --- LOGIN LOGIC ---
+        function attemptLogin() {
+            // No auth check, just flow
+            ui.loginForm.classList.add('hidden');
+            ui.authMsg.classList.remove('hidden');
+
+            setTimeout(() => {
+                ui.authMsg.innerText = "PŘÍSTUP POVOLEN";
+                ui.authMsg.style.color = "#00ff41";
+            }, 1000);
+
+            setTimeout(() => {
+                ui.loginScreen.style.opacity = '0';
+                setTimeout(() => {
+                    ui.loginScreen.classList.add('hidden');
+                    ui.dashboard.style.opacity = '1';
+                    startGameLoop();
+                }, 1000);
+            }, 2000);
+        }
+
+        // --- CORE LOGIC ---
+        function startHeating() { isHeating = true; }
+        function stopHeating() { isHeating = false; }
+
+        function updateSettings() {
+            settings.alarmThreshold = parseFloat(ui.inputs.alarm.value) || 350;
+            settings.restartThreshold = parseFloat(ui.inputs.restart.value) || 500;
+            settings.coolingFactor = parseFloat(ui.inputs.cooling.value) || 0.5;
+            settings.autoRestart = ui.inputs.autoRestart.checked;
+
+            updateMarkers();
+            addLog("Settings updated by Root.");
+        }
+
+        function updateMarkers() {
+            const alarmPct = (settings.alarmThreshold / MAX_SCALE) * 100;
+            ui.markerAlarm.style.left = `${Math.min(alarmPct, 99)}%`;
+
+            if (settings.autoRestart) {
+                ui.markerRestart.classList.remove('hidden');
+                const rstPct = (settings.restartThreshold / MAX_SCALE) * 100;
+                ui.markerRestart.style.left = `${Math.min(rstPct, 99)}%`;
+            } else {
+                ui.markerRestart.classList.add('hidden');
+            }
+        }
+
+        function addLog(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            div.innerText = `[${time}] ${msg}`;
+            ui.log.prepend(div);
+        }
+
+        function gameLoop() {
+            // Physics
+            if (isHeating) {
+                currentTemp += HEAT_RATE;
+            } else {
+                currentTemp -= settings.coolingFactor;
+            }
+
+            // Bounds
+            if (currentTemp < 20) currentTemp = 20;
+
+            // Logic
+            checkAlarm();
+            checkAutoRestart();
+
+            // UI Render
+            render();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function checkAlarm() {
+            if (currentTemp >= settings.alarmThreshold) {
+                if (ui.overlay.style.display !== 'flex') {
+                    ui.overlay.style.display = 'flex'; // Show Warning
+                    ui.overlay.classList.remove('hidden');
+                    document.body.style.backgroundColor = '#200';
+                    ui.tempDisplay.style.color = 'red';
+                }
+            } else {
+                if (ui.overlay.style.display === 'flex') {
+                    ui.overlay.style.display = 'none';
+                    ui.overlay.classList.add('hidden');
+                    document.body.style.backgroundColor = 'var(--bg-color)';
+                    ui.tempDisplay.style.color = 'var(--text-color)';
+                }
+            }
+        }
+
+        function checkAutoRestart() {
+            if (settings.autoRestart && currentTemp >= settings.restartThreshold) {
+                // TRIGGER RESTART
+                currentTemp = 20;
+                addLog("AUTOMATICKÝ RESTART SYSTÉMU", "warn");
+
+                // Flash white
+                let flash = document.createElement('div');
+                flash.style.position = 'fixed';
+                flash.style.inset = '0';
+                flash.style.background = 'white';
+                flash.style.zIndex = '999';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 100);
+            }
+        }
+
+        function render() {
+            // Display Number
+            ui.tempDisplay.innerText = `${currentTemp.toFixed(1)} °C`;
+
+            // Progress Bar
+            let pct = (currentTemp / MAX_SCALE) * 100;
+            if (pct > 100) pct = 100;
+            ui.tempBar.style.width = `${pct}%`;
+
+            // Color change of bar
+            if (currentTemp >= settings.alarmThreshold) {
+                ui.tempBar.style.background = 'red';
+            } else {
+                ui.tempBar.style.background = 'linear-gradient(90deg, var(--text-color), #ffff00, var(--alert-color))';
+            }
+        }
+
+        function startGameLoop() {
+            updateMarkers();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Init
+        // Enter key for login
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !ui.loginScreen.classList.contains('hidden')) {
+                attemptLogin();
+            }
+        });
+
+    </script>
+</body>
+
+</html>

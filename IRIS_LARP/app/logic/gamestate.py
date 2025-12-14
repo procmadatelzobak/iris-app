@@ -73,6 +73,8 @@ class GameState:
             system_prompt="You are an AI assistant."
         )
 
+        self.test_mode = False # v1.9 Test Mode
+        
         self.initialized = True
         
     def set_temperature(self, value: float):

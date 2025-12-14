@@ -97,7 +97,19 @@
     </div>
 
     <!-- Right Panel: Chat -->
-    <div class="w-2/3 flex flex-col theme-card h-full p-0 overflow-hidden">
+    <div class="w-2/3 flex flex-col theme-card h-full p-0 overflow-hidden relative"> <!-- Added relative -->
+
+        <!-- Purgatory Overlay -->
+        <div id="lockoutOverlay"
+            class="absolute inset-0 z-20 bg-black/95 flex flex-col items-center justify-center text-red-600 hidden border-2 border-red-900 m-1">
+            <i class="fas fa-ban text-6xl mb-6 animate-pulse"></i>
+            <h1 class="text-4xl font-bold mb-2 tracking-widest text-center glitch-text">COMMUNICATION OFFLINE</h1>
+            <div
+                class="text-sm font-mono tracking-wider opacity-80 bg-red-900/20 px-4 py-2 rounded border border-red-800">
+                DEBT RECOVERY REQUIRED. COMPLETE TASKS.
+            </div>
+        </div>
+
         <!-- Chat History -->
         <div id="chatHistory" class="flex-1 overflow-y-auto p-6 flex flex-col space-y-4">
             <div class="text-center opacity-30 text-xs mt-10 tracking-[0.5em]">--- SESSION ESTABLISHED ---</div>

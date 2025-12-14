@@ -433,3 +433,38 @@ async def reset_system(admin=Depends(get_current_admin)):
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         db.close()
+
+# --- AI CONFIGURATION (ROOT) ---
+class AIConfigUpdate(BaseModel):
+    optimizer_prompt: str
+    autopilot_model: str
+
+@router.get("/root/ai_config")
+async def get_ai_config(admin=Depends(get_current_admin)):
+    """ROOT ONLY: Get AI configuration"""
+    return {
+        "optimizer_prompt": gamestate.optimizer_prompt,
+        "autopilot_model": gamestate.llm_config_hyper.model_name,
+        "optimizer_active": gamestate.optimizer_active
+    }
+
+@router.post("/root/ai_config")
+async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_admin)):
+    """ROOT ONLY: Update AI configuration"""
+    # Update gamestate
+    gamestate.optimizer_prompt = config.optimizer_prompt
+    gamestate.llm_config_hyper.model_name = config.autopilot_model
+    
+    # Log action
+    from ..database import SessionLocal, SystemLog
+    import json
+    db = SessionLocal()
+    db.add(SystemLog(
+        event_type="ROOT", 
+        message=f"AI Config updated by {admin.username}",
+        data=json.dumps(config.dict())
+    ))
+    db.commit()
+    db.close()
+    
+    return {"status": "ok", "config": config.dict()}

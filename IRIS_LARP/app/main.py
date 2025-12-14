@@ -87,4 +87,19 @@ app.include_router(admin_api.router)
 
 @app.get("/")
 async def root(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request, "title": "IRIS Login"})
+    # Test Mode Logic
+    from .logic.gamestate import gamestate
+    from .database import SessionLocal, User
+    
+    users = []
+    if gamestate.test_mode:
+        db = SessionLocal()
+        users = db.query(User).order_by(User.role, User.username).all()
+        db.close()
+        
+    return templates.TemplateResponse("login.html", {
+        "request": request, 
+        "title": "IRIS Login",
+        "test_mode": gamestate.test_mode,
+        "users": users
+    })

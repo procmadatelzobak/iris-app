@@ -9,6 +9,8 @@ from .. import dependencies, database
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
+from fastapi.responses import HTMLResponse, JSONResponse
+
 @router.post("/login")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(dependencies.get_db)):
     user = db.query(database.User).filter(database.User.username == form_data.username).first()
@@ -20,13 +22,21 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
         )
     
     access_token = dependencies.create_access_token(data={"sub": user.username, "role": user.role.value})
-    # Return role to redirect frontend
-    return {"access_token": access_token, "token_type": "bearer", "role": user.role.value}
+    
+    # Server-side cookie setting for robust session management
+    response = JSONResponse(content={"access_token": access_token, "token_type": "bearer", "role": user.role.value})
+    # HTTPOnly=False because we might need JS to read it? 
+    # Actually, login.html uses localStorage for WS. 
+    # But get_current_user_cookie needs it. 
+    # Let's use httponly=False so JS can sync if needed, but path=/ is key.
+    response.set_cookie(key="access_token", value=access_token, httponly=False, path="/")
+    return response
 
 @router.get("/logout")
 async def logout(request: Request):
     response = templates.TemplateResponse("login.html", {"request": request, "title": "IRIS Login"})
-    response.delete_cookie("access_token")
+    # Must match path set in login
+    response.delete_cookie("access_token", path="/")
     return response
 
 @router.get("/terminal", response_class=HTMLResponse)

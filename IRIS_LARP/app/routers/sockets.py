@@ -335,6 +335,20 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         continue
 
                     if not content: continue
+                    
+                    # Purgatory Mode Check: Fetch fresh status
+                    db_user_check = db_save.query(User).filter(User.id == user.id).first()
+                    is_purgatory = db_user_check.is_locked if db_user_check else False
+                    
+                    if is_purgatory:
+                        # Block Chat - Allow only tasks (handled above)
+                        # Optionally send error back
+                        await websocket.send_text(json.dumps({
+                           "type": "error",
+                           "msg": "COMMUNICATION OFFLINE due to Debt."
+                        }))
+                        continue
+
                     session_id = get_logical_id(user.username, "user")
                     # Save User Message
                     log = ChatLog(session_id=session_id, sender_id=user.id, content=content)
@@ -486,6 +500,15 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         await routing_logic.broadcast_global(json.dumps({
                             "type": "gamestate_update",
                             "hyper_mode": gamestate.hyper_visibility_mode.value
+                        }))
+
+                    elif cmd_type == "test_mode_toggle":
+                        enabled = msg_data.get("enabled", False)
+                        gamestate.test_mode = enabled
+                        # Broadcast status? Maybe just ack.
+                        await websocket.send_text(json.dumps({
+                            "type": "admin_ack",
+                            "msg": f"TEST MODE set to {enabled}"
                         }))
 
             finally:

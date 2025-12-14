@@ -123,6 +123,7 @@
     <div class="admin-nav z-10 flex justify-between items-center">
         <div class="flex">
             <div class="nav-btn active" onclick="switchView('dashboard')" id="nav-dashboard">DASHBOARD</div>
+            <div class="nav-btn" onclick="switchView('config')" id="nav-config">CONFIG</div>
             <div class="nav-btn" onclick="switchView('economy')" id="nav-economy">GLOBAL ECO</div>
             <div class="nav-btn" onclick="switchView('time')" id="nav-time">CHRONOS</div>
             <div class="nav-btn" onclick="switchView('surveillance')" id="nav-surveillance">PANOPTICON</div>
@@ -192,6 +193,68 @@
             <div id="logStream"
                 class="font-mono text-xs text-gray-400 h-full overflow-y-auto p-2 bg-black border border-gray-800">
                 <!-- Logs from socket -->
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: CONFIG -->
+    <div id="view-config" class="view-container hidden">
+        <!-- Test Mode Panel -->
+        <div class="god-panel">
+            <div class="god-title">🔧 DEVELOPER MODE</div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-lg font-bold">Quick Login Buttons</div>
+                        <div class="text-sm text-gray-500">Enable passwordless login for testing (shows user buttons on
+                            login screen)</div>
+                    </div>
+                    <button id="btnTestMode" class="btn-god px-8" onclick="toggleTestMode()">
+                        <span id="testModeLabel">DISABLED</span>
+                    </button>
+                </div>
+                <div id="testModeStatus" class="text-sm text-gray-600 italic"></div>
+            </div>
+        </div>
+
+        <!-- LLM Configuration -->
+        <div class="god-panel mt-6">
+            <div class="god-title">🤖 AI CONFIGURATION</div>
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">OPTIMIZER PROMPT</label>
+                    <textarea id="optimizerPrompt" rows="3"
+                        class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                        placeholder="Rewrite instructions..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">AUTOPILOT MODEL</label>
+                    <select id="autopilotModel" class="w-full bg-black border border-gray-700 p-2 text-white">
+                        <option value="google/gemini-2.0-flash-lite-preview-02-05:free">Gemini 2.0 Flash (Free)</option>
+                        <option value="google/gemini-flash-1.5">Gemini 1.5 Flash</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-god w-full mt-4" onclick="saveAIConfig()">[ SAVE AI CONFIG ]</button>
+        </div>
+
+        <!--System Info -->
+        <div class="god-panel mt-6">
+            <div class="god-title">ℹ️ SYSTEM INFORMATION</div>
+            <div class="grid grid-cols-3 gap-4 text-sm font-mono">
+                <div>
+                    <div class="text-gray-500">Version</div>
+                    <div class="text-white">Phase 25.0</div>
+                </div>
+                <div>
+                    <div class="text-gray-500">Total Users</div>
+                    <div class="text-white" id="sysUserCount">--</div>
+                </div>
+                <div>
+                    <div class="text-gray-500">Database</div>
+                    <div class="text-white">SQLite (iris.db)</div>
+                </div>
             </div>
         </div>
     </div>
@@ -395,6 +458,77 @@
         client.send({ type: 'chernobyl_command', level: parseInt(val) });
         document.getElementById('valChernobyl').innerText = val + "%";
     }
+
+    // --- TEST MODE TOGGLE ---
+    let testModeActive = false;
+
+    window.toggleTestMode = async () => {
+        testModeActive = !testModeActive;
+
+        // Send WebSocket command
+        client.send({
+            type: 'test_mode_toggle',
+            enabled: testModeActive
+        });
+
+        // Update UI
+        const btn = document.getElementById('btnTestMode');
+        const label = document.getElementById('testModeLabel');
+        const status = document.getElementById('testModeStatus');
+
+        if (testModeActive) {
+            label.innerText = 'ENABLED';
+            btn.classList.add('border-green-500', 'text-green-500');
+            btn.classList.remove('border-gray-700');
+            status.innerText = '✅ Quick login buttons will appear on login screen';
+            status.classList.remove('text-gray-600');
+            status.classList.add('text-green-500');
+        } else {
+            label.innerText = 'DISABLED';
+            btn.classList.remove('border-green-500', 'text-green-500');
+            btn.classList.add('border-gray-700');
+            status.innerText = '❌ Standard password input required';
+            status.classList.remove('text-green-500');
+            status.classList.add('text-gray-600');
+        }
+    };
+
+    // --- AI CONFIGURATION ---
+    window.saveAIConfig = async () => {
+        const optimizerPrompt = document.getElementById('optimizerPrompt').value;
+        const autopilotModel = document.getElementById('autopilotModel').value;
+
+        // Send to backend (implement API endpoint later)
+        try {
+            await fetch('/api/admin/root/ai_config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    optimizer_prompt: optimizerPrompt,
+                    autopilot_model: autopilotModel
+                })
+            });
+            alert('✅ AI Configuration Saved');
+        } catch (e) {
+            console.error(e);
+            alert('❌ Failed to save config');
+        }
+    };
+
+    // Load initial AI config
+    async function loadAIConfig() {
+        try {
+            const res = await fetch('/api/admin/root/ai_config');
+            const data = await res.json();
+            document.getElementById('optimizerPrompt').value = data.optimizer_prompt || '';
+            document.getElementById('autopilotModel').value = data.autopilot_model || 'google/gemini-2.0-flash-lite-preview-02-05:free';
+        } catch (e) {
+            console.error('Could not load AI config:', e);
+        }
+    }
+
+    // Call on init
+    setTimeout(loadAIConfig, 1000);
 
     // --- ECONOMY TABLE ---
     async function fetchUsers() {
