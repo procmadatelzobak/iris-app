@@ -105,26 +105,26 @@ class LLMService:
         except Exception:
             return 50
 
-    async def rewrite_message(self, content: str, instruction: str) -> str:
+    async def rewrite_message(self, content: str, instruction: str, config: Optional[LLMConfig] = None) -> str:
         """
         Rewrites the agent's message based on the instruction (Optimizer).
+        Allows passing a custom LLMConfig so ROOT can pick provider/model per role.
         """
-        prompt_content = f"Original message: '{content}'\n\nInstruction: {instruction}\n\nRewrite the message to match the instruction. Return ONLY the rewritten text, nothing else."
-        
-        # Use a temporary config for the Optimizer (Fast & Cheap)
-        # Ideally, this provider choice could also be in GameState, but hardcoded 'cheap' is fine for v1.
-        config = LLMConfig(
+        prompt_content = (
+            f"Original message: '{content}'\n\n"
+            f"Instruction: {instruction}\n\n"
+            "Rewrite the message to match the instruction. Return ONLY the rewritten text, nothing else."
+        )
+
+        effective_config = config or LLMConfig(
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
             system_prompt="You are a text rewriter. You strictly follow instructions."
         )
-        
-        # Wrap in history format
+
         history = [{"role": "user", "content": prompt_content}]
-        
-        # Reuse the existing synchronous generate_response (or make it async if possible)
-        # Assuming generate_response is synchronous as per existing code
-        return self.generate_response(config, history)
+
+        return self.generate_response(effective_config, history)
 
     def _generate_openai(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
         client = OpenAI(api_key=api_key)
