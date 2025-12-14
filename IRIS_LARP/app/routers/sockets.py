@@ -193,7 +193,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             "type": "typing_sync",
                             "sender": user.username, # To identify self vs mirror
                             "content": content
-                        }))
+                        }), exclude_ws=websocket)
                         continue
 
                     if not content: continue
@@ -274,7 +274,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "session_id": session_id,
                         "id": log.id,
                         "is_optimized": log.is_optimized  # PHASE 27: Report immunity flag
-                    }))
+                    }), exclude_ws=websocket)
                     
                     # No feedback needed if confirmed, client knows.
 
@@ -462,7 +462,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "role": "user",
                         "content": content,
                         "id": log.id
-                    }))
+                    }), exclude_ws=websocket)
                     
                     # CHECK FOR AUTOPILOT
                     # Reverse Routing: Which Agent is on this Session?
@@ -534,7 +534,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             "sender": user.username,
                             "role": "user",
                             "session_id": session_id
-                        }))
+                        }), exclude_ws=websocket)
                         
                     elif user.role == UserRole.AGENT:
                         # Agent typing -> Send to User in current session
@@ -548,7 +548,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                                 "sender": user.username,
                                 "role": "agent",
                                 "session_id": target_session_id
-                            }))
+                            }), exclude_ws=websocket)
 
                 elif user.role == UserRole.ADMIN:
                     # Admin commands

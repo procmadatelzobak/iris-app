@@ -136,11 +136,12 @@ class ConnectionManager:
                     except:
                         pass
 
-    async def broadcast_to_session(self, session_id: int, message: str):
+    async def broadcast_to_session(self, session_id: int, message: str, exclude_ws: Optional[WebSocket] = None):
         # 1. Send to USER bound to this session
         user_id = session_id 
         if user_id in self.user_connections:
             for connection in self.user_connections[user_id]:
+                if exclude_ws and connection == exclude_ws: continue
                 try: await connection.send_text(message)
                 except: pass
         
@@ -156,12 +157,14 @@ class ConnectionManager:
             
             if current_session_id == session_id:
                 for connection in connections:
+                    if exclude_ws and connection == exclude_ws: continue
                     try: await connection.send_text(message)
                     except: pass
 
-    async def broadcast_to_agent(self, agent_id: int, message: str):
+    async def broadcast_to_agent(self, agent_id: int, message: str, exclude_ws: Optional[WebSocket] = None):
         if agent_id in self.agent_connections:
             for connection in self.agent_connections[agent_id]:
+                if exclude_ws and connection == exclude_ws: continue
                 try: await connection.send_text(message)
                 except: pass
 
