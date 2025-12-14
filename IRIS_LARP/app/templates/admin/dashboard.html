@@ -90,6 +90,15 @@
 
     <div id="hub-view"
         class="h-screen w-screen bg-black flex items-center justify-center gap-8 p-10 z-50 absolute inset-0 text-center">
+        <!-- Hub Docs Buttons -->
+        <div class="absolute top-4 right-4 flex gap-4">
+            <a href="/doc/view/admin" target="_blank"
+                class="border border-yellow-500 text-yellow-500 hover:bg-yellow-900 px-3 py-1 text-xs font-mono transition">[
+                MANUÁL ]</a>
+            <a href="/doc/view/system" target="_blank"
+                class="border border-blue-500 text-blue-500 hover:bg-blue-900 px-3 py-1 text-xs font-mono transition">[
+                SYSTEM ]</a>
+        </div>
         <div class="chernobyl-panel hover:bg-green-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('monitor')">
             <h2 class="text-6xl text-green-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
@@ -128,6 +137,12 @@
         </div>
 
         <div class="flex gap-4 ml-auto mr-4">
+            <a href="/doc/view/admin" target="_blank"
+                class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800 hover:text-white flex items-center justify-center">[
+                MANUÁL ]</a>
+            <a href="/doc/view/system" target="_blank"
+                class="chernobyl-btn px-4 py-1 text-sm text-blue-500 border-blue-800 hover:text-white flex items-center justify-center">[
+                SYSTEM ]</a>
             <button class="chernobyl-btn px-4 py-1 text-sm" data-key="btn_labels" onclick="toggleEditMode()">PŘEPSAT
                 REALITU</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-red-500 border-red-800 editable-label"

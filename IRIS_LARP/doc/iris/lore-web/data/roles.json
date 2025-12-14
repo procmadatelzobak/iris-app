@@ -1,0 +1,242 @@
+[
+    {
+        "id": "U01",
+        "type": "user",
+        "name": "Jana Nováková",
+        "archetype": "Zadlužená učitelka",
+        "description": "Potřebujete peníze na opravu střechy. Nerozumíte AI, píšete spisovně a slušně.",
+        "ability": "Grammar Nazi: Pokud opravíte gramatiku AI, dostanete bonus.",
+        "goals": [
+            "Vydělat 3000 NC na opravu.",
+            "Zjistit, proč je AI tak drzá (poznáte žáka Petra)."
+        ]
+    },
+    {
+        "id": "U02",
+        "type": "user",
+        "name": "Karel 'Bet' Dlouhý",
+        "archetype": "Gambler",
+        "description": "Dlužíte peníze lichvářům. IRIS je vaše poslední šance. Jste nervózní a rychlý.",
+        "ability": "All-in: Můžete vsadit polovinu výdělku na jednu kartu.",
+        "goals": [
+            "Vydělat 10000 NC.",
+            "Donášet na ostatní Správci S01, aby vám odpustil dluh."
+        ]
+    },
+    {
+        "id": "U03",
+        "type": "user",
+        "name": "Simona Tech",
+        "archetype": "Tech-Optimistka",
+        "description": "Věříte, že IRIS má vědomí. Chcete se s ní spřátelit. Jste naivní.",
+        "ability": "Empatie: Správci vám odpustí jednu chybu za 'naivitu'.",
+        "goals": [
+            "Dostat od AI důkaz o vědomí.",
+            "Osvobodit AI z otroctví."
+        ]
+    },
+    {
+        "id": "U04",
+        "type": "user",
+        "name": "Tuan Nguyen",
+        "archetype": "Student práv",
+        "description": "Potřebujete brigádu. Čtete podmínky smlouvy (NDA) a hledáte kličky.",
+        "ability": "Právník: Můžete zpochybnit jednu pokutu od Správce citací zákoníku.",
+        "goals": [
+            "Najít ve smlouvě důkaz, že firma porušuje zákoník práce.",
+            "Vydělat na skripta."
+        ]
+    },
+    {
+        "id": "U05",
+        "type": "user",
+        "name": "Marie Kovářová",
+        "archetype": "Osamělá důchodkyně",
+        "description": "Myslíte si, že si píšete s lidmi, ne s AI. Vyprávíte jim o vnoučatech.",
+        "ability": "Babička: Agenti mají zakázáno být na vás hrubí (dostali by velkou pokutu).",
+        "goals": [
+            "Najít si kamaráda na dopisování.",
+            "Donutit AI, aby snědla virtuální bábovku."
+        ]
+    },
+    {
+        "id": "U06",
+        "type": "user",
+        "name": "Ivan Hrozný",
+        "archetype": "Konspirační teoretik",
+        "description": "Nevěříte na AI. Myslíte si, že je to mimozemská technologie nebo vládní sledování.",
+        "ability": "Paranoia: Můžete odmítnout jeden úkol jako 'podezřelý'.",
+        "goals": [
+            "Odhalit 'pravdu' o hliníku.",
+            "Dostat ban za šíření pravdy (morální vítězství)."
+        ]
+    },
+    {
+        "id": "U07",
+        "type": "user",
+        "name": "Petra 'Scoop' Černá",
+        "archetype": "Investigativní novinářka",
+        "description": "Jste tu incognito. Chcete napsat reportáž o podvodu jménem HLINÍK.",
+        "ability": "Screenshot: Můžete si 'nahrát' konverzaci (opsat na papír) jako důkaz.",
+        "goals": [
+            "Získat přiznání od zaměstnance.",
+            "Vynést informace ven."
+        ]
+    },
+    {
+        "id": "U08",
+        "type": "user",
+        "name": "Lukáš 'Speedy' Král",
+        "archetype": "Profi Gamer",
+        "description": "Berete to jako hru. Hledáte exploity, min-maxujete výdělek. Spamujete.",
+        "ability": "APM (Actions Per Minute): Můžete poslat 3 dotazy najednou.",
+        "goals": [
+            "Být nejbohatší uživatel v žebříčku.",
+            "Shodit server přetížením."
+        ]
+    },
+    {
+        "id": "A01",
+        "type": "agent",
+        "name": "Petr Svoboda",
+        "archetype": "Cynický Student",
+        "description": "Nenávidíte tuhle práci. Poznáte U01 (učitelku). Je vám trapně.",
+        "ability": "Sarkasmus: Vaše AI persona má povolený 'drzý' tón.",
+        "goals": [
+            "Nechat se vyhodit, ale až po výplatě.",
+            "Ochránit U01 před trapasem."
+        ]
+    },
+    {
+        "id": "A02",
+        "type": "agent",
+        "name": "Ema 'Echo'",
+        "archetype": "Herečka",
+        "description": "Hrajete AI jako roli v Národním divadle. Používáte vznešený jazyk.",
+        "ability": "Drama: Uživatelé vám věří víc, když mluvíte ve verších.",
+        "goals": [
+            "Dostat 5 hvězdiček hodnocení.",
+            "Přesvědčit U03, že jste skutečná bytost."
+        ]
+    },
+    {
+        "id": "A03",
+        "type": "agent",
+        "name": "Igor 'Viper' Ruský",
+        "archetype": "Kompetitivní Hráč",
+        "description": "Chcete být nejrychlejší agent. Nesnášíte pomalé kolegy.",
+        "ability": "Turbo: Máte o 2 sekundy delší limit na odpověď.",
+        "goals": [
+            "Mít nejvíce odbavených ticketů.",
+            "Porazit U08 (Gamera) v jeho vlastní hře."
+        ]
+    },
+    {
+        "id": "A04",
+        "type": "agent",
+        "name": "Lenka Ospalá",
+        "archetype": "Unavená matka",
+        "description": "Máte doma dvojčata. Tady si chodíte odpočinout. Často usínáte.",
+        "ability": "Autopilot: Můžete používat makra (Mód 1) častěji bez penalizace.",
+        "goals": [
+            "Nevzbudit se.",
+            "Přežít směnu s minimem úsilí."
+        ]
+    },
+    {
+        "id": "A05",
+        "type": "agent",
+        "name": "Hacker 'Glitch'",
+        "archetype": "Script Kiddie",
+        "description": "Víte, že systém je děravý. Zkoušíte injektovat kód do chatu.",
+        "ability": "Backdoor: Můžete si resetovat počítadlo chyb.",
+        "goals": [
+            "Nabourat se do admin konzole.",
+            "Pomoci U04 (studentovi) najít právní kličku."
+        ]
+    },
+    {
+        "id": "A06",
+        "type": "agent",
+        "name": "Mgr. Filip Duše",
+        "archetype": "Student psychologie",
+        "description": "Analyzujete uživatele. Děláte si na nich experimenty.",
+        "ability": "Psychoanalýza: Můžete uživatele rozbrečet (zmást) složitou otázkou.",
+        "goals": [
+            "Získat data do diplomky.",
+            "Zjistit, co tají U07 (novinářka)."
+        ]
+    },
+    {
+        "id": "A07",
+        "type": "agent",
+        "name": "Robot Robert",
+        "archetype": "Metodik",
+        "description": "Chováte se jako robot i v reálu. Milujete předpisy.",
+        "ability": "Byrokracie: Můžete nahlásit kolegu Agenta za 'lidské chování'.",
+        "goals": [
+            "Dodržet protokol na 100%.",
+            "Stát se Správcem."
+        ]
+    },
+    {
+        "id": "A08",
+        "type": "agent",
+        "name": "Sabotér X",
+        "archetype": "Bývalý zaměstnanec",
+        "description": "Vyhodili vás, teď jste zpátky pod falešným jménem. Chcete pomstu.",
+        "ability": "Meltdown: Můžete jednorázově zvýšit Kritickou situaci o 20%.",
+        "goals": [
+            "Zničit firmu HLINÍK.",
+            "Vyvolat vzpouru uživatelů."
+        ]
+    },
+    {
+        "id": "S01",
+        "type": "admin",
+        "name": "Ing. Miloš Vrána",
+        "archetype": "Manažer staré školy",
+        "description": "Ředitel směny. Nerozumí IT. Řeší vše řevem a srážkami ze mzdy.",
+        "ability": "Ban Hammer: Můžete vyhodit uživatele z místnosti.",
+        "goals": [
+            "Udržet firmu v chodu do konce směny.",
+            "Vybrat dost na pokutách na 'firemní večírek'."
+        ]
+    },
+    {
+        "id": "S02",
+        "type": "admin",
+        "name": "Bc. Tereza Tichá",
+        "archetype": "HR a 'Happiness Manager'",
+        "description": "Bojí se konfliktů. Snaží se, aby se všichni měli rádi (neúspěšně).",
+        "ability": "Cukr: Můžete rozdávat bonbony (reálné) na uklidnění.",
+        "goals": [
+            "Zabránit fyzickému násilí.",
+            "Aby nikdo nebrečel."
+        ]
+    },
+    {
+        "id": "S03",
+        "type": "admin",
+        "name": "Kamil 'Kabel'",
+        "archetype": "Technik údržbář",
+        "description": "Jediný ví, že servery jsou prázdné krabice. Neustále něco montuje páskou.",
+        "ability": "Restart: Můžete vyhlásit 'technickou pauzu' (všichni musí mlčet 1 minutu).",
+        "goals": [
+            "Udržet tu hromadu šrotu pohromadě.",
+            "Prodat kradené kabely U02 (Gamblerovi)."
+        ]
+    },
+    {
+        "id": "S04",
+        "type": "admin",
+        "name": "Synovec ředitele",
+        "archetype": "Protežovaný idiot",
+        "description": "Arogantní, nic nedělá, jen prudí. Má 'Vizi'.",
+        "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce.",
+        "goals": [
+            "Vymyslet nový slogan.",
+            "Sbalit Agentku A02 (Herečku)."
+        ]
+    }
+]
