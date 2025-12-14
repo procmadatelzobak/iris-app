@@ -19,11 +19,15 @@ def process_task_payment(task_id: int, rating: int):
             
         if task.status == TaskStatus.PAID:
             return {"error": "Task already paid"}
+
+        if task.status not in [TaskStatus.SUBMITTED, TaskStatus.ACTIVE, TaskStatus.COMPLETED]:
+            return {"error": "Task is not ready for payment"}
             
         # Calculate Reward
-        # Reward = Offered * (Rating / 100)
+        # Reward = Offered * (Rating / 100), rating can be boosted up to 200
         base_reward = task.reward_offered
-        actual_reward = int(base_reward * (rating / 100.0))
+        safe_rating = max(0, rating)
+        actual_reward = int(base_reward * (safe_rating / 100.0))
         
         # Calculate Tax
         tax_amount = int(actual_reward * gamestate.tax_rate)
@@ -38,6 +42,7 @@ def process_task_payment(task_id: int, rating: int):
         gamestate.treasury_balance += tax_amount
         
         # Update Task
+        task.final_rating = safe_rating
         task.status = TaskStatus.PAID
         db.commit()
         
@@ -47,7 +52,9 @@ def process_task_payment(task_id: int, rating: int):
             "actual_reward": actual_reward,
             "tax_collected": tax_amount,
             "net_reward": net_reward,
-            "treasury_balance": gamestate.treasury_balance
+            "treasury_balance": gamestate.treasury_balance,
+            "task_id": task_id,
+            "user_id": task.user_id
         }
     except Exception as e:
         db.rollback()

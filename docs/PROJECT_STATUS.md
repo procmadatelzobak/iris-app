@@ -116,6 +116,10 @@
 ## Phase 32 - Admin Task Workflow Fixes
 
 - [x] **Task visibility**: Admin task dashboard now uses authenticated API calls, reliable status strings, and live websocket refresh when new submissions arrive.
+- [x] **Task lifecycle clarity**: Requests, active tasks, submitted work, and paid tasks are separated in the admin dashboard with clear badges and reliable approval handling.
+- [x] **Reward review controls**: Admins evaluate submissions with fixed payout multipliers (0/50/100/200) and see submitted text inline.
+- [x] **User submissions**: Users can submit task outputs via a dedicated modal, pushing status updates to admins and locking further edits while under review.
+- [x] **Root reward presets**: Root dashboard configures default task rewards per user level; new requests auto-fill rewards from these presets.
 
 ## Phase 33 - Agent Response Controls
 

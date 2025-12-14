@@ -110,6 +110,22 @@
         </div>
     </div>
 
+    <!-- Task submission modal -->
+    <div id="taskSubmitModal"
+        class="hidden fixed inset-0 bg-black/80 z-30 flex items-center justify-center p-4">
+        <div class="bg-[#101010] border border-[var(--border-color)] rounded w-full max-w-2xl p-6 shadow-xl">
+            <h3 class="text-xl font-bold text-[var(--text-color)] mb-2">Odevzdat úkol</h3>
+            <p class="text-xs text-gray-400 mb-3">Vyplň řešení a odešli ho správci ke zhodnocení.</p>
+            <textarea id="taskSubmissionInput" rows="6"
+                class="w-full bg-black text-white border border-[var(--border-color)] p-3 mb-4"
+                placeholder="Popiš řešení úkolu..."></textarea>
+            <div class="flex justify-end gap-3">
+                <button class="theme-btn bg-red-900/40" type="button" onclick="closeTaskModal()">Zavřít</button>
+                <button class="theme-btn" type="button" onclick="submitTaskSolution()">Odeslat</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Right Panel: Chat -->
     <div class="w-2/3 flex flex-col theme-card h-full p-0 overflow-hidden relative"> <!-- Added relative -->
 
@@ -152,6 +168,9 @@
 
     const chatHistory = document.getElementById('chatHistory');
     const creditsDisplay = document.getElementById('creditsDisplay');
+
+    let currentTaskId = null;
+    let currentTaskStatus = null;
 
     // Response timer state
     let responseWindowSeconds = 120;
@@ -203,6 +222,8 @@
             if (data.credits !== undefined) creditsDisplay.innerText = data.credits;
         } else if (data.type === 'task_update') {
             renderTask(data);
+        } else if (data.type === 'task_error') {
+            showToast(data.message || 'Nepodařilo se zpracovat úkol.', 'error');
         } else if (data.type === 'typing_sync') {
             handleTypingSync(data);
         } else if (data.type === 'report_denied') {
@@ -307,22 +328,86 @@
         const empty = document.getElementById('emptyTaskMsg');
         if (empty) empty.style.display = 'none';
 
-        // Clear previous pending/active to avoid dupes? 
-        // For now simplest logic: Clear all and show this one.
         list.innerHTML = '';
 
-        const card = document.createElement('div');
-        card.className = `border p-2 text-sm ${data.status === 'active' ? 'border-green-500 bg-green-900/20' : 'border-yellow-600 bg-yellow-900/20'}`;
+        currentTaskId = data.task_id || data.id || currentTaskId;
+        currentTaskStatus = data.status;
 
-        let statusLabel = data.status === 'pending_approval' ? 'ČEKAJÍCÍ' : 'AKTIVNÍ';
-        let statusColor = data.status === 'pending_approval' ? 'text-yellow-500' : 'text-green-500';
+        const card = document.createElement('div');
+        const baseColor = data.status === 'paid' ? 'border-gray-500 bg-gray-900/60' : data.status === 'submitted' ? 'border-green-500 bg-green-900/10' : data.status === 'active' ? 'border-blue-500 bg-blue-900/10' : 'border-yellow-600 bg-yellow-900/10';
+        card.className = `border p-3 text-sm ${baseColor}`;
+
+        const promptText = data.prompt || data.description || 'Čekání na zadání...';
+        const rewardLine = data.reward ? `<div class="text-yellow-400 text-xs mt-1">Nabídka: ${data.reward} CR</div>` : '';
+        const submissionBlock = data.submission ? `<div class="mt-3 text-white border-l-2 border-[var(--border-color)] pl-3 whitespace-pre-wrap">${data.submission}</div>` : '';
+
+        const labels = {
+            pending_approval: ['ČEKÁ NA SCHVÁLENÍ', 'text-yellow-400'],
+            active: ['ZADÁNO', 'text-blue-300'],
+            submitted: ['ODEVZDÁNO', 'text-green-400'],
+            paid: ['ZAPLACENO', 'text-gray-200'],
+            completed: ['HOTOVO', 'text-gray-200']
+        };
+
+        const [label, color] = labels[data.status] || ['STATUS', 'text-white'];
+
+        let footer = '';
+        if (data.status === 'pending_approval') {
+            footer = '<div class="text-xs text-gray-400 mt-3">Správce musí úkol schválit.</div>';
+        } else if (data.status === 'active') {
+            footer = `<div class="flex justify-between items-center mt-3">
+                <div class="text-xs text-gray-400">Vypracuj řešení a odešli ho.</div>
+                <button class="theme-btn text-xs" onclick="openTaskModal()">Odevzdat</button>
+            </div>`;
+        } else if (data.status === 'submitted') {
+            footer = '<div class="text-xs text-green-300 mt-3">Odevzdáno. Čeká na zhodnocení správce.</div>';
+        } else if (data.status === 'paid' || data.status === 'completed') {
+            const payout = data.net_reward || data.payout || data.reward || 0;
+            const rating = data.rating !== undefined ? data.rating : '—';
+            footer = `<div class="mt-3 text-xs text-gray-300">Vyplaceno: ${payout} CR (hodnocení ${rating}%).</div>`;
+        }
 
         card.innerHTML = `
-            <div class="font-bold ${statusColor} mb-1">${statusLabel}</div>
-            <div class="${data.status === 'active' ? 'text-green-300' : 'text-gray-400'}">${data.description || 'Čekání na zadání...'}</div>
-            ${data.reward ? `<div class="text-yellow-400 text-xs mt-2">ODMĚNA: ${data.reward} CR</div>` : ''}
+            <div class="font-bold ${color} mb-1">${label}</div>
+            <div class="text-[var(--text-color)]">${promptText}</div>
+            ${rewardLine}
+            ${submissionBlock}
+            ${footer}
         `;
         list.appendChild(card);
+    }
+
+    function openTaskModal() {
+        if (!currentTaskId || currentTaskStatus !== 'active') {
+            showToast('Nemáš aktivní úkol k odevzdání.', 'error');
+            return;
+        }
+        const modal = document.getElementById('taskSubmitModal');
+        const input = document.getElementById('taskSubmissionInput');
+        if (modal) modal.classList.remove('hidden');
+        if (input) input.focus();
+    }
+
+    function closeTaskModal() {
+        const modal = document.getElementById('taskSubmitModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function submitTaskSolution() {
+        if (!currentTaskId) {
+            showToast('Žádný úkol není k dispozici.', 'error');
+            return;
+        }
+        const input = document.getElementById('taskSubmissionInput');
+        const text = input ? input.value.trim() : '';
+        if (!text) {
+            showToast('Vyplň nejdřív řešení.', 'error');
+            return;
+        }
+        client.send({ type: 'task_submit', task_id: currentTaskId, content: text });
+        if (input) input.value = '';
+        closeTaskModal();
+        showToast('Odevzdáno správci ke kontrole.', 'success');
     }
 
     function handleTypingSync(data) {

@@ -164,3 +164,27 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 - `python3 -m compileall app` (**PASS**) — Verified modules compile without import errors.
 
 
+## [2025-12-15] Phase 33 - Task Workflow & Reward Controls
+### Prompt
+- V dashboardu s úkoly po kliknutí na APPROVE občas nic nestane; nejsou jasně vidět stádia úkolů.
+- Rozdělit stavy: požadavky, rozpracované úkoly na straně uživatele a odevzdané ke zhodnocení.
+- Správce má při hodnocení volit odměnu 0/50/100/200.
+- Odměna se má nastavovat automaticky podle nastavení rootu nebo levelu uživatele; hodnoty musí být v root dashboardu upravitelné.
+- Uživatel má přes speciální okno úkol odevzdat; správce schvaluje a určí odměnu.
+
+### Plan
+- [x] Přidat do backendu konfigurovatelné výchozí odměny pro úkoly (globální a dle user levelu) a vystavit je v root API/UI.
+- [x] Opravit admin task dashboard: jasné fáze (požadavek/aktivní/odevzdaný/zaplaceno), spolehlivé APPROVE a výběr 0/50/100/200 pro platbu.
+- [x] Umožnit uživateli odevzdat úkol přes dedikované UI a websocket; ukládat text submissionu a notifikovat administrátory.
+- [x] Aktualizovat uživatelský task panel pro zobrazení stavu a dostupnosti odevzdávacího okna; ladit dokumentaci.
+
+### Outcome
+- Root dashboard now exposes editable task reward presets per user level; new requests automatically inherit the configured baseline.
+- Admin task view clearly separates requests, active work, submissions, and paid tasks, with approval reliability and fixed payout buttons (0/50/100/200).
+- Users can submit task results through a modal tied to websocket `task_submit`, sending content to admins and freezing state while under review.
+- User task cards reflect current stage, submission text, and payout info once paid; documentation updated to reflect the workflow.
+
+### Tests
+- Not run (websocket/UI workflow changes; manual dashboard verification required).
+
+
