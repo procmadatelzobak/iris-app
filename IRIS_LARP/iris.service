@@ -1,0 +1,18 @@
+[Unit]
+Description=IRIS LARP Control System
+After=network.target
+
+[Service]
+Type=simple
+# CHANGE THESE VALUES TO MATCH YOUR SYSTEM
+User=iris
+WorkingDirectory=/opt/iris-app/IRIS_LARP
+ExecStart=/opt/iris-app/IRIS_LARP/venv/bin/python run.py
+Environment=PATH=/opt/iris-app/IRIS_LARP/venv/bin
+Restart=always
+RestartSec=5
+StandardOutput=append:/opt/iris-app/IRIS_LARP/server.log
+StandardError=append:/opt/iris-app/IRIS_LARP/server.log
+
+[Install]
+WantedBy=multi-user.target

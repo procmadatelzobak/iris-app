@@ -1,0 +1,60 @@
+{
+    "users": {
+        "root": {
+            "username": "root",
+            "password": "master_control_666",
+            "role": "admin",
+            "status_level": "high"
+        },
+        "admins": {
+            "count": 4,
+            "username_pattern": "admin{i}",
+            "password_pattern": "secure_admin_{i}",
+            "role": "admin",
+            "status_level": "high"
+        },
+        "agents": {
+            "count": 8,
+            "username_pattern": "agent{i}",
+            "password_pattern": "agent_pass_{i}",
+            "role": "agent",
+            "status_level": "mid"
+        },
+        "users": {
+            "count": 8,
+            "username_pattern": "user{i}",
+            "password_pattern": "subject_pass_{i}",
+            "role": "user",
+            "status_level": "low",
+            "initial_credits": 100
+        }
+    },
+    "economy": {
+        "treasury_balance": 500,
+        "tax_rate": 0.20
+    },
+    "power": {
+        "capacity": 100,
+        "cost_base": 10.0,
+        "cost_per_user": 5.0,
+        "cost_per_autopilot": 10.0,
+        "cost_low_latency": 30.0,
+        "cost_optimizer": 15.0
+    },
+    "temperature": {
+        "initial": 80.0,
+        "min": 20.0,
+        "threshold": 350.0,
+        "reset_value": 80.0
+    },
+    "llm": {
+        "task_provider": "openai",
+        "task_model": "gpt-4o",
+        "hyper_provider": "openrouter",
+        "hyper_model": "google/gemini-2.0-flash-lite-preview-02-05:free",
+        "optimizer_prompt": "Přepiš text do formálního, korporátního tónu. Buď stručný."
+    },
+    "agent": {
+        "response_window": 120
+    }
+}

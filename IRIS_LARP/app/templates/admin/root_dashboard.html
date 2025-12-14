@@ -176,13 +176,17 @@
             <!-- Quick Actions -->
             <div class="god-panel col-span-2">
                 <div class="god-title">EXECUTIVE PROTOCOLS</div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-3 gap-4">
                     <button class="btn-god" onclick="triggerShift()">>> FORCE SHIFT >></button>
                     <button class="btn-god border-pink-500 text-pink-500 hover:bg-pink-900"
                         onclick="broadcastMsg()">GLOBAL BROADCAST</button>
                     <button class="btn-god btn-nuke" onclick="triggerReset()">[ SYSTEM RESET ]</button>
                     <button class="btn-god border-blue-500 text-blue-500 hover:bg-blue-900"
                         onclick="location.reload()">RELOAD UI</button>
+                    <button class="btn-god border-yellow-500 text-yellow-500 hover:bg-yellow-900"
+                        onclick="restartServer()">[ RESTART SERVER ]</button>
+                    <button class="btn-god border-red-600 text-red-600 hover:bg-red-900 animate-pulse"
+                        onclick="factoryReset()">[ FACTORY RESET ]</button>
                 </div>
             </div>
         </div>
@@ -444,6 +448,36 @@
     window.triggerReset = () => {
         if (prompt("TYPE 'NUKE' TO CONFIRM") === 'NUKE') {
             client.send({ type: 'reset_game' });
+        }
+    };
+
+    window.restartServer = async () => {
+        if (!confirm("RESTART SERVER? All connections will be dropped temporarily.")) return;
+        try {
+            const res = await fetch('/api/admin/root/restart', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            alert(data.message);
+            setTimeout(() => location.reload(), 5000);
+        } catch (e) {
+            alert("Restart failed: " + e);
+        }
+    };
+
+    window.factoryReset = async () => {
+        if (prompt("THIS WILL DELETE ALL DATA AND RESTART WITH DEFAULTS.\nType 'FACTORY RESET' to confirm:") !== 'FACTORY RESET') return;
+        try {
+            const res = await fetch('/api/admin/root/factory_reset', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            alert(data.message);
+            setTimeout(() => location.reload(), 8000);
+        } catch (e) {
+            alert("Factory reset failed: " + e);
         }
     };
 

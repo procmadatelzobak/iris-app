@@ -493,3 +493,76 @@ async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_adm
     db.close()
     
     return {"status": "ok", "config": config.dict()}
+
+@router.post("/root/restart")
+async def restart_server(admin=Depends(get_current_admin)):
+    """ROOT ONLY: Restart the server process"""
+    import subprocess
+    import sys
+    import os
+    
+    # Log action
+    from ..database import SessionLocal, SystemLog
+    db = SessionLocal()
+    db.add(SystemLog(event_type="ROOT", message=f"Server RESTART initiated by {admin.username}"))
+    db.commit()
+    db.close()
+    
+    # Broadcast shutdown warning
+    await routing_logic.broadcast_global('{"type": "server_restart", "message": "Server restarting in 3 seconds..."}')
+    
+    # Spawn a detached process to restart the server
+    # This script will: wait 2s, kill current process, start new one
+    restart_script = f"""
+import time
+import os
+import signal
+import subprocess
+time.sleep(2)
+os.kill({os.getpid()}, signal.SIGTERM)
+time.sleep(1)
+subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.dirname(os.path.dirname(__file__)))}')
+"""
+    subprocess.Popen([sys.executable, '-c', restart_script], start_new_session=True)
+    
+    return {"status": "restarting", "message": "Server will restart in ~3 seconds"}
+
+@router.post("/root/factory_reset")
+async def factory_reset(admin=Depends(get_current_admin)):
+    """ROOT ONLY: Delete database and restart with fresh data"""
+    import subprocess
+    import sys
+    import os
+    
+    # Log action (will be deleted but good for immediate debugging)
+    from ..database import SessionLocal, SystemLog
+    db = SessionLocal()
+    db.add(SystemLog(event_type="ROOT", message=f"FACTORY RESET initiated by {admin.username}"))
+    db.commit()
+    db.close()
+    
+    # Broadcast shutdown warning
+    await routing_logic.broadcast_global('{"type": "factory_reset", "message": "System will be wiped and restarted in 5 seconds..."}')
+    
+    # Find database path
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'iris.db')
+    
+    # Spawn a detached process to delete DB and restart
+    reset_script = f"""
+import time
+import os
+import signal
+import subprocess
+time.sleep(3)
+# Delete database
+if os.path.exists('{db_path}'):
+    os.remove('{db_path}')
+    print('Database deleted.')
+os.kill({os.getpid()}, signal.SIGTERM)
+time.sleep(1)
+subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.dirname(os.path.dirname(__file__)))}')
+"""
+    subprocess.Popen([sys.executable, '-c', reset_script], start_new_session=True)
+    
+    return {"status": "resetting", "message": "Database will be deleted and server restarted in ~5 seconds"}
+

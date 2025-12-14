@@ -114,6 +114,7 @@ venv.bak/
 IRIS_LARP/data/*.db
 IRIS_LARP/data/admin_labels.json
 IRIS_LARP/server.log
+# NOTE: IRIS_LARP/data/default_scenario.json IS tracked (template config)
 
 # Temporary files
 *.tmp
