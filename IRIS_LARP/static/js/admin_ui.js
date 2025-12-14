@@ -768,33 +768,6 @@ async function loadLabels() {
 }
 
 // AI Modal
-window.toggleAIModal = function() {
-    const m = document.getElementById('aiModal');
-    if (m) m.classList.toggle('hidden');
-};
-
-window.switchConfigTab = function(tab) {
-    document.querySelectorAll('.conf-tab').forEach(e => e.classList.add('hidden'));
-    const tabEl = document.getElementById(`conf-${tab}`);
-    if (tabEl) tabEl.classList.remove('hidden');
-};
-
-window.saveKey = async function(provider) {
-    const inputEl = document.getElementById(`key-${provider}`);
-    if (!inputEl) return;
-    const val = inputEl.value;
-    await fetch('/api/admin/llm/keys', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ provider: provider, key: val })
-    });
-    alert('Saved');
-};
-
-window.saveConfig = async function(type) {
-    alert('Saved (Mock)');
-};
-
 // --- SYSTEM LOGS ---
 window.refreshSystemLogs = async function() {
     try {

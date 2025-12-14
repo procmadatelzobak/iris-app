@@ -61,6 +61,15 @@ def agent_auth():
 
 
 @pytest.fixture
+def root_auth():
+    """Get root authentication headers."""
+    response = client.post("/auth/login", data={"username": "root", "password": "master_control_666"})
+    assert response.status_code == 200
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
 def clean_user():
     """Reset user1 to default state before test."""
     db = SessionLocal()
@@ -523,9 +532,9 @@ class TestOptimizerSystem:
         response = client.post("/api/admin/llm/config/hyper", json=config, headers=admin_auth)
         assert response.status_code == 200
 
-    def test_get_api_keys(self, admin_auth):
-        """5.7: Get API keys (masked)."""
-        response = client.get("/api/admin/llm/keys", headers=admin_auth)
+    def test_get_api_keys(self, root_auth):
+        """5.7: Get API keys (masked) - Root only."""
+        response = client.get("/api/admin/llm/keys", headers=root_auth)
         assert response.status_code == 200
 
 
@@ -536,8 +545,8 @@ class TestOptimizerSystem:
 class TestRootControls:
     """Block 6: Verify root-level system controls."""
 
-    def test_update_constants(self, admin_auth, clean_gamestate):
-        """6.1: Update system constants."""
+    def test_update_constants(self, root_auth, clean_gamestate):
+        """6.1: Update system constants - Root only."""
         constants = {
             "tax_rate": 0.30,
             "power_cap": 200,
@@ -554,7 +563,7 @@ class TestRootControls:
         response = client.post(
             "/api/admin/root/update_constants",
             json=constants,
-            headers=admin_auth
+            headers=root_auth
         )
         assert response.status_code == 200
 
@@ -562,25 +571,25 @@ class TestRootControls:
         assert gamestate.power_capacity == 200
         assert gamestate.TEMP_THRESHOLD == 400.0
 
-    def test_get_root_state(self, admin_auth):
-        """6.2: Get root state."""
-        response = client.get("/api/admin/root/state", headers=admin_auth)
+    def test_get_root_state(self, root_auth):
+        """6.2: Get root state - Root only."""
+        response = client.get("/api/admin/root/state", headers=root_auth)
         assert response.status_code == 200
         data = response.json()
         assert "tax_rate" in data
         assert "treasury" in data
         assert "costs" in data
 
-    def test_get_ai_config(self, admin_auth):
-        """6.3: Get AI config."""
-        response = client.get("/api/admin/root/ai_config", headers=admin_auth)
+    def test_get_ai_config(self, root_auth):
+        """6.3: Get AI config - Root only."""
+        response = client.get("/api/admin/root/ai_config", headers=root_auth)
         assert response.status_code == 200
         data = response.json()
         assert "optimizer_prompt" in data
         assert "autopilot_model" in data
 
-    def test_update_ai_config(self, admin_auth):
-        """6.4: Update AI config."""
+    def test_update_ai_config(self, root_auth):
+        """6.4: Update AI config - Root only."""
         config = {
             "optimizer_prompt": "New optimizer prompt",
             "autopilot_model": "gpt-4o"
@@ -589,20 +598,20 @@ class TestRootControls:
         response = client.post(
             "/api/admin/root/ai_config",
             json=config,
-            headers=admin_auth
+            headers=root_auth
         )
         assert response.status_code == 200
         assert gamestate.optimizer_prompt == "New optimizer prompt"
 
-    def test_system_reset(self, admin_auth):
-        """6.5: System reset clears data."""
+    def test_system_reset(self, root_auth):
+        """6.5: System reset clears data - Root only."""
         # Create some data
         db = SessionLocal()
         db.add(SystemLog(event_type="TEST", message="Test log"))
         db.commit()
         db.close()
 
-        response = client.post("/api/admin/root/reset", headers=admin_auth)
+        response = client.post("/api/admin/root/reset", headers=root_auth)
         assert response.status_code == 200
 
         db = SessionLocal()
@@ -633,6 +642,18 @@ class TestRootControls:
         logs = db.query(SystemLog).all()
         db.close()
         assert len(logs) == 0
+
+    def test_admin_cannot_access_root_endpoints(self, admin_auth):
+        """6.8: Regular admin should not access root-only endpoints."""
+        # Test a few root-only endpoints
+        response = client.get("/api/admin/llm/keys", headers=admin_auth)
+        assert response.status_code == 403
+        
+        response = client.get("/api/admin/root/state", headers=admin_auth)
+        assert response.status_code == 403
+        
+        response = client.get("/api/admin/root/ai_config", headers=admin_auth)
+        assert response.status_code == 403
 
 
 # ============================================================================
