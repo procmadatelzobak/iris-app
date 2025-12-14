@@ -73,22 +73,22 @@
     <!-- Left Panel: Status -->
     <div class="w-1/3 theme-card flex flex-col h-full">
         <div class="mb-6 border-b border-[var(--border-color)] pb-4">
-            <h2 class="text-xl font-bold mb-4 uppercase tracking-wider text-[var(--accent-color)]">
+            <h2 class="text-xl font-bold mb-4 uppercase tracking-wider text-[var(--text-color)]">
                 <i class="fas fa-id-card"></i> STAV SUBJEKTU
             </h2>
             <!-- Username Display -->
             <div class="mb-4 p-2 bg-[rgba(255,255,255,0.1)] rounded border border-[var(--border-color)]">
-                <div class="text-xs opacity-70">UŽIVATEL</div>
-                <div class="font-mono text-lg font-bold mt-1 text-[var(--accent-color)]">{{ user.username|upper }}</div>
+                <div class="text-xs text-gray-400">UŽIVATEL</div>
+                <div class="font-mono text-lg font-bold mt-1 text-[var(--text-color)]">{{ user.username|upper }}</div>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div class="p-2 bg-[rgba(255,255,255,0.05)] rounded">
-                    <div class="text-xs opacity-70">POSUN SVĚTA</div>
+                    <div class="text-xs text-gray-400">POSUN SVĚTA</div>
                     <div class="font-mono text-2xl font-bold mt-1" id="shiftDisplay">--</div>
                 </div>
                 <div class="p-2 bg-[rgba(255,255,255,0.05)] rounded">
-                    <div class="text-xs opacity-70">KREDITY</div>
-                    <div class="font-mono text-2xl font-bold mt-1 text-[var(--accent-color)]" id="creditsDisplay">--
+                    <div class="text-xs text-gray-400">KREDITY</div>
+                    <div class="font-mono text-2xl font-bold mt-1 text-[var(--text-color)]" id="creditsDisplay">--
                     </div>
                 </div>
             </div>
