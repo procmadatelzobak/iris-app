@@ -100,40 +100,48 @@
     </div>
 
     <!-- Left Panel: Status -->
-    <div class="w-1/5 flex flex-col gap-2 p-2 border-r border-pink-900/30">
-        <!-- Status Card -->
-        <div class="bg-black/60 border border-pink-800 relative p-2">
-            <h3 class="text-pink-500 border-b border-pink-900 mb-1 font-bold text-xs" data-key="agent_terminal.status">STAV</h3>
-            <div class="grid grid-cols-1 gap-1 text-[10px] font-mono text-pink-300">
-                <div>AGENT: <span class="text-white font-bold">{{ user.username|upper }}</span></div>
-                <div><span data-key="agent_terminal.session_id">ID RELACE</span>: <span id="sessionIdDisplay" class="text-white">...</span></div>
-                <div><span data-key="agent_terminal.llm_status">LLM</span>: <span id="llmStatus" class="text-green-500" data-key="agent_terminal.llm_online">ONLINE</span></div>
-            </div>
-
-            <div class="mt-2 pt-2 border-t border-pink-900">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-pink-500 font-bold text-[10px]" data-key="agent_terminal.hyper_mode">HYPER-MÓD</span>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="autopilotToggle" class="sr-only peer" onchange="toggleAutopilot()">
-                        <div
-                            class="w-8 h-4 bg-pink-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-500">
-                        </div>
-                    </label>
+    <div class="w-[30%] min-w-[260px] max-w-md flex flex-col h-full gap-3 p-3 border-r border-pink-900/30 bg-black/30">
+        <div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1">
+            <!-- Status Card -->
+            <div class="bg-black/60 border border-pink-800 relative p-3 flex flex-col gap-2">
+                <h3 class="text-pink-500 border-b border-pink-900 pb-1 font-bold text-xs" data-key="agent_terminal.status">STAV</h3>
+                <div class="grid grid-cols-1 gap-1 text-[10px] font-mono text-pink-300">
+                    <div>AGENT: <span class="text-white font-bold">{{ user.username|upper }}</span></div>
+                    <div><span data-key="agent_terminal.session_id">ID RELACE</span>: <span id="sessionIdDisplay" class="text-white">...</span></div>
+                    <div>SHIFT: <span id="shiftDisplay" class="text-white">...</span></div>
+                    <div>TEPLOTA: <span id="tempDisplay" class="text-white">...</span>°C</div>
+                    <div>OKNO: <span id="responseWindowDisplay" class="text-white">120s</span></div>
+                    <div><span data-key="agent_terminal.llm_status">LLM</span>: <span id="llmStatus" class="text-green-500" data-key="agent_terminal.llm_online">ONLINE</span></div>
                 </div>
-                <div class="text-[8px] text-pink-800 leading-tight" data-key="agent_terminal.hyper_description">
-                    Aktivuje automatickou neurální odpověď. Vstup uživatele bude uzamčen.
+
+                <div class="mt-2 pt-2 border-t border-pink-900">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-pink-500 font-bold text-[10px]" data-key="agent_terminal.hyper_mode">HYPER-MÓD</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="autopilotToggle" class="sr-only peer" onchange="toggleAutopilot()">
+                            <div
+                                class="w-8 h-4 bg-pink-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-500">
+                            </div>
+                        </label>
+                    </div>
+                    <div class="text-[8px] text-pink-800 leading-tight" data-key="agent_terminal.hyper_description">
+                        Aktivuje automatickou neurální odpověď. Vstup uživatele bude uzamčen.
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Timer Bar -->
-        <div class="bg-black/60 border border-pink-800 p-2">
-            <h3 class="text-pink-500 font-bold mb-1 text-[10px]">ODPOVĚĎ TIMER</h3>
+        <div class="bg-black/60 border border-pink-800 p-3 shadow-lg">
+            <div class="flex items-center justify-between mb-1">
+                <h3 class="text-pink-500 font-bold text-[10px]">ODPOVĚĎ TIMER</h3>
+                <span class="text-[9px] text-pink-300">limit: <span id="timerLimitDisplay">120s</span></span>
+            </div>
             <div class="h-3 bg-gray-900 border border-pink-900 relative overflow-hidden">
                 <div id="timerBar" class="h-full bg-yellow-500 transition-all duration-1000 linear" style="width: 100%;">
                 </div>
             </div>
-            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-1" data-key="agent_terminal.timer_waiting">ČEKÁM NA UŽIVATELE</div>
+            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-2" data-key="agent_terminal.timer_waiting">ČEKÁM NA UŽIVATELE</div>
         </div>
     </div>
 
@@ -176,6 +184,8 @@
         const token = localStorage.getItem('token');
         const sessionIdDisplay = document.getElementById('sessionIdDisplay');
         const chatHistory = document.getElementById('chatHistory');
+        const timerLimitDisplay = document.getElementById('timerLimitDisplay');
+        const responseWindowDisplay = document.getElementById('responseWindowDisplay');
         const tabId = Math.random().toString(36).substring(7); // Unique ID for this tab
 
         const t = (key, fallback) => {
@@ -210,6 +220,17 @@
         let timerRemaining = 120;
         let timerInterval = null;
 
+        function updateTimerLimitUI(newLimit) {
+            if (typeof newLimit === 'number') {
+                timerLimit = newLimit;
+                timerRemaining = Math.min(timerRemaining, timerLimit);
+            }
+
+            if (timerLimitDisplay) timerLimitDisplay.innerText = `${timerLimit}s`;
+            if (responseWindowDisplay) responseWindowDisplay.innerText = `${timerLimit}s`;
+            updateTimerUI();
+        }
+
         applyLocalizedText();
         const translationReady = setInterval(() => {
             if (window.translationManager && window.translationManager.initialized) {
@@ -217,6 +238,8 @@
                 clearInterval(translationReady);
             }
         }, 200);
+
+        updateTimerLimitUI(timerLimit);
 
         function startTimer() {
             clearInterval(timerInterval);
@@ -286,7 +309,7 @@
                     sessionIdDisplay.innerText = "S" + data.session_id;
                 }
                 if (data.hyper_mode) applyHyperVisibility(data.hyper_mode);
-                if (data.agent_window !== undefined) timerLimit = data.agent_window;
+                if (data.agent_window !== undefined) updateTimerLimitUI(data.agent_window);
 
             } else if (data.type === 'optimizing_start') {
                 showOptimizingLoader();

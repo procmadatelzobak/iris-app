@@ -49,7 +49,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
         return 0 # Fallback
 
     # Connect
-    await routing_logic.connect(websocket, user.role, user.id)
+    agent_logical_id = get_logical_id(user.username, user.role.value) if user.role == UserRole.AGENT else None
+
+    await routing_logic.connect(websocket, user.role, user.id, logical_id=agent_logical_id)
     
     # Notify Admins of new connection (if not admin)
     if user.role != UserRole.ADMIN:

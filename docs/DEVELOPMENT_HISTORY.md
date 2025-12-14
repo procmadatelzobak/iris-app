@@ -90,6 +90,24 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 - Not run (UI localization change; no automated coverage in container).
 
 
+## [2025-12-14] Phase 33 - Agent Terminal Layout & Visibility
+### Prompt
+- User reports that agent terminals do not show incoming user messages and the vertical status panel is too narrow and underused.
+
+### Plan
+- [x] Investigate websocket routing to ensure user messages reach the mapped agent session and render in the agent terminal.
+- [x] Expand the agent-side status panel width and reorganize its layout to better use vertical space (add routing and timer context).
+- [x] Reconcile documentation (prompt log, status, history, tests) after implementation and any verification steps.
+
+### Outcome
+- Websocket routing now uses logical agent identifiers when broadcasting sessions, so agents receive user prompts regardless of database primary keys.
+- Agent status sidebar widened with shift, temperature, and response window metadata plus an expanded timer card for better vertical real estate use.
+- Project status, prompt log, and test log updated to reflect the routing fix and UI adjustments.
+
+### Tests
+- Not run (websocket mapping and UI layout updates; requires manual terminal verification).
+
+
 ## [2025-12-15] Phase 33 - Economy Dashboard Authorization
 ### Prompt
 - Admin economy dashboard (Station 3) shows no user entries; confirm whether configuration is missing and ensure values are prepopulated.
@@ -127,4 +145,5 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 
 ### Tests
 - Not run (UI/API wiring change; manual verification recommended for model listing with real API keys).
+
 
