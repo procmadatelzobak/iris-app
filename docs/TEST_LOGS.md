@@ -8,7 +8,11 @@
 | 2025-12-14 | n/a (UI/docs change) | Lore viewer embed | Not Run | Static documentation embed; manual UI check pending. |
 | 2025-12-14 | n/a (manual) | Response timer enforcement & UI | Not Run | Websocket/UI changes; manual countdown validation still needed. |
 | 2025-12-14 | n/a (UI localization) | Agent terminal translations | Not Run | Localization change; verify visually in UI. |
+
 | 2025-12-15 | n/a (UI auth wiring) | Admin economy dashboards | Not Run | Authorization header fix; verify Station 3 and ROOT economy tables populate. |
+
+| 2025-12-15 | n/a (UI/API wiring) | ROOT LLM configuration per role | Not Run | Manual check needed with real API keys for model discovery and saves. |
+
 
 ## Manual Verification Required
 

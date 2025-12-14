@@ -51,7 +51,7 @@ class GameState:
         self.agent_response_window = 120 
         
         # v1.5 AI Optimizer
-        self.optimizer_active = False 
+        self.optimizer_active = False
         self.optimizer_prompt = "Přepiš text do formálního, korporátního tónu. Buď stručný."
         
         # v1.8 Costs (Root Configurable)
@@ -71,6 +71,11 @@ class GameState:
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
             system_prompt="You are an AI assistant."
+        )
+        self.llm_config_optimizer = LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            system_prompt="You are a precise rewriter. Follow all instructions."
         )
 
         self.test_mode = False # v1.9 Test Mode
@@ -152,12 +157,29 @@ class GameState:
         self.treasury_balance = 500
         self.tax_rate = 0.20
         self.optimizer_active = False
+        self.optimizer_prompt = "Přepiš text do formálního, korporátního tónu. Buď stručný."
         # Costs reset too? Yes.
         self.COST_BASE = 10.0
         self.COST_PER_USER = 5.0
         self.COST_PER_AUTOPILOT = 10.0
         self.COST_LOW_LATENCY = 30.0
         self.COST_OPTIMIZER_ACTIVE = 15.0
+        # Reset LLM configs
+        self.llm_config_task = LLMConfig(
+            provider=LLMProvider.OPENAI,
+            model_name="gpt-4o",
+            system_prompt="You are a strict task evaluator."
+        )
+        self.llm_config_hyper = LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            system_prompt="You are an AI assistant."
+        )
+        self.llm_config_optimizer = LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name="google/gemini-2.0-flash-lite-preview-02-05:free",
+            system_prompt="You are a precise rewriter. Follow all instructions."
+        )
         # Reset custom labels (translation overrides)
         self.custom_labels = {}
 

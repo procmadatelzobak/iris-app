@@ -281,28 +281,110 @@
             <!-- LLM Configuration -->
             <div class="god-panel mt-6">
                 <div class="god-title">🤖 AI CONFIGURATION</div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">OPTIMIZER PROMPT</label>
-                        <textarea id="optimizerPrompt" rows="3"
-                            class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
-                            placeholder="Rewrite instructions..."></textarea>
+                <p class="text-sm text-gray-400 mb-4">Oddělené profily pro jednotlivé LLM role (úkoly, soft/optimizer, HYPER autopilot). Každá karta umožní vybrat poskytovatele, dostupný model, systémový prompt a uložit vlastní volbu.</p>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="border border-gray-800 bg-black p-3 space-y-3">
+                        <div class="text-lg font-bold text-yellow-400">🗒️ LLM PRO ZADÁVÁNÍ ÚKOLŮ</div>
+                        <div class="text-xs text-gray-500">Hodnotí a přijímá úkoly (Task Evaluator).</div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
+                            <select id="taskProvider" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onProviderChanged('task')">
+                                <option value="openai">OpenAI</option>
+                                <option value="openrouter">OpenRouter</option>
+                                <option value="gemini">Gemini</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 items-end">
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
+                                <select id="taskModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onModelSelected('task')">
+                                    <option value="">Načítám...</option>
+                                </select>
+                            </div>
+                            <button class="btn-god px-3" onclick="refreshModels('task')">Obnovit</button>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
+                            <input id="taskModelInput" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="např. gpt-4o" />
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">System prompt</label>
+                            <textarea id="taskSystemPrompt" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Jak má LLM hodnotit úkoly"></textarea>
+                        </div>
+                        <button class="btn-god w-full" onclick="saveLLMConfig('task')">ULOŽIT TASK LLM</button>
                     </div>
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">AUTOPILOT MODEL</label>
-                        <select id="autopilotModel" class="w-full bg-black border border-gray-700 p-2 text-white">
-                            <option value="google/gemini-2.0-flash-lite-preview-02-05:free">Gemini 2.0 Flash (Free)
-                            </option>
-                            <option value="google/gemini-flash-1.5">Gemini 1.5 Flash</option>
-                            <option value="gpt-4o-mini">GPT-4o Mini</option>
-                        </select>
+
+                    <div class="border border-gray-800 bg-black p-3 space-y-3">
+                        <div class="text-lg font-bold text-yellow-400">🌿 SOFT REŽIM / OPTIMIZER</div>
+                        <div class="text-xs text-gray-500">Přepisuje odpovědi dle instrukcí (mírnější tón).</div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
+                            <select id="optimizerProvider" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onProviderChanged('optimizer')">
+                                <option value="openai">OpenAI</option>
+                                <option value="openrouter">OpenRouter</option>
+                                <option value="gemini">Gemini</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 items-end">
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
+                                <select id="optimizerModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onModelSelected('optimizer')">
+                                    <option value="">Načítám...</option>
+                                </select>
+                            </div>
+                            <button class="btn-god px-3" onclick="refreshModels('optimizer')">Obnovit</button>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
+                            <input id="optimizerModelInput" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="např. mistralai/..." />
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">System prompt</label>
+                            <textarea id="optimizerSystemPrompt" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Jak má přepisovat odpovědi"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Rewrite instrukce</label>
+                            <textarea id="optimizerInstruction" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Např. formální tón, stručnost..."></textarea>
+                        </div>
+                        <button class="btn-god w-full" onclick="saveLLMConfig('optimizer')">ULOŽIT SOFT LLM</button>
+                    </div>
+
+                    <div class="border border-gray-800 bg-black p-3 space-y-3">
+                        <div class="text-lg font-bold text-yellow-400">🚀 HYPER / AUTOPILOT</div>
+                        <div class="text-xs text-gray-500">Plně automatické odpovědi (Autopilot/HYPER režim).</div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Poskytovatel</label>
+                            <select id="hyperProvider" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onProviderChanged('hyper')">
+                                <option value="openai">OpenAI</option>
+                                <option value="openrouter">OpenRouter</option>
+                                <option value="gemini">Gemini</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 items-end">
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-500 mb-1">Model (dostupné)</label>
+                                <select id="hyperModelSelect" class="w-full bg-black border border-gray-700 p-2 text-white" onchange="onModelSelected('hyper')">
+                                    <option value="">Načítám...</option>
+                                </select>
+                            </div>
+                            <button class="btn-god px-3" onclick="refreshModels('hyper')">Obnovit</button>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Model (vlastní ID)</label>
+                            <input id="hyperModelInput" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="např. google/..." />
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">System prompt</label>
+                            <textarea id="hyperSystemPrompt" rows="3" class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm" placeholder="Jak má autopilot reagovat"></textarea>
+                        </div>
+                        <button class="btn-god w-full" onclick="saveLLMConfig('hyper')">ULOŽIT HYPER LLM</button>
                     </div>
                 </div>
 
                 <!-- API Keys Section -->
                 <div class="mt-4 pt-4 border-t border-gray-700">
                     <div class="text-sm text-yellow-500 mb-3">🔑 API KEYS (uloženo v .env)</div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">OPENAI API KEY</label>
                             <input type="password" id="openaiKey"
@@ -315,13 +397,18 @@
                                 class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
                                 placeholder="sk-or-..." autocomplete="off">
                         </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">GEMINI API KEY</label>
+                            <input type="password" id="geminiKey"
+                                class="w-full bg-black border border-gray-700 p-2 text-white font-mono text-sm"
+                                placeholder="AIza..." autocomplete="off">
+                        </div>
                     </div>
-                    <div class="text-xs text-gray-600 mt-2 italic">
-                        ⚠️ Klíče se ukládají pouze do .env souboru na serveru. Vyžaduje restart serveru.
+                    <div class="text-xs text-gray-600 mt-2 italic flex items-center justify-between">
+                        <span>⚠️ Klíče se ukládají do .env/SystemConfig na serveru. Většinou vyžadují restart serveru.</span>
+                        <button class="btn-god px-4" onclick="saveApiKeys()">ULOŽIT API KEYS</button>
                     </div>
                 </div>
-
-                <button class="btn-god w-full mt-4" onclick="saveAIConfig()">[ SAVE AI CONFIG ]</button>
             </div>
 
             <!--System Info -->
@@ -635,7 +722,10 @@
                 enabled: testModeActive
             });
 
-            // Update UI
+            updateTestModeUI();
+        };
+
+        function updateTestModeUI() {
             const btn = document.getElementById('btnTestMode');
             const label = document.getElementById('testModeLabel');
             const status = document.getElementById('testModeStatus');
@@ -655,70 +745,244 @@
                 status.classList.remove('text-green-500');
                 status.classList.add('text-gray-600');
             }
-        };
+        }
 
         // --- AI CONFIGURATION ---
-        window.saveAIConfig = async () => {
-            const optimizerPrompt = document.getElementById('optimizerPrompt').value;
-            const autopilotModel = document.getElementById('autopilotModel').value;
-
-            // Send to backend (implement API endpoint later)
-            try {
-                await fetch('/api/admin/root/ai_config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        optimizer_prompt: optimizerPrompt,
-                        autopilot_model: autopilotModel
-                    })
-                });
-                alert('✅ AI Configuration Saved');
-            } catch (e) {
-                console.error(e);
-                alert('❌ Failed to save config');
+        const llmRoles = {
+            task: {
+                providerId: 'taskProvider',
+                modelSelectId: 'taskModelSelect',
+                modelInputId: 'taskModelInput',
+                promptId: 'taskSystemPrompt'
+            },
+            optimizer: {
+                providerId: 'optimizerProvider',
+                modelSelectId: 'optimizerModelSelect',
+                modelInputId: 'optimizerModelInput',
+                promptId: 'optimizerSystemPrompt',
+                instructionId: 'optimizerInstruction'
+            },
+            hyper: {
+                providerId: 'hyperProvider',
+                modelSelectId: 'hyperModelSelect',
+                modelInputId: 'hyperModelInput',
+                promptId: 'hyperSystemPrompt'
             }
         };
 
-        // Load initial AI config
-        window.loadAIConfig = async () => {
+        function getAuthHeaders() {
+            return { 'Authorization': `Bearer ${token}` };
+        }
+
+        window.onProviderChanged = (role) => {
+            refreshModels(role);
+        }
+
+        window.onModelSelected = (role) => {
+            const config = llmRoles[role];
+            const select = document.getElementById(config.modelSelectId);
+            const input = document.getElementById(config.modelInputId);
+            if (select && input) {
+                input.value = select.value;
+            }
+        }
+
+        window.refreshModels = async (role, selectedModel = '') => {
+            const config = llmRoles[role];
+            if (!config) return;
+
+            const provider = document.getElementById(config.providerId)?.value;
+            const select = document.getElementById(config.modelSelectId);
+            const input = document.getElementById(config.modelInputId);
+
+            if (!provider || !select) return;
+            select.innerHTML = `<option value="">Načítám...</option>`;
+
             try {
-                const res = await fetch('/api/admin/root/ai_config', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                if (data.status === 'ok') {
-                    document.getElementById('optimizerPrompt').value = data.optimizer_prompt;
-                    document.getElementById('autopilotModel').value = data.autopilot_model;
+                const res = await fetch(`/api/admin/llm/models/${provider}`, { headers: getAuthHeaders() });
+                const models = await res.json();
+                select.innerHTML = '';
 
-                    // Hydrate Test Mode State
-                    if (data.test_mode !== undefined) {
-                        testModeActive = data.test_mode;
-                        const btn = document.getElementById('btnTestMode');
-                        const label = document.getElementById('testModeLabel');
-                        const status = document.getElementById('testModeStatus');
-
-                        if (testModeActive) {
-                            label.innerText = 'ENABLED';
-                            btn.classList.add('border-green-500', 'text-green-500');
-                            btn.classList.remove('border-gray-700');
-                            status.innerText = '✅ Quick login buttons will appear on login screen';
-                            status.classList.remove('text-gray-600');
-                            status.classList.add('text-green-500');
-                        } else {
-                            label.innerText = 'DISABLED';
-                            btn.classList.remove('border-green-500', 'text-green-500');
-                            btn.classList.add('border-gray-700');
-                            status.innerText = '❌ Standard password input required';
-                            status.classList.remove('text-green-500');
-                            status.classList.add('text-gray-600');
-                        }
-                    }
+                if (models.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.innerText = 'Žádné modely (zadejte ručně)';
+                    select.appendChild(opt);
                 }
-            } catch (e) { console.error("Config load failed", e); }
+
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m;
+                    opt.innerText = m;
+                    select.appendChild(opt);
+                });
+
+                if (selectedModel && models.includes(selectedModel)) {
+                    select.value = selectedModel;
+                }
+            } catch (e) {
+                console.error('Model fetch failed', e);
+                select.innerHTML = '<option value="">Chyba načítání</option>';
+            }
+
+            if (input) {
+                input.value = selectedModel || select.value || '';
+            }
+        }
+
+        function applyConfigToUI(role, cfg) {
+            const config = llmRoles[role];
+            if (!config || !cfg) return;
+
+            const providerSelect = document.getElementById(config.providerId);
+            const promptField = document.getElementById(config.promptId);
+            const modelInput = document.getElementById(config.modelInputId);
+
+            if (providerSelect && cfg.provider) providerSelect.value = cfg.provider;
+            if (promptField && cfg.system_prompt !== undefined) promptField.value = cfg.system_prompt || '';
+            if (modelInput && cfg.model_name) modelInput.value = cfg.model_name;
+
+            refreshModels(role, cfg.model_name || '');
+
+            if (config.instructionId && cfg.prompt !== undefined) {
+                const instructionField = document.getElementById(config.instructionId);
+                if (instructionField) instructionField.value = cfg.prompt || '';
+            }
+        }
+
+        function gatherRoleConfig(role) {
+            const cfg = llmRoles[role];
+            const provider = document.getElementById(cfg.providerId)?.value;
+            const select = document.getElementById(cfg.modelSelectId);
+            const input = document.getElementById(cfg.modelInputId);
+            const systemPrompt = document.getElementById(cfg.promptId)?.value || '';
+            const modelName = (input?.value || '').trim() || (select?.value || '').trim();
+
+            return { provider, modelName, systemPrompt };
+        }
+
+        window.saveLLMConfig = async (role) => {
+            const cfg = llmRoles[role];
+            if (!cfg) return;
+            const { provider, modelName, systemPrompt } = gatherRoleConfig(role);
+            if (!provider || !modelName) {
+                alert('Vyplňte poskytovatele i model.');
+                return;
+            }
+
+            const payload = {
+                provider,
+                model_name: modelName,
+                system_prompt: systemPrompt
+            };
+
+            if (cfg.instructionId) {
+                payload.prompt = document.getElementById(cfg.instructionId)?.value || '';
+            }
+
+            try {
+                const res = await fetch(`/api/admin/llm/config/${role}`, {
+                    method: 'POST',
+                    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error(await res.text());
+                alert('✅ LLM konfigurace uložena');
+            } catch (e) {
+                console.error(e);
+                alert('❌ Uložení se nezdařilo');
+            }
+        };
+
+        async function loadLLMConfig() {
+            try {
+                const res = await fetch('/api/admin/llm/config', { headers: getAuthHeaders() });
+                const data = await res.json();
+                applyConfigToUI('task', data.task);
+                applyConfigToUI('hyper', data.hyper);
+                applyConfigToUI('optimizer', data.optimizer);
+            } catch (e) {
+                console.error('Config load failed', e);
+            }
+        }
+
+        async function loadApiKeys() {
+            try {
+                const res = await fetch('/api/admin/llm/keys', { headers: getAuthHeaders() });
+                const data = await res.json();
+                const placeholders = {
+                    openai: 'sk-...',
+                    openrouter: 'sk-or-...',
+                    gemini: 'AIza...'
+                };
+                [['openai', 'openaiKey'], ['openrouter', 'openrouterKey'], ['gemini', 'geminiKey']]
+                    .forEach(([provider, inputId]) => {
+                        const input = document.getElementById(inputId);
+                        if (!input) return;
+                        input.value = '';
+                        input.placeholder = data?.[provider] || placeholders[provider];
+                    });
+            } catch (e) {
+                console.error('Key fetch failed', e);
+            }
+        }
+
+        window.saveApiKeys = async () => {
+            const providers = ['openai', 'openrouter', 'gemini'];
+            const updates = [];
+
+            providers.forEach((provider) => {
+                const input = document.getElementById(`${provider}Key`);
+                if (input && input.value.trim()) {
+                    updates.push({ provider, key: input.value.trim() });
+                }
+            });
+
+            if (updates.length === 0) {
+                alert('Zadejte alespoň jeden API klíč.');
+                return;
+            }
+
+            try {
+                for (const upd of updates) {
+                    const res = await fetch('/api/admin/llm/keys', {
+                        method: 'POST',
+                        headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                        body: JSON.stringify(upd)
+                    });
+                    if (!res.ok) throw new Error(await res.text());
+                }
+                alert('✅ API klíče uloženy');
+                loadApiKeys();
+            } catch (e) {
+                console.error(e);
+                alert('❌ Uložení klíčů selhalo');
+            }
+        }
+
+        async function hydrateTestMode() {
+            try {
+                const res = await fetch('/api/admin/root/ai_config', { headers: getAuthHeaders() });
+                const data = await res.json();
+                if (data.test_mode !== undefined) {
+                    testModeActive = data.test_mode;
+                    updateTestModeUI();
+                }
+                const optimizerField = document.getElementById('optimizerInstruction');
+                if (optimizerField && !optimizerField.value && data.optimizer_prompt) {
+                    optimizerField.value = data.optimizer_prompt;
+                }
+            } catch (e) {
+                console.error('Test mode hydrate failed', e);
+            }
         }
 
         // Call on init
-        setTimeout(loadAIConfig, 1000);
+        setTimeout(() => {
+            loadLLMConfig();
+            loadApiKeys();
+            hydrateTestMode();
+        }, 1000);
 
         // --- ECONOMY TABLE ---
         async function fetchUsers() {
