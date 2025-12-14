@@ -188,3 +188,21 @@ Admin dashboard shows no tasks while users see their submissions queued for appr
 - Not run (websocket/UI workflow changes; manual dashboard verification required).
 
 
+## [2025-12-14] Phase 34 - Websocket Gamestate Scope Fix
+### Prompt
+- "Mám tu errory" — websocket connections failing with `Error loading history: cannot access local variable 'gamestate' where it is not associated with a value` during chat history load.
+
+### Plan
+- [x] Reproduce the websocket connection to trigger the gamestate UnboundLocalError.
+- [x] Remove the shadowing import so the global gamestate instance is used across the socket handler.
+- [x] Run a lightweight compile check to confirm the module imports cleanly.
+- [x] Reconcile documentation (status, prompt log, test log) for Phase 34.
+
+### Outcome
+- Eliminated the local gamestate import inside the websocket handler so history loading consistently references the shared instance, preventing UnboundLocalError during connects.
+- Documentation updated for Phase 34 with prompt, plan, and testing notes.
+
+### Tests
+- `python3 -m compileall app` (**PASS**) — Verified websocket router compiles without scope errors.
+
+

@@ -139,6 +139,7 @@
 ## Phase 34 - Server Stability
 
 - [x] **Admin API import order**: Ensure BaseModel is imported before class declarations to prevent startup crashes.
+- [x] **Websocket gamestate scope**: Removed local shadowing import so connection history loads without UnboundLocalError.
 
 
 ## Uncertainties
