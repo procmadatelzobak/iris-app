@@ -2,7 +2,7 @@
 
 **Language Policy:** Documentation (EN), UI (Czech/English Hybrid as per LARP Spec).
 
-## Current Phase: Phase 18 - Verification v1.4 [TESTED]
+## Current Phase: Phase 33 - Agent Response Controls [IN_PROGRESS]
 
 | Phase | Description | Status |
 | :--- | :--- | :--- |
@@ -116,6 +116,12 @@
 ## Phase 32 - Admin Task Workflow Fixes
 
 - [x] **Task visibility**: Admin task dashboard now uses authenticated API calls, reliable status strings, and live websocket refresh when new submissions arrive.
+
+## Phase 33 - Agent Response Controls
+
+- [x] **Prompt-first enforcement**: Agent replies are blocked until a user prompt arrives, with explicit timeout errors delivered to users.
+- [x] **Countdown UI**: User terminal shows a visible "ČEKÁNÍ NA ODPOVĚĎ" timer and switches to "probíhá optimalizace odpovědi" during optimizer or hyper/crazy flows.
+- [x] **Admin configurability**: Dashboard slider adjusts the response window and pushes updates to agents and users immediately.
 
 ## Uncertainties
 - [ ] None currently.

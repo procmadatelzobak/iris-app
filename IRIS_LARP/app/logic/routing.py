@@ -97,7 +97,7 @@ class ConnectionManager:
         if user_id in self.user_connections:
             error_msg = json.dumps({
                 "type": "agent_timeout",
-                "content": "Agent neodpověděl včas. Odpověď vypršela.",
+                "content": "Agent nestihl odpovědět v časovém limitu. Požadavek se nepovedlo doručit.",
                 "session_id": session_id
             })
             for connection in self.user_connections[user_id]:

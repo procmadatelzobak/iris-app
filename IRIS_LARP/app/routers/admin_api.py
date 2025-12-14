@@ -279,7 +279,16 @@ class TimerAction(BaseModel):
 
 @router.post("/timer")
 async def set_timer(action: TimerAction, admin=Depends(get_current_admin)):
+    import json
+    from ..logic.routing import routing_logic
+
     gamestate.agent_response_window = action.seconds
+
+    await routing_logic.broadcast_global(json.dumps({
+        "type": "gamestate_update",
+        "agent_window": gamestate.agent_response_window
+    }))
+
     return {"status": "ok", "window": gamestate.agent_response_window}
 
 @router.post("/power/buy")

@@ -208,6 +208,22 @@
                 </button>
             </div>
 
+            <!-- Agent Response Timer -->
+            <div class="chernobyl-panel p-6 bg-black">
+                <h3 class="text-2xl text-green-400 mb-4 editable-label" data-key="lbl_timer">ČAS NA ODPOVĚĎ AGENTA</h3>
+                <div class="text-6xl font-bold text-white mb-4 text-center border border-green-900 p-3"
+                    id="timerDisplay">-- s</div>
+                <input type="range" class="w-full accent-green-500 bg-gray-800" min="15" max="300" step="5"
+                    id="timerInput" oninput="updateTimerPreview(this.value)">
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>15s</span>
+                    <span>300s</span>
+                </div>
+                <button class="w-full chernobyl-btn py-2 mt-4 border-green-900 text-green-400 hover:bg-green-900 transition"
+                    onclick="saveResponseTimer()">[ ULOŽIT LIMIT ]</button>
+                <div class="text-[10px] text-gray-500 mt-2">Úprava se projeví okamžitě na agentovi i uživateli.</div>
+            </div>
+
             <!-- Power & Instability Column -->
             <div class="space-y-6">
                 <!-- Power Management v1.4 -->

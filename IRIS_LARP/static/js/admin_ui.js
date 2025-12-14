@@ -216,6 +216,11 @@ window.loadControlState = async function() {
             timerInp.value = data.agent_response_window;
         }
 
+        const timerDisplay = document.getElementById('timerDisplay');
+        if (timerDisplay) {
+            timerDisplay.innerText = `${data.agent_response_window || 0} s`;
+        }
+
         // Power Bar
         const powerBar = document.getElementById('powerBar');
         const powerText = document.getElementById('powerText');
@@ -264,6 +269,38 @@ window.loadControlState = async function() {
         }
 
     } catch (e) { console.error("Control Sync Fail", e); }
+};
+
+window.updateTimerPreview = function(value) {
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (timerDisplay) timerDisplay.innerText = `${value} s`;
+};
+
+window.saveResponseTimer = async function() {
+    const timerInp = document.getElementById('timerInput');
+    if (!timerInp) return;
+    const seconds = parseInt(timerInp.value, 10);
+
+    try {
+        const res = await fetch('/api/admin/timer', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ seconds })
+        });
+
+        if (res.ok) {
+            updateTimerPreview(seconds);
+            showAdminToast('Limit uložen.');
+        } else {
+            showAdminToast('Nepodařilo se uložit limit.', true);
+        }
+    } catch (e) {
+        console.error('Timer save failed', e);
+        showAdminToast('Nepodařilo se uložit limit.', true);
+    }
 };
 
 // --- NETWORK GRAPH (CANVAS) ---
@@ -968,6 +1005,14 @@ function getLogColor(type) {
     if (type === 'ALERT') return 'text-yellow-400';
     if (type === 'TASK') return 'text-pink-400';
     return 'text-gray-400';
+}
+
+function showAdminToast(msg, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 border font-mono text-sm shadow-lg ${isError ? 'bg-red-900 border-red-700 text-red-100' : 'bg-green-900 border-green-700 text-green-100'}`;
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
 }
 
 // --- INITIALIZATION ---
