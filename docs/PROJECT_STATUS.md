@@ -81,6 +81,12 @@
 ### Persistence
 - [x] **Labels**: Admin labels saved to `data/admin_labels.json` [TESTED]
 
+## Phase 32 - Lore Web Viewer
+
+- [x] **Lore Site**: Markdown archive from `/docs/iris/lore` published as static web in `/doc/iris/lore-web`.
+- [x] **Hosting**: FastAPI mounts `/lore-web` for in-app embedding.
+- [x] **UI Integration**: ROOT dashboard tab "LORE" with iframe container for reuse.
+
 ## Phase 30 - UI Fixes and Improvements
 
 ### Login Page
