@@ -9,7 +9,7 @@ from .. import dependencies, database
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 
 @router.post("/login")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(dependencies.get_db)):
@@ -34,8 +34,8 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
 
 @router.get("/logout")
 async def logout(request: Request):
-    response = templates.TemplateResponse("login.html", {"request": request, "title": "IRIS Login"})
-    # Must match path set in login
+    # Redirect to root (which handles test_mode check) instead of returning template directly
+    response = RedirectResponse(url="/", status_code=302)
     response.delete_cookie("access_token", path="/")
     return response
 

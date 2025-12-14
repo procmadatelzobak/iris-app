@@ -422,6 +422,36 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                                 "id": log_ai.id
                             }))
 
+                # === GENERIC TYPING INDICATORS ===
+                # Available to all roles (User <-> Agent)
+                # We need to route to the *other* party in the session.
+                
+                msg_type = msg_data.get("type")
+                if msg_type in ["typing_start", "typing_stop"]:
+                    if user.role == UserRole.USER:
+                        # Value from User -> Send to Agent
+                        session_id = get_logical_id(user.username, "user")
+                        await routing_logic.broadcast_to_session(session_id, json.dumps({
+                            "type": msg_type,
+                            "sender": user.username,
+                            "role": "user",
+                            "session_id": session_id
+                        }))
+                        
+                    elif user.role == UserRole.AGENT:
+                        # Agent typing -> Send to User in current session
+                        # CRITICAL FIX: Do NOT trust client session_id, it might be stale after Shift.
+                        # Calculate always based on current Shift.
+                        target_session_id = get_logical_id(user.username, "agent")
+                        
+                        if target_session_id:
+                            await routing_logic.broadcast_to_session(target_session_id, json.dumps({
+                                "type": msg_type,
+                                "sender": user.username,
+                                "role": "agent",
+                                "session_id": target_session_id
+                            }))
+
                 elif user.role == UserRole.ADMIN:
                     # Admin commands
                     cmd_type = msg_data.get("type")

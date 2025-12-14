@@ -3,84 +3,84 @@
 {% block head %}
 <link rel="stylesheet" href="/static/css/admin_chernobyl.css">
 <style>
-.nav-btn {
-padding: 1rem 2rem;
-color: #880;
-border-right: 1px solid #330;
-cursor: pointer;
-font-weight: bold;
-}
+    .nav-btn {
+        padding: 1rem 2rem;
+        color: #880;
+        border-right: 1px solid #330;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-.nav-btn:hover {
-background: #220;
-color: #ff0;
-}
+    .nav-btn:hover {
+        background: #220;
+        color: #ff0;
+    }
 
-.nav-btn.active {
-background: #330;
-color: #ff0;
-border-bottom: 3px solid #f00;
-}
+    .nav-btn.active {
+        background: #330;
+        color: #ff0;
+        border-bottom: 3px solid #f00;
+    }
 
-.view-container {
-padding: 1rem;
-height: calc(100vh - 60px);
-overflow-y: auto;
-}
+    .view-container {
+        padding: 1rem;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
 
-/* Monitor Grid */
-.monitor-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 1rem;
-}
+    /* Monitor Grid */
+    .monitor-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
 
-.session-card {
-background: rgba(0, 10, 0, 0.9);
-border: 1px solid #330000;
-padding: 10px;
-height: 250px;
-/* Fixed height for consistency */
-display: flex;
-flex-direction: column;
-}
+    .session-card {
+        background: rgba(0, 10, 0, 0.9);
+        border: 1px solid #330000;
+        padding: 10px;
+        height: 250px;
+        /* Fixed height for consistency */
+        display: flex;
+        flex-direction: column;
+    }
 
-/* Controls Layout */
-.canvas-container {
-border: 1px solid #330;
-height: 100px;
-width: 100%;
-position: relative;
-}
+    /* Controls Layout */
+    .canvas-container {
+        border: 1px solid #330;
+        height: 100px;
+        width: 100%;
+        position: relative;
+    }
 
-/* Economy Table */
-.eco-table {
-width: 100%;
-border-collapse: collapse;
-}
+    /* Economy Table */
+    .eco-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-.eco-table th,
-.eco-table td {
-border: 1px solid #330;
-padding: 0.5rem;
-text-align: left;
-}
+    .eco-table th,
+    .eco-table td {
+        border: 1px solid #330;
+        padding: 0.5rem;
+        text-align: left;
+    }
 
-.eco-table th {
-color: #f00;
-}
+    .eco-table th {
+        color: #f00;
+    }
 
-.btn-action {
-border: 1px solid #555;
-padding: 2px 8px;
-color: #aaa;
-cursor: pointer;
-}
+    .btn-action {
+        border: 1px solid #555;
+        padding: 2px 8px;
+        color: #aaa;
+        cursor: pointer;
+    }
 
-.btn-action:hover {
-border-color: #fff;
-color: #fff;
-}
+    .btn-action:hover {
+        border-color: #fff;
+        color: #fff;
+    }
 </style>
 {% endblock %}
 
@@ -387,6 +387,6 @@ color: #fff;
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/socket_client.js"></script>
-<script src="/static/js/admin_ui.js"></script>
+<script src="/static/js/socket_client.js?v=30.5"></script>
+<script src="/static/js/admin_ui.js?v=30.5"></script>
 {% endblock %}
