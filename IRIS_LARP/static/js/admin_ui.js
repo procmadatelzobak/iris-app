@@ -268,6 +268,8 @@ window.loadControlState = async function() {
 
 // --- NETWORK GRAPH (CANVAS) ---
 let graphLoop = null;
+let particles = [];
+const MAX_PARTICLES = 100; // Limit particle count for performance
 function startGraphLoop() {
     if (graphLoop) return;
     const canvas = document.getElementById('networkGraph');
@@ -281,65 +283,195 @@ function startGraphLoop() {
     fit();
 
     const ctx = canvas.getContext('2d');
+    particles = []; // Reset particles
 
     const loop = () => {
-        ctx.fillStyle = '#111';
+        // Fade trail effect instead of clearing
+        ctx.fillStyle = 'rgba(17, 17, 17, 0.15)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
-        const radius = Math.min(cx, cy) * 0.7;
+        const radius = Math.min(cx, cy) * 0.85; // Increased from 0.7 to 0.85
 
+        const time = Date.now() / 1000;
+
+        // Draw multiple orbital rings with varying opacity
+        for (let ring = 0; ring < 3; ring++) {
+            const ringRadius = radius * (0.4 + ring * 0.2);
+            ctx.strokeStyle = `rgba(51, 0, 0, ${0.3 - ring * 0.1})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // Draw outer boundary ring
         ctx.strokeStyle = '#330000';
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
         ctx.stroke();
 
-        const time = Date.now() / 1000;
-
+        // User and Agent positions with more dynamic behavior
         for (let i = 1; i <= TOTAL_SESSIONS; i++) {
             const angle = (i - 1) / TOTAL_SESSIONS * Math.PI * 2;
-            const x = cx + Math.cos(angle) * radius;
-            const y = cy + Math.sin(angle) * radius;
-
-            ctx.fillStyle = '#0f0';
-            ctx.beginPath();
-            ctx.arc(x, y, 8, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = '#fff';
-            ctx.font = '10px monospace';
-            ctx.fillText(`U${i}`, x + 10, y + 10);
+            
+            // Users orbit with slight wobble
+            const wobble = Math.sin(time * 0.5 + i) * 15;
+            const x = cx + Math.cos(angle) * (radius + wobble);
+            const y = cy + Math.sin(angle) * (radius + wobble);
 
             let shift = currentShift || 0;
             let agentIndex = (i - 1 - shift) % TOTAL_SESSIONS;
             if (agentIndex < 0) agentIndex += TOTAL_SESSIONS;
             const agentId = agentIndex + 1;
 
-            const innerR = radius * 0.5;
-            const agAngle = (agentId - 1) / TOTAL_SESSIONS * Math.PI * 2 + (time * 0.1);
+            // Agents move in complex spiral patterns
+            const agentBaseAngle = (agentId - 1) / TOTAL_SESSIONS * Math.PI * 2;
+            const spiralOffset = Math.sin(time * 0.3 + agentId * 0.5) * 0.3;
+            const innerR = radius * (0.35 + spiralOffset);
+            const agAngle = agentBaseAngle + (time * 0.15) + Math.cos(time * 0.2 + agentId) * 0.5;
             const agX = cx + Math.cos(agAngle) * innerR;
             const agY = cy + Math.sin(agAngle) * innerR;
 
-            ctx.strokeStyle = `rgba(0, 255, 0, 0.3)`;
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(agX, agY);
-            ctx.stroke();
+            // Draw connection lines with varying thickness and glow
+            const distance = Math.sqrt((x - agX) ** 2 + (y - agY) ** 2);
+            const intensity = Math.max(0, 1 - distance / radius);
+            
+            // Multiple connection lines for depth
+            for (let layer = 0; layer < 2; layer++) {
+                ctx.strokeStyle = layer === 0 
+                    ? `rgba(0, 255, 0, ${intensity * 0.4})` 
+                    : `rgba(0, 255, 0, ${intensity * 0.15})`;
+                ctx.lineWidth = layer === 0 ? 2 : 4;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(agX, agY);
+                ctx.stroke();
+            }
 
-            ctx.fillStyle = '#f0f';
+            // Spawn particles along connections (with limit for performance)
+            if (particles.length < MAX_PARTICLES && Math.random() < 0.08) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (agX - x) * 0.01,
+                    vy: (agY - y) * 0.01,
+                    life: 1,
+                    color: Math.random() > 0.5 ? [0, 255, 0] : [255, 0, 255]
+                });
+            }
+
+            // Draw user nodes with glow
+            const userPulse = 8 + Math.sin(time * 2 + i) * 2;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#0f0';
+            ctx.fillStyle = onlineUsernames.has(`user${i}`) ? '#0f0' : '#050';
             ctx.beginPath();
-            ctx.arc(agX, agY, 5, 0, Math.PI * 2);
+            ctx.arc(x, y, userPulse, 0, Math.PI * 2);
             ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // User label
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 11px monospace';
+            ctx.fillText(`U${i}`, x + 12, y + 12);
+
+            // Draw agent nodes with different glow
+            const agentPulse = 6 + Math.cos(time * 3 + agentId) * 1.5;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#f0f';
+            ctx.fillStyle = onlineUsernames.has(`agent${agentId}`) ? '#f0f' : '#505';
+            ctx.beginPath();
+            ctx.arc(agX, agY, agentPulse, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Agent label
             ctx.fillStyle = '#f8f';
-            ctx.fillText(`A${agentId}`, agX + 8, agY + 8);
+            ctx.font = 'bold 10px monospace';
+            ctx.fillText(`A${agentId}`, agX + 10, agY + 10);
         }
 
-        const pulse = 10 + Math.sin(time * 2) * 5;
-        ctx.fillStyle = `rgba(255, 0, 0, ${Math.abs(Math.sin(time))})`;
+        // Update and draw particles (batched by color for performance)
+        const greenParticles = [];
+        const magentaParticles = [];
+        
+        particles = particles.filter(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.02;
+            
+            if (p.life <= 0) return false;
+            
+            // Batch particles by color
+            if (p.color[0] === 0) greenParticles.push(p);
+            else magentaParticles.push(p);
+            
+            return true;
+        });
+        
+        // Draw green particles in one batch
+        if (greenParticles.length > 0) {
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#0f0';
+            greenParticles.forEach(p => {
+                ctx.fillStyle = `rgba(0, 255, 0, ${p.life})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        
+        // Draw magenta particles in one batch
+        if (magentaParticles.length > 0) {
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#f0f';
+            magentaParticles.forEach(p => {
+                ctx.fillStyle = `rgba(255, 0, 255, ${p.life})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        ctx.shadowBlur = 0;
+
+        // Central core with complex pulsing (optimized with gradient instead of multiple shadow blurs)
+        const coreSize = 15 + Math.sin(time * 2) * 5 + Math.cos(time * 3) * 3;
+        const coreAlpha = 0.6 + Math.abs(Math.sin(time * 1.5)) * 0.4;
+        
+        // Use radial gradient for glow effect (more efficient than multiple shadow blurs)
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize + 8);
+        gradient.addColorStop(0, `rgba(255, 0, 0, ${coreAlpha})`);
+        gradient.addColorStop(0.5, `rgba(255, 0, 0, ${coreAlpha * 0.6})`);
+        gradient.addColorStop(0.8, `rgba(255, 0, 0, ${coreAlpha * 0.3})`);
+        gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+        
+        ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(cx, cy, pulse, 0, Math.PI * 2);
+        ctx.arc(cx, cy, coreSize + 8, 0, Math.PI * 2);
         ctx.fill();
+        
+        // Bright center
+        ctx.fillStyle = `rgba(255, 100, 0, ${coreAlpha})`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreSize, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Add energy waves from center
+        const waveCount = 3;
+        for (let w = 0; w < waveCount; w++) {
+            const wavePhase = (time * 0.5 + w * (Math.PI * 2 / waveCount)) % (Math.PI * 2);
+            const waveRadius = (wavePhase / (Math.PI * 2)) * radius * 0.6;
+            const waveAlpha = Math.max(0, 1 - wavePhase / (Math.PI * 2));
+            
+            ctx.strokeStyle = `rgba(255, 255, 0, ${waveAlpha * 0.3})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, waveRadius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
 
         graphLoop = requestAnimationFrame(loop);
     };
