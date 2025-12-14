@@ -195,6 +195,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
 
+                    # Check if session has timed out - agent can no longer respond
+                    if routing_logic.is_session_timed_out(session_id):
+                        await websocket.send_text(json.dumps({
+                            "type": "error",
+                            "msg": "Odpověď vypršela. Čekejte na novou zprávu od uživatele."
+                        }))
+                        continue
+
                     # v1.5 AI Optimizer && v2.0 Confirm Flow
                     final_content = content
                     was_rewritten = False
@@ -234,6 +242,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content, is_optimized=is_confirming or was_rewritten)
                     db_save.add(log)
                     db_save.commit()
+
+                    # Agent responded - clear pending response timer
+                    routing_logic.clear_pending_response(session_id)
 
                     # Broadcast to Session (User sees final_content)
                     await routing_logic.broadcast_to_session(session_id, json.dumps({
@@ -366,6 +377,10 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     db_save.add(log)
                     db_save.commit()
                     
+                    # Clear any previous timeout and start pending response timer
+                    routing_logic.clear_session_timeout(session_id)
+                    routing_logic.start_pending_response(session_id)
+                    
                     await routing_logic.broadcast_to_session(session_id, json.dumps({
                         "sender": user.username,
                         "role": "user",
@@ -413,6 +428,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             log_ai = ChatLog(session_id=session_id, sender_id=agent_db_user.id, content=reply)
                             db_save.add(log_ai)
                             db_save.commit()
+                            
+                            # Autopilot responded - clear pending response timer
+                            routing_logic.clear_pending_response(session_id)
                             
                             await routing_logic.broadcast_to_session(session_id, json.dumps({
                                 "sender": agent_username,

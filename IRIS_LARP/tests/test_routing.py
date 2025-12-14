@@ -94,3 +94,68 @@ async def test_routing_logic_calculation():
     assert "Hello Session 2" not in ws_user1.sent_messages # User 1 is Session 1
     assert "Hello Session 2" in ws_agent1.sent_messages    # Agent 1 is now Session 2
     assert "Hello Session 2" not in ws_agent2.sent_messages # Agent 2 is Session 3
+
+
+@pytest.mark.asyncio
+async def test_pending_response_tracking():
+    """Test that pending response tracking works correctly for agent timeout feature."""
+    from app.logic.routing import routing_logic
+    import time
+    
+    # Reset state
+    routing_logic.pending_responses = {}
+    routing_logic.timed_out_sessions = {}
+    
+    session_id = 1
+    
+    # Initially no pending response
+    assert session_id not in routing_logic.pending_responses
+    assert not routing_logic.is_session_timed_out(session_id)
+    
+    # Start pending response (user sends message)
+    routing_logic.start_pending_response(session_id)
+    assert session_id in routing_logic.pending_responses
+    assert routing_logic.pending_responses[session_id] <= time.time()
+    
+    # Clear pending response (agent responds)
+    routing_logic.clear_pending_response(session_id)
+    assert session_id not in routing_logic.pending_responses
+    
+    # Test timeout marking
+    routing_logic.start_pending_response(session_id)
+    routing_logic.mark_session_timeout(session_id)
+    assert session_id not in routing_logic.pending_responses
+    assert routing_logic.is_session_timed_out(session_id)
+    
+    # New user message clears timeout
+    routing_logic.clear_session_timeout(session_id)
+    assert not routing_logic.is_session_timed_out(session_id)
+
+
+@pytest.mark.asyncio
+async def test_timeout_error_sent_to_user():
+    """Test that timeout error message is sent to user when agent doesn't respond."""
+    from app.logic.routing import routing_logic
+    from app.database import UserRole
+    import json
+    
+    # Reset connections
+    routing_logic.user_connections = {}
+    routing_logic.agent_connections = {}
+    routing_logic.pending_responses = {}
+    routing_logic.timed_out_sessions = {}
+    
+    # Setup mock user connection
+    ws_user1 = MockWebSocket("u1")
+    await routing_logic.connect(ws_user1, UserRole.USER, 1)
+    
+    session_id = 1
+    
+    # Send timeout error to user
+    await routing_logic.send_timeout_error_to_user(session_id)
+    
+    # Verify user received timeout message
+    assert len(ws_user1.sent_messages) == 1
+    msg = json.loads(ws_user1.sent_messages[0])
+    assert msg["type"] == "agent_timeout"
+    assert "session_id" in msg
