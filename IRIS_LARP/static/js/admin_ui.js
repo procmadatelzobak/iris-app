@@ -698,6 +698,16 @@ function startPowerTimer(endTime) {
 
 // Edit Mode
 let isEditMode = false;
+
+// Handler to prevent click propagation when in edit mode
+function editModeClickHandler(e) {
+    // Prevent the click from triggering parent onclick handlers and other listeners
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    // Focus the element for editing
+    this.focus();
+}
+
 window.toggleEditMode = function() {
     isEditMode = !isEditMode;
     const els = document.querySelectorAll('.editable-label');
@@ -707,6 +717,9 @@ window.toggleEditMode = function() {
             el.contentEditable = "true";
             el.style.border = "1px dashed #fff";
             el.style.backgroundColor = "rgba(0,0,0,0.5)";
+            el.style.cursor = "text";
+            // Add click handler to prevent button actions
+            el.addEventListener('click', editModeClickHandler, true);
         });
         alert("EDIT MODE ENGAGED. Click text to edit. Toggle off to save.");
     } else {
@@ -715,6 +728,9 @@ window.toggleEditMode = function() {
             el.contentEditable = "false";
             el.style.border = "none";
             el.style.backgroundColor = "transparent";
+            el.style.cursor = "";
+            // Remove click handler
+            el.removeEventListener('click', editModeClickHandler, true);
             const key = el.dataset.key;
             if (key) packet[key] = el.innerText;
         });
