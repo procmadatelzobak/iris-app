@@ -716,6 +716,18 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             "msg": f"TEST MODE set to {enabled}"
                         }))
 
+                    elif cmd_type == "panic_command":
+                        enabled = msg_data.get("enabled", False)
+                        # Global Panic set for all sessions
+                        for i in range(1, settings.TOTAL_SESSIONS + 1):
+                             routing_logic.set_panic_mode(i, "user", enabled)
+                             routing_logic.set_panic_mode(i, "agent", enabled)
+                        
+                        await routing_logic.broadcast_global(json.dumps({
+                            "type": "gamestate_update",
+                            "panic_global": enabled
+                        }))
+
             finally:
                 db_save.close()
                     

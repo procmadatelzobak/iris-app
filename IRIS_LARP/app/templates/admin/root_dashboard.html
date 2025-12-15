@@ -208,7 +208,7 @@
             <!-- Quick Actions -->
             <div class="god-panel col-span-2">
                 <div class="god-title">EXECUTIVE PROTOCOLS</div>
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-4 gap-4">
                     <button class="btn-god" onclick="triggerShift()">>> FORCE SHIFT >></button>
                     <button class="btn-god border-pink-500 text-pink-500 hover:bg-pink-900"
                         onclick="broadcastMsg()">GLOBAL BROADCAST</button>
@@ -224,6 +224,10 @@
                         style="text-decoration:none;">
                         [ OPEN WIKI ]
                     </a>
+                    <button class="btn-god border-red-600 text-red-600 hover:bg-black animate-pulse" id="btnPanic"
+                        onclick="togglePanic()">
+                        ⚠️ PANIC MODE ⚠️
+                    </button>
                 </div>
             </div>
 
@@ -598,6 +602,7 @@
     // --- STATE ---
     let currentView = 'dashboard';
     let rootState = {};
+    let isPanic = false;
 
     // --- SOCKET ---
     const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
@@ -701,6 +706,10 @@
             document.getElementById('valShift').innerText = data.shift;
             document.getElementById('bigShift').innerText = data.shift;
             document.getElementById('valChernobyl').innerText = data.chernobyl + "%";
+            if (data.panic_global !== undefined) {
+                isPanic = data.panic_global;
+                updatePanicBtn();
+            }
         }
         if (data.type === 'message') {
             // Update Panopticon
@@ -787,6 +796,32 @@
             client.send({ type: 'reset_game' });
         }
     };
+
+    window.togglePanic = () => {
+        const action = isPanic ? "DEACTIVATE PANIC MODE?" : "ACTIVATE EMERGENCY CENSORSHIP?";
+        if (confirm(action)) {
+            // Optimistic update
+            isPanic = !isPanic;
+            updatePanicBtn();
+            client.send({ type: 'panic_command', enabled: isPanic });
+        }
+    };
+
+    function updatePanicBtn() {
+        const btn = document.getElementById('btnPanic');
+        if (!btn) return;
+        if (isPanic) {
+            btn.style.background = '#f00';
+            btn.style.color = '#fff';
+            btn.innerText = "🚨 PANIC ACTIVE 🚨";
+            btn.classList.remove('animate-pulse');
+        } else {
+            btn.style.background = 'transparent';
+            btn.style.color = '#f00';
+            btn.innerText = "⚠️ PANIC MODE ⚠️";
+            btn.classList.add('animate-pulse');
+        }
+    }
 
     window.restartServer = async () => {
         if (!confirm("RESTART SERVER? All connections will be dropped temporarily.")) return;
