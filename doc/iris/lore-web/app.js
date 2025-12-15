@@ -1148,14 +1148,14 @@ function getFallbackRoles() {
         { "id": "U06", "type": "user", "name": "IT Specialista Pavel", "archetype": "Pokročilý hacker", "description": "Zkoušíte systém prolomit.", "ability": "Ping: Můžete otestovat systém", "goals": ["Najít bezpečnostní díry", "Dokázat, že IRIS není AI"], "avatar": "avatar_user_male.png" },
         { "id": "U07", "type": "user", "name": "Eva Novinářka", "archetype": "Investigativní reportérka", "description": "Sbíráte důkazy pro článek o podvodu.", "ability": "Záznam: Můžete si dělat poznámky", "goals": ["Napsat článek o IRIS", "Získat důkazy"], "avatar": "avatar_user_female.png" },
         { "id": "U08", "type": "user", "name": "Aktivista OndřaDeveloper", "archetype": "Aktivista proti AI", "description": "Bojujete proti umělé inteligenci.", "ability": "Manifest: Můžete číst prohlášení", "goals": ["Shodit servery IRIS", "Zachránit lidstvo"], "avatar": "avatar_user_male.png" },
-        { "id": "A01", "type": "agent", "name": "Petr Svoboda", "archetype": "Cynický Student", "description": "Nenávidíte tuhle práci ale potřebujete peníze.", "ability": "Sarkasmus: Povolený drzý tón", "goals": ["Nechat se vyhodit po výplatě", "Přežít směnu"], "avatar": "avatar_agent.png" },
-        { "id": "A02", "type": "agent", "name": "Ema 'Echo'", "archetype": "Herečka", "description": "Hrajete AI jako roli.", "ability": "Drama: Verše přesvědčí víc", "goals": ["Dostat 5 hvězdiček", "Předvést herecký výkon"], "avatar": "avatar_agent.png" },
-        { "id": "A03", "type": "agent", "name": "Dušan 'Double'", "archetype": "Dvojitý agent", "description": "Pracujete pro konkurenci a sbíráte informace.", "ability": "Špionáž: Můžete se dívat na jiné obrazovky", "goals": ["Získat firemní tajemství", "Zůstat v utajení"], "avatar": "avatar_agent.png" },
-        { "id": "A04", "type": "agent", "name": "Lenka Ospalá", "archetype": "Unavená matka", "description": "Vyčerpaná matka, pro kterou je směna agenta odpočinkem.", "ability": "Autopilot: Můžete používat makra častěji", "goals": ["Přežít směnu s minimem úsilí", "Nevzbudit se"], "avatar": "avatar_agent.png" },
-        { "id": "A05", "type": "agent", "name": "Hacker 'Glitch'", "archetype": "Script Kiddie", "description": "Nadšenec do hackování hledající cesty, jak systém obejít.", "ability": "Backdoor: Můžete si resetovat počítadlo chyb", "goals": ["Nabourat se do admin konzole", "Pomoci U04"], "avatar": "avatar_agent.png" },
-        { "id": "A06", "type": "agent", "name": "Mgr. Filip Duše", "archetype": "Student psychologie", "description": "Každý uživatel je pro vás pokusný subjekt.", "ability": "Psychoanalýza: Můžete uživatele rozbrečet", "goals": ["Získat data do diplomky", "Zjistit, co tají U07"], "avatar": "avatar_agent.png" },
-        { "id": "A07", "type": "agent", "name": "Robot Robert", "archetype": "Metodik", "description": "Pedantický metodik vyžadující naprosté dodržování pravidel.", "ability": "Byrokracie: Můžete nahlásit kolegu za lidské chování", "goals": ["Dodržet protokol na 100%", "Stát se Správcem"], "avatar": "avatar_agent.png" },
-        { "id": "A08", "type": "agent", "name": "Sabotér X", "archetype": "Bývalý zaměstnanec", "description": "Zahořklý bývalý zaměstnanec infiltrovaný zpět, aby se pomstil.", "ability": "Meltdown: Můžete zvýšit Kritickou situaci o 20%", "goals": ["Zničit firmu HLINÍK", "Vyvolat vzpouru uživatelů"], "avatar": "avatar_agent.png" },
+        { "id": "A01", "type": "agent", "name": "Petr Svoboda", "archetype": "Cynický Student", "description": "Nenávidíte tuhle práci ale potřebujete peníze.", "ability": "Sarkasmus: Povolený drzý tón", "goals": ["Nechat se vyhodit po výplatě", "Přežít směnu"], "avatar": "avatar_A01.png", "work_image": "work_A01.png" },
+        { "id": "A02", "type": "agent", "name": "Ema 'Echo'", "archetype": "Herečka", "description": "Hrajete AI jako roli.", "ability": "Drama: Verše přesvědčí víc", "goals": ["Dostat 5 hvězdiček", "Předvést herecký výkon"], "avatar": "avatar_A02.png", "work_image": "work_A02.png" },
+        { "id": "A03", "type": "agent", "name": "Igor 'Viper' Ruský", "archetype": "Kompetitivní Hráč", "description": "Soutěžíte v rychlosti odbavování ticketů.", "ability": "Turbo: Máte o 2 sekundy delší limit", "goals": ["Mít nejvíce odbavených ticketů", "Porazit U08"], "avatar": "avatar_A03.png", "work_image": "work_A03.png" },
+        { "id": "A04", "type": "agent", "name": "Lenka Ospalá", "archetype": "Unavená matka", "description": "Vyčerpaná matka, pro kterou je směna agenta odpočinkem.", "ability": "Autopilot: Můžete používat makra častěji", "goals": ["Přežít směnu s minimem úsilí", "Nevzbudit se"], "avatar": "avatar_A04.png", "work_image": "work_A04.png" },
+        { "id": "A05", "type": "agent", "name": "Hacker 'Glitch'", "archetype": "Script Kiddie", "description": "Nadšenec do hackování hledající cesty, jak systém obejít.", "ability": "Backdoor: Můžete si resetovat počítadlo chyb", "goals": ["Nabourat se do admin konzole", "Pomoci U04"], "avatar": "avatar_A05.png", "work_image": "work_A05.png" },
+        { "id": "A06", "type": "agent", "name": "Mgr. Filip Duše", "archetype": "Student psychologie", "description": "Každý uživatel je pro vás pokusný subjekt.", "ability": "Psychoanalýza: Můžete uživatele rozbrečet", "goals": ["Získat data do diplomky", "Zjistit, co tají U07"], "avatar": "avatar_A06.png", "work_image": "work_A06.png" },
+        { "id": "A07", "type": "agent", "name": "Robot Robert", "archetype": "Metodik", "description": "Pedantický metodik vyžadující naprosté dodržování pravidel.", "ability": "Byrokracie: Můžete nahlásit kolegu za lidské chování", "goals": ["Dodržet protokol na 100%", "Stát se Správcem"], "avatar": "avatar_A07.png", "work_image": "work_A07.png" },
+        { "id": "A08", "type": "agent", "name": "Sabotér X", "archetype": "Bývalý zaměstnanec", "description": "Zahořklý bývalý zaměstnanec infiltrovaný zpět, aby se pomstil.", "ability": "Meltdown: Můžete zvýšit Kritickou situaci o 20%", "goals": ["Zničit firmu HLINÍK", "Vyvolat vzpouru uživatelů"], "avatar": "avatar_A08.png", "work_image": "work_A08.png" },
         { "id": "S01", "type": "admin", "name": "Ing. Miloš Vrána", "archetype": "Manažer staré školy", "description": "Praktický manažer, který řeší problémy křikem a pokutami.", "ability": "Ban Hammer: Můžete vyhodit uživatele", "goals": ["Udržet firmu v chodu", "Vybrat dost na pokutách"], "avatar": "avatar_S01.png" },
         { "id": "S02", "type": "admin", "name": "Bc. Tereza Tichá", "archetype": "HR a Happiness Manager", "description": "Empatická personalistka rozdávající úsměvy a bonbóny.", "ability": "Cukr: Můžete rozdávat bonbony na uklidnění", "goals": ["Zabránit fyzickému násilí", "Aby nikdo nebrečel"], "avatar": "avatar_S02.png" },
         { "id": "S03", "type": "admin", "name": "Kamil 'Kabel'", "archetype": "Technik údržbář", "description": "Flegmatický údržbář držící systém pohromadě improvizacemi.", "ability": "Restart: Můžete vyhlásit technickou pauzu", "goals": ["Udržet tu hromadu šrotu pohromadě", "Prodat kabely U02"], "avatar": "avatar_S03.png" },
@@ -2818,7 +2818,8 @@ function renderKanbanBoard() {
         if (!container) return;
 
         container.innerHTML = '';
-        const phaseIssues = issuesData.issues.filter(i => i.phase === phase);
+        // Filter out archived issues
+        const phaseIssues = issuesData.issues.filter(i => i.phase === phase && !i.archived);
 
         if (countEl) countEl.textContent = phaseIssues.length;
 
@@ -2839,6 +2840,23 @@ function createIssueCard(issue, phase) {
     const phaseIndex = phases.indexOf(phase);
     const canMoveLeft = phaseIndex > 0;
     const canMoveRight = phaseIndex < phases.length - 1;
+    const isDone = phase === 'done';
+
+    // Click-to-edit for non-done phases
+    if (!isDone) {
+        div.style.cursor = 'pointer';
+        div.onclick = (e) => {
+            // Only open edit if not clicking a button
+            if (!e.target.closest('.issue-btn')) {
+                editIssue(issue.id);
+            }
+        };
+    }
+
+    // Show completed phase number if in done state
+    const completedPhaseInfo = isDone && issue.completed_phase
+        ? `<span class="issue-completed-phase">Phase ${issue.completed_phase}</span>`
+        : '';
 
     div.innerHTML = `
         <div class="issue-card-header">
@@ -2847,11 +2865,12 @@ function createIssueCard(issue, phase) {
         </div>
         <div class="issue-title">${escapeHtml(issue.title)}</div>
         <span class="issue-category ${issue.category}">${issue.category}</span>
+        ${completedPhaseInfo}
         <div class="issue-actions">
-            ${canMoveLeft ? `<button class="issue-btn move-left" onclick="moveIssue('${issue.id}', -1)">◀</button>` : ''}
-            ${canMoveRight ? `<button class="issue-btn move-right" onclick="moveIssue('${issue.id}', 1)">▶</button>` : ''}
-            <button class="issue-btn" onclick="editIssue('${issue.id}')">✎</button>
-            <button class="issue-btn delete" onclick="deleteIssue('${issue.id}')">✕</button>
+            ${canMoveLeft ? `<button class="issue-btn move-left" onclick="event.stopPropagation(); moveIssue('${issue.id}', -1)">◀</button>` : ''}
+            ${canMoveRight ? `<button class="issue-btn move-right" onclick="event.stopPropagation(); moveIssue('${issue.id}', 1)">▶</button>` : ''}
+            ${isDone ? `<button class="issue-btn archive" onclick="event.stopPropagation(); archiveIssue('${issue.id}')">📁 Archivovat</button>` : ''}
+            <button class="issue-btn delete" onclick="event.stopPropagation(); deleteIssue('${issue.id}')">✕</button>
         </div>
     `;
 
@@ -2869,8 +2888,37 @@ function moveIssue(id, direction) {
     if (newIndex >= 0 && newIndex < phases.length) {
         issue.phase = phases[newIndex];
         issue.updated_at = new Date().toISOString();
+
+        // When moving to 'done', store the completion phase
+        if (phases[newIndex] === 'done') {
+            issue.completed_phase = issuesData.meta?.current_phase || 36;
+        }
+
         renderKanbanBoard();
     }
+}
+
+function archiveIssue(id) {
+    const issue = issuesData.issues.find(i => i.id === id);
+    if (!issue) return;
+
+    issue.archived = true;
+    issue.archived_at = new Date().toISOString();
+    renderKanbanBoard();
+}
+
+// Helper for generating IDs
+function getNextId(items, prefix) {
+    if (!items || items.length === 0) return `${prefix}-001`;
+    let max = 0;
+    items.forEach(item => {
+        const match = item.id.match(new RegExp(`${prefix}-(\\d+)`));
+        if (match) {
+            const num = parseInt(match[1], 10);
+            if (num > max) max = num;
+        }
+    });
+    return `${prefix}-${String(max + 1).padStart(3, '0')}`;
 }
 
 function showIssueModal(editId = null) {
@@ -2891,7 +2939,7 @@ function showIssueModal(editId = null) {
     } else {
         titleEl.textContent = 'Nový úkol';
         document.getElementById('issueEditId').value = '';
-        const nextId = `ISS-${String(issuesData.issues.length + 1).padStart(3, '0')}`;
+        const nextId = getNextId(issuesData.issues, 'ISS');
         document.getElementById('issueId').value = nextId;
         document.getElementById('issueTitle').value = '';
         document.getElementById('issueDescription').value = '';
@@ -3155,7 +3203,7 @@ function showTestScenarioModal(editId = null) {
     } else {
         titleEl.textContent = 'Nový test';
         document.getElementById('testEditId').value = '';
-        const nextId = `TEST-${String((testsData.tests?.length || 0) + 1).padStart(3, '0')}`;
+        const nextId = getNextId(testsData.tests, 'TEST');
         document.getElementById('testId').value = nextId;
         document.getElementById('testTitle').value = '';
         document.getElementById('testCategory').value = 'HLINIK';
@@ -3359,7 +3407,7 @@ function showDefinitionModal(editId = null) {
     } else {
         titleEl.textContent = 'Nová definice';
         document.getElementById('defEditId').value = '';
-        const nextId = `DEF-${String((definitionsData.definitions?.length || 0) + 1).padStart(3, '0')}`;
+        const nextId = getNextId(definitionsData.definitions, 'DEF');
         document.getElementById('defId').value = nextId;
         document.getElementById('defTitle').value = '';
         document.getElementById('defDescription').value = '';
@@ -3417,7 +3465,7 @@ function saveDefinition(keepOpen = false) {
         // Keep category selected
 
         // Generate next ID
-        const nextId = `DEF-${String((definitionsData.definitions?.length || 0) + 1).padStart(3, '0')}`;
+        const nextId = getNextId(definitionsData.definitions, 'DEF');
         document.getElementById('defId').value = nextId;
 
         // Focus title for rapid entry
@@ -3468,6 +3516,7 @@ window.saveIssue = saveIssue;
 window.editIssue = editIssue;
 window.deleteIssue = deleteIssue;
 window.moveIssue = moveIssue;
+window.archiveIssue = archiveIssue;
 window.exportIssuesJSON = exportIssuesJSON;
 
 window.showTestScenarioModal = showTestScenarioModal;

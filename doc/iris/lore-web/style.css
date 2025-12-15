@@ -2724,6 +2724,24 @@ canvas {
     color: var(--accent-red);
 }
 
+.issue-btn.archive {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+.issue-btn.archive:hover {
+    background: rgba(76, 175, 80, 0.25);
+}
+
+.issue-completed-phase {
+    display: block;
+    margin-top: var(--space-xs);
+    font-size: 0.7rem;
+    color: #4caf50;
+    font-weight: 500;
+}
+
 /* ============================================
    TEST SCENARIOS
    ============================================ */

@@ -233,7 +233,7 @@ Tento adresář obsahuje kompletní překladový systém pro IRIS aplikaci. Zde 
 ---
 
 **Poslední update:** 2025-12-15  
-**Verze dokumentace:** 1.1.0 (Phase 36)  
+**Verze dokumentace:** 1.1.0 (Phase 37)  
 **Status:** ✅ Complete & Ready
 
 ---

@@ -184,7 +184,8 @@
             "Ochránit U01 před trapasem.",
             "Připravit si tak ostrou sarkastickou odpověď, že za ni dostanete okamžitý vyhazov - ideálně těsně po výplatě."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A01.png",
+        "work_image": "work_A01.png",
         "appearance": {
             "gender": "muž",
             "age_range": "20-25",
@@ -205,7 +206,8 @@
             "Přesvědčit U03, že jste skutečná bytost.",
             "Využít zalíbení S04 ve svůj prospěch - získat výhodu, aniž byste mu cokoli skutečně slíbila."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A02.png",
+        "work_image": "work_A02.png",
         "appearance": {
             "gender": "žena",
             "age_range": "25-32",
@@ -226,7 +228,8 @@
             "Porazit U08 (Gamera) v jeho vlastní hře.",
             "Předvést se před nadřízenými jako nejlepší agent směny - rekordní rychlost, žádné chyby."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A03.png",
+        "work_image": "work_A03.png",
         "appearance": {
             "gender": "muž",
             "age_range": "28-35",
@@ -247,7 +250,8 @@
             "Přežít směnu s minimem úsilí.",
             "Věnovat zvláštní péči uživatelce U05 - její pomalé dotazy jsou pro vás ideální."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A04.png",
+        "work_image": "work_A04.png",
         "appearance": {
             "gender": "žena",
             "age_range": "30-38",
@@ -268,7 +272,8 @@
             "Pomoci U04 (studentovi) najít právní kličku.",
             "Projít celou směnu, aniž by si kdokoli všiml vašich hackerských pokusů."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A05.png",
+        "work_image": "work_A05.png",
         "appearance": {
             "gender": "muž",
             "age_range": "19-25",
@@ -289,7 +294,8 @@
             "Zjistit, co tají U07 (novinářka).",
             "Vyvolat u alespoň jednoho uživatele silnou emoční reakci a zdokumentovat ji."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A06.png",
+        "work_image": "work_A06.png",
         "appearance": {
             "gender": "muž",
             "age_range": "26-32",
@@ -310,7 +316,8 @@
             "Stát se Správcem.",
             "Odhalit a nahlásit alespoň jedno závažné porušení protokolu některým z agentů."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A07.png",
+        "work_image": "work_A07.png",
         "appearance": {
             "gender": "muž",
             "age_range": "35-45",
@@ -331,7 +338,8 @@
             "Vyvolat vzpouru uživatelů.",
             "Udržet svou pravou identitu v tajnosti až do finální sabotážní akce."
         ],
-        "avatar": "avatar_agent.png",
+        "avatar": "avatar_A08.png",
+        "work_image": "work_A08.png",
         "appearance": {
             "gender": "muž",
             "age_range": "38-48",
