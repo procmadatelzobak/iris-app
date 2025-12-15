@@ -3,7 +3,8 @@
   "scenario_name": "HLINIK Manual Testing - Comprehensive UI/UX and Functionality Audit",
   "tester": "Claude AI (Manual Tester Role)",
   "status": "failed",
-  "duration": 420.0,
+  "duration": 540.0,
+  "duration_note": "Celkový čas testování včetně analýzy a dokumentace",
   "filename": "manual_test_1765789771.json",
   "summary": {
     "tested_roles": ["ROOT", "USER1", "AGENT1"],
@@ -26,6 +27,7 @@
       "severity": "CRITICAL",
       "title": "WebSocket Connection Loop - Continuous Connect/Disconnect Cycle",
       "description": "WebSocket připojení se neustále odpojuje a znovu připojuje v rychlém cyklu (každou sekundu). Toto brání normální komunikaci mezi klientem a serverem.",
+      "reproduction_rate": "always",
       "steps_to_reproduce": [
         "1. Přihlásit se jako jakýkoliv uživatel (USER, AGENT, ROOT)",
         "2. Pozorovat console log v prohlížeči",
@@ -54,7 +56,7 @@
       "expected_behavior": "POSUN SVĚTA: číslo, KREDITY: číslo",
       "actual_behavior": "POSUN SVĚTA: --, KREDITY: --",
       "impact": "Uživatelé nevidí svůj aktuální stav a kredity",
-      "root_cause": "Pravděpodobně souvisí s BUG-001 - data nejsou přijata přes WebSocket",
+      "root_cause_hypothesis": "Pravděpodobně souvisí s BUG-001 - data nejsou přijata přes WebSocket. Vyžaduje další investigaci pro potvrzení.",
       "screenshot": "manual_04_user_terminal.png"
     },
     {
@@ -298,7 +300,18 @@
     {
       "priority": "CRITICAL",
       "title": "Opravit WebSocket Connection Loop",
-      "description": "Hlavní prioritou je oprava WebSocket připojení. Bez stabilního WebSocket spojení je aplikace prakticky nepoužitelná. Doporučuji zkontrolovat: 1) Server-side WebSocket handler, 2) Autentizaci WebSocket spojení, 3) Ping/pong heartbeat implementaci, 4) Event handling při odpojení."
+      "description": "Hlavní prioritou je oprava WebSocket připojení. Bez stabilního WebSocket spojení je aplikace prakticky nepoužitelná.",
+      "complexity": "HIGH",
+      "estimated_effort": "4-8 hodin",
+      "technical_steps": [
+        "1. Zkontrolovat WebSocket URL konfiguraci v socket_client.js",
+        "2. Ověřit CORS nastavení pro WebSocket spojení na serveru",
+        "3. Zkontrolovat server-side WebSocket handler (sockets.py router)",
+        "4. Ověřit autentizaci a token validaci při WebSocket handshake",
+        "5. Zkontrolovat ping/pong heartbeat implementaci",
+        "6. Prozkoumat server logy pro chybové zprávy při odpojení",
+        "7. Zvážit přidání exponenciálního backoff při reconnect pokusech"
+      ]
     },
     {
       "priority": "HIGH",

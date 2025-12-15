@@ -3,7 +3,8 @@
     "timestamp": "2025-12-15T08:49:31.000000",
     "scenario_name": "HLINIK Manual Testing - Comprehensive UI/UX and Functionality Audit",
     "status": "failed",
-    "duration": 420.0,
+    "duration": 540.0,
+    "duration_note": "Celkový čas testování včetně analýzy a dokumentace",
     "filename": "manual_test_1765789771.json",
     "stats": {
       "tested_roles": 3,
