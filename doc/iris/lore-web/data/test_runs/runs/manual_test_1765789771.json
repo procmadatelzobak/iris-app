@@ -1,0 +1,423 @@
+{
+  "timestamp": "2025-12-15T08:49:31.000000",
+  "scenario_name": "HLINIK Manual Testing - Comprehensive UI/UX and Functionality Audit",
+  "tester": "Claude AI (Manual Tester Role)",
+  "status": "failed",
+  "duration": 420.0,
+  "filename": "manual_test_1765789771.json",
+  "summary": {
+    "tested_roles": ["ROOT", "USER1", "AGENT1"],
+    "total_tests": 18,
+    "passed": 10,
+    "failed": 5,
+    "warnings": 3,
+    "critical_bugs": 1,
+    "screenshots": 6
+  },
+  "environment": {
+    "browser": "Chromium (Playwright)",
+    "server": "localhost:8000",
+    "app_version": "Phase 25.0",
+    "test_mode": true
+  },
+  "bug_reports": [
+    {
+      "id": "BUG-001",
+      "severity": "CRITICAL",
+      "title": "WebSocket Connection Loop - Continuous Connect/Disconnect Cycle",
+      "description": "WebSocket připojení se neustále odpojuje a znovu připojuje v rychlém cyklu (každou sekundu). Toto brání normální komunikaci mezi klientem a serverem.",
+      "steps_to_reproduce": [
+        "1. Přihlásit se jako jakýkoliv uživatel (USER, AGENT, ROOT)",
+        "2. Pozorovat console log v prohlížeči",
+        "3. Vidět opakované zprávy 'WS Connected' následované 'WS Disconnected. Reconnecting...'"
+      ],
+      "expected_behavior": "WebSocket spojení by mělo zůstat stabilní po úspěšném připojení",
+      "actual_behavior": "WebSocket se připojí a okamžitě odpojí v nekonečné smyčce",
+      "impact": "Blokuje veškerou real-time komunikaci, uživatelé nemohou odesílat zprávy, data se neaktualizují",
+      "console_errors": [
+        "WS Connected @ socket_client.js:15",
+        "WS Disconnected. Reconnecting... @ socket_client.js:25",
+        "WS not open, cannot send @ socket_client.js:40"
+      ],
+      "affected_roles": ["USER", "AGENT", "ADMIN", "ROOT"],
+      "screenshot": "manual_04_user_terminal.png"
+    },
+    {
+      "id": "BUG-002",
+      "severity": "HIGH",
+      "title": "User Terminal - Missing Data (POSUN SVĚTA, KREDITY show '--')",
+      "description": "V uživatelském terminálu se nezobrazují hodnoty pro POSUN SVĚTA a KREDITY - místo číselných hodnot je vidět pouze '--'",
+      "steps_to_reproduce": [
+        "1. Přihlásit se jako USER1",
+        "2. Zkontrolovat sekci STAV SUBJEKTU"
+      ],
+      "expected_behavior": "POSUN SVĚTA: číslo, KREDITY: číslo",
+      "actual_behavior": "POSUN SVĚTA: --, KREDITY: --",
+      "impact": "Uživatelé nevidí svůj aktuální stav a kredity",
+      "root_cause": "Pravděpodobně souvisí s BUG-001 - data nejsou přijata přes WebSocket",
+      "screenshot": "manual_04_user_terminal.png"
+    },
+    {
+      "id": "BUG-003",
+      "severity": "HIGH",
+      "title": "Communication Permanently OFFLINE",
+      "description": "Komunikační okno na uživatelském terminálu zobrazuje 'COMMUNICATION OFFLINE' a 'DEBT RECOVERY REQUIRED. COMPLETE TASKS.'",
+      "steps_to_reproduce": [
+        "1. Přihlásit se jako USER1",
+        "2. Zkontrolovat komunikační panel dole na stránce"
+      ],
+      "expected_behavior": "Komunikace by měla být aktivní po přihlášení",
+      "actual_behavior": "Komunikace je trvale OFFLINE",
+      "impact": "Uživatelé nemohou komunikovat se systémem",
+      "screenshot": "manual_04_user_terminal.png"
+    },
+    {
+      "id": "BUG-004",
+      "severity": "MEDIUM",
+      "title": "Task Request Button Stuck in Processing State",
+      "description": "Po kliknutí na tlačítko '+ VYŽÁDAT' se tlačítko změní na 'Processing...' a zůstane zablokované",
+      "steps_to_reproduce": [
+        "1. Přihlásit se jako USER1",
+        "2. Kliknout na '+ VYŽÁDAT' v sekci ÚKOLY"
+      ],
+      "expected_behavior": "Úkol by měl být vyžádán a tlačítko by se mělo vrátit do normálního stavu",
+      "actual_behavior": "Tlačítko zobrazuje 'Processing...' a je disabled",
+      "impact": "Uživatelé nemohou vyžádat úkoly",
+      "console_errors": ["WS not open, cannot send"],
+      "screenshot": "manual_05_user_task_request.png"
+    },
+    {
+      "id": "BUG-005",
+      "severity": "MEDIUM",
+      "title": "Agent Terminal - Missing State Data",
+      "description": "V agent terminálu se nezobrazují hodnoty pro ID RELACE, SHIFT, TEPLOTA - místo hodnot je vidět '...'",
+      "steps_to_reproduce": [
+        "1. Přihlásit se jako AGENT1",
+        "2. Zkontrolovat sekci STAV"
+      ],
+      "expected_behavior": "Všechny hodnoty by měly zobrazovat aktuální data",
+      "actual_behavior": "ID RELACE: ..., SHIFT: ..., TEPLOTA: ...°C",
+      "impact": "Agenti nevidí svůj aktuální stav",
+      "screenshot": "manual_06_agent_terminal.png"
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Login Page Load",
+      "category": "Authentication",
+      "status": "PASSED",
+      "description": "Ověření načtení přihlašovací stránky",
+      "steps": ["Navigace na http://localhost:8000/"],
+      "expected": "Přihlašovací stránka se zobrazí s formulářem a rychlými tlačítky",
+      "actual": "Stránka se načetla správně, zobrazuje HLINIK title a testovací režim",
+      "screenshot": "manual_01_login_page.png"
+    },
+    {
+      "id": "TC-002",
+      "name": "Quick Login - ROOT",
+      "category": "Authentication",
+      "status": "PASSED",
+      "description": "Rychlé přihlášení jako ROOT pomocí testovacího tlačítka",
+      "steps": ["Klik na '[ ROOT PŘÍSTUP ]'"],
+      "expected": "Přesměrování na admin dashboard",
+      "actual": "Úspěšné přesměrování na /auth/terminal s ROOT přístupem",
+      "screenshot": "manual_02_root_dashboard.png"
+    },
+    {
+      "id": "TC-003",
+      "name": "ROOT Dashboard - UI Elements",
+      "category": "Admin Interface",
+      "status": "PASSED",
+      "description": "Ověření zobrazení všech prvků ROOT dashboardu",
+      "steps": ["Kontrola všech sekcí dashboardu"],
+      "expected": "Dashboard obsahuje: SYSTEM STATUS, PHYSICS CONSTANTS, EXECUTIVE PROTOCOLS, AI CONFIGURATION, SIMULATION, PANOPTICON, LORE",
+      "actual": "Všechny sekce jsou přítomny a funkční",
+      "screenshot": "manual_02_root_dashboard.png"
+    },
+    {
+      "id": "TC-004",
+      "name": "PANOPTICON View",
+      "category": "Admin Interface",
+      "status": "PASSED",
+      "description": "Ověření zobrazení PANOPTICON 8x8 view",
+      "steps": ["Klik na záložku PANOPTICON"],
+      "expected": "Zobrazení 8x8 matice sessions",
+      "actual": "PANOPTICON 8x8 se zobrazuje se SESSION 1-8 jako Active",
+      "screenshot": "manual_03_panopticon.png"
+    },
+    {
+      "id": "TC-005",
+      "name": "Logout Functionality",
+      "category": "Authentication",
+      "status": "PASSED",
+      "description": "Ověření funkce odhlášení",
+      "steps": ["Klik na '[ ODHLÁSIT ]'"],
+      "expected": "Přesměrování na login stránku",
+      "actual": "Úspěšné odhlášení a přesměrování"
+    },
+    {
+      "id": "TC-006",
+      "name": "Quick Login - USER1",
+      "category": "Authentication",
+      "status": "PASSED",
+      "description": "Rychlé přihlášení jako USER1",
+      "steps": ["Klik na 'USER1' tlačítko"],
+      "expected": "Přesměrování na user terminal",
+      "actual": "Úspěšné přihlášení a zobrazení user terminálu",
+      "screenshot": "manual_04_user_terminal.png"
+    },
+    {
+      "id": "TC-007",
+      "name": "User Terminal - State Display",
+      "category": "User Interface",
+      "status": "FAILED",
+      "description": "Ověření zobrazení stavu uživatele",
+      "steps": ["Kontrola sekce STAV SUBJEKTU"],
+      "expected": "Zobrazení: UŽIVATEL, POSUN SVĚTA (číslo), KREDITY (číslo)",
+      "actual": "POSUN SVĚTA a KREDITY zobrazují '--' místo hodnot",
+      "bug_reference": "BUG-002"
+    },
+    {
+      "id": "TC-008",
+      "name": "User Terminal - Communication Status",
+      "category": "User Interface",
+      "status": "FAILED",
+      "description": "Ověření stavu komunikace",
+      "steps": ["Kontrola komunikačního panelu"],
+      "expected": "Komunikace aktivní",
+      "actual": "COMMUNICATION OFFLINE - DEBT RECOVERY REQUIRED",
+      "bug_reference": "BUG-003"
+    },
+    {
+      "id": "TC-009",
+      "name": "Task Request",
+      "category": "Functionality",
+      "status": "FAILED",
+      "description": "Vyžádání nového úkolu",
+      "steps": ["Klik na '+ VYŽÁDAT'"],
+      "expected": "Nový úkol je přidělen",
+      "actual": "Tlačítko zůstává ve stavu 'Processing...' - nelze odeslat požadavek",
+      "bug_reference": "BUG-004"
+    },
+    {
+      "id": "TC-010",
+      "name": "Quick Login - AGENT1",
+      "category": "Authentication",
+      "status": "PASSED",
+      "description": "Rychlé přihlášení jako AGENT1",
+      "steps": ["Odhlášení, klik na 'AGENT1'"],
+      "expected": "Přesměrování na agent terminal",
+      "actual": "Úspěšné přihlášení",
+      "screenshot": "manual_06_agent_terminal.png"
+    },
+    {
+      "id": "TC-011",
+      "name": "Agent Terminal - HYPER Mode Display",
+      "category": "Agent Interface",
+      "status": "PASSED",
+      "description": "Zobrazení HYPER režimu na agent terminálu",
+      "steps": ["Kontrola záhlaví terminálu"],
+      "expected": "Zobrazení HYPER-VISIBILITY stavu",
+      "actual": "Zobrazuje 'HYPER-VISIBILITY AKTIVNÍ' a 'NEURÁLNÍ SPOJENÍ NAVÁZÁNO'"
+    },
+    {
+      "id": "TC-012",
+      "name": "Agent Terminal - State Display",
+      "category": "Agent Interface",
+      "status": "FAILED",
+      "description": "Ověření zobrazení stavu agenta",
+      "steps": ["Kontrola sekce STAV"],
+      "expected": "Zobrazení: AGENT, ID RELACE, SHIFT, TEPLOTA s hodnotami",
+      "actual": "ID RELACE, SHIFT, TEPLOTA zobrazují '...' místo hodnot",
+      "bug_reference": "BUG-005"
+    },
+    {
+      "id": "TC-013",
+      "name": "WebSocket Stability",
+      "category": "Core Functionality",
+      "status": "FAILED",
+      "description": "Ověření stability WebSocket připojení",
+      "steps": ["Sledování console log při normálním používání"],
+      "expected": "Stabilní WebSocket připojení",
+      "actual": "WebSocket se neustále odpojuje a připojuje (cca každou sekundu)",
+      "bug_reference": "BUG-001"
+    },
+    {
+      "id": "TC-014",
+      "name": "Translation System",
+      "category": "Localization",
+      "status": "PASSED",
+      "description": "Ověření funkce překladového systému",
+      "steps": ["Kontrola českých textů v UI"],
+      "expected": "UI texty jsou v češtině",
+      "actual": "TranslationManager initialized: cz - texty jsou správně lokalizovány"
+    },
+    {
+      "id": "TC-015",
+      "name": "AI Configuration Panel",
+      "category": "Admin Interface",
+      "status": "PASSED",
+      "description": "Ověření zobrazení AI konfigurace",
+      "steps": ["Kontrola sekce AI CONFIGURATION na ROOT dashboardu"],
+      "expected": "Tři karty: LLM PRO ZADÁVÁNÍ ÚKOLŮ, SOFT REŽIM/OPTIMIZER, HYPER/AUTOPILOT",
+      "actual": "Všechny tři karty jsou přítomny s konfiguračními možnostmi"
+    },
+    {
+      "id": "TC-016",
+      "name": "Economy Controls",
+      "category": "Admin Interface",
+      "status": "PASSED",
+      "description": "Ověření zobrazení ekonomických ovládacích prvků",
+      "steps": ["Kontrola sekce GLOBAL ECONOMY MANIPULATION"],
+      "expected": "Tlačítka STIMULUS, TAXATION, RESET a nastavení odměn",
+      "actual": "Všechny ekonomické ovládací prvky jsou přítomny"
+    },
+    {
+      "id": "TC-017",
+      "name": "Sound Volume Control",
+      "category": "User Interface",
+      "status": "PASSED",
+      "description": "Ověření zobrazení ovládání hlasitosti",
+      "steps": ["Kontrola horní lišty user terminálu"],
+      "expected": "Slider pro hlasitost zvuků",
+      "actual": "Slider 'Hlasitost zvuků' je přítomen s hodnotou 30"
+    },
+    {
+      "id": "TC-018",
+      "name": "System Log Stream",
+      "category": "Admin Interface",
+      "status": "WARNING",
+      "description": "Ověření funkce streamu systémových logů",
+      "steps": ["Kontrola sekce SYSTEM LOG STREAM na ROOT dashboardu"],
+      "expected": "Aktuální systémové logy",
+      "actual": "Zobrazuje pouze 'init' záznamy - může souviset s WebSocket problémem"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "CRITICAL",
+      "title": "Opravit WebSocket Connection Loop",
+      "description": "Hlavní prioritou je oprava WebSocket připojení. Bez stabilního WebSocket spojení je aplikace prakticky nepoužitelná. Doporučuji zkontrolovat: 1) Server-side WebSocket handler, 2) Autentizaci WebSocket spojení, 3) Ping/pong heartbeat implementaci, 4) Event handling při odpojení."
+    },
+    {
+      "priority": "HIGH",
+      "title": "Implementovat fallback pro chybějící data",
+      "description": "I když WebSocket není připojen, UI by mělo zobrazovat poslední známé hodnoty nebo jasnou chybovou zprávu místo '--' nebo '...'."
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Přidat timeout pro Processing stav",
+      "description": "Tlačítka ve stavu 'Processing...' by měla mít timeout a automaticky se resetovat po určité době neúspěchu."
+    },
+    {
+      "priority": "LOW",
+      "title": "Přidat indikátor stavu připojení",
+      "description": "Viditelný indikátor v UI, který ukazuje aktuální stav WebSocket připojení by pomohl uživatelům pochopit problémy s konektivitou."
+    }
+  ],
+  "logs": [
+    {
+      "time": "2025-12-15T08:40:03.000000",
+      "level": "INFO",
+      "message": "[INIT] Spuštění manuálního testování aplikace HLINIK",
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T08:40:15.000000",
+      "level": "INFO",
+      "message": "[INIT] Server běží na localhost:8000",
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T08:41:00.000000",
+      "level": "SUCCESS",
+      "message": "[LOGIN] Login stránka načtena úspěšně",
+      "screenshot": "manual_01_login_page.png",
+      "phase": "LOGIN"
+    },
+    {
+      "time": "2025-12-15T08:42:00.000000",
+      "level": "SUCCESS",
+      "message": "[ROOT] ROOT dashboard načten",
+      "screenshot": "manual_02_root_dashboard.png",
+      "phase": "ROOT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:42:30.000000",
+      "level": "WARNING",
+      "message": "[ROOT] Detekován WebSocket connection loop - WS Connected/Disconnected opakovaně",
+      "phase": "ROOT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:43:00.000000",
+      "level": "SUCCESS",
+      "message": "[ROOT] PANOPTICON 8x8 zobrazen",
+      "screenshot": "manual_03_panopticon.png",
+      "phase": "ROOT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:44:00.000000",
+      "level": "SUCCESS",
+      "message": "[USER] Přihlášení jako USER1 úspěšné",
+      "phase": "USER_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:44:30.000000",
+      "level": "ERROR",
+      "message": "[USER] POSUN SVĚTA a KREDITY zobrazují '--' - chybí data",
+      "screenshot": "manual_04_user_terminal.png",
+      "phase": "USER_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:44:45.000000",
+      "level": "ERROR",
+      "message": "[USER] Komunikace je OFFLINE",
+      "phase": "USER_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:45:00.000000",
+      "level": "WARNING",
+      "message": "[USER] Klik na VYŽÁDAT - tlačítko zůstává v Processing stavu",
+      "screenshot": "manual_05_user_task_request.png",
+      "phase": "USER_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:45:15.000000",
+      "level": "WARNING",
+      "message": "[USER] Console: 'WS not open, cannot send'",
+      "phase": "USER_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:46:00.000000",
+      "level": "SUCCESS",
+      "message": "[AGENT] Přihlášení jako AGENT1 úspěšné",
+      "phase": "AGENT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:46:30.000000",
+      "level": "INFO",
+      "message": "[AGENT] HYPER-VISIBILITY AKTIVNÍ zobrazen",
+      "screenshot": "manual_06_agent_terminal.png",
+      "phase": "AGENT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:46:45.000000",
+      "level": "ERROR",
+      "message": "[AGENT] ID RELACE, SHIFT, TEPLOTA zobrazují '...'",
+      "phase": "AGENT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:47:00.000000",
+      "level": "ERROR",
+      "message": "[AGENT] Přenos blokován - ⚠️ PŘENOS BLOKOVÁN ⚠️",
+      "phase": "AGENT_TESTING"
+    },
+    {
+      "time": "2025-12-15T08:49:00.000000",
+      "level": "INFO",
+      "message": "[SUMMARY] Testování dokončeno - nalezeno 5 bugů, 1 kritický",
+      "phase": "SUMMARY"
+    }
+  ]
+}
