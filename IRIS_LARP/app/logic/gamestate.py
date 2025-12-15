@@ -341,19 +341,23 @@ class GameState:
             logger.warning("Routing logic unavailable for panic toggle: %s", exc)
             return
 
-        total_sessions = getattr(settings, "TOTAL_SESSIONS", 0) or 0
+        total_sessions = getattr(settings, "TOTAL_SESSIONS", 0)
         for i in range(1, total_sessions + 1):
             routing_logic.set_panic_mode(i, "user", enabled)
             routing_logic.set_panic_mode(i, "agent", enabled)
 
         try:
             loop = asyncio.get_running_loop()
-            loop.create_task(routing_logic.broadcast_global(json.dumps({
+            task = loop.create_task(routing_logic.broadcast_global(json.dumps({
                 "type": "gamestate_update",
                 "panic_global": enabled,
                 "temperature": self.temperature,
                 "is_overloaded": self.is_overloaded
             })))
+            task.add_done_callback(
+                lambda t: logger.debug("Panic broadcast task failed: %s", t.exception())
+                if t.exception() else None
+            )
         except RuntimeError as exc:
             logger.debug("No running event loop for panic broadcast: %s", exc)
 

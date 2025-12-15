@@ -131,9 +131,7 @@ def clean_gamestate():
 
 
 def reset_panic_modes():
-    for i in range(1, settings.TOTAL_SESSIONS + 1):
-        routing_logic.set_panic_mode(i, "user", False)
-        routing_logic.set_panic_mode(i, "agent", False)
+    routing_logic.reset_panic_modes()
 
 
 # ============================================================================
