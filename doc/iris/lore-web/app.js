@@ -1239,7 +1239,7 @@ function selectPlayer(playerId) {
     // Avatar
     const avatarEl = document.getElementById('playerAvatar');
     if (avatarEl) {
-        avatarEl.src = role.avatar ? `assets/${role.avatar}` : 'assets/avatar_default.png';
+        avatarEl.src = role.avatar ? `assets/images/${role.avatar}` : 'assets/images/avatar_user_male.png';
         avatarEl.onerror = () => { avatarEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="%23gold" font-size="40">' + role.id.charAt(0) + '</text></svg>'; };
     }
 
