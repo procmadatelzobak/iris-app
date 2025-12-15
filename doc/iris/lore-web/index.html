@@ -1257,14 +1257,139 @@
         <div class="filter-bar" style="margin-bottom: 1.5rem;">
             <span style="color: var(--text-muted); margin-right: 1rem;">Vyberte audit:</span>
             <select id="auditSelector" class="audit-select" onchange="switchAudit(this.value)">
-                <option value="audit-2025-12-15" selected>📋 15.12.2025 - Phase 34 (Nejnovější)</option>
+                <option value="audit-phase-35" selected>📋 15.12.2025 - Phase 35 - Komplexní Analýza (Nejnovější)</option>
+                <option value="audit-2025-12-15">📋 15.12.2025 - Phase 34</option>
                 <option value="audit-2025-12-01">📋 01.12.2025 - Phase 33</option>
                 <option value="audit-2025-11-15">📋 15.11.2025 - Phase 31</option>
             </select>
         </div>
 
-        <!-- Audit Content - Phase 34 (Latest) -->
-        <div id="audit-2025-12-15" class="audit-content active">
+        <!-- Audit Content - Phase 35 (Latest) -->
+        <div id="audit-phase-35" class="audit-content active">
+            <div class="dashboard-grid">
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                        <div>
+                            <h3>📊 Komplexní Analýza - Phase 35</h3>
+                            <p class="lead" style="color: var(--text-primary);">Status: <strong style="color: var(--accent-orange)">PODMÍNĚNĚ PROVOZUSCHOPNÁ</strong>. 
+                            Lore obsah je 100% kompletní. Manuální testy odhalily kritický WebSocket bug. LLM simulace fungují bezchybně.</p>
+                            <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025 | <strong>Analytik:</strong> Claude AI</p>
+                        </div>
+                        <button class="btn-primary" onclick="showManual('audit_35')">📄 Otevřít kompletní report</button>
+                    </div>
+                </div>
+
+                <!-- Executive Summary Cards -->
+                <div class="dashboard-card" style="border-color: var(--accent-blue)">
+                    <h3>📁 Repository Metriky</h3>
+                    <ul class="quick-links">
+                        <li><strong>Celý repozitář:</strong> 73 MB</li>
+                        <li><strong>HLINIK aplikace:</strong> 3.0 MB (17,302 řádků kódu)</li>
+                        <li><strong>Lore-web wiki:</strong> 24 MB (9,981 řádků)</li>
+                        <li><strong>Testy:</strong> 19 souborů (5,029 řádků)</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card" style="border-color: var(--accent-green)">
+                    <h3>🎭 Lore Obsah</h3>
+                    <ul class="quick-links">
+                        <li><strong>Role celkem:</strong> 20/20 ✅</li>
+                        <li><strong>Uživatelé:</strong> 8</li>
+                        <li><strong>Agenti:</strong> 8</li>
+                        <li><strong>Správci:</strong> 4</li>
+                        <li><strong>Vztahy:</strong> 14 (100% propojení)</li>
+                        <li><strong>Průměr cílů/role:</strong> 3.0</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card" style="border-color: var(--accent-red)">
+                    <h3>🐛 Kritický Bug</h3>
+                    <div style="background:rgba(244,67,54,0.1); padding:10px; border-radius:6px; margin-top:10px">
+                        <strong style="color: var(--accent-red)">BUG-001: WebSocket Connection Loop</strong>
+                        <p style="font-size: 0.9em; margin-top: 8px;">WS se neustále odpojuje/připojuje. Blokuje real-time komunikaci.</p>
+                        <p style="font-size: 0.85em; opacity: 0.8; margin-top: 5px;">Postiženo: USER, AGENT, ADMIN, ROOT</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="border-color: var(--accent-gold)">
+                    <h3>🧪 Testovací Statistiky</h3>
+                    <ul class="quick-links">
+                        <li><strong>Manuální testy:</strong> 10/18 passed (55.6%)</li>
+                        <li><strong>LLM simulace:</strong> 3/3 success (100%)</li>
+                        <li><strong>LLM zpráv:</strong> 114</li>
+                        <li><strong>Kritické bugy:</strong> 1</li>
+                        <li><strong>Varování:</strong> 3</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card" style="border-color: var(--accent-green)">
+                    <h3>✅ Feature Compliance</h3>
+                    <ul class="quick-links">
+                        <li><strong style="color: var(--accent-green)">Implementováno:</strong> 185/194 (95.4%)</li>
+                        <li><strong style="color: var(--accent-orange)">Částečně:</strong> 5 (2.6%)</li>
+                        <li><strong style="color: var(--accent-red)">Chybí:</strong> 4 (2.1%)</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card" style="border-color: var(--accent-purple)">
+                    <h3>📋 Kvalita Obsahu Postav</h3>
+                    <ul class="quick-links">
+                        <li><strong>Průměr popisu:</strong> 338 znaků</li>
+                        <li><strong>Min/Max:</strong> 288-384 znaků</li>
+                        <li><strong>Appearance data:</strong> 100%</li>
+                        <li><strong>Celkem cílů:</strong> 60</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card full-width" style="border-color: var(--accent-orange)">
+                    <h3>📋 Doporučené Další Testy</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Priorita</th>
+                                <th>Test</th>
+                                <th>Popis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong style="color: var(--accent-red)">CRITICAL</strong></td>
+                                <td>WebSocket Stability</td>
+                                <td>Debug connection loop, ověření ping/pong</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
+                                <td>E2E Chat Flow</td>
+                                <td>User → Agent → User kompletní cyklus</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
+                                <td>Task Lifecycle</td>
+                                <td>Request → Approval → Submit → Payment</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--accent-gold)">MEDIUM</strong></td>
+                                <td>Multi-User Stress</td>
+                                <td>8 Users + 8 Agents simultánně</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="dashboard-card full-width">
+                    <h3>💡 Doporučení k Nasazení</h3>
+                    <ol style="margin: 10px 0 0 20px; line-height: 1.8">
+                        <li><strong>Okamžitě:</strong> Opravit WebSocket connection loop (socket_client.js)</li>
+                        <li><strong>Před nasazením:</strong> Implementovat exponenciální backoff při reconnect</li>
+                        <li><strong>Před nasazením:</strong> Fallback pro chybějící data (cache)</li>
+                        <li><strong>Nice-to-have:</strong> Viditelný indikátor stavu WS připojení</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Content - Phase 34 -->
+        <div id="audit-2025-12-15" class="audit-content">
             <div class="dashboard-grid">
                 <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start">
