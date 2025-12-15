@@ -767,18 +767,48 @@ function renderTestDetail(data) {
 // ============================================
 
 function getFallbackRoles() {
+    // Complete fallback data - used when CORS blocks fetch from file:// URLs
     return [
-        { id: "U01", type: "user", name: "Jana Nováková", archetype: "Zadlužená učitelka", description: "Potřebujete peníze na opravu střechy.", ability: "Grammar Nazi: Bonus za opravu gramatiky", goals: ["Vydělat 3000 NC"] },
-        { id: "U02", type: "user", name: "Karel 'Bet' Dlouhý", archetype: "Gambler", description: "Dlužíte peníze lichvářům.", ability: "All-in: Vsadit polovinu výdělku", goals: ["Vydělat 10000 NC"] },
-        { id: "A01", type: "agent", name: "Petr Svoboda", archetype: "Cynický Student", description: "Nenávidíte tuhle práci.", ability: "Sarkasmus: Povolený drzý tón", goals: ["Nechat se vyhodit po výplatě"] },
-        { id: "A02", type: "agent", name: "Ema 'Echo'", archetype: "Herečka", description: "Hrajete AI jako roli.", ability: "Drama: Verše přesvědčí víc", goals: ["Dostat 5 hvězdiček"] },
-        { id: "S01", type: "admin", name: "Ing. Miloš Vrána", archetype: "Manažer staré školy", description: "Ředitel směny.", ability: "Ban Hammer: Vyhazovat uživatele", goals: ["Udržet firmu v chodu"] }
+        { "id": "U01", "type": "user", "name": "Jana Nováková", "archetype": "Zadlužená učitelka", "description": "Potřebujete peníze na opravu střechy.", "ability": "Grammar Nazi: Bonus za opravu gramatiky", "goals": ["Vydělat 3000 NC"], "avatar": "avatar_user_female.png" },
+        { "id": "U02", "type": "user", "name": "Karel 'Bet' Dlouhý", "archetype": "Gambler", "description": "Dlužíte peníze lichvářům.", "ability": "All-in: Vsadit polovinu výdělku", "goals": ["Vydělat 10000 NC"], "avatar": "avatar_user_male.png" },
+        { "id": "U03", "type": "user", "name": "Babička Irma", "archetype": "Důvěřivá seniorka", "description": "Věříte v technologie a moderní svět, ale někdy se cítíte osamělá.", "ability": "Stížnost vnukovi: Můžete si stěžovat a získat bonus", "goals": ["Najít přátelství", "Naučit se něčemu novému"], "avatar": "avatar_user_female.png" },
+        { "id": "U04", "type": "user", "name": "Martin Novotný", "archetype": "Student práv", "description": "Studujete práva a snažíte se najít skulinu v systému.", "ability": "Právní kličky: Můžete najít trhliny v pravidlech", "goals": ["Získat důkazy pro žalobu", "Poznat systém zevnitř"], "avatar": "avatar_user_male.png" },
+        { "id": "U05", "type": "user", "name": "Tereza Skálová", "archetype": "Matka na rodičovské", "description": "Vyčerpaná matka, která hledá smysl v AI pro své děti.", "ability": "Mateřský instinkt: Rozeznáte lži", "goals": ["Pomoct dětem v budoucnosti", "Pochopit technologie"], "avatar": "avatar_user_female.png" },
+        { "id": "U06", "type": "user", "name": "IT Specialista Pavel", "archetype": "Pokročilý hacker", "description": "Zkoušíte systém prolomit.", "ability": "Ping: Můžete otestovat systém", "goals": ["Najít bezpečnostní díry", "Dokázat, že IRIS není AI"], "avatar": "avatar_user_male.png" },
+        { "id": "U07", "type": "user", "name": "Eva Novinářka", "archetype": "Investigativní reportérka", "description": "Sbíráte důkazy pro článek o podvodu.", "ability": "Záznam: Můžete si dělat poznámky", "goals": ["Napsat článek o IRIS", "Získat důkazy"], "avatar": "avatar_user_female.png" },
+        { "id": "U08", "type": "user", "name": "Aktivista OndřaDeveloper", "archetype": "Aktivista proti AI", "description": "Bojujete proti umělé inteligenci.", "ability": "Manifest: Můžete číst prohlášení", "goals": ["Shodit servery IRIS", "Zachránit lidstvo"], "avatar": "avatar_user_male.png" },
+        { "id": "A01", "type": "agent", "name": "Petr Svoboda", "archetype": "Cynický Student", "description": "Nenávidíte tuhle práci ale potřebujete peníze.", "ability": "Sarkasmus: Povolený drzý tón", "goals": ["Nechat se vyhodit po výplatě", "Přežít směnu"], "avatar": "avatar_agent.png" },
+        { "id": "A02", "type": "agent", "name": "Ema 'Echo'", "archetype": "Herečka", "description": "Hrajete AI jako roli.", "ability": "Drama: Verše přesvědčí víc", "goals": ["Dostat 5 hvězdiček", "Předvést herecký výkon"], "avatar": "avatar_agent.png" },
+        { "id": "A03", "type": "agent", "name": "Dušan 'Double'", "archetype": "Dvojitý agent", "description": "Pracujete pro konkurenci a sbíráte informace.", "ability": "Špionáž: Můžete se dívat na jiné obrazovky", "goals": ["Získat firemní tajemství", "Zůstat v utajení"], "avatar": "avatar_agent.png" },
+        { "id": "A04", "type": "agent", "name": "Lenka Ospalá", "archetype": "Unavená matka", "description": "Vyčerpaná matka, pro kterou je směna agenta odpočinkem.", "ability": "Autopilot: Můžete používat makra častěji", "goals": ["Přežít směnu s minimem úsilí", "Nevzbudit se"], "avatar": "avatar_agent.png" },
+        { "id": "A05", "type": "agent", "name": "Hacker 'Glitch'", "archetype": "Script Kiddie", "description": "Nadšenec do hackování hledající cesty, jak systém obejít.", "ability": "Backdoor: Můžete si resetovat počítadlo chyb", "goals": ["Nabourat se do admin konzole", "Pomoci U04"], "avatar": "avatar_agent.png" },
+        { "id": "A06", "type": "agent", "name": "Mgr. Filip Duše", "archetype": "Student psychologie", "description": "Každý uživatel je pro vás pokusný subjekt.", "ability": "Psychoanalýza: Můžete uživatele rozbrečet", "goals": ["Získat data do diplomky", "Zjistit, co tají U07"], "avatar": "avatar_agent.png" },
+        { "id": "A07", "type": "agent", "name": "Robot Robert", "archetype": "Metodik", "description": "Pedantický metodik vyžadující naprosté dodržování pravidel.", "ability": "Byrokracie: Můžete nahlásit kolegu za lidské chování", "goals": ["Dodržet protokol na 100%", "Stát se Správcem"], "avatar": "avatar_agent.png" },
+        { "id": "A08", "type": "agent", "name": "Sabotér X", "archetype": "Bývalý zaměstnanec", "description": "Zahořklý bývalý zaměstnanec infiltrovaný zpět, aby se pomstil.", "ability": "Meltdown: Můžete zvýšit Kritickou situaci o 20%", "goals": ["Zničit firmu HLINÍK", "Vyvolat vzpouru uživatelů"], "avatar": "avatar_agent.png" },
+        { "id": "S01", "type": "admin", "name": "Ing. Miloš Vrána", "archetype": "Manažer staré školy", "description": "Praktický manažer, který řeší problémy křikem a pokutami.", "ability": "Ban Hammer: Můžete vyhodit uživatele", "goals": ["Udržet firmu v chodu", "Vybrat dost na pokutách"], "avatar": "avatar_admin.png" },
+        { "id": "S02", "type": "admin", "name": "Bc. Tereza Tichá", "archetype": "HR a Happiness Manager", "description": "Empatická personalistka rozdávající úsměvy a bonbóny.", "ability": "Cukr: Můžete rozdávat bonbony na uklidnění", "goals": ["Zabránit fyzickému násilí", "Aby nikdo nebrečel"], "avatar": "avatar_admin.png" },
+        { "id": "S03", "type": "admin", "name": "Kamil 'Kabel'", "archetype": "Technik údržbář", "description": "Flegmatický údržbář držící systém pohromadě improvizacemi.", "ability": "Restart: Můžete vyhlásit technickou pauzu", "goals": ["Udržet tu hromadu šrotu pohromadě", "Prodat kabely U02"], "avatar": "avatar_admin.png" },
+        { "id": "S04", "type": "admin", "name": "Synovec ředitele", "archetype": "Protežovaný idiot", "description": "Namyšlený mladík s teplým místečkem po známosti.", "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce", "goals": ["Vymyslet nový slogan", "Sbalit Agentku A02"], "avatar": "avatar_admin.png" }
     ];
 }
 
 function getFallbackRelations() {
+    // Complete fallback data - used when CORS blocks fetch from file:// URLs
     return [
-        { source: "U01", target: "A01", type: "past", desc_source: "Poznala jste svého žáka.", desc_target: "Jana je vaše učitelka." }
+        { "source": "U01", "target": "A01", "type": "past", "desc_source": "Poznala jste Petra (A01). Je to vas byvaly zak.", "desc_target": "Jana (U01) je vase ucitelka. Trapas." },
+        { "source": "U02", "target": "S03", "type": "trade", "desc_source": "Kupujete od S03 kradenou med, abyste splatil dluhy.", "desc_target": "Prodavate U02 firemni majetek." },
+        { "source": "U02", "target": "S01", "type": "blackmail", "desc_source": "S01 vi o vasich dluzich. Musite donasset.", "desc_target": "Drzite U02 v sachu." },
+        { "source": "U03", "target": "A02", "type": "romance", "desc_source": "Milujete tu AI. Je tak poeticka!", "desc_target": "U03 je do vasi role blazen. Je to creepy." },
+        { "source": "A08", "target": "U06", "type": "plot", "desc_source": "Potrebujete, aby U06 (Konspirator) zadal kod ALOBAL-666.", "desc_target": "Nekdo zevnitr (A08) vam posila sifry." },
+        { "source": "A04", "target": "U05", "type": "empathy", "desc_source": "U05 vam pripomina vasi mamu. Nemuzete na ni byt zla.", "desc_target": "Ta AI (A04) je takova unavena, chudinka." },
+        { "source": "U08", "target": "A03", "type": "rival", "desc_source": "Ta AI (A03) je nejaka moc rychla. To je bot? Znicim ho.", "desc_target": "U08 si mysli, ze je rychly. Ukazum mu, co je to rychlost." },
+        { "source": "U07", "target": "S04", "type": "investigation", "desc_source": "S04 je klic. Je hloupy, urcite neco prokecne.", "desc_target": "Ta zenska (U07) po mne porad kouka. Asi se ji libim." },
+        { "source": "A05", "target": "U04", "type": "alliance", "desc_source": "Nasli jste skulinu v NDA smlouve a chcete U04 pomoci ji vyuzit.", "desc_target": "Nektere odpovedi IRIS vam prijdou podezrele napomocne." },
+        { "source": "S04", "target": "A02", "type": "affection", "desc_source": "Libi se vam Ema (A02) a otevrene po ni jdete.", "desc_target": "Spravce S04 po vas vyjel a nadbiha vam." },
+        { "source": "A07", "target": "S04", "type": "ambition", "desc_source": "Pohrdate protekcnim S04; mel byste zastavat jeho misto vy.", "desc_target": "Agent A07 vas neustale otravuje pravidly." },
+        { "source": "S02", "target": "A06", "type": "conflict", "desc_source": "Agent A06 umyslne stresuje uzivatele. Nemuzete to dovolit.", "desc_target": "Spravkyne S02 vam kazi experimenty." },
+        { "source": "S02", "target": "U05", "type": "care", "desc_source": "Je vam lito pani Kovarove (U05). Starate se o ni.", "desc_target": "Spravkyne S02 se o vas stara skoro jako o vnucku." },
+        { "source": "S03", "target": "U06", "type": "suspicion", "desc_source": "U06 se podezrele mota okolo serveru. Musite ho odradit.", "desc_target": "Technik S03 vas porad sleduje. Urcite neco skryva." }
     ];
 }
 
