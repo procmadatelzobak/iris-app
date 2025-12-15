@@ -7,6 +7,7 @@ from ..dependencies import get_current_user
 from ..database import User, UserRole, SessionLocal, ChatLog
 from ..config import settings
 import json
+import asyncio
 from jose import jwt, JWTError
 from sqlalchemy.exc import SQLAlchemyError
 

@@ -215,6 +215,11 @@ function navigateTo(section) {
     if (targetSection) {
         targetSection.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Re-render graph when navigating to relations section (deferred)
+        if (section === 'vztahy') {
+            setTimeout(() => renderRelationsGraph(), 50);
+        }
     }
 
     // Update URL hash
@@ -424,31 +429,77 @@ function getRelationColor(type) {
 function renderRelationsGraph() {
     const svg = document.getElementById('relationsGraph');
     if (!svg || !svg.parentElement) return;
-    const width = svg.parentElement.clientWidth;
+
+    // Ensure container is visible before measuring
+    const container = svg.parentElement;
+    if (container.clientWidth === 0) {
+        // Container is hidden, defer render
+        return;
+    }
+
+    const width = container.clientWidth;
     const height = 400;
 
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
     svg.innerHTML = '';
 
-    // Create nodes from roles
-    const nodes = rolesData.map((role, i) => {
-        const angle = (i / rolesData.length) * 2 * Math.PI;
-        const radius = Math.min(width, height) * 0.35;
-        return {
-            id: role.name,
+    // Separate roles by type for grouped layout
+    const users = rolesData.filter(r => r.type === 'user');
+    const agents = rolesData.filter(r => r.type === 'agent');
+    const admins = rolesData.filter(r => r.type === 'admin');
+
+    // Layout: 3 columns (Users left, Admins center, Agents right)
+    const colWidth = width / 4;
+    const userX = colWidth * 0.75;
+    const adminX = colWidth * 2;
+    const agentX = colWidth * 3.25;
+    const startY = 40;
+    const spacing = (height - startY * 2) / Math.max(users.length, agents.length, 1);
+
+    const nodes = [];
+
+    // Position Users (left column)
+    users.forEach((role, i) => {
+        nodes.push({
+            id: role.id,
             name: role.name,
             type: role.type,
-            group: role.type,
-            radius: role.type === 'admin' ? 8 : 6,
-            x: width / 2 + Math.cos(angle) * radius,
-            y: height / 2 + Math.sin(angle) * radius
-        };
+            x: userX,
+            y: startY + i * spacing
+        });
     });
+
+    // Position Agents (right column)
+    agents.forEach((role, i) => {
+        nodes.push({
+            id: role.id,
+            name: role.name,
+            type: role.type,
+            x: agentX,
+            y: startY + i * spacing
+        });
+    });
+
+    // Position Admins (center column, more spaced)
+    const adminSpacing = (height - startY * 2) / Math.max(admins.length, 1);
+    admins.forEach((role, i) => {
+        nodes.push({
+            id: role.id,
+            name: role.name,
+            type: role.type,
+            x: adminX,
+            y: startY + i * adminSpacing
+        });
+    });
+
+    // Create node lookup map
+    const nodeMap = {};
+    nodes.forEach(n => nodeMap[n.id] = n);
 
     // Draw edges (relations)
     relationsData.forEach(rel => {
-        const source = nodes.find(n => n.id === rel.source);
-        const target = nodes.find(n => n.id === rel.target);
+        const source = nodeMap[rel.source];
+        const target = nodeMap[rel.target];
         if (source && target) {
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line.setAttribute('x1', source.x);
@@ -473,24 +524,36 @@ function renderRelationsGraph() {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', node.x);
         circle.setAttribute('cy', node.y);
-        circle.setAttribute('r', '20');
+        circle.setAttribute('r', node.type === 'admin' ? 18 : 14);
         circle.setAttribute('fill', getNodeColor(node.type));
         circle.setAttribute('stroke', '#1a1a25');
         circle.setAttribute('stroke-width', '2');
         g.appendChild(circle);
 
-        // Label
+        // Label (ID)
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', node.x);
         text.setAttribute('y', node.y + 4);
         text.setAttribute('text-anchor', 'middle');
         text.setAttribute('fill', '#fff');
-        text.setAttribute('font-size', '10');
+        text.setAttribute('font-size', '9');
         text.setAttribute('font-weight', 'bold');
         text.textContent = node.id;
         g.appendChild(text);
 
         svg.appendChild(g);
+    });
+
+    // Draw column labels
+    const labelY = 20;
+    const labelStyle = { fill: '#888', 'font-size': '12', 'font-weight': '600', 'text-anchor': 'middle' };
+    [['UŽIVATELÉ', userX], ['SPRÁVCI', adminX], ['AGENTI', agentX]].forEach(([label, x]) => {
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', x);
+        t.setAttribute('y', labelY);
+        Object.entries(labelStyle).forEach(([k, v]) => t.setAttribute(k, v));
+        t.textContent = label;
+        svg.appendChild(t);
     });
 }
 
