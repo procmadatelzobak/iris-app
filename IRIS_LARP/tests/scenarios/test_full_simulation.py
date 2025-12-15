@@ -39,11 +39,25 @@ from playwright.async_api import async_playwright
 API_URL = "http://localhost:8000"
 WS_URL = "ws://localhost:8000/ws"
 
+# Browser automation timeouts (in milliseconds)
+BROWSER_TIMEOUT = 10000
+SELECTOR_TIMEOUT = 5000
+TRANSITION_DELAY = 0.5
+
+# Wiki navigation sections (for automated testing)
+WIKI_SECTIONS = ["role", "uzivatele", "vztahy", "manualy", "system", "lore", "compliance", "tests"]
+
+# How many messages to send per character in initial greeting (1 = first message only)
+INITIAL_MESSAGE_COUNT = 1
+
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent  # iris-app root
 DOC_DATA_DIR = BASE_DIR / "doc" / "iris" / "lore-web" / "data" / "test_runs"
 ROLES_FILE = BASE_DIR / "doc" / "iris" / "lore-web" / "data" / "roles.json"
 RELATIONS_FILE = BASE_DIR / "doc" / "iris" / "lore-web" / "data" / "relations.json"
+
+# Note: Credentials are from default_scenario.json which is part of the public test data.
+# For production use, these would be loaded from environment variables.
 
 # ============================================
 # LORE DATA - Character definitions
@@ -343,9 +357,9 @@ async def simulate_user_session(role, logger, relations):
             logger.record_latency(connect_latency)
             logger.log("INFO", f"{role_id} ({role_name} - {archetype}) připojen za {int(connect_latency)}ms")
             
-            # Odeslat úvodní zprávu podle archetypu
+            # Odeslat úvodní zprávu podle archetypu (pouze první zpráva pro rychlost simulace)
             messages = CHARACTER_MESSAGES.get(role_id, [f"Inicializace {role_id}"])
-            for msg in messages[:1]:  # První zpráva
+            for msg in messages[:INITIAL_MESSAGE_COUNT]:
                 msg_data = {"type": "chat", "content": msg, "channel": "default"}
                 await websocket.send(json.dumps(msg_data))
                 logger.log("INFO", f"{role_id} posílá: '{msg[:50]}...'")
@@ -590,11 +604,11 @@ async def run_browser_simulation(logger, roles, relations):
             # Check Wiki
             logger.log("INFO", f"Navigace na Wiki: {API_URL}/organizer-wiki/")
             try:
-                response = await page.goto(f"{API_URL}/organizer-wiki/", timeout=10000)
+                response = await page.goto(f"{API_URL}/organizer-wiki/", timeout=BROWSER_TIMEOUT)
                 if response and response.status == 200:
                     logger.log("SUCCESS", "Wiki Dashboard načten")
                     try:
-                        await page.wait_for_selector(".dashboard-grid", timeout=5000)
+                        await page.wait_for_selector(".dashboard-grid", timeout=SELECTOR_TIMEOUT)
                         await take_screenshot(page, "00_wiki_dashboard", logger)
                     except Exception:
                         logger.log("WARNING", "Wiki selector timeout")
@@ -604,8 +618,7 @@ async def run_browser_simulation(logger, roles, relations):
                 logger.log("WARNING", f"Wiki nedostupná: {str(e)[:100]}")
             
             # Check all sections
-            sections = ["role", "uzivatele", "vztahy", "manualy", "system", "lore", "compliance", "tests"]
-            for section in sections:
+            for section in WIKI_SECTIONS:
                 try:
                     await page.click(f'[data-section="{section}"]', timeout=2000)
                     await asyncio.sleep(0.3)
@@ -620,7 +633,7 @@ async def run_browser_simulation(logger, roles, relations):
             logger.log_phase("PHASE_1_ARRIVAL", "Zaměstnanci přicházejí do práce")
             
             try:
-                await page.goto(f"{API_URL}/", timeout=10000)
+                await page.goto(f"{API_URL}/", timeout=BROWSER_TIMEOUT)
                 await page.wait_for_load_state("networkidle")
                 await take_screenshot(page, "01_login_page", logger)
                 logger.log("SUCCESS", "Login stránka načtena")
