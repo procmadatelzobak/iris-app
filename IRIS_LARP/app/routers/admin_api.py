@@ -518,10 +518,8 @@ class SystemConstants(BaseModel):
     task_reward_party: int = 200
 
 @router.post("/root/update_constants")
-async def update_constants(data: SystemConstants, admin=Depends(get_current_root)):
-    """ROOT ONLY: Update game constants logic"""
-    # Ideally check basic auth to confirm 'admin' is root or superadmin if we had role separation.
-    # For now, any admin can (per v1 spec).
+async def update_constants(data: SystemConstants, admin=Depends(get_current_admin)):
+    """Update game constants logic (admin/root)"""
     gamestate.tax_rate = data.tax_rate
     gamestate.power_capacity = data.power_cap
     gamestate.TEMP_THRESHOLD = data.temp_threshold
@@ -607,8 +605,8 @@ async def reset_system_logs(admin=Depends(get_current_admin)):
     return {"status": "ok"}
 
 @router.post("/root/reset")
-async def reset_system(admin=Depends(get_current_root)):
-    """ROOT ONLY: Full System Wipe"""
+async def reset_system(admin=Depends(get_current_admin)):
+    """Full System Wipe"""
     db = SessionLocal()
     try:
         # 1. Truncate Logs

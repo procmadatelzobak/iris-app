@@ -94,6 +94,7 @@ class TestPhase23Complex(unittest.TestCase):
                         break
                 
                 self.assertTrue(found_broadcast, "Did not receive broadcast of confirmed message")
+                break
 
     def test_task_edit_on_approve(self):
         admin_auth = self.get_auth_headers("admin1", "secure_admin_1")
