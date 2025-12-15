@@ -899,29 +899,49 @@
                 </div>
 
                 <div class="dashboard-card full-width">
-                    <h3>⚡ Přehled klíčových funkcí (Phase 34)</h3>
-                    <div class="filter-bar" style="margin-bottom: 1rem;">
-                        <button class="filter-btn active" data-feature-filter="all">Všechny</button>
-                        <button class="filter-btn" data-feature-filter="core">🏗️ Jádro</button>
-                        <button class="filter-btn" data-feature-filter="user">👥 Uživatel</button>
-                        <button class="filter-btn" data-feature-filter="agent">🤖 Agent</button>
-                        <button class="filter-btn" data-feature-filter="admin">👔 Admin</button>
-                        <button class="filter-btn" data-feature-filter="ai">🧠 AI</button>
+                    <h3>⚡ Přehled klíčových funkcí (Automaticky generováno)</h3>
+                    
+                    <!-- Role Filter -->
+                    <div class="filter-bar" style="margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-muted); margin-right: 0.5rem;">Role:</span>
+                        <button class="filter-btn active" data-role-filter="all">Vše</button>
+                        <button class="filter-btn" data-role-filter="All">🌐 Systém</button>
+                        <button class="filter-btn" data-role-filter="User">👥 User</button>
+                        <button class="filter-btn" data-role-filter="Agent">🤖 Agent</button>
+                        <button class="filter-btn" data-role-filter="Admin">👔 Admin</button>
+                        <button class="filter-btn" data-role-filter="Root">👑 Root</button>
+                        <button class="filter-btn" data-role-filter="AI">🧠 AI</button>
                     </div>
-                    <div class="roles-table-container">
+                    
+                    <!-- Status Filter -->
+                    <div class="filter-bar" style="margin-bottom: 1rem;">
+                        <span style="color: var(--text-muted); margin-right: 0.5rem;">Stav:</span>
+                        <button class="filter-btn active" data-status-filter="all">Vše</button>
+                        <button class="filter-btn" data-status-filter="DONE">✅ Hotovo</button>
+                        <button class="filter-btn" data-status-filter="PARTIAL">⚠️ Částečně</button>
+                        <button class="filter-btn" data-status-filter="TODO">❌ Chybí</button>
+                    </div>
+                    
+                    <div class="roles-table-container" style="max-height: 600px; overflow-y: auto;">
                         <table class="data-table" id="featuresTable">
                             <thead>
                                 <tr>
-                                    <th>Stav</th>
-                                    <th>Kategorie</th>
+                                    <th style="width: 60px;">Stav</th>
+                                    <th style="width: 80px;">Role</th>
                                     <th>Funkce</th>
                                     <th>Popis</th>
+                                    <th style="width: 120px;">Test</th>
                                 </tr>
                             </thead>
                             <tbody id="featuresTableBody">
-                                <!-- Dynamicky naplněno z JavaScript -->
+                                <!-- Dynamicky naplněno z features.json -->
                             </tbody>
                         </table>
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                        <span id="featuresFilterCount">Zobrazeno: -- z --</span> | 
+                        Zdroj: <code>IRIS_LARP/docs/FEATURE_LIST.md</code> | 
+                        Generováno: <span id="featuresGeneratedAt">--</span>
                     </div>
                 </div>
 
@@ -930,15 +950,19 @@
                     <div class="version-info">
                         <div class="version-item">
                             <span class="label">Celkem funkcí:</span>
-                            <span class="value" id="statTotalFeatures">170+</span>
+                            <span class="value" id="statTotalFeatures">--</span>
                         </div>
                         <div class="version-item">
                             <span class="label">Implementováno:</span>
-                            <span class="value" style="color: var(--accent-green)" id="statImplemented">✅ 165+</span>
+                            <span class="value badge-done" id="statImplemented">--</span>
                         </div>
                         <div class="version-item">
                             <span class="label">Částečně:</span>
-                            <span class="value" style="color: var(--accent-orange)" id="statPartial">⚠️ 5</span>
+                            <span class="value badge-partial" id="statPartial">--</span>
+                        </div>
+                        <div class="version-item">
+                            <span class="label">Chybí:</span>
+                            <span class="value badge-todo" id="statTodo">--</span>
                         </div>
                     </div>
                 </div>
