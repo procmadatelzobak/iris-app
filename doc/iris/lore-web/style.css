@@ -1317,6 +1317,50 @@ a:hover {
 }
 
 /* ============================================
+   MANUAL & AVATAR STYLES
+   ============================================ */
+
+.manual-image-container {
+    margin: 20px 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.manual-img {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 2px;
+    border: 1px solid var(--accent-blue);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.img-caption {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-mono);
+}
+
+.role-avatar-wrapper {
+    flex-shrink: 0;
+}
+
+.user-card-header img {
+    transition: transform 0.2s;
+}
+
+.user-card:hover .user-card-header img {
+    transform: scale(1.1);
+}
+
+/* ============================================
    PRINT STYLES
    ============================================ */
 
