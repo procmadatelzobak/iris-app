@@ -574,7 +574,11 @@ function renderTestRunsList(runs) {
     runs.forEach(run => {
         const item = document.createElement('div');
         item.className = 'test-run-item';
-        item.onclick = () => loadTestRunDetail(run);
+        item.onclick = () => {
+            document.querySelectorAll('.test-run-item').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+            loadTestRunDetail(run);
+        };
 
         const date = new Date(run.timestamp).toLocaleString('cs-CZ');
         const statusClass = run.status === 'success' ? 'passed' : 'failed';
