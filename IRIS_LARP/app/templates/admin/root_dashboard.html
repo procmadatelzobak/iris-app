@@ -271,17 +271,22 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <div class="text-lg font-bold">Režim Jazyka Systému</div>
-                        <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní</div>
+                        <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní. Změna platí pro všechny terminály v systému.</div>
                     </div>
                     <select id="languageModeSelect" class="bg-black border border-gray-700 p-2 text-white min-w-48"
                         onchange="setLanguageMode(this.value)">
                         <option value="cz">Čeština (výchozí)</option>
+                        <option value="en">English</option>
+                        <option value="crazy">Crazy Čeština 🤪</option>
                         <option value="czech-iris">Čeština + IRIS Terminologie</option>
                     </select>
                 </div>
                 <div class="text-xs text-gray-500 border-t border-gray-800 pt-2 mt-2">
                     <strong>Čeština:</strong> Standardní české překlady pro všechny uživatele<br>
+                    <strong>English:</strong> Anglické překlady pro mezinárodní hráče<br>
+                    <strong>Crazy Čeština:</strong> Šílená/zábavná varianta češtiny pro LARP efekt<br>
                     <strong>Čeština + IRIS:</strong> LARP-specifická terminologie pro správce (UMYVADLO, BAHNO, atd.)
+                </div>
                 </div>
                 <div class="flex items-center justify-between border-t border-gray-800 pt-4">
                     <div>
@@ -1303,6 +1308,13 @@
     }
 
     // --- LANGUAGE SETTINGS ---
+    const languageLabels = {
+        'cz': 'Čeština',
+        'en': 'English',
+        'crazy': 'Crazy Čeština 🤪',
+        'czech-iris': 'Čeština + IRIS'
+    };
+    
     window.setLanguageMode = async (mode) => {
         const status = document.getElementById('languageStatus');
         try {
@@ -1316,7 +1328,8 @@
             });
 
             if (res.ok) {
-                status.innerText = '✅ Jazyk úspěšně změněn na: ' + (mode === 'cz' ? 'Čeština' : 'Čeština + IRIS');
+                const label = languageLabels[mode] || mode;
+                status.innerText = '✅ Jazyk úspěšně změněn na: ' + label;
                 status.classList.remove('text-gray-600', 'text-red-500');
                 status.classList.add('text-green-500');
             } else {

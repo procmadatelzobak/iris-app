@@ -1,7 +1,7 @@
 # IRIS LARP - Development History
 **Project**: Interactive Role-playing Information System  
 **Timeline**: November 2024 - December 2024  
-**Current Phase**: 33
+**Current Phase**: 36
 
 ---
 
@@ -178,7 +178,7 @@
 - ✅ Economy tab for reward amounts per status level
 - ✅ `update_reward_config()` method in GameState
 
-### Phase 33: Automated E2E Test Suite A (CURRENT)
+### Phase 33: Automated E2E Test Suite A
 **Focus**: Playwright-based automated testing
 
 **Test Infrastructure**:
@@ -194,6 +194,25 @@
 
 **Run Scripts**:
 - ✅ `run_suite_a.sh` (headed + CI modes)
+
+### Phase 36: Multi-Language Support (CURRENT)
+**Focus**: Enhanced language system for Hlinik terminals
+
+**Language Options**:
+- ✅ Čeština (cz) - Standard Czech
+- ✅ English (en) - Full English translations
+- ✅ Crazy Čeština (crazy) - Fun/crazy Czech for LARP effect
+- ✅ Čeština + IRIS (czech-iris) - LARP-specific terminology
+
+**Language Propagation**:
+- ✅ Root sets system language via CONFIG tab
+- ✅ WebSocket broadcast to all terminals on change
+- ✅ Admin custom labels preserved across language switches
+
+**Files Created**:
+- ✅ `app/translations/english.json` - Full English translations
+- ✅ `app/translations/crazy.json` - Crazy Czech translations
+- ✅ `docs/PHASE_36_IMPLEMENTATION.md` - Phase documentation
 
 ---
 
@@ -407,6 +426,6 @@
 
 ---
 
-**Document Version**: Phase 31.0  
-**Last Updated**: 2025-12-14  
+**Document Version**: Phase 36.0  
+**Last Updated**: 2025-12-15  
 **Status**: Living Document
