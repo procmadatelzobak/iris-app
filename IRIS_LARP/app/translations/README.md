@@ -22,6 +22,25 @@ Základní český překlad pro **všechny** UI elementy v aplikaci. Toto je vý
 
 **Usage Priority:** Základní vrstva (Level 1)
 
+### `english.json`
+Anglické překlady pro mezinárodní hráče (`en` mode).
+
+**Obsahuje:**
+- Kompletní anglické překlady všech UI elementů
+- Fallback na czech.json pokud klíč chybí
+
+**Usage Priority:** Základní vrstva (Level 1) - alternativní jazyk
+
+### `crazy.json`
+Crazy Czech překlady pro zábavný LARP efekt (`crazy` mode).
+
+**Obsahuje:**
+- Šílené/zábavné české překlady
+- Přejmenovává standardní termíny na vtipné alternativy (ÚTĚK!, ZLAŤÁKY, POKUSNÍ KRÁLÍCI)
+- Fallback na czech.json pokud klíč chybí
+
+**Usage Priority:** Základní vrstva (Level 1) - alternativní jazyk
+
 ### `iris.json`
 IRIS-specifické přepisy pro admin rozhraní (`czech-iris` mode). Obsahuje **pouze rozdíly** oproti `czech.json`.
 
@@ -132,9 +151,16 @@ Klíče jsou organizovány hierarchicky podle části aplikace:
 
 ## Rozšiřitelnost / Extensibility
 
-Systém je připraven pro budoucí jazyky:
-- Stačí přidat nový `.json` soubor (např. `english.json`)
-- Updatovat loading logiku
+Systém podporuje 4 jazykové režimy:
+- **cz** - Čeština (výchozí)
+- **en** - English
+- **crazy** - Crazy Čeština (LARP efekt)
+- **czech-iris** - Čeština + IRIS terminologie
+
+Pro přidání nového jazyka:
+- Stačí přidat nový `.json` soubor (např. `german.json`)
+- Updatovat `__init__.py` loading logiku
+- Updatovat `routers/translations.py` validaci
 - Přidat nový režim do root settings UI
 
 ## Testing
@@ -142,11 +168,18 @@ Systém je připraven pro budoucí jazyky:
 Pro testování překladů:
 1. Ověřte, že všechny klíče v `iris.json` existují také v `czech.json`
 2. Zkontrolujte, že všechny `data-key` atributy v HTML mají odpovídající klíč v překladech
-3. Testujte přepínání mezi režimy `cz` a `czech-iris`
+3. Testujte přepínání mezi všemi režimy (`cz`, `en`, `crazy`, `czech-iris`)
 4. Testujte custom admin overrides a jejich persistenci
+
+Spuštění testů:
+```bash
+cd IRIS_LARP
+python -m app.translations.test_translations
+```
 
 ---
 
 **Vytvořeno:** 2025-12-14  
-**Verze:** 1.0.0  
-**Status:** Ready for logic implementation
+**Aktualizováno:** 2025-12-15 (Phase 36)  
+**Verze:** 1.1.0  
+**Status:** ✅ Fully implemented
