@@ -480,7 +480,6 @@ class TestGamestateSystem:
 
     def test_check_overload_triggers_panic_and_recovers(self, clean_gamestate):
         """4.8b: Thermal overload auto-enables global panic and clears after cool-down."""
-        reset_panic_modes()
         gamestate.power_capacity = 100
         gamestate.power_load = 50
         gamestate.temperature = gamestate.TEMP_THRESHOLD + 25

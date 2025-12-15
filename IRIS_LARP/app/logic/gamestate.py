@@ -3,6 +3,9 @@ from .llm_core import LLMConfig, LLMProvider
 import enum
 import asyncio
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Default LLM System Prompts based on HLINÍK lore (Czech)
 # These prompts define the personality and behavior of the LLM agents used in the game.
@@ -334,7 +337,8 @@ class GameState:
         """Auto-toggle global panic (censorship) when thermal overload crosses threshold."""
         try:
             from .routing import routing_logic
-        except ImportError:
+        except ImportError as exc:
+            logger.warning("Routing logic unavailable for panic toggle: %s", exc)
             return
 
         total_sessions = getattr(settings, "TOTAL_SESSIONS", 0) or 0
@@ -350,8 +354,7 @@ class GameState:
                 "temperature": self.temperature,
                 "is_overloaded": self.is_overloaded
             })))
-        except RuntimeError:
-            # No running event loop (e.g., during unit tests)
-            pass
+        except RuntimeError as exc:
+            logger.debug("No running event loop for panic broadcast: %s", exc)
 
 gamestate = GameState()
