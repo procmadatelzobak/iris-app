@@ -128,3 +128,4 @@ __pycache__/
 .env
 *.log
 *.db
+doc/iris/*.zip
