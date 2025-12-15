@@ -1,14 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
 
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 import json
 
-from typing import List, Dict
 from pydantic import BaseModel
 
 from ..dependencies import get_current_admin, get_current_root
 from ..logic.llm_core import llm_service, LLMConfig, LLMProvider
 from ..logic.gamestate import gamestate
+from ..config import BASE_DIR
+
+# Persistent storage path for admin-defined session labels
+LABELS_PATH = BASE_DIR / "data" / "admin_labels.json"
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -469,10 +472,9 @@ class LabelUpdate(BaseModel):
 
 @router.post("/labels")
 async def save_labels(action: LabelUpdate, admin=Depends(get_current_admin)):
-    import json
-    import os
+    LABELS_PATH.parent.mkdir(parents=True, exist_ok=True)
     try:
-        with open("data/admin_labels.json", "w") as f:
+        with open(LABELS_PATH, "w") as f:
             json.dump(action.labels, f)
         return {"status": "saved"}
     except Exception as e:
@@ -480,11 +482,9 @@ async def save_labels(action: LabelUpdate, admin=Depends(get_current_admin)):
 
 @router.get("/labels")
 async def get_labels(admin=Depends(get_current_admin)):
-    import json
-    import os
-    if os.path.exists("data/admin_labels.json"):
+    if LABELS_PATH.exists():
         try:
-            with open("data/admin_labels.json", "r") as f:
+            with open(LABELS_PATH, "r") as f:
                 return json.load(f)
         except:
             return {}

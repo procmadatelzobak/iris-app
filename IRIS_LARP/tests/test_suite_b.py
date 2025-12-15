@@ -27,6 +27,25 @@ def test_health_endpoint():
     assert payload.get("version") == settings.VERSION
 
 
+def test_static_assets_served():
+    """0.1: Verify static terminal stylesheet is accessible."""
+    response = client.get("/static/css/terminal.css")
+    assert response.status_code == 200
+    assert response.headers.get("content-type", "").startswith("text/css")
+    assert len(response.text) > 0
+
+
+def test_root_login_page_shows_quick_buttons_when_test_mode(clean_gamestate):
+    """0.2: Root login renders quick login panel in test mode."""
+    gamestate.test_mode = True
+    response = client.get("/")
+    assert response.status_code == 200
+    body = response.text.lower()
+    assert "quicklogin('root')" in body
+    assert "user1" in body
+    assert "agent1" in body
+
+
 # ============================================================================
 # FIXTURES
 # ============================================================================

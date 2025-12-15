@@ -198,6 +198,7 @@ class GameState:
         """Resets all transient game state to defaults."""
         self.global_shift_offset = settings.DEFAULT_GLOBAL_SHIFT_OFFSET
         self.hyper_visibility_mode = HyperVisibilityMode.NORMAL
+        self.test_mode = False
         self.temperature = 80.0
         self.chernobyl_mode = ChernobylMode.NORMAL
         self.power_capacity = 100
