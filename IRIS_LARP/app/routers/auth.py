@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
+import os
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
@@ -10,6 +11,25 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+
+@router.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
+    # Pass all users for the quick login panel if test_mode is on
+    # But wait, logic for quick login loops over 'users'. We need to pass that or have it available globally?
+    # login.html iterates 'users'.
+    # We need to fetch users if we want the panel.
+    # For now, let's just make sure the page loads.
+    # To support the panel:
+    db = next(dependencies.get_db())
+    users = db.query(database.User).all()
+    # Check if test mode is enabled (env var or default)
+    is_test = os.environ.get("IRIS_TEST_MODE", "1") == "1"
+    
+    return templates.TemplateResponse("login.html", {
+        "request": request, 
+        "test_mode": is_test,
+        "users": users
+    })
 
 @router.post("/login")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(dependencies.get_db)):
@@ -41,15 +61,26 @@ async def logout(request: Request):
 
 @router.get("/terminal", response_class=HTMLResponse)
 async def terminal(request: Request, current_user: Annotated[database.User, Depends(dependencies.get_current_user_cookie)]):
+    # Load translations
+    import json
+    import os
+    translations = {}
+    try:
+        # Assuming czech is default/active
+        with open("app/translations/czech.json", "r", encoding="utf-8") as f:
+            translations = json.load(f)
+    except Exception as e:
+        print(f"Translation load error: {e}")
+
     # Route to correct template based on role
     if current_user.role == database.UserRole.USER:
-        return templates.TemplateResponse("user_terminal.html", {"request": request, "user": current_user})
+        return templates.TemplateResponse("user_terminal.html", {"request": request, "user": current_user, "translations": translations})
     elif current_user.role == database.UserRole.AGENT:
-         return templates.TemplateResponse("agent_terminal.html", {"request": request, "user": current_user})
+         return templates.TemplateResponse("agent_terminal.html", {"request": request, "user": current_user, "translations": translations})
     elif current_user.role == database.UserRole.ADMIN:
         if current_user.username == "root":
-             return templates.TemplateResponse("admin/root_dashboard.html", {"request": request, "user": current_user})
-        return templates.TemplateResponse("admin/dashboard.html", {"request": request, "user": current_user})
+             return templates.TemplateResponse("admin/root_dashboard.html", {"request": request, "user": current_user, "translations": translations})
+        return templates.TemplateResponse("admin/dashboard.html", {"request": request, "user": current_user, "translations": translations})
     
     raise HTTPException(status_code=400, detail="Unknown Role")
 

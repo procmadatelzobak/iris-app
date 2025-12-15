@@ -1,5 +1,28 @@
 [
   {
+    "timestamp": "2025-12-15T20:56:06.688252",
+    "scenario_name": "HLINIK Workflow Automation",
+    "status": "running",
+    "duration": 26.567045211791992,
+    "filename": "hlinik_workflow_1765828593.json",
+    "stats": {
+      "steps_completed": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T20:56:06.000000",
+    "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+    "status": "failed",
+    "duration": 1.0639116764068604,
+    "filename": "scenario_complex_1765828566.json",
+    "stats": {
+      "steps_total": 4,
+      "steps_passed": 1,
+      "hyper_response": "ok",
+      "optimizer_active": true
+    }
+  },
+  {
     "timestamp": "2025-12-15T19:30:00.000000",
     "scenario_name": "Phase 36: Advanced Automation Protocol",
     "status": "success",

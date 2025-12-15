@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IRIS 4.1 | Organizátorská Wiki | HLINIK Phase 35</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20251215_fix3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -455,6 +455,16 @@
                     <div class="manual-actions">
                         <button class="btn-primary" onclick="showManual('admin')">Zobrazit</button>
                         <button class="btn-secondary" onclick="exportManualPDF('admin')">PDF</button>
+                    </div>
+                </div>
+
+                <div class="manual-card" data-manual="admin_crazy">
+                    <div class="manual-icon">🤪</div>
+                    <h3>Příručka Crazy Czech</h3>
+                    <p>Návod k alternativnímu jazykovému režimu.</p>
+                    <div class="manual-actions">
+                        <button class="btn-primary" onclick="showManual('admin_crazy')">Zobrazit</button>
+                        <button class="btn-secondary" onclick="exportManualPDF('admin_crazy')">PDF</button>
                     </div>
                 </div>
 
@@ -2036,8 +2046,8 @@
         </div>
     </div>
 
-    <script src="js/graph.js"></script>
-    <script src="app.js"></script>
+    <script src="js/graph.js?v=20251215_fix3"></script>
+    <script src="app.js?v=20251215_fix3"></script>
 </body>
 
 </html>

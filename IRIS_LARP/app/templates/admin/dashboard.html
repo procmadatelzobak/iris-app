@@ -173,27 +173,39 @@
         </div>
 
         <!-- Tab Content -->
-        <div id="mon-content-all" class="mon-tab">
-            <!-- Chats + Logs -->
+        <!-- Tab Content -->
+        <div id="mon-content-all" class="mon-tab flex-1 min-h-0 flex flex-col">
+            <!-- Split View: Grid (Left) + Graph Overview (Right) -->
             <div class="flex gap-4 h-full">
-                <div class="w-3/4 flex flex-col">
+                <div class="w-1/2 flex flex-col">
                     <h3 class="text-green-600 mb-2 editable-label" data-key="hdr_active_sessions">AKTIVNÍ RELACE</h3>
                     <div class="monitor-grid" id="sessionGrid"></div>
                 </div>
-                <div class="w-1/4 border-l-4 border-gray-800 pl-4 flex flex-col">
-                    <h3 class="text-gray-500 mb-2 editable-label" data-key="hdr_log_mini">HLINÍK LOG</h3>
-                    <div id="miniLog"
-                        class="flex-1 overflow-y-auto text-xs font-mono text-gray-400 space-y-1 bg-black p-2 border border-gray-800">
+                <div class="w-1/2 border-l-4 border-gray-800 pl-4 flex flex-col relative">
+                    <h3 class="text-green-500 mb-2 w-full text-left editable-label" data-key="tab_graph_mini">
+                        VISUALIZACE SÍTĚ (PŘEHLED)</h3>
+
+                    <!-- Overview graph filling the column -->
+                    <div
+                        class="relative flex-1 bg-black border border-green-900 shadow-2xl shadow-green-900/20 w-full h-full">
+                        <canvas id="networkGraphOverview" class="w-full h-full block"></canvas>
+
+                        <div id="miniLog"
+                            class="absolute bottom-0 left-0 right-0 h-32 bg-black/80 border-t border-gray-800 p-2 text-xs font-mono text-gray-500 pointer-events-none overflow-hidden">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="mon-content-chats" class="mon-tab hidden">
-            <div class="monitor-grid" id="sessionGridOnly"></div>
+        <div id="mon-content-chats" class="mon-tab hidden flex-1 min-h-0">
+            <!-- Reuse grid logic? admin_ui.js usually populates sessionGrid. We need to duplicate or move? 
+                 admin_ui.js populates .monitor-grid class. So just adding another div with that class works.
+            -->
+            <div class="monitor-grid" id="sessionGridChats"></div>
         </div>
 
-        <div id="mon-content-logs" class="mon-tab hidden flex flex-col h-full">
+        <div id="mon-content-logs" class="mon-tab hidden flex-1 min-h-0 flex flex-col">
             <div class="flex justify-between mb-2">
                 <h3 class="text-gray-400 editable-label" data-key="hdr_log_full">HLINÍK SYSTÉMOVÝ LOG</h3>
                 <div class="flex items-center gap-4">
@@ -212,8 +224,11 @@
             </div>
         </div>
 
-        <div id="mon-content-graph" class="mon-tab hidden">
-            <canvas id="networkGraph" class="w-full h-full bg-black border border-green-900"></canvas>
+        <!-- Relace Tab: Full Screen -->
+        <div id="mon-content-graph" class="mon-tab hidden flex-1 min-h-0 flex flex-col">
+            <div class="flex-1 min-h-0 bg-black border border-green-900 flex flex-col relative w-full">
+                <canvas id="networkGraphFull" class="flex-1 w-full h-full block"></canvas>
+            </div>
         </div>
     </div>
 

@@ -52,15 +52,35 @@ function fillTemplate(template, data) {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadData();
-    await loadTemplates();
-    initNavigation();
-    initFilters();
+    console.log('DOM Loaded, starting init...');
+
+    try {
+        await loadData();
+        console.log('Data loaded (or fallback used)');
+    } catch (e) { console.error('CRITICAL: loadData failed', e); }
+
+    try {
+        await loadTemplates();
+        console.log('Templates loaded (or fallback used)');
+    } catch (e) { console.error('CRITICAL: loadTemplates failed', e); }
+
+    try {
+        initNavigation();
+        initFilters();
+        console.log('Navigation and filters initialized.');
+    } catch (e) { console.error('Init UI failed', e); }
+
     // Load Manuals
     try {
-        const manualsRes = await fetch('data/manuals.json');
+        console.log('Loading manuals...');
+        // Check for file protocol to avoid CORS wait/error
+        if (window.location.protocol === 'file:') {
+            throw new Error('Skipping manuals fetch on file://');
+        }
+        const manualsRes = await fetch('data/manuals.json?v=' + new Date().getTime());
         if (manualsRes.ok) {
             state.manuals = await manualsRes.json();
+            console.log('Manuals loaded successfully.');
         } else {
             console.warn("Manuals load failed (not OK), using fallback");
             state.manuals = getFallbackManuals();
@@ -70,20 +90,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.manuals = getFallbackManuals();
     }
 
-    renderDashboard();
-    renderRolesTable();
-    renderUsersGrid();
-    renderRelations(); // This will init graph
-    renderTimeline();
-    updateLastUpdate();
-    initGraphFilter(); // NEW: Filter logic
+    try {
+        console.log('Rendering UI components...');
+        renderDashboard();
+        renderRolesTable();
+        renderUsersGrid();
+        renderRelations(); // This will init graph
+        renderTimeline();
+        updateLastUpdate();
+        initGraphFilter(); // NEW: Filter logic
 
-    // HLINIK features
-    renderFeaturesTable();
-    initFeatureFilters();
+        // HLINIK features
+        renderFeaturesTable();
+        initFeatureFilters();
+        console.log('UI components rendered.');
+    } catch (e) { console.error('Rendering failed', e); }
 
+    console.log('Calling initTests...');
     initTests();
-
 });
 
 async function loadData() {
@@ -408,25 +432,55 @@ function renderUsersGrid() {
 // RELATIONS
 // ============================================
 
+function getRoleName(id) {
+    const role = rolesData.find(r => r.id === id);
+    return role ? role.name : id;
+}
+
+function getRelTypeLabel(type) {
+    const labels = {
+        'past': 'Minulost', 'trade': 'Obchod', 'blackmail': 'Vydírání',
+        'romance': 'Láska', 'plot': 'Spiknutí', 'rival': 'Rivalita',
+        'investigation': 'Vyšetřování', 'empathy': 'Empatie',
+        'alliance': 'Aliance', 'affection': 'Náklonnost',
+        'ambition': 'Ambice', 'conflict': 'Konflikt',
+        'care': 'Péče', 'suspicion': 'Podezření'
+    };
+    return labels[type] || type;
+}
+
 function renderRelations() {
     renderRelationsList();
     initRelationsGraph();
 }
 
 function initRelationsGraph() {
-    // Check if graph already exists (re-init?)
     const container = document.getElementById('graphContainer');
-    if (!container || relationGraph) return;
+    if (!container) return;
 
+    // Wait for container to be visible
     if (container.clientWidth === 0) {
-        // Defer until visible
+        setTimeout(initRelationsGraph, 100);
         return;
     }
 
-    relationGraph = new RelationGraph('graphContainer', {
-        roles: rolesData,
-        relations: relationsData
-    });
+    // Destroy old graph if exists
+    if (relationGraph && relationGraph.destroy) {
+        relationGraph.destroy();
+    }
+    relationGraph = null;
+
+    // Create new graph
+    if (typeof RelationGraph === 'function') {
+        relationGraph = new RelationGraph('graphContainer', {
+            roles: rolesData,
+            relations: relationsData
+        });
+        // Expose globally for debugging
+        window.relationGraph = relationGraph;
+    } else {
+        console.error('RelationGraph class not found');
+    }
 }
 
 function renderRelationsList(filterPlayerId = null) {
@@ -734,15 +788,29 @@ function closeManual() {
 // ============================================
 
 async function initTests() {
+    console.log('initTests: Starting...');
+    const isLocalFile = window.location.protocol === 'file:';
+
+    // If running locally via file://, usually fetch logic fails/warns. 
+    // We can try fetch, but if it fails, we MUST use fallback.
+    // Or we can default to fallback immediately if we know it will fail (Chrome default).
+
     try {
+        if (isLocalFile) {
+            console.warn('initTests: Detected file:// protocol. Fetch might fail due to CORS. attempting fetch anyway...');
+        }
+
         const response = await fetch('data/test_runs/index.json');
         if (!response.ok) throw new Error('HTTP error: ' + response.status);
         const runs = await response.json();
+        console.log('initTests: Loaded runs via fetch', runs.length);
         renderTestRunsList(runs);
     } catch (e) {
-        console.warn("Failed to load test runs via fetch, using fallback data", e);
+        console.warn("initTests: Failed to load test runs via fetch, using fallback data.", e);
         // Use fallback data when CORS blocks fetch (file:// protocol)
-        renderTestRunsList(getFallbackTestRuns());
+        const fallbackRuns = getFallbackTestRuns();
+        console.log('initTests: Using fallback runs', fallbackRuns.length);
+        renderTestRunsList(fallbackRuns);
     }
 }
 

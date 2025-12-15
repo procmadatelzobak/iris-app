@@ -1,159 +1,54 @@
-# Phase 36: Language System Enhancement - Hlinik Multi-Language Support
-**Status:** ✅ COMPLETE & VERIFIED  
-**Started:** 2025-12-15  
-**Verified:** 2025-12-15  
-**Goal:** Add multi-language support to IRIS/Hlinik system with Czech, English, and Crazy Czech options
+# PHASE 36: UI Standardization & Visualization Upgrade
+
+## 📅 Date: 2025-12-15
+## 🎯 Objectives
+1.  **Standardize UI Terminology**: Replace lore-specific slang ("Bahno", "Mrkev") with professional corporate terminology.
+2.  **Upgrade Network Visualization**: Improve the Network Graph aesthetics and layout functionality.
+3.  **Automate Advanced Testing**: Verify LLM integration and Economy logic via automated scripts.
+4.  **Bug Fixes**: Resolve 500 Errors, Socket connectivity, and Layout Overflows.
+
+## 🛠️ Implementation Details
+
+### 1. UI Standardization (Localization)
+*   **Translation File**: Updated `app/translations/czech.json` to replace slang terms.
+    *   `"BAHNO"` → `"EKONOMIKA"`
+    *   `"MRKEV"` → `"ÚKOLY"`
+    *   `"VŠEVIDOUCÍ"` → `"PŘEHLED"` (etc.)
+    *   Added dynamic keys for buttons: `eco_btn_fine` ("SANKCE"), `eco_btn_bribe` ("ODMĚNA").
+*   **JS Refactoring**: Updated `static/js/admin_ui.js` to remove hardcoded strings.
+    *   Implemented `t(key, default)` helper for dynamic translations.
+    *   Added `applyTranslations()` to update static HTML elements with `data-key` attributes on load.
+*   **Backend Support**: Updated `app/routers/auth.py` to load `czech.json` and inject it into the `dashboard.html` template context as `window.TRANS`.
+
+### 2. Visualization Upgrade (Network Graph)
+*   **Dual Layout**:
+    *   **Overview Tab ('PŘEHLED')**: Graph is displayed in a centralized, compact container (approx. 25% size) in the right column, providing a quick summary alongside the Grid.
+    *   **Relations Tab ('RELACE')**: **Full Screen Mode**. The graph now occupies the **entire tab area** (100% width, 100% height), providing a massive, immersive visualization of the network. The previous split layout was removed to maximize visibility.
+*   **Orbital Mechanics**:
+    *   **Agents (Purple)**: Orbit in a clean, stable circle at **0.6 radius**.
+    *   **Users (Green)**: Orbit further out at **0.85 radius** with organic movement (wobble).
+*   **Technical Implementation**:
+    *   Refactored `startGraphLoop` in `admin_ui.js` to dynamically target the active canvas (`networkGraphOverview` vs `networkGraphFull`) based on the current tab.
+    *   Implemented `requestAnimationFrame` delay in `admin_ui.js` resize logic to ensure correct canvas dimensions after tab switching.
+
+### 3. Test Automation
+*   **Scenario**: Created `tests/test_hlinik_advanced_llm.py` to test the full lifecycle:
+    1.  User Login & Task Request (WebSocket).
+    2.  Admin Approval triggering **LLM Generation** (via `approve_task` endpoint).
+    3.  User Submission & Admin Grading.
+    4.  Economy Verification (Tax/Reward calculations).
+*   **Fixes**: Fixed a bug in `app/routers/sockets.py` where `task_id` was missing from the requested task response.
+
+### 4. Critical Bug Fixes
+*   **Dashboard 500 Error**: Fixed `Undefined error: translations` by ensuring `auth.py` correctly passes the translation dictionary to the Jinja2 template.
+*   **Syntax Errors**: Corrected minor JS syntax issues introduced during refactoring.
+*   **Layout Overflow**: Fixed vertical scrollbar issues on "RELACE" and "SYSTÉMOVÝ LOG" tabs by replacing fixed height classes with flex-growing containers using `flex-1 min-h-0`.
+
+## ✅ Verification Status
+*   **UI Text**: Verified standardized labels are applied dynamically on both Grid and Static elements.
+*   **Visualization**: Verified dual-canvas rendering and correct orbital physics.
+*   **Layout**: Verified correct layout (Full Screen Relations / Split Overview) via browser automation.
+*   **Tests**: Automated test suite passed successfully (See `tests/results/20251215/TEST_HLINIK_ADVANCED_REPORT.md`).
 
 ---
-
-## 📋 Overview
-
-Phase 36 implements enhanced language system for the Hlinik terminal network:
-
-1. **New Language Options** - Added English and Crazy Czech languages
-2. **Root Language Control** - Root can set system language for all terminals
-3. **Language Propagation** - All terminals follow root's language setting
-4. **Admin Custom Labels** - Admin custom labels are preserved across language changes
-
----
-
-## 🎯 Implementation Details
-
-### Language Modes
-
-| Mode | Label | Description |
-|------|-------|-------------|
-| `cz` | Čeština (výchozí) | Standard Czech translations |
-| `en` | English | English translations for international players |
-| `crazy` | Crazy Čeština 🤪 | Fun/crazy Czech variant for LARP effect |
-| `czech-iris` | Čeština + IRIS Terminologie | LARP-specific terminology (UMYVADLO, BAHNO, etc.) |
-
-### Files Created/Modified
-
-| File | Purpose |
-|------|---------|
-| `app/translations/english.json` | Full English translations |
-| `app/translations/crazy.json` | Crazy Czech translations |
-| `app/translations/__init__.py` | Updated `get_translation()` for new modes |
-| `app/routers/translations.py` | Updated API for new language modes |
-| `app/templates/admin/root_dashboard.html` | Updated UI with all 4 language options |
-| `app/translations/test_translations.py` | Added tests for new languages |
-
-### Language Propagation Flow
-
-1. **Root sets language** → POST `/api/translations/language`
-2. **Server updates gamestate** → `gamestate.language_mode = new_mode`
-3. **WebSocket broadcast** → `{type: "language_change", language_mode: "..."}`
-4. **All terminals receive update** → `translationManager.handleTranslationUpdate(data)`
-5. **UI refreshes** → Translations reloaded from server
-
-### Admin Custom Labels Behavior
-
-> [!IMPORTANT]
-> Custom labels have **highest priority** in translation lookup, which means:
-> - **Přejmenovaná tlačítka** (custom labels) zůstávají zachována i po změně jazyka
-> - **Nepřejmenovaná tlačítka** se změní dle aktuálně zvoleného jazyka
-
-**Translation Priority Order:**
-1. ✅ `custom_labels` (admin overrides) - **HIGHEST PRIORITY**
-2. ✅ Language translations (crazy/cz/en)
-3. ✅ Key path fallback
-
-Custom labels are stored per-key in `gamestate.custom_labels`. When language changes:
-- Custom labels remain unchanged
-- Only elements WITHOUT custom labels update to new language
-- Admins can reset all custom labels via ROOT dashboard
-
----
-
-## 🎨 Crazy Czech Highlights
-
-The Crazy Czech (`crazy`) mode provides humorous translations for LARP immersion:
-
-| Original | Crazy Version |
-|----------|---------------|
-| IDENTIFIKÁTOR | PŘEZDÍVKA KÁMOŠE |
-| HESLO | TAJNÉ ZAKLÍNADLO |
-| ODHLÁSIT | ÚTĚK! |
-| KREDITY | ZLAŤÁKY |
-| SYSTÉMOVÉ PŘETÍŽENÍ | SYSTÉM HOŘÍ |
-| STÍN | PŘÍZRAK |
-| SUBJEKTY | POKUSNÍ KRÁLÍCI |
-
----
-
-## 🚀 Usage
-
-### For Root User
-
-1. Login as ROOT
-2. Navigate to CONFIG tab
-3. Find "NASTAVENÍ JAZYKA" section
-4. Select language from dropdown
-5. Language changes immediately for all connected terminals
-
-### API Endpoints
-
-```bash
-# Get available language options
-GET /api/translations/language-options
-
-# Set language (root only)
-POST /api/translations/language
-Body: {"language_mode": "crazy"}
-
-# Get translations for current mode
-GET /api/translations/
-```
-
----
-
-## 🧪 Testing
-
-### Unit Tests
-
-```bash
-cd IRIS_LARP
-python3 -m app.translations.test_translations
-```
-
-### Verified Test Results (2025-12-15)
-
-```
-✓ czech.json is valid JSON
-✓ iris.json is valid JSON
-✓ english.json is valid JSON
-✓ crazy.json is valid JSON
-✓ All required sections present
-Czech translations: 219 keys
-IRIS overrides: 38 keys
-✓ crazy mode: login.username_label = 'PŘEZDÍVKA KÁMOŠE'
-✓ crazy mode: user_terminal.logout = 'ÚTĚK!'
-✓ Custom override works: 'CUSTOM STATION NAME'
-✓ Non-overridden key works: 'IDENTIFIKÁTOR'
-============================================================
-✓ All tests completed!
-```
-
-### Manual Testing
-
-1. Login as ROOT, switch to CONFIG tab
-2. Change language to "Crazy Čeština"
-3. Verify UI updates with crazy translations
-4. Open another terminal (agent/user) and verify language matches
-5. Switch to English and verify English translations appear
-6. **NEW:** Verify custom-labeled buttons remain unchanged after language switch
-
----
-
-## 📚 References
-
-- [translations/__init__.py](../app/translations/__init__.py) - Translation loading logic
-- [translations/czech.json](../app/translations/czech.json) - Base Czech translations
-- [translations/english.json](../app/translations/english.json) - English translations
-- [translations/crazy.json](../app/translations/crazy.json) - Crazy Czech translations
-- [root_dashboard.html](../app/templates/admin/root_dashboard.html) - Language settings UI
-
----
-
-**Last Updated:** 2025-12-15
+*Signed: Agent Antigravity / Sinuhet System Admin*
