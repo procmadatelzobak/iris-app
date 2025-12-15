@@ -747,6 +747,7 @@ function exportManualPDF(type) {
     const manual = state.manuals[manualType];
     if (!manual) {
         console.warn(`Manual '${manualType}' nebyl nalezen.`);
+        alert(`Manuál typu '${manualType}' nebyl nalezen.`);
         return;
     }
 
