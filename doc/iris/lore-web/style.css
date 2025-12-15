@@ -231,11 +231,14 @@ a:hover {
     display: flex;
     justify-content: center;
     min-height: 48px;
+
+
     position: fixed;
     top: 60px;
     left: 0;
     width: 100%;
     /* Height of main-header */
+
     z-index: 90;
     backdrop-filter: blur(8px);
 }
