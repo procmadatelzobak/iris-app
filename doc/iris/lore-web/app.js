@@ -971,3 +971,143 @@ function openPrintWindow(htmlContent, filename) {
         printWindow.print();
     };
 }
+
+// ============================================
+// HLINIK FEATURES DATA
+// ============================================
+
+const featuresData = [
+    // Core Features
+    { status: "✅", category: "core", name: "JWT Autentizace", desc: "Bezpečné přihlašování s HTTP-only cookies" },
+    { status: "✅", category: "core", name: "Role-based Access", desc: "Přístup podle rolí (User/Agent/Admin/Root)" },
+    { status: "✅", category: "core", name: "WebSocket Real-time", desc: "Okamžitá komunikace přes WebSocket" },
+    { status: "✅", category: "core", name: "Session Routing", desc: "8 izolovaných kanálů s dynamickým přiřazením" },
+    { status: "✅", category: "core", name: "Ekonomický systém", desc: "Kredity, daně, Treasury, Purgatory mód" },
+    { status: "✅", category: "core", name: "Task systém", desc: "Schvalování, hodnocení, výplata úkolů" },
+    
+    // User Features
+    { status: "✅", category: "user", name: "Retro terminál", desc: "CRT efekty, 4 témata (Low/Mid/High/Party)" },
+    { status: "✅", category: "user", name: "Chat s agentem", desc: "Posílání a přijímání zpráv v reálném čase" },
+    { status: "✅", category: "user", name: "Report systém", desc: "Nahlášení nevhodných zpráv" },
+    { status: "✅", category: "user", name: "Purgatory mód", desc: "Blokace chatu při záporném zůstatku, úkoly povoleny" },
+    { status: "✅", category: "user", name: "Party mód", desc: "Speciální téma s animovanými bublinami" },
+    { status: "✅", category: "user", name: "Správa úkolů", desc: "Žádost o úkol, odevzdání, sledování stavu" },
+    
+    // Agent Features
+    { status: "✅", category: "agent", name: "Agent terminál", desc: "Monochromatický retro design" },
+    { status: "✅", category: "agent", name: "Message Optimizer", desc: "AI přepis zpráv s potvrzením před odesláním" },
+    { status: "✅", category: "agent", name: "Autopilot", desc: "Automatické AI odpovědi" },
+    { status: "✅", category: "agent", name: "Response Timer", desc: "Žlutý progress bar s časovým limitem" },
+    { status: "✅", category: "agent", name: "Visibility módy", desc: "Normal, Blackbox, Forensic, Ephemeral" },
+    { status: "✅", category: "agent", name: "Typing sync", desc: "Real-time synchronizace psaní" },
+    
+    // Admin Features
+    { status: "✅", category: "admin", name: "Dashboard Hub", desc: "4 stanice: Monitor, Control, Economy, Tasks" },
+    { status: "✅", category: "admin", name: "Panopticon", desc: "Přehled všech 8 relací, systémové logy" },
+    { status: "✅", category: "admin", name: "Ekonomika", desc: "Pokuty, bonusy, zámky, status levely" },
+    { status: "✅", category: "admin", name: "Úkoly", desc: "Schvalování, editace, hodnocení s LLM" },
+    { status: "✅", category: "admin", name: "Kontrola", desc: "Shift, teplota, AI optimizer, visibility" },
+    { status: "✅", category: "admin", name: "Network graf", desc: "Canvas vizualizace User-Agent spojení" },
+    
+    // ROOT Features
+    { status: "✅", category: "admin", name: "ROOT Dashboard", desc: "Elite admin interface s 5 taby" },
+    { status: "✅", category: "admin", name: "Test Mode", desc: "Quick login tlačítka pro testování" },
+    { status: "✅", category: "admin", name: "AI Config", desc: "Nastavení Optimizer a Autopilot modelů" },
+    { status: "✅", category: "admin", name: "Chronos", desc: "Časová manipulace, override teploty" },
+    
+    // AI Features
+    { status: "✅", category: "ai", name: "Multi-provider", desc: "OpenAI, OpenRouter, Gemini" },
+    { status: "✅", category: "ai", name: "Task Generation", desc: "LLM generování popisů úkolů" },
+    { status: "✅", category: "ai", name: "Report Immunity", desc: "AI zprávy nelze nahlásit" },
+    { status: "⚠️", category: "ai", name: "Task LLM Config", desc: "Backend existuje, UI není implementováno" },
+    { status: "⚠️", category: "ai", name: "Provider Selection", desc: "Částečná implementace v UI" }
+];
+
+function renderFeaturesTable() {
+    const tbody = document.getElementById('featuresTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    featuresData.forEach(feature => {
+        const tr = document.createElement('tr');
+        tr.dataset.featureCategory = feature.category;
+        
+        const statusColor = feature.status === '✅' ? 'var(--accent-green)' : 
+                           feature.status === '⚠️' ? 'var(--accent-orange)' : 'var(--text-muted)';
+        
+        const categoryLabels = {
+            'core': '🏗️ Jádro',
+            'user': '👥 Uživatel',
+            'agent': '🤖 Agent',
+            'admin': '👔 Admin',
+            'ai': '🧠 AI'
+        };
+
+        tr.innerHTML = `
+            <td style="color: ${statusColor}; text-align: center;">${feature.status}</td>
+            <td><span class="role-badge" style="background: var(--bg-secondary);">${categoryLabels[feature.category] || feature.category}</span></td>
+            <td><strong>${feature.name}</strong></td>
+            <td class="ability-text">${feature.desc}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function initFeatureFilters() {
+    document.querySelectorAll('[data-feature-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.featureFilter;
+
+            // Update active state
+            document.querySelectorAll('[data-feature-filter]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Filter table
+            filterFeaturesTable(filter);
+        });
+    });
+}
+
+function filterFeaturesTable(filter) {
+    const rows = document.querySelectorAll('#featuresTableBody tr');
+    rows.forEach(row => {
+        if (filter === 'all') {
+            row.style.display = '';
+        } else {
+            row.style.display = row.dataset.featureCategory === filter ? '' : 'none';
+        }
+    });
+}
+
+// ============================================
+// AUDIT SWITCHING
+// ============================================
+
+function switchAudit(auditId) {
+    // Hide all audit contents
+    document.querySelectorAll('.audit-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // Show selected audit
+    const selectedAudit = document.getElementById(auditId);
+    if (selectedAudit) {
+        selectedAudit.classList.add('active');
+    }
+}
+
+// Make function globally available
+window.switchAudit = switchAudit;
+
+// ============================================
+// INITIALIZATION UPDATES
+// ============================================
+
+// Update DOMContentLoaded to include new features
+const originalInit = document.addEventListener;
+document.addEventListener('DOMContentLoaded', () => {
+    // Render features table
+    renderFeaturesTable();
+    initFeatureFilters();
+});
