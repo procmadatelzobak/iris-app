@@ -71,9 +71,44 @@ async function loadData() {
 // NAVIGATION
 // ============================================
 
+// Section to category mapping
+const sectionCategories = {
+    'dashboard': 'none',
+    'role': 'lore',
+    'uzivatele': 'lore',
+    'vztahy': 'lore',
+    'manualy': 'lore',
+    'lore': 'lore',
+    'hraci': 'lore',
+    'hlinik': 'hlinik',
+    'system': 'hlinik',
+    'tests': 'hlinik',
+    'compliance': 'hlinik',
+    'exporty': 'none'
+};
+
+let currentCategory = 'lore';
+
 function initNavigation() {
-    // Handle nav clicks
+    // Handle main nav clicks (categories)
     document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = link.dataset.category;
+            const section = link.dataset.section;
+
+            if (category && category !== 'none') {
+                // Category link - switch submenu
+                switchCategory(category);
+            } else if (section) {
+                // Direct section link
+                navigateTo(section);
+            }
+        });
+    });
+
+    // Handle submenu clicks
+    document.querySelectorAll('.submenu-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const section = link.dataset.section;
@@ -94,6 +129,9 @@ function initNavigation() {
     if (window.location.hash) {
         const section = window.location.hash.substring(1);
         navigateTo(section);
+    } else {
+        // Default to lore category visible
+        switchCategory('lore');
     }
 
     // Listen for hash changes
@@ -103,13 +141,54 @@ function initNavigation() {
     });
 }
 
+function switchCategory(category) {
+    currentCategory = category;
+
+    // Update main nav active state
+    document.querySelectorAll('.nav-category').forEach(link => {
+        link.classList.toggle('active', link.dataset.category === category);
+    });
+
+    // Show/hide submenu groups
+    document.querySelectorAll('.submenu-group').forEach(group => {
+        group.style.display = group.dataset.category === category ? 'flex' : 'none';
+    });
+
+    // Navigate to first section of category
+    const firstLink = document.querySelector(`.submenu-group[data-category="${category}"] .submenu-link`);
+    if (firstLink) {
+        navigateTo(firstLink.dataset.section);
+    }
+}
+
 function navigateTo(section) {
-    // Update nav active state
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-        if (link.dataset.section === section) {
-            link.classList.add('active');
-        }
+    // Determine category for this section
+    const category = sectionCategories[section] || 'lore';
+
+    // If it's a categorized section, ensure submenu is visible
+    if (category !== 'none' && category !== currentCategory) {
+        currentCategory = category;
+        document.querySelectorAll('.nav-category').forEach(link => {
+            link.classList.toggle('active', link.dataset.category === category);
+        });
+        document.querySelectorAll('.submenu-group').forEach(group => {
+            group.style.display = group.dataset.category === category ? 'flex' : 'none';
+        });
+    }
+
+    // Hide submenu for non-categorized sections
+    if (category === 'none') {
+        document.querySelectorAll('.nav-category').forEach(link => link.classList.remove('active'));
+    }
+
+    // Update main nav active state for direct links
+    document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+        link.classList.toggle('active', link.dataset.section === section);
+    });
+
+    // Update submenu active state
+    document.querySelectorAll('.submenu-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.section === section);
     });
 
     // Update section visibility

@@ -22,60 +22,67 @@
             <span class="version-badge">HLINIK Phase 35</span>
         </div>
         <nav class="main-nav" id="mainNav">
-            <a href="#dashboard" class="nav-link active" data-section="dashboard">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard" data-category="none">
                 <span class="nav-icon">📊</span>
                 <span>Dashboard</span>
             </a>
-            <a href="#role" class="nav-link" data-section="role">
-                <span class="nav-icon">🎭</span>
-                <span>Role</span>
-            </a>
-            <a href="#uzivatele" class="nav-link" data-section="uzivatele">
-                <span class="nav-icon">👥</span>
-                <span>Uživatelé</span>
-            </a>
-            <a href="#vztahy" class="nav-link" data-section="vztahy">
-                <span class="nav-icon">🔗</span>
-                <span>Vztahy</span>
-            </a>
-            <a href="#manualy" class="nav-link" data-section="manualy">
-                <span class="nav-icon">📖</span>
-                <span>Manuály</span>
-            </a>
-            <a href="#system" class="nav-link" data-section="system">
-                <span class="nav-icon">⚙️</span>
-                <span>Systém</span>
-            </a>
-            <a href="#lore" class="nav-link" data-section="lore">
+            <a href="#lore" class="nav-link nav-category" data-category="lore">
                 <span class="nav-icon">📜</span>
                 <span>Lore</span>
             </a>
-            <a href="#hlinik" class="nav-link" data-section="hlinik">
+            <a href="#hlinik" class="nav-link nav-category" data-category="hlinik">
                 <span class="nav-icon">🏭</span>
                 <span>HLINÍK</span>
             </a>
-            <a href="#compliance" class="nav-link" data-section="compliance">
-                <span class="nav-icon">🔍</span>
-                <span>Audit</span>
-            </a>
-            <a href="#tests" class="nav-link" data-section="tests">
-                <span class="nav-icon">🧪</span>
-                <span>Testy</span>
-            </a>
-            <a href="#hraci" class="nav-link" data-section="hraci">
-                <span class="nav-icon">🎮</span>
-                <span>Hráči</span>
-            </a>
-            <a href="#exporty" class="nav-link" data-section="exporty">
+            <a href="#exporty" class="nav-link" data-section="exporty" data-category="none">
                 <span class="nav-icon">📥</span>
                 <span>Exporty</span>
             </a>
         </nav>
         <div class="header-actions">
-            <a href="/lore-web/" class="btn-secondary" target="_blank">Starý Lore Web</a>
             <a href="/" class="btn-secondary">← Zpět do aplikace</a>
         </div>
     </header>
+
+    <!-- Submenu Bar -->
+    <nav class="submenu-bar" id="submenuBar">
+        <!-- Lore submenu -->
+        <div class="submenu-group" data-category="lore">
+            <a href="#role" class="submenu-link" data-section="role">
+                <span class="submenu-icon">🎭</span> Role
+            </a>
+            <a href="#uzivatele" class="submenu-link" data-section="uzivatele">
+                <span class="submenu-icon">👥</span> Uživatelé
+            </a>
+            <a href="#vztahy" class="submenu-link" data-section="vztahy">
+                <span class="submenu-icon">🔗</span> Vztahy
+            </a>
+            <a href="#manualy" class="submenu-link" data-section="manualy">
+                <span class="submenu-icon">📖</span> Manuály
+            </a>
+            <a href="#lore" class="submenu-link" data-section="lore">
+                <span class="submenu-icon">📜</span> Příběh
+            </a>
+            <a href="#hraci" class="submenu-link" data-section="hraci">
+                <span class="submenu-icon">🎮</span> Hráči
+            </a>
+        </div>
+        <!-- HLINIK submenu -->
+        <div class="submenu-group" data-category="hlinik" style="display: none;">
+            <a href="#hlinik" class="submenu-link" data-section="hlinik">
+                <span class="submenu-icon">🏭</span> Systém
+            </a>
+            <a href="#system" class="submenu-link" data-section="system">
+                <span class="submenu-icon">⚙️</span> Konfigurace
+            </a>
+            <a href="#tests" class="submenu-link" data-section="tests">
+                <span class="submenu-icon">🧪</span> Testy
+            </a>
+            <a href="#compliance" class="submenu-link" data-section="compliance">
+                <span class="submenu-icon">🔍</span> Audit
+            </a>
+        </div>
+    </nav>
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">

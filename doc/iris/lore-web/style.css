@@ -178,6 +178,71 @@ a:hover {
     font-size: 1rem;
 }
 
+/* Category navigation */
+.nav-category {
+    position: relative;
+}
+
+.nav-category::after {
+    content: '▼';
+    font-size: 0.6rem;
+    margin-left: 4px;
+    opacity: 0.6;
+}
+
+.nav-category.active::after {
+    content: '▲';
+}
+
+/* ============================================
+   SUBMENU BAR
+   ============================================ */
+
+.submenu-bar {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--space-sm) var(--space-xl);
+    display: flex;
+    justify-content: center;
+    min-height: 48px;
+}
+
+.submenu-group {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.submenu-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.submenu-link:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-accent);
+}
+
+.submenu-link.active {
+    background: var(--bg-card);
+    color: var(--accent-gold);
+    border-color: var(--accent-gold-dim);
+}
+
+.submenu-icon {
+    font-size: 0.9rem;
+}
+
 .header-actions {
     display: flex;
     gap: var(--space-sm);
