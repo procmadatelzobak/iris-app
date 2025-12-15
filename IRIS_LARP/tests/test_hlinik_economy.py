@@ -41,7 +41,7 @@ def test_tax_collection(db):
 
     # Action: Pay Function
     # Rating 100%
-    result = process_task_payment(task.id, 100)
+    result = process_task_payment(task.id, 100, db)
     
     # Reload from DB
     db.refresh(user)

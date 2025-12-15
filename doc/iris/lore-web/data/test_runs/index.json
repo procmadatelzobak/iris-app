@@ -1,5 +1,20 @@
 [
   {
+    "timestamp": "2025-12-15T17:10:05.000000",
+    "scenario_name": "Phase 36B: HLINIK Advanced Sync & Purgatory Recovery",
+    "status": "success",
+    "duration": 1200.0,
+    "filename": "manual_test_hlinik_advanced.json",
+    "stats": {
+      "total_tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "warnings": 1,
+      "critical_bugs": 0,
+      "screenshots": 4
+    }
+  },
+  {
     "timestamp": "2025-12-15T14:55:00.000000",
     "scenario_name": "Phase 36: Advanced Multi-User Workflow & Economy Integration",
     "status": "success",

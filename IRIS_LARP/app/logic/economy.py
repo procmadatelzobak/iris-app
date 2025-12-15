@@ -1,8 +1,9 @@
+from typing import Optional
 from sqlalchemy.orm import Session
 from ..database import SessionLocal, Task, TaskStatus, User
 from .gamestate import gamestate
 
-def process_task_payment(task_id: int, rating: int):
+def process_task_payment(task_id: int, rating: int, db: Optional[Session] = None):
     """
     Processes the payment for a completed task.
     - Calculates reward based on rating (0-100%).
@@ -11,7 +12,10 @@ def process_task_payment(task_id: int, rating: int):
     - Updates Treasury Balance.
     - Marks task as PAID.
     """
-    db = SessionLocal()
+    owns_session = False
+    if db is None:
+        db = SessionLocal()
+        owns_session = True
     try:
         task = db.query(Task).filter(Task.id == task_id).first()
         if not task:
@@ -60,4 +64,5 @@ def process_task_payment(task_id: int, rating: int):
         db.rollback()
         return {"error": str(e)}
     finally:
-        db.close()
+        if owns_session:
+            db.close()

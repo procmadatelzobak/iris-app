@@ -34,11 +34,8 @@ def test_tax_collection():
     db.add(task)
     db.commit()
 
-    # Mock SessionLocal in economy module
-    from unittest.mock import patch
-    with patch('IRIS_LARP.app.logic.economy.SessionLocal', return_value=db):
-        # Action: Pay Function
-        result = process_task_payment(task.id, 100)
+    # Action: Pay Function using injected session
+    result = process_task_payment(task.id, 100, db)
     
     # Reload from DB
     db.refresh(user)
