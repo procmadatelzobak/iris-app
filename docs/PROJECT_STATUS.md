@@ -192,8 +192,8 @@ LLM configuration APIs (and UI consumers) live in `IRIS_LARP/app/routers/admin_a
 
 Full censorship safeguard for chat conversations controlled from the ROOT dashboard (Chats tab).
 
-- [ ] **LLM Agent (Cenzura)**: Additional LLM profile dedicated to generating substitute replies when censorship is active.
-- [ ] **Per-Participant Toggles**: Panic Mode switch for each conversation, separately for the user side and the agent side.
-- [ ] **Message Handling**: When enabled, any outgoing message from the toggled participant is removed during the optimization step and replaced by the LLM agent's response to the user prompt.
+- [x] **LLM Agent (Cenzura)**: Additional LLM profile dedicated to generating substitute replies when censorship is active.
+- [x] **Per-Participant Toggles**: Panic Mode switch for each conversation, separately for the user side and the agent side.
+- [x] **Message Handling**: When enabled, any outgoing message from the toggled participant is removed during the optimization step and replaced by the LLM agent's response to the user prompt.
 - [ ] **UI Indicators**: Visual cue on the first tab via colored usernames (user/agent) and colored conversation card area with a label "panický mód zapnut" to confirm activation.
 - [ ] **Dashboard Controls**: Panic Mode toggles follow the same placement and behavior pattern as other agent configurations on the ROOT chat dashboard.

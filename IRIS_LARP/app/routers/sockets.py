@@ -2,11 +2,23 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, HTTPExce
 from typing import Annotated
 from ..logic.routing import routing_logic
 from ..logic.gamestate import gamestate
+from ..logic.llm_core import llm_service
 from ..dependencies import get_current_user
-from ..database import User, UserRole
+from ..database import User, UserRole, SessionLocal, ChatLog
 from ..config import settings
 import json
 from jose import jwt, JWTError
+from sqlalchemy.exc import SQLAlchemyError
+
+PANIC_PROMPT_FALLBACK = "Panický režim nahrazuje odpověď."
+PANIC_RESPONSE_FALLBACK = "PANICKÝ MÓD: Odpověď nahrazena."
+PANIC_USER_FALLBACK = "PANICKÝ MÓD: Zpráva nahrazena."
+
+def get_latest_user_message(db_session, session_id: int):
+    try:
+        return db_session.query(ChatLog).filter(ChatLog.session_id == session_id).order_by(ChatLog.timestamp.desc()).first()
+    except SQLAlchemyError:
+        return None
 
 router = APIRouter(tags=["sockets"])
 
@@ -24,7 +36,6 @@ async def get_user_from_token(token: str):
         # Issue: we need the numerical ID. 
         # To avoid DB call on every connect/msg, let's embed ID in token or fetch once.
         # Fetching DB here is safer.
-        from ..database import SessionLocal, User
         db = SessionLocal()
         user = db.query(User).filter(User.username == username).first()
         db.close()
@@ -78,7 +89,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
 
     
     # Send History on Connect (User/Agent logic)
-    from ..database import SessionLocal, ChatLog
     db = SessionLocal()
     try:
         # Determine which Session to load
@@ -222,10 +232,26 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     # v1.5 AI Optimizer && v2.0 Confirm Flow
                     final_content = content
                     was_rewritten = False
+                    panic_state = routing_logic.get_panic_state(session_id)
 
                     is_confirming = msg_data.get("confirm_opt", False) # Flag sent by client
 
-                    if gamestate.optimizer_active and not is_confirming:
+                    # Panic mode for agent: override outgoing content with censorship LLM
+                    if panic_state.get("agent"):
+                        prompt_source = routing_logic.get_last_user_message(session_id)
+                        if not prompt_source:
+                            latest_user = get_latest_user_message(db_save, session_id)
+                            if latest_user and latest_user.sender and latest_user.sender.role == UserRole.USER and latest_user.content:
+                                prompt_source = latest_user.content
+                                routing_logic.set_last_user_message(session_id, prompt_source)
+                        if not prompt_source:
+                            prompt_source = content
+                        final_content = llm_service.generate_response(
+                            gamestate.llm_config_censor,
+                            [{"role": "user", "content": prompt_source or PANIC_PROMPT_FALLBACK}]
+                        ) or PANIC_RESPONSE_FALLBACK
+                        was_rewritten = True
+                    elif gamestate.optimizer_active and not is_confirming:
                         # Check Power
                         current_load = gamestate.power_load
                         cost = gamestate.COST_OPTIMIZER_ACTIVE
@@ -237,7 +263,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                                 "type": "optimizing_start"
                             }))
 
-                            from ..logic.llm_core import llm_service
                             try:
                                 rewritten = await llm_service.rewrite_message(
                                     content,
@@ -273,7 +298,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "content": final_content,
                         "session_id": session_id,
                         "id": log.id,
-                        "is_optimized": log.is_optimized  # PHASE 27: Report immunity flag
+                        "is_optimized": log.is_optimized,  # PHASE 27: Report immunity flag
+                        "panic": panic_state.get("agent", False)
                     }), exclude_ws=websocket)
                     
                     # No feedback needed if confirmed, client knows.
@@ -448,6 +474,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         continue
 
                     session_id = get_logical_id(user.username, "user")
+                    panic_state = routing_logic.get_panic_state(session_id)
+                    if panic_state.get("user"):
+                        censored = llm_service.generate_response(
+                            gamestate.llm_config_censor,
+                            [{"role": "user", "content": content}]
+                        )
+                        content = censored or PANIC_USER_FALLBACK
+                    routing_logic.set_last_user_message(session_id, content)
                     # Save User Message
                     log = ChatLog(session_id=session_id, sender_id=user.id, content=content)
                     db_save.add(log)
@@ -461,7 +495,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "sender": user.username,
                         "role": "user",
                         "content": content,
-                        "id": log.id
+                        "id": log.id,
+                        "panic": panic_state.get("user", False)
                     }), exclude_ws=websocket)
                     
                     # CHECK FOR AUTOPILOT
@@ -486,7 +521,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         history.append({"role": "user", "content": content})
                         
                         # 2. Generate Reply
-                        from ..logic.llm_core import llm_service
                         reply = llm_service.generate_response(gamestate.llm_config_hyper, history)
                         
                         # 3. Add Reply to History
@@ -613,6 +647,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         labels_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'admin_labels.json')
                         if os.path.exists(labels_path):
                             os.remove(labels_path)
+                        routing_logic.panic_modes = {}
+                        routing_logic.latest_user_messages = {}
                         
                         # Broadcast failover message to ALL users
                         await routing_logic.broadcast_global(json.dumps({

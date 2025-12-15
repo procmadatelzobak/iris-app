@@ -24,7 +24,8 @@ async def get_llm_config(admin=Depends(get_current_admin)):
         "optimizer": {
             **gamestate.llm_config_optimizer.dict(),
             "prompt": gamestate.optimizer_prompt
-        }
+        },
+        "censor": gamestate.llm_config_censor
     }
 
 class OptimizerConfigPayload(BaseModel):
@@ -47,6 +48,8 @@ async def set_llm_config(config_type: str, payload: dict = Body(...), admin=Depe
             system_prompt=parsed.system_prompt
         )
         gamestate.optimizer_prompt = parsed.prompt
+    elif config_type == "censor":
+        gamestate.llm_config_censor = LLMConfig(**payload)
     else:
         raise HTTPException(status_code=400, detail="Invalid config type")
     return {"status": "ok", "config_type": config_type}
@@ -86,6 +89,22 @@ async def set_key(update: KeyUpdate, admin=Depends(get_current_root)):
 # --- ECONOMY & TASKS ---
 from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog, StatusLevel
 from ..logic.routing import routing_logic
+
+class PanicToggle(BaseModel):
+    session_id: int
+    target: str  # "user" or "agent"
+    enabled: bool
+
+@router.get("/panic/state/{session_id}")
+async def get_panic_state(session_id: int, admin=Depends(get_current_admin)):
+    return routing_logic.get_panic_state(session_id)
+
+@router.post("/panic/toggle")
+async def set_panic(toggle: PanicToggle, admin=Depends(get_current_admin)):
+    if toggle.target not in ["user", "agent"]:
+        raise HTTPException(status_code=400, detail="target must be 'user' or 'agent'")
+    routing_logic.set_panic_mode(toggle.session_id, toggle.target, toggle.enabled)
+    return {"status": "ok", "state": routing_logic.get_panic_state(toggle.session_id)}
 
 class EconomyAction(BaseModel):
     user_id: int
@@ -735,4 +754,3 @@ subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.d
     subprocess.Popen([sys.executable, '-c', reset_script], start_new_session=True)
     
     return {"status": "resetting", "message": "Database will be deleted and server restarted in ~5 seconds"}
-

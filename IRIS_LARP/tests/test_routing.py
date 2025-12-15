@@ -132,6 +132,29 @@ async def test_pending_response_tracking():
     assert not routing_logic.is_session_timed_out(session_id)
 
 
+def test_panic_mode_state_toggle():
+    """Ensure panic mode state toggles per session/role are tracked."""
+    from app.logic.routing import routing_logic
+
+    routing_logic.panic_modes = {}
+    session_id = 2
+
+    state = routing_logic.get_panic_state(session_id)
+    assert state["user"] is False and state["agent"] is False
+
+    routing_logic.set_panic_mode(session_id, "user", True)
+    state = routing_logic.get_panic_state(session_id)
+    assert state["user"] is True and state["agent"] is False
+
+    routing_logic.set_panic_mode(session_id, "agent", True)
+    state = routing_logic.get_panic_state(session_id)
+    assert state["user"] is True and state["agent"] is True
+
+    routing_logic.clear_panic_state(session_id)
+    state = routing_logic.get_panic_state(session_id)
+    assert state["user"] is False and state["agent"] is False
+
+
 @pytest.mark.asyncio
 async def test_timeout_error_sent_to_user():
     """Test that timeout error message is sent to user when agent doesn't respond."""
