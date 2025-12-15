@@ -1,0 +1,2413 @@
+{
+  "generated_at": "2025-12-15T13:06:30.365446",
+  "source": "IRIS_LARP/docs/FEATURE_LIST.md",
+  "statistics": {
+    "total": 240,
+    "done": 185,
+    "partial": 5,
+    "todo": 49,
+    "in_progress": 1
+  },
+  "features": [
+    {
+      "id": "feat_001",
+      "category": "Core Features",
+      "subcategory": "Authentication & Authorization",
+      "role": "All",
+      "name": "JWT-based authentication",
+      "description": "JWT-based authentication",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_002",
+      "category": "Core Features",
+      "subcategory": "Authentication & Authorization",
+      "role": "All",
+      "name": "HTTP-only cookie sessions",
+      "description": "HTTP-only cookie sessions",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_003",
+      "category": "Core Features",
+      "subcategory": "Authentication & Authorization",
+      "role": "All",
+      "name": "Role-based access control (User/Agent/Admin/Root)",
+      "description": "Role-based access control (User/Agent/Admin/Root)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_004",
+      "category": "Core Features",
+      "subcategory": "Authentication & Authorization",
+      "role": "All",
+      "name": "Automatic terminal routing based on role",
+      "description": "Automatic terminal routing based on role",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_005",
+      "category": "Core Features",
+      "subcategory": "Authentication & Authorization",
+      "role": "All",
+      "name": "Secure logout with cookie cleanup",
+      "description": "Secure logout with cookie cleanup",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_006",
+      "category": "Core Features",
+      "subcategory": "Real-Time Communication",
+      "role": "All",
+      "name": "WebSocket-based instant messaging",
+      "description": "WebSocket-based instant messaging",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_007",
+      "category": "Core Features",
+      "subcategory": "Real-Time Communication",
+      "role": "All",
+      "name": "Session-based chat (8 isolated channels)",
+      "description": "Session-based chat (8 isolated channels)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_008",
+      "category": "Core Features",
+      "subcategory": "Real-Time Communication",
+      "role": "All",
+      "name": "Dynamic agent routing via global shift offset",
+      "description": "Dynamic agent routing via global shift offset",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_009",
+      "category": "Core Features",
+      "subcategory": "Real-Time Communication",
+      "role": "All",
+      "name": "Message history persistence",
+      "description": "Message history persistence",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_010",
+      "category": "Core Features",
+      "subcategory": "Real-Time Communication",
+      "role": "All",
+      "name": "Typing indicators (User & Agent mirroring)",
+      "description": "Typing indicators (User & Agent mirroring)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_011",
+      "category": "Core Features",
+      "subcategory": "Economy System",
+      "role": "All",
+      "name": "Credit-based user economy (default",
+      "description": "100 credits)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_012",
+      "category": "Core Features",
+      "subcategory": "Economy System",
+      "role": "All",
+      "name": "Task-based rewards",
+      "description": "Task-based rewards",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_013",
+      "category": "Core Features",
+      "subcategory": "Economy System",
+      "role": "All",
+      "name": "Configurable tax rate (default",
+      "description": "20%)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_014",
+      "category": "Core Features",
+      "subcategory": "Economy System",
+      "role": "All",
+      "name": "Treasury management (admin-controlled)",
+      "description": "Treasury management (admin-controlled)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_015",
+      "category": "Core Features",
+      "subcategory": "Economy System",
+      "role": "All",
+      "name": "Purgatory Mode",
+      "description": "Automatic lockout when credits < 0",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_016",
+      "category": "Core Features",
+      "subcategory": "Economy System",
+      "role": "All",
+      "name": "Auto-unlock when credits restored",
+      "description": "Auto-unlock when credits restored",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_017",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "User task requests (WebSocket)",
+      "description": "User task requests (WebSocket)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_018",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "Admin task approval with custom descriptions",
+      "description": "Admin task approval with custom descriptions",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_019",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "Task status tracking (Pending/Active/Completed/Paid/Rejected)",
+      "description": "Task status tracking (Pending/Active/Completed/Paid/Rejected)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_020",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "Configurable task rewards",
+      "description": "Configurable task rewards",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_021",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "Task submission and payment flow",
+      "description": "Task submission and payment flow",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_022",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "Task editing during approval",
+      "description": "Task editing during approval",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_023",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "Rating-based payment (0-100%)",
+      "description": "Rating-based payment (0-100%)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_024",
+      "category": "Core Features",
+      "subcategory": "Task System",
+      "role": "All",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_025",
+      "category": "User Features",
+      "subcategory": "Terminal Interface",
+      "role": "User",
+      "name": "Retro terminal aesthetic",
+      "description": "Retro terminal aesthetic",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_026",
+      "category": "User Features",
+      "subcategory": "Terminal Interface",
+      "role": "User",
+      "name": "4 Theme Variants",
+      "description": "Low (basic), Mid (nature), High (luxury), Party (chaos)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_027",
+      "category": "User Features",
+      "subcategory": "Terminal Interface",
+      "role": "User",
+      "name": "CRT scan-line effects",
+      "description": "CRT scan-line effects",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_028",
+      "category": "User Features",
+      "subcategory": "Terminal Interface",
+      "role": "User",
+      "name": "Dynamic theme switching via WebSocket",
+      "description": "Dynamic theme switching via WebSocket",
+      "status": "DONE",
+      "test_status": "Automated - PASS"
+    },
+    {
+      "id": "feat_029",
+      "category": "User Features",
+      "subcategory": "Terminal Interface",
+      "role": "User",
+      "name": "Logout button",
+      "description": "Logout button",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_030",
+      "category": "User Features",
+      "subcategory": "Communication",
+      "role": "User",
+      "name": "Send/receive messages to/from assigned agent",
+      "description": "Send/receive messages to/from assigned agent",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_031",
+      "category": "User Features",
+      "subcategory": "Communication",
+      "role": "User",
+      "name": "Real-time message updates",
+      "description": "Real-time message updates",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_032",
+      "category": "User Features",
+      "subcategory": "Communication",
+      "role": "User",
+      "name": "Report System",
+      "description": "Flag inappropriate agent messages",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_033",
+      "category": "User Features",
+      "subcategory": "Communication",
+      "role": "User",
+      "name": "Report immunity for AI-optimized messages",
+      "description": "Report immunity for AI-optimized messages",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_034",
+      "category": "User Features",
+      "subcategory": "Communication",
+      "role": "User",
+      "name": "Typing indicator broadcast",
+      "description": "Typing indicator broadcast",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_035",
+      "category": "User Features",
+      "subcategory": "Status Display",
+      "role": "User",
+      "name": "Credit balance indicator",
+      "description": "Credit balance indicator",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_036",
+      "category": "User Features",
+      "subcategory": "Status Display",
+      "role": "User",
+      "name": "Task status display (None/Pending/Active)",
+      "description": "Task status display (None/Pending/Active)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_037",
+      "category": "User Features",
+      "subcategory": "Status Display",
+      "role": "User",
+      "name": "System overload warnings (visual glitch effects)",
+      "description": "System overload warnings (visual glitch effects)",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_038",
+      "category": "User Features",
+      "subcategory": "Task Management",
+      "role": "User",
+      "name": "\"Request New Task\" button",
+      "description": "\"Request New Task\" button",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_039",
+      "category": "User Features",
+      "subcategory": "Task Management",
+      "role": "User",
+      "name": "Task description display when active",
+      "description": "Task description display when active",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_040",
+      "category": "User Features",
+      "subcategory": "Task Management",
+      "role": "User",
+      "name": "Task submission textarea",
+      "description": "Task submission textarea",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_041",
+      "category": "User Features",
+      "subcategory": "Task Management",
+      "role": "User",
+      "name": "Submit button with confirmation",
+      "description": "Submit button with confirmation",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_042",
+      "category": "User Features",
+      "subcategory": "Purgatory Mode (Debt Lockout)",
+      "role": "User",
+      "name": "Chat Blocked",
+      "description": "Red overlay on chat panel when locked",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_043",
+      "category": "User Features",
+      "subcategory": "Purgatory Mode (Debt Lockout)",
+      "role": "User",
+      "name": "Tasks Allowed",
+      "description": "Can still request & submit tasks",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_044",
+      "category": "User Features",
+      "subcategory": "Purgatory Mode (Debt Lockout)",
+      "role": "User",
+      "name": "Automatic unlock when balance restored",
+      "description": "Automatic unlock when balance restored",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_045",
+      "category": "User Features",
+      "subcategory": "Purgatory Mode (Debt Lockout)",
+      "role": "User",
+      "name": "Clear messaging (\"COMMUNICATION OFFLINE\", \"DEBT RECOVERY REQUIRED\")",
+      "description": "Clear messaging (\"COMMUNICATION OFFLINE\", \"DEBT RECOVERY REQUIRED\")",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_046",
+      "category": "User Features",
+      "subcategory": "Party Mode (Status: Party)",
+      "role": "User",
+      "name": "Pink/rainbow color scheme",
+      "description": "Pink/rainbow color scheme",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_047",
+      "category": "User Features",
+      "subcategory": "Party Mode (Status: Party)",
+      "role": "User",
+      "name": "Animated bubbles background",
+      "description": "Animated bubbles background",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_048",
+      "category": "User Features",
+      "subcategory": "Party Mode (Status: Party)",
+      "role": "User",
+      "name": "Dynamic visual effects",
+      "description": "Dynamic visual effects",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_049",
+      "category": "User Features",
+      "subcategory": "Party Mode (Status: Party)",
+      "role": "User",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_050",
+      "category": "Agent Features",
+      "subcategory": "Terminal Interface",
+      "role": "Agent",
+      "name": "Retro-functional monochrome design",
+      "description": "Retro-functional monochrome design",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_051",
+      "category": "Agent Features",
+      "subcategory": "Terminal Interface",
+      "role": "Agent",
+      "name": "Session ID indicator",
+      "description": "Session ID indicator",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_052",
+      "category": "Agent Features",
+      "subcategory": "Terminal Interface",
+      "role": "Agent",
+      "name": "Global shift display",
+      "description": "Global shift display",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_053",
+      "category": "Agent Features",
+      "subcategory": "Terminal Interface",
+      "role": "Agent",
+      "name": "Logout button",
+      "description": "Logout button",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_054",
+      "category": "Agent Features",
+      "subcategory": "Communication",
+      "role": "Agent",
+      "name": "Send/receive messages to/from assigned user",
+      "description": "Send/receive messages to/from assigned user",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_055",
+      "category": "Agent Features",
+      "subcategory": "Communication",
+      "role": "Agent",
+      "name": "Message history (filtered by visibility mode)",
+      "description": "Message history (filtered by visibility mode)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_056",
+      "category": "Agent Features",
+      "subcategory": "Communication",
+      "role": "Agent",
+      "name": "Typing indicator broadcast",
+      "description": "Typing indicator broadcast",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_057",
+      "category": "Agent Features",
+      "subcategory": "Communication",
+      "role": "Agent",
+      "name": "Typing Sync",
+      "description": "Real-time input mirroring across devices",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_058",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Message Optimizer",
+      "description": "Message Optimizer",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_059",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Preview optimized version before sending",
+      "description": "Preview optimized version before sending",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_060",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Confirm/Reject workflow",
+      "description": "Confirm/Reject workflow",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_061",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Locks input during optimization",
+      "description": "Locks input during optimization",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_062",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Grants report immunity",
+      "description": "Grants report immunity",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_063",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Autopilot Mode",
+      "description": "Autopilot Mode",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_064",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "AI auto-responds to users",
+      "description": "AI auto-responds to users",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_065",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Toggle ON/OFF per agent",
+      "description": "Toggle ON/OFF per agent",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_066",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Maintains conversation context",
+      "description": "Maintains conversation context",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_067",
+      "category": "Agent Features",
+      "subcategory": "AI Tools",
+      "role": "Agent",
+      "name": "Uses configurable LLM model",
+      "description": "Uses configurable LLM model",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_068",
+      "category": "Agent Features",
+      "subcategory": "Status Display",
+      "role": "Agent",
+      "name": "Response Timer",
+      "description": "Yellow progress bar (configurable deadline)",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_069",
+      "category": "Agent Features",
+      "subcategory": "Status Display",
+      "role": "Agent",
+      "name": "Session ID",
+      "description": "Shows which user the agent is assigned to",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_070",
+      "category": "Agent Features",
+      "subcategory": "Status Display",
+      "role": "Agent",
+      "name": "Shift Offset",
+      "description": "Displays current routing shift",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_071",
+      "category": "Agent Features",
+      "subcategory": "Status Display",
+      "role": "Agent",
+      "name": "Autopilot indicator (ON/OFF state)",
+      "description": "Autopilot indicator (ON/OFF state)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_072",
+      "category": "Agent Features",
+      "subcategory": "Visibility Modes",
+      "role": "Agent",
+      "name": "NORMAL",
+      "description": "Full chat history visible",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_073",
+      "category": "Agent Features",
+      "subcategory": "Visibility Modes",
+      "role": "Agent",
+      "name": "BLACKBOX",
+      "description": "No history, blind responses",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_074",
+      "category": "Agent Features",
+      "subcategory": "Visibility Modes",
+      "role": "Agent",
+      "name": "FORENSIC",
+      "description": "Enhanced view (reserved for future)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_075",
+      "category": "Agent Features",
+      "subcategory": "Visibility Modes",
+      "role": "Agent",
+      "name": "EPHEMERAL",
+      "description": "(reserved for future)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_076",
+      "category": "Agent Features",
+      "subcategory": "Visibility Modes",
+      "role": "Agent",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_077",
+      "category": "Admin Features",
+      "subcategory": "Dashboard Structure",
+      "role": "Admin",
+      "name": "Hub View",
+      "description": "4-station selection (Monitor/Control/Economy/Tasks)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_078",
+      "category": "Admin Features",
+      "subcategory": "Dashboard Structure",
+      "role": "Admin",
+      "name": "Chernobyl Console Theme",
+      "description": "Retro-industrial aesthetic",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_079",
+      "category": "Admin Features",
+      "subcategory": "Dashboard Structure",
+      "role": "Admin",
+      "name": "Editable Labels",
+      "description": "Customize Czech \"nonsense\" labels",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_080",
+      "category": "Admin Features",
+      "subcategory": "Dashboard Structure",
+      "role": "Admin",
+      "name": "Navigation Tabs",
+      "description": "Switch between stations",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_081",
+      "category": "Admin Features",
+      "subcategory": "Dashboard Structure",
+      "role": "Admin",
+      "name": "Logout button",
+      "description": "Logout button",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_082",
+      "category": "Admin Features",
+      "subcategory": "Station 1: Monitor (Panopticon)",
+      "role": "Admin",
+      "name": "Overview Tab",
+      "description": "Split view (Sessions + Mini Log)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_083",
+      "category": "Admin Features",
+      "subcategory": "Station 1: Monitor (Panopticon)",
+      "role": "Admin",
+      "name": "Chats Tab",
+      "description": "Live chat grid (8 sessions)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_084",
+      "category": "Admin Features",
+      "subcategory": "Station 1: Monitor (Panopticon)",
+      "role": "Admin",
+      "name": "System Logs Tab",
+      "description": "Filterable event log",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_085",
+      "category": "Admin Features",
+      "subcategory": "Station 1: Monitor (Panopticon)",
+      "role": "Admin",
+      "name": "Real-time message updates",
+      "description": "Real-time message updates",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_086",
+      "category": "Admin Features",
+      "subcategory": "Station 1: Monitor (Panopticon)",
+      "role": "Admin",
+      "name": "Color-coded log events (ACTION/ROOT/REPORT/TASK)",
+      "description": "Color-coded log events (ACTION/ROOT/REPORT/TASK)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_087",
+      "category": "Admin Features",
+      "subcategory": "Station 1: Monitor (Panopticon)",
+      "role": "Admin",
+      "name": "\"Reset Log\" button",
+      "description": "\"Reset Log\" button",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_088",
+      "category": "Admin Features",
+      "subcategory": "Station 2: Controls",
+      "role": "Admin",
+      "name": "Agency Operation Mode",
+      "description": "Normal/Low Power/Overclock",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_089",
+      "category": "Admin Features",
+      "subcategory": "Station 2: Controls",
+      "role": "Admin",
+      "name": "Visibility Protocols",
+      "description": "Control agent history visibility",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_090",
+      "category": "Admin Features",
+      "subcategory": "Station 2: Controls",
+      "role": "Admin",
+      "name": "Temperature Meter",
+      "description": "Manual override (slider 0-350+)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_091",
+      "category": "Admin Features",
+      "subcategory": "Station 2: Controls",
+      "role": "Admin",
+      "name": "Shift Execution",
+      "description": "\">> EXECUTE SHIFT >>\" button",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_092",
+      "category": "Admin Features",
+      "subcategory": "Station 2: Controls",
+      "role": "Admin",
+      "name": "AI Optimizer",
+      "description": "Toggle ON/OFF, custom prompt",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_093",
+      "category": "Admin Features",
+      "subcategory": "Station 2: Controls",
+      "role": "Admin",
+      "name": "Agent Response Timer",
+      "description": "Configure deadline (seconds)",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_094",
+      "category": "Admin Features",
+      "subcategory": "Station 3: Economy",
+      "role": "Admin",
+      "name": "User credit grid display",
+      "description": "User credit grid display",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_095",
+      "category": "Admin Features",
+      "subcategory": "Station 3: Economy",
+      "role": "Admin",
+      "name": "Fine/Bonus",
+      "description": "Grant or deduct credits",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_096",
+      "category": "Admin Features",
+      "subcategory": "Station 3: Economy",
+      "role": "Admin",
+      "name": "Lock/Unlock",
+      "description": "Manual user lockout toggle",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_097",
+      "category": "Admin Features",
+      "subcategory": "Station 3: Economy",
+      "role": "Admin",
+      "name": "Status Level Buttons",
+      "description": "Set theme (L/M/H/P)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_098",
+      "category": "Admin Features",
+      "subcategory": "Station 3: Economy",
+      "role": "Admin",
+      "name": "Real-time balance updates",
+      "description": "Real-time balance updates",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_099",
+      "category": "Admin Features",
+      "subcategory": "Station 4: Tasks",
+      "role": "Admin",
+      "name": "Pending tasks list",
+      "description": "Pending tasks list",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_100",
+      "category": "Admin Features",
+      "subcategory": "Station 4: Tasks",
+      "role": "Admin",
+      "name": "Approve",
+      "description": "Edit description & set reward",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_101",
+      "category": "Admin Features",
+      "subcategory": "Station 4: Tasks",
+      "role": "Admin",
+      "name": "Pay",
+      "description": "Rate completion (0-100%) and pay reward",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_102",
+      "category": "Admin Features",
+      "subcategory": "Station 4: Tasks",
+      "role": "Admin",
+      "name": "Reject",
+      "description": "Deny task",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_103",
+      "category": "Admin Features",
+      "subcategory": "Station 4: Tasks",
+      "role": "Admin",
+      "name": "Task history view",
+      "description": "Task history view",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_104",
+      "category": "Admin Features",
+      "subcategory": "System Controls",
+      "role": "Admin",
+      "name": "Global Broadcast",
+      "description": "Send message to all users",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_105",
+      "category": "Admin Features",
+      "subcategory": "System Controls",
+      "role": "Admin",
+      "name": "System Reset",
+      "description": "Wipe logs, reset credits, clear tasks",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_106",
+      "category": "Admin Features",
+      "subcategory": "System Controls",
+      "role": "Admin",
+      "name": "Force Shift",
+      "description": "Increment routing offset",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_107",
+      "category": "Admin Features",
+      "subcategory": "Network Graph",
+      "role": "Admin",
+      "name": "Canvas-based visualization of User-Agent connections",
+      "description": "Canvas-based visualization of User-Agent connections",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_108",
+      "category": "Admin Features",
+      "subcategory": "Network Graph",
+      "role": "Admin",
+      "name": "Updates on shift changes",
+      "description": "Updates on shift changes",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_109",
+      "category": "Admin Features",
+      "subcategory": "Network Graph",
+      "role": "Admin",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_110",
+      "category": "ROOT Features",
+      "subcategory": "ROOT Dashboard",
+      "role": "Root",
+      "name": "Dedicated elite admin interface",
+      "description": "Dedicated elite admin interface",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_111",
+      "category": "ROOT Features",
+      "subcategory": "ROOT Dashboard",
+      "role": "Root",
+      "name": "Gold/black color scheme",
+      "description": "Gold/black color scheme",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_112",
+      "category": "ROOT Features",
+      "subcategory": "ROOT Dashboard",
+      "role": "Root",
+      "name": "5 Tabs",
+      "description": "Dashboard, CONFIG, Economy, Chronos, Panopticon",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_113",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "Test Mode Toggle",
+      "description": "Enable/disable quick login buttons",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_114",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "Shows all user buttons on login screen",
+      "description": "Shows all user buttons on login screen",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_115",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "Auto-fills seeded passwords",
+      "description": "Auto-fills seeded passwords",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_116",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "One-click login for testing",
+      "description": "One-click login for testing",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_117",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "AI Configuration",
+      "description": "AI Configuration",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_118",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "Optimizer prompt customization",
+      "description": "Optimizer prompt customization",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_119",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "Autopilot model selection",
+      "description": "Autopilot model selection",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_120",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "Save/load config via API",
+      "description": "Save/load config via API",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_121",
+      "category": "ROOT Features",
+      "subcategory": "CONFIG Tab (Developer Tools)",
+      "role": "Root",
+      "name": "System Information",
+      "description": "Version, user count, database type",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_122",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "System Status",
+      "description": "Shift offset, online users, temperature",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_123",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "Physics Constants",
+      "description": "Tax rate, power capacity tuning",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_124",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "Executive Protocols",
+      "description": "Executive Protocols",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_125",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "Force shift",
+      "description": "Force shift",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_126",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "Global broadcast",
+      "description": "Global broadcast",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_127",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "System reset (NUKE)",
+      "description": "System reset (NUKE)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_128",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "Reload UI",
+      "description": "Reload UI",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_129",
+      "category": "ROOT Features",
+      "subcategory": "Dashboard Tab",
+      "role": "Root",
+      "name": "System Log Stream",
+      "description": "Real-time log viewer",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_130",
+      "category": "ROOT Features",
+      "subcategory": "Economy Tab",
+      "role": "Root",
+      "name": "Global Economy",
+      "description": "Global Economy",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_131",
+      "category": "ROOT Features",
+      "subcategory": "Economy Tab",
+      "role": "Root",
+      "name": "Stimulus packages (+100, +1000)",
+      "description": "Stimulus packages (+100, +1000)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_132",
+      "category": "ROOT Features",
+      "subcategory": "Economy Tab",
+      "role": "Root",
+      "name": "Taxation (-100)",
+      "description": "Taxation (-100)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_133",
+      "category": "ROOT Features",
+      "subcategory": "Economy Tab",
+      "role": "Root",
+      "name": "Reset all credits",
+      "description": "Reset all credits",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_134",
+      "category": "ROOT Features",
+      "subcategory": "Economy Tab",
+      "role": "Root",
+      "name": "Individual Editor",
+      "description": "Per-user credit/status management",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_135",
+      "category": "ROOT Features",
+      "subcategory": "Chronos Tab (Time Manipulation)",
+      "role": "Root",
+      "name": "Current shift display (large)",
+      "description": "Current shift display (large)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_136",
+      "category": "ROOT Features",
+      "subcategory": "Chronos Tab (Time Manipulation)",
+      "role": "Root",
+      "name": "Jump to Shift",
+      "description": "Set specific shift value",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_137",
+      "category": "ROOT Features",
+      "subcategory": "Chronos Tab (Time Manipulation)",
+      "role": "Root",
+      "name": "Temperature Override",
+      "description": "Slider (0-200%)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_138",
+      "category": "ROOT Features",
+      "subcategory": "Panopticon Tab",
+      "role": "Root",
+      "name": "8x8 grid of all sessions",
+      "description": "8x8 grid of all sessions",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_139",
+      "category": "ROOT Features",
+      "subcategory": "Panopticon Tab",
+      "role": "Root",
+      "name": "Raw chat view",
+      "description": "Raw chat view",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_140",
+      "category": "ROOT Features",
+      "subcategory": "Panopticon Tab",
+      "role": "Root",
+      "name": "User status indicators",
+      "description": "User status indicators",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_141",
+      "category": "ROOT Features",
+      "subcategory": "Panopticon Tab",
+      "role": "Root",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_142",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "Multi-Provider Support",
+      "description": "Multi-Provider Support",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_143",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "OpenAI (GPT-4o, GPT-4o-mini)",
+      "description": "OpenAI (GPT-4o, GPT-4o-mini)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_144",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "OpenRouter (Gemini, various models)",
+      "description": "OpenRouter (Gemini, various models)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_145",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "Gemini (Direct API)",
+      "description": "Gemini (Direct API)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_146",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "Dynamic API Key Management",
+      "description": "Store keys in database",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_147",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "Two LLM Configs",
+      "description": "(Backend):",
+      "status": "PARTIAL",
+      "test_status": null
+    },
+    {
+      "id": "feat_148",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "Task Evaluator (default",
+      "description": "GPT-4o) - API exists, UI not exposed",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_149",
+      "category": "AI Features",
+      "subcategory": "LLM Integration",
+      "role": "AI",
+      "name": "Hyper/Autopilot (default",
+      "description": "Gemini Flash) - Partial UI (model only)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_150",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "Optimizer Prompt",
+      "description": "Customizable prompt for message rewriting",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_151",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "Autopilot Model Selection",
+      "description": "Only model name, no provider selection",
+      "status": "PARTIAL",
+      "test_status": null
+    },
+    {
+      "id": "feat_152",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "Task Evaluator LLM Config",
+      "description": "Not exposed in ROOT UI",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_153",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "Per-Role LLM Provider Selection",
+      "description": "Not implemented in UI",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_154",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "OpenAI API Key",
+      "description": "Input field available",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_155",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "OpenRouter API Key",
+      "description": "Input field available",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_156",
+      "category": "AI Features",
+      "subcategory": "ROOT Dashboard AI Configuration (CONFIG Tab)",
+      "role": "AI",
+      "name": "Gemini API Key",
+      "description": "Backend support exists, UI input missing",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_157",
+      "category": "AI Features",
+      "subcategory": "Message Optimizer",
+      "role": "AI",
+      "name": "Rewrites agent messages in custom tone/style",
+      "description": "Rewrites agent messages in custom tone/style",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_158",
+      "category": "AI Features",
+      "subcategory": "Message Optimizer",
+      "role": "AI",
+      "name": "Preview-Confirm-Reject workflow",
+      "description": "Preview-Confirm-Reject workflow",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_159",
+      "category": "AI Features",
+      "subcategory": "Message Optimizer",
+      "role": "AI",
+      "name": "Configurable system prompt (ROOT/Admin)",
+      "description": "Configurable system prompt (ROOT/Admin)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_160",
+      "category": "AI Features",
+      "subcategory": "Message Optimizer",
+      "role": "AI",
+      "name": "Grants report immunity",
+      "description": "Grants report immunity",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_161",
+      "category": "AI Features",
+      "subcategory": "Message Optimizer",
+      "role": "AI",
+      "name": "Uses hardcoded model (no separate config from HYPER)",
+      "description": "Uses hardcoded model (no separate config from HYPER)",
+      "status": "PARTIAL",
+      "test_status": null
+    },
+    {
+      "id": "feat_162",
+      "category": "AI Features",
+      "subcategory": "Autopilot",
+      "role": "AI",
+      "name": "AI-driven automatic responses",
+      "description": "AI-driven automatic responses",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_163",
+      "category": "AI Features",
+      "subcategory": "Autopilot",
+      "role": "AI",
+      "name": "Maintains per-session context",
+      "description": "Maintains per-session context",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_164",
+      "category": "AI Features",
+      "subcategory": "Autopilot",
+      "role": "AI",
+      "name": "Configurable model selection (partial - model only, not provider)",
+      "description": "Configurable model selection (partial - model only, not provider)",
+      "status": "PARTIAL",
+      "test_status": null
+    },
+    {
+      "id": "feat_165",
+      "category": "AI Features",
+      "subcategory": "Autopilot",
+      "role": "AI",
+      "name": "Toggle per agent",
+      "description": "Toggle per agent",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_166",
+      "category": "AI Features",
+      "subcategory": "Autopilot",
+      "role": "AI",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_167",
+      "category": "UI/UX Features",
+      "subcategory": "Visual Design",
+      "role": "All",
+      "name": "Retro Terminal Aesthetic",
+      "description": "Monospace fonts, green/amber text",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_168",
+      "category": "UI/UX Features",
+      "subcategory": "Visual Design",
+      "role": "All",
+      "name": "CRT Effects",
+      "description": "Scan lines, overlays",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_169",
+      "category": "UI/UX Features",
+      "subcategory": "Visual Design",
+      "role": "All",
+      "name": "Theme System",
+      "description": "CSS variables for easy customization",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_170",
+      "category": "UI/UX Features",
+      "subcategory": "Visual Design",
+      "role": "All",
+      "name": "Responsive Layout",
+      "description": "Flexbox-based design",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_171",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Sound Effects",
+      "description": "Sound Effects",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_172",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Typing sounds",
+      "description": "Typing sounds",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_173",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Message send/receive tones",
+      "description": "Message send/receive tones",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_174",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Error beeps",
+      "description": "Error beeps",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_175",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Visual Indicators",
+      "description": "Visual Indicators",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_176",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Glitch effects on overload",
+      "description": "Glitch effects on overload",
+      "status": "TODO",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_177",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Progress bars (timer, temperature)",
+      "description": "Progress bars (timer, temperature)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_178",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Status badges (locked, active)",
+      "description": "Status badges (locked, active)",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_179",
+      "category": "UI/UX Features",
+      "subcategory": "Feedback Systems",
+      "role": "All",
+      "name": "Toast Notifications",
+      "description": "Context-specific alerts",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_180",
+      "category": "UI/UX Features",
+      "subcategory": "Animations",
+      "role": "All",
+      "name": "Party Bubbles",
+      "description": "Animated .png bubbles for Party theme",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_181",
+      "category": "UI/UX Features",
+      "subcategory": "Animations",
+      "role": "All",
+      "name": "Glitch Effects",
+      "description": "Zalgo text, screen shake on overload",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_182",
+      "category": "UI/UX Features",
+      "subcategory": "Animations",
+      "role": "All",
+      "name": "Fade Transitions",
+      "description": "Smooth tab/view switching",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_183",
+      "category": "UI/UX Features",
+      "subcategory": "Animations",
+      "role": "All",
+      "name": "Pulse Effects",
+      "description": "Attention-grabbing indicators",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_184",
+      "category": "UI/UX Features",
+      "subcategory": "Accessibility",
+      "role": "All",
+      "name": "High Contrast",
+      "description": "Clear text against backgrounds",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_185",
+      "category": "UI/UX Features",
+      "subcategory": "Accessibility",
+      "role": "All",
+      "name": "Status Indicators",
+      "description": "Multiple cues (color + text + icons)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_186",
+      "category": "UI/UX Features",
+      "subcategory": "Accessibility",
+      "role": "All",
+      "name": "Keyboard Navigation",
+      "description": "Tab-friendly forms",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_187",
+      "category": "UI/UX Features",
+      "subcategory": "Localization",
+      "role": "All",
+      "name": "Czech Language",
+      "description": "All UI elements translated",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_188",
+      "category": "UI/UX Features",
+      "subcategory": "Localization",
+      "role": "All",
+      "name": "Editable Labels",
+      "description": "Admin can customize Czech \"nonsense\" terms",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_189",
+      "category": "UI/UX Features",
+      "subcategory": "Localization",
+      "role": "All",
+      "name": "Consistent Terminology",
+      "description": "Unified vocabulary across terminals",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_190",
+      "category": "UI/UX Features",
+      "subcategory": "Localization",
+      "role": "All",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_191",
+      "category": "Developer Features",
+      "subcategory": "Test Mode",
+      "role": "Developer",
+      "name": "Quick login buttons (ROOT-controlled toggle)",
+      "description": "Quick login buttons (ROOT-controlled toggle)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_192",
+      "category": "Developer Features",
+      "subcategory": "Test Mode",
+      "role": "Developer",
+      "name": "Auto-fill seeded passwords",
+      "description": "Auto-fill seeded passwords",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_193",
+      "category": "Developer Features",
+      "subcategory": "Test Mode",
+      "role": "Developer",
+      "name": "One-click user/agent/admin switching",
+      "description": "One-click user/agent/admin switching",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_194",
+      "category": "Developer Features",
+      "subcategory": "Test Mode",
+      "role": "Developer",
+      "name": "Visual indicator when active",
+      "description": "Visual indicator when active",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_195",
+      "category": "Developer Features",
+      "subcategory": "Debugging Tools",
+      "role": "Developer",
+      "name": "System logs (database + console)",
+      "description": "System logs (database + console)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_196",
+      "category": "Developer Features",
+      "subcategory": "Debugging Tools",
+      "role": "Developer",
+      "name": "ROOT panopticon (all sessions visible)",
+      "description": "ROOT panopticon (all sessions visible)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_197",
+      "category": "Developer Features",
+      "subcategory": "Debugging Tools",
+      "role": "Developer",
+      "name": "Network graph visualization",
+      "description": "Network graph visualization",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_198",
+      "category": "Developer Features",
+      "subcategory": "Debugging Tools",
+      "role": "Developer",
+      "name": "Browser console integration",
+      "description": "Browser console integration",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_199",
+      "category": "Developer Features",
+      "subcategory": "Deployment",
+      "role": "Developer",
+      "name": "`install.sh`",
+      "description": "Automated setup",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_200",
+      "category": "Developer Features",
+      "subcategory": "Deployment",
+      "role": "Developer",
+      "name": "`run.sh`",
+      "description": "One-command startup",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_201",
+      "category": "Developer Features",
+      "subcategory": "Deployment",
+      "role": "Developer",
+      "name": "SQLite (single-file database)",
+      "description": "SQLite (single-file database)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_202",
+      "category": "Developer Features",
+      "subcategory": "Deployment",
+      "role": "Developer",
+      "name": "No external dependencies (Docker-free)",
+      "description": "No external dependencies (Docker-free)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_203",
+      "category": "Developer Features",
+      "subcategory": "Deployment",
+      "role": "Developer",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_204",
+      "category": "Power & Performance",
+      "subcategory": "Power System",
+      "role": "System",
+      "name": "Load Calculation",
+      "description": "Base + per-user + per-autopilot + features",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_205",
+      "category": "Power & Performance",
+      "subcategory": "Power System",
+      "role": "System",
+      "name": "Capacity Management",
+      "description": "Configurable power cap",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_206",
+      "category": "Power & Performance",
+      "subcategory": "Power System",
+      "role": "System",
+      "name": "Overload Detection",
+      "description": "Load > Cap triggers glitches",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_207",
+      "category": "Power & Performance",
+      "subcategory": "Power System",
+      "role": "System",
+      "name": "Visual Feedback",
+      "description": "Admin power bar, user glitch effects",
+      "status": "DONE",
+      "test_status": "Manual - Pending"
+    },
+    {
+      "id": "feat_208",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Range",
+      "description": "20-1000 (threshold at 350)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_209",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Decay Modes",
+      "description": "Decay Modes",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_210",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Normal",
+      "description": "-0.5/s",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_211",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Low Power",
+      "description": "-1.5/s",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_212",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Overclock",
+      "description": "+0.1/s",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_213",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Overload Trigger",
+      "description": "Temp > 350 activates glitches",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_214",
+      "category": "Power & Performance",
+      "subcategory": "Temperature System",
+      "role": "System",
+      "name": "Manual Override",
+      "description": "ROOT/Admin slider control",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_215",
+      "category": "Power & Performance",
+      "subcategory": "Performance Optimizations",
+      "role": "System",
+      "name": "Singleton Pattern",
+      "description": "GameState, Routing Logic",
+      "status": "DONE",
+      "test_status": "Automated - PASS"
+    },
+    {
+      "id": "feat_216",
+      "category": "Power & Performance",
+      "subcategory": "Performance Optimizations",
+      "role": "System",
+      "name": "Broadcast Optimization",
+      "description": "Only send on state change",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_217",
+      "category": "Power & Performance",
+      "subcategory": "Performance Optimizations",
+      "role": "System",
+      "name": "Session Management",
+      "description": "Efficient WebSocket connection pooling",
+      "status": "DONE",
+      "test_status": "Automated - PASS"
+    },
+    {
+      "id": "feat_218",
+      "category": "Power & Performance",
+      "subcategory": "State Persistence (Phase 31)",
+      "role": "System",
+      "name": "GameState Export/Import",
+      "description": "Serialize and restore critical state",
+      "status": "DONE",
+      "test_status": "Automated - PASS"
+    },
+    {
+      "id": "feat_219",
+      "category": "Power & Performance",
+      "subcategory": "State Persistence (Phase 31)",
+      "role": "System",
+      "name": "Auto-Save on Shutdown",
+      "description": "State saved to `data/gamestate_dump.json`",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_220",
+      "category": "Power & Performance",
+      "subcategory": "State Persistence (Phase 31)",
+      "role": "System",
+      "name": "Auto-Restore on Startup",
+      "description": "State loaded from JSON file",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_221",
+      "category": "Power & Performance",
+      "subcategory": "State Persistence (Phase 31)",
+      "role": "System",
+      "name": "Error Recovery",
+      "description": "Game loop continues after exceptions",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_222",
+      "category": "Power & Performance",
+      "subcategory": "Security (Phase 31)",
+      "role": "System",
+      "name": "SECRET_KEY Validation",
+      "description": "Warning in dev, error in production",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_223",
+      "category": "Power & Performance",
+      "subcategory": "Security (Phase 31)",
+      "role": "System",
+      "name": "Production Mode Check",
+      "description": "`IRIS_ENV=production` requires secure key",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_224",
+      "category": "Power & Performance",
+      "subcategory": "Documentation (Phase 31)",
+      "role": "System",
+      "name": "In-App Manuals",
+      "description": "Markdown viewer with role-based styling",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_225",
+      "category": "Power & Performance",
+      "subcategory": "Documentation (Phase 31)",
+      "role": "System",
+      "name": "DEPLOYMENT.md",
+      "description": "Single-worker requirement documented",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_226",
+      "category": "Power & Performance",
+      "subcategory": "Task Lifecycle (Phase 32)",
+      "role": "System",
+      "name": "LLM Task Generation",
+      "description": "Auto-generates descriptions based on user status",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_227",
+      "category": "Power & Performance",
+      "subcategory": "Task Lifecycle (Phase 32)",
+      "role": "System",
+      "name": "Grading Modal",
+      "description": "Split view (prompt | submission) for admin review",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_228",
+      "category": "Power & Performance",
+      "subcategory": "Task Lifecycle (Phase 32)",
+      "role": "System",
+      "name": "Rating Modifiers",
+      "description": "0% / 50% / 100% / 200% options",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_229",
+      "category": "Power & Performance",
+      "subcategory": "Task Lifecycle (Phase 32)",
+      "role": "System",
+      "name": "Economy Integration",
+      "description": "Credits to user, tax to treasury",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_230",
+      "category": "Power & Performance",
+      "subcategory": "Task Lifecycle (Phase 32)",
+      "role": "System",
+      "name": "Root Reward Config",
+      "description": "Configurable rewards per status level",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_231",
+      "category": "Power & Performance",
+      "subcategory": "E2E Testing (Phase 33)",
+      "role": "System",
+      "name": "Playwright Integration",
+      "description": "Full browser automation",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_232",
+      "category": "Power & Performance",
+      "subcategory": "E2E Testing (Phase 33)",
+      "role": "System",
+      "name": "Test Suite A",
+      "description": "8-block story test (login→task→purgatory)",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_233",
+      "category": "Power & Performance",
+      "subcategory": "E2E Testing (Phase 33)",
+      "role": "System",
+      "name": "Server Fixture",
+      "description": "Auto-start uvicorn with seeded DB",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_234",
+      "category": "Power & Performance",
+      "subcategory": "E2E Testing (Phase 33)",
+      "role": "System",
+      "name": "Run Script",
+      "description": "Headed and CI modes",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_235",
+      "category": "Power & Performance",
+      "subcategory": "E2E Testing (Phase 33)",
+      "role": "System",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_236",
+      "category": "Feature Status Legend",
+      "subcategory": "Feature Status Legend",
+      "role": "All",
+      "name": "Implemented & Tested",
+      "description": "Implemented & Tested",
+      "status": "DONE",
+      "test_status": "Untested"
+    },
+    {
+      "id": "feat_237",
+      "category": "Feature Status Legend",
+      "subcategory": "Feature Status Legend",
+      "role": "All",
+      "name": "Partial Implementation",
+      "description": "(Backend exists, UI incomplete)",
+      "status": "PARTIAL",
+      "test_status": null
+    },
+    {
+      "id": "feat_238",
+      "category": "Feature Status Legend",
+      "subcategory": "Feature Status Legend",
+      "role": "All",
+      "name": "In Progress",
+      "description": "In Progress",
+      "status": "IN_PROGRESS",
+      "test_status": null
+    },
+    {
+      "id": "feat_239",
+      "category": "Feature Status Legend",
+      "subcategory": "Feature Status Legend",
+      "role": "All",
+      "name": "Planned, Not Started",
+      "description": "/ **Missing**",
+      "status": "TODO",
+      "test_status": null
+    },
+    {
+      "id": "feat_240",
+      "category": "Feature Status Legend",
+      "subcategory": "Feature Status Legend",
+      "role": "All",
+      "name": "--",
+      "description": "--",
+      "status": "TODO",
+      "test_status": null
+    }
+  ]
+}
