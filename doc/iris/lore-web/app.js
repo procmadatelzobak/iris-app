@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderUsersGrid();
     renderRelations();
     updateLastUpdate();
+    // HLINIK features
+    renderFeaturesTable();
+    initFeatureFilters();
 });
 
 async function loadData() {
@@ -1099,15 +1102,3 @@ function switchAudit(auditId) {
 
 // Make function globally available
 window.switchAudit = switchAudit;
-
-// ============================================
-// INITIALIZATION UPDATES
-// ============================================
-
-// Update DOMContentLoaded to include new features
-const originalInit = document.addEventListener;
-document.addEventListener('DOMContentLoaded', () => {
-    // Render features table
-    renderFeaturesTable();
-    initFeatureFilters();
-});
