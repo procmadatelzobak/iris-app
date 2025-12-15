@@ -432,8 +432,14 @@
             </div>
 
             <div class="dashboard-card full-width" style="margin-top:2rem">
-                <h3>📋 Seznam vztahů</h3>
-                <div class="relations-list" id="relationsList">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0;">📋 Seznam vztahů</h3>
+                    <select id="relationsListFilter" class="audit-select" style="min-width: 200px;">
+                        <option value="all">Všechny vztahy</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div id="relationsList">
                     <!-- Dynamicky naplněno -->
                 </div>
             </div>
@@ -2049,7 +2055,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h1>Správa úkolů</h1>
-                    <p class="section-subtitle">Kanban board pro sledování postupu úkolů projektu</p>
+
                 </div>
                 <div style="display: flex; gap: 0.5rem;">
                     <button class="btn-primary" onclick="showIssueModal()">+ Nový úkol</button>
@@ -2316,9 +2322,12 @@ Popište, co se má otestovat...
                     </select>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="display: flex; justify-content: space-between; gap: 1rem;">
                 <button class="btn-secondary" onclick="closeDefinitionModal()">Zrušit</button>
-                <button class="btn-primary" onclick="saveDefinition()">Uložit</button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-secondary" onclick="saveDefinition(true)">Uložit a další</button>
+                    <button class="btn-primary" onclick="saveDefinition(false)">Uložit</button>
+                </div>
             </div>
         </div>
     </div>
@@ -2422,8 +2431,8 @@ Popište, co se má otestovat...
         </div>
     </div>
 
-    <script src="js/graph.js?v=20251215_fix6"></script>
-    <script src="app.js?v=20251215_fix6"></script>
+    <script src="js/graph.js?v=20251215_fix10"></script>
+    <script src="app.js?v=20251215_fix10"></script>
 </body>
 
 </html>

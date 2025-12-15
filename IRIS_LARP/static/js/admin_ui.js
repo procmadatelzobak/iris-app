@@ -12,6 +12,17 @@ let onlineUsernames = new Set();
 
 const TOTAL_SESSIONS = 8;
 
+// --- SHUFFLE ANIMATION STATE (Phase 37) ---
+window.shufflePhase = null;  // 'scatter' | 'reassemble' | null
+window.shuffleStartTime = 0;
+window.prevShift = 0;
+
+function triggerShuffleAnimation() {
+    window.shufflePhase = 'scatter';
+    window.shuffleStartTime = Date.now();
+    console.log('Shuffle animation triggered');
+}
+
 // --- HELPERS ---
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -20,10 +31,22 @@ function getCookie(name) {
     return null;
 }
 
-// Get authentication token (from localStorage or cookie)
+// Get authentication token (from URL param > sessionStorage > cookie)
 function getAuthToken() {
-    let token = localStorage.getItem('token');
+    // Check URL param first (for tab isolation)
+    const urlParams = new URLSearchParams(window.location.search);
+    let token = urlParams.get('token');
+
+    if (token) {
+        // Save to sessionStorage for subsequent API calls
+        sessionStorage.setItem('token', token);
+    } else {
+        // Try sessionStorage
+        token = sessionStorage.getItem('token');
+    }
+
     if (!token) {
+        // Fallback to cookie
         token = getCookie('access_token');
         if (token && token.startsWith('"')) token = token.slice(1, -1);
     }
@@ -349,8 +372,22 @@ function startGraphLoop() {
         for (let i = 1; i <= TOTAL_SESSIONS; i++) {
             const angle = (i - 1) / TOTAL_SESSIONS * Math.PI * 2;
 
-            // Users orbit (Far out,Green)
-            const wobble = Math.sin(time * 0.5 + i) * 15;
+            // --- SHUFFLE ANIMATION WOBBLE FACTOR (Phase 37) ---
+            let wobbleFactor = 1.0;
+            if (window.shufflePhase) {
+                const elapsed = (Date.now() - window.shuffleStartTime) / 1000;
+                if (window.shufflePhase === 'scatter' && elapsed < 0.4) {
+                    wobbleFactor = 3.0 + Math.sin(elapsed * 20) * 2;  // Chaotic scatter
+                } else if (elapsed < 0.8) {
+                    window.shufflePhase = 'reassemble';
+                    wobbleFactor = 2.0 - (elapsed - 0.4) * 3;  // Converging back
+                } else {
+                    window.shufflePhase = null;  // Done
+                }
+            }
+
+            // Users orbit (Far out, Green)
+            const wobble = Math.sin(time * 0.5 + i) * 15 * wobbleFactor;
             const x = cx + Math.cos(angle) * (radius + wobble);
             const y = cy + Math.sin(angle) * (radius + wobble);
 
@@ -359,30 +396,47 @@ function startGraphLoop() {
             if (agentIndex < 0) agentIndex += TOTAL_SESSIONS;
             const agentId = agentIndex + 1;
 
-            // Agents orbit (Middle, Purple, Circular as requested)
-            // "Agents ať krouží na kulaté orbitě, dál od středu"
-            // Previous was 0.35 + wobbles. Now fixed circle at 0.6
+            // Check online status for this session (Phase 37)
+            const isUserOnline = onlineUsernames.has(`user${i}`);
+            const isAgentOnline = onlineUsernames.has(`agent${agentId}`);
+            const isSessionActive = isUserOnline && isAgentOnline;
+
+            // Agents orbit (Middle, Purple, Circular)
             const agentBaseAngle = (agentId - 1) / TOTAL_SESSIONS * Math.PI * 2;
             const innerR = radius * 0.6;
-            // Simple rotation
+            // Add wobble during shuffle
+            const agWobble = window.shufflePhase ? Math.sin(time * 10 + agentId) * 20 * wobbleFactor : 0;
             const agAngle = agentBaseAngle + (time * 0.15);
-            const agX = cx + Math.cos(agAngle) * innerR;
-            const agY = cy + Math.sin(agAngle) * innerR;
+            const agX = cx + Math.cos(agAngle) * (innerR + agWobble);
+            const agY = cy + Math.sin(agAngle) * (innerR + agWobble);
 
-            // Draw connection lines with varying thickness and glow
+            // Draw connection lines with ACTIVE SESSION HIGHLIGHTING (Phase 37)
             const distance = Math.sqrt((x - agX) ** 2 + (y - agY) ** 2);
             const intensity = Math.max(0, 1 - distance / radius);
 
-            // Multiple connection lines for depth
-            for (let layer = 0; layer < 2; layer++) {
-                ctx.strokeStyle = layer === 0
-                    ? `rgba(0, 255, 0, ${intensity * 0.4})`
-                    : `rgba(0, 255, 0, ${intensity * 0.15})`;
-                ctx.lineWidth = layer === 0 ? 2 : 4;
+            if (isSessionActive) {
+                // ACTIVE SESSION: Bright glowing connection
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = '#0f0';
+                ctx.strokeStyle = `rgba(0, 255, 100, 0.9)`;
+                ctx.lineWidth = 4;
                 ctx.beginPath();
                 ctx.moveTo(x, y);
                 ctx.lineTo(agX, agY);
                 ctx.stroke();
+                ctx.shadowBlur = 0;
+            } else {
+                // Normal connection (dim)
+                for (let layer = 0; layer < 2; layer++) {
+                    ctx.strokeStyle = layer === 0
+                        ? `rgba(0, 255, 0, ${intensity * 0.3})`
+                        : `rgba(0, 255, 0, ${intensity * 0.1})`;
+                    ctx.lineWidth = layer === 0 ? 1 : 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(agX, agY);
+                    ctx.stroke();
+                }
             }
 
             // Spawn particles along connections (with limit for performance)
@@ -397,33 +451,47 @@ function startGraphLoop() {
                 });
             }
 
-            // Draw user nodes with glow
+            // Draw user nodes with ENHANCED GLOW based on online status (Phase 37)
             const userPulse = 8 + Math.sin(time * 2 + i) * 2;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#0f0';
-            ctx.fillStyle = onlineUsernames.has(`user${i}`) ? '#0f0' : '#050';
+            if (isUserOnline) {
+                // ONLINE: Bright pulsing glow
+                ctx.shadowBlur = 20 + Math.sin(time * 4 + i) * 8;
+                ctx.shadowColor = '#0f0';
+                ctx.fillStyle = '#0f0';
+            } else {
+                // OFFLINE: Dim, no glow
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#333';
+            }
             ctx.beginPath();
             ctx.arc(x, y, userPulse, 0, Math.PI * 2);
             ctx.fill();
             ctx.shadowBlur = 0;
 
             // User label
-            ctx.fillStyle = '#fff';
+            ctx.fillStyle = isUserOnline ? '#fff' : '#666';
             ctx.font = 'bold 11px monospace';
             ctx.fillText(`U${i}`, x + 12, y + 12);
 
-            // Draw agent nodes with different glow
+            // Draw agent nodes with ENHANCED GLOW based on online status (Phase 37)
             const agentPulse = 6 + Math.cos(time * 3 + agentId) * 1.5;
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = '#f0f';
-            ctx.fillStyle = onlineUsernames.has(`agent${agentId}`) ? '#f0f' : '#505';
+            if (isAgentOnline) {
+                // ONLINE: Bright pulsing magenta glow
+                ctx.shadowBlur = 18 + Math.sin(time * 4 + agentId) * 6;
+                ctx.shadowColor = '#f0f';
+                ctx.fillStyle = '#f0f';
+            } else {
+                // OFFLINE: Dim, no glow
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#444';
+            }
             ctx.beginPath();
             ctx.arc(agX, agY, agentPulse, 0, Math.PI * 2);
             ctx.fill();
             ctx.shadowBlur = 0;
 
             // Agent label
-            ctx.fillStyle = '#f8f';
+            ctx.fillStyle = isAgentOnline ? '#f8f' : '#666';
             ctx.font = 'bold 10px monospace';
             ctx.fillText(`A${agentId}`, agX + 10, agY + 10);
 
@@ -1047,6 +1115,10 @@ function handleMessage(data) {
             setHyperVisUI(data.hyper_mode);
         }
         if (data.shift !== undefined) {
+            // Trigger shuffle animation if shift changed
+            if (data.shift !== currentShift && currentShift !== undefined) {
+                triggerShuffleAnimation();
+            }
             currentShift = data.shift;
             const el1 = document.getElementById('monitorShift');
             const el2 = document.getElementById('controlShift');

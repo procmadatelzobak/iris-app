@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderTimeline();
         updateLastUpdate();
         initGraphFilter(); // NEW: Filter logic
+        initRelationsListFilter(); // NEW: Relations list filter
 
         // HLINIK features
         renderFeaturesTable();
@@ -167,7 +168,11 @@ const sectionCategories = {
     'loreweb-doc': 'about',
     'compliance': 'about',
     'exporty': 'about',
-    'jazyky': 'lore' // Under 'Lore' category with other content items
+    'jazyky': 'lore',
+    // Správa sections
+    'issues': 'sprava',
+    'test-scenarios': 'sprava',
+    'definitions': 'sprava'
 };
 
 let currentCategory = 'lore';
@@ -498,34 +503,67 @@ function renderRelationsList(filterPlayerId = null) {
         );
     }
 
+    // Helper to get role details
+    const getRole = (id) => rolesData.find(r => r.id === id) || { name: id, avatar: 'avatar_user_male.png', type: 'user' };
+
     list.innerHTML = `
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Typ</th>
-                    <th>Od (Source)</th>
-                    <th>Komu (Target)</th>
-                    <th>Popis</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${filteredRelations.map(rel => `
-                    <tr>
-                        <td>
-                             <span class="relation-dot dot-${rel.type}"></span>
-                             ${getRelTypeLabel(rel.type)}
-                        </td>
-                        <td>${getRoleName(rel.source)}</td>
-                        <td>${getRoleName(rel.target)}</td>
-                        <td>
-                            <div><strong>${getRoleName(rel.source)}:</strong> ${rel.desc_source}</div>
-                            <div style="margin-top:4px"><strong>${getRoleName(rel.target)}:</strong> ${rel.desc_target}</div>
-                        </td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
+        <div class="relation-cards-grid">
+            ${filteredRelations.map(rel => {
+        const source = getRole(rel.source);
+        const target = getRole(rel.target);
+        return `
+                    <div class="relation-card" data-type="${rel.type}">
+                        <div class="relation-card-header">
+                            <span class="relation-type-badge type-${rel.type}">
+                                <span class="relation-dot dot-${rel.type}"></span>
+                                ${getRelTypeLabel(rel.type)}
+                            </span>
+                        </div>
+                        <div class="relation-card-body">
+                            <div class="relation-participant">
+                                <img src="assets/avatars/${source.avatar}" alt="${source.name}" class="relation-avatar" onerror="this.src='assets/avatars/avatar_user_male.png'">
+                                <div class="relation-participant-info">
+                                    <span class="relation-name clickable-name" onclick="showBriefing('${source.id}')">${source.name}</span>
+                                    <span class="relation-role-type type-${source.type}">${source.type === 'admin' ? 'Správce' : source.type === 'agent' ? 'Agent' : 'Uživatel'}</span>
+                                </div>
+                            </div>
+                            <div class="relation-arrow">→</div>
+                            <div class="relation-participant">
+                                <img src="assets/avatars/${target.avatar}" alt="${target.name}" class="relation-avatar" onerror="this.src='assets/avatars/avatar_user_male.png'">
+                                <div class="relation-participant-info">
+                                    <span class="relation-name clickable-name" onclick="showBriefing('${target.id}')">${target.name}</span>
+                                    <span class="relation-role-type type-${target.type}">${target.type === 'admin' ? 'Správce' : target.type === 'agent' ? 'Agent' : 'Uživatel'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relation-card-descriptions">
+                            <div class="relation-desc">
+                                <strong>${source.name}:</strong> ${rel.desc_source || '—'}
+                            </div>
+                            <div class="relation-desc">
+                                <strong>${target.name}:</strong> ${rel.desc_target || '—'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+    }).join('')}
+        </div>
     `;
+}
+
+// Relations list filter (separate from graph filter)
+function initRelationsListFilter() {
+    const select = document.getElementById('relationsListFilter');
+    if (!select) return;
+
+    const sortedRoles = [...rolesData].sort((a, b) => a.name.localeCompare(b.name));
+
+    select.innerHTML = '<option value="all">Všechny vztahy</option>' +
+        sortedRoles.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+
+    select.addEventListener('change', (e) => {
+        renderRelationsList(e.target.value);
+    });
 }
 
 function initGraphFilter() {
@@ -2585,18 +2623,20 @@ function renderTranslationTable(data) {
     const tbody = document.getElementById('langTableBody');
     tbody.innerHTML = '';
 
-    // Sort keys
-    const sortedKeys = Object.keys(data).sort();
+    // Flatten nested object into dot-notation keys
+    const flattened = flattenObject(data);
+    const sortedKeys = Object.keys(flattened).sort();
 
     sortedKeys.forEach(key => {
         const tr = document.createElement('tr');
-        const val = data[key];
+        const val = flattened[key];
 
         // Use textarea for long values, input for short
-        const isLong = val.length > 50;
+        const strVal = String(val);
+        const isLong = strVal.length > 50;
         const inputHtml = isLong
-            ? `<textarea class="audit-input lang-value" data-key="${key}" rows="3" style="width:100%">${escapeHtml(val)}</textarea>`
-            : `<input type="text" class="audit-input lang-value" data-key="${key}" value="${escapeHtml(val)}" style="width:100%">`;
+            ? `<textarea class="audit-input lang-value" data-key="${key}" rows="3" style="width:100%">${escapeHtml(strVal)}</textarea>`
+            : `<input type="text" class="audit-input lang-value" data-key="${key}" value="${escapeHtml(strVal)}" style="width:100%">`;
 
         tr.innerHTML = `
             <td style="vertical-align:top; font-family:monospace; color:var(--text-muted); padding-top:10px;">${key}</td>
@@ -2604,6 +2644,34 @@ function renderTranslationTable(data) {
         `;
         tbody.appendChild(tr);
     });
+}
+
+// Helper: Flatten nested object to dot-notation keys
+function flattenObject(obj, prefix = '', result = {}) {
+    for (const key of Object.keys(obj)) {
+        const newKey = prefix ? `${prefix}.${key}` : key;
+        if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+            flattenObject(obj[key], newKey, result);
+        } else {
+            result[newKey] = obj[key];
+        }
+    }
+    return result;
+}
+
+// Helper: Unflatten dot-notation keys back to nested object
+function unflattenObject(data) {
+    const result = {};
+    for (const key of Object.keys(data)) {
+        const parts = key.split('.');
+        let current = result;
+        for (let i = 0; i < parts.length - 1; i++) {
+            if (!current[parts[i]]) current[parts[i]] = {};
+            current = current[parts[i]];
+        }
+        current[parts[parts.length - 1]] = data[key];
+    }
+    return result;
 }
 
 function filterTranslationTable(query) {
@@ -2624,11 +2692,15 @@ function filterTranslationTable(query) {
 }
 
 function updateCurrentDataFromUI() {
+    // Build flattened data from UI inputs
+    const flatData = {};
     const inputs = document.querySelectorAll('.lang-value');
     inputs.forEach(input => {
         const key = input.dataset.key;
-        currentTranslationData[key] = input.value;
+        flatData[key] = input.value;
     });
+    // Store as flattened for now, unflatten on save
+    currentTranslationData = flatData;
 }
 
 async function saveCurrentLanguage() {
@@ -2648,10 +2720,12 @@ async function saveCurrentLanguage() {
             console.log('Saving data:', currentTranslationData);
             await new Promise(r => setTimeout(r, 800));
         } else {
+            // Unflatten the data before saving
+            const nestedData = unflattenObject(currentTranslationData);
             const res = await fetch(`/api/translations/files/${currentTranslationFile}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentTranslationData)
+                body: JSON.stringify(nestedData)
             });
 
             if (!res.ok) throw new Error('Save failed');
@@ -2678,3 +2752,742 @@ function escapeHtml(text) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+// ============================================
+// TASK MANAGEMENT MODULE (Issues, Tests, Definitions)
+// ============================================
+
+let issuesData = { issues: [], phases: [], meta: {} };
+let testsData = { tests: [], protocols: [], meta: {} };
+let definitionsData = { definitions: [], categories: [], meta: {} };
+
+let currentTestScenario = null;
+let currentDefCategoryFilter = 'all';
+let currentDefStatusFilter = 'all';
+
+// Initialize task management on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        initTaskManagement();
+    }, 600);
+});
+
+async function initTaskManagement() {
+    await loadIssuesData();
+    await loadTestsData();
+    await loadDefinitionsData();
+}
+
+// ============================================
+// ISSUES (KANBAN BOARD)
+// ============================================
+
+async function loadIssuesData() {
+    try {
+        const res = await fetch('data/issues.json');
+        if (res.ok) {
+            issuesData = await res.json();
+        }
+    } catch (e) {
+        console.warn('Failed to load issues.json, using fallback');
+        issuesData = getFallbackIssues();
+    }
+    renderKanbanBoard();
+}
+
+function getFallbackIssues() {
+    return {
+        meta: { version: "1.0", current_phase: 35 },
+        phases: [
+            { id: "waiting", label: "⏳ Čekání", color: "#a0a0b0" },
+            { id: "implementation", label: "🔧 Implementace", color: "#4a9eff" },
+            { id: "testing", label: "🧪 Automatický test", color: "#ff9800" },
+            { id: "user_confirm", label: "✅ Uživatelské potvrzení", color: "#9c27b0" },
+            { id: "done", label: "✓ Hotovo", color: "#4caf50" }
+        ],
+        issues: []
+    };
+}
+
+function renderKanbanBoard() {
+    const phases = ['waiting', 'implementation', 'testing', 'user_confirm', 'done'];
+
+    phases.forEach(phase => {
+        const container = document.getElementById(`cards-${phase}`);
+        const countEl = document.getElementById(`count-${phase}`);
+        if (!container) return;
+
+        container.innerHTML = '';
+        const phaseIssues = issuesData.issues.filter(i => i.phase === phase);
+
+        if (countEl) countEl.textContent = phaseIssues.length;
+
+        phaseIssues.forEach(issue => {
+            const card = createIssueCard(issue, phase);
+            container.appendChild(card);
+        });
+    });
+}
+
+function createIssueCard(issue, phase) {
+    const div = document.createElement('div');
+    div.className = 'issue-card';
+    div.dataset.id = issue.id;
+
+    const priorityIcon = { high: '🔴', normal: '⚪', low: '🔵' }[issue.priority] || '⚪';
+    const phases = ['waiting', 'implementation', 'testing', 'user_confirm', 'done'];
+    const phaseIndex = phases.indexOf(phase);
+    const canMoveLeft = phaseIndex > 0;
+    const canMoveRight = phaseIndex < phases.length - 1;
+
+    div.innerHTML = `
+        <div class="issue-card-header">
+            <span class="issue-id">${issue.id}</span>
+            <span class="issue-priority ${issue.priority}">${priorityIcon}</span>
+        </div>
+        <div class="issue-title">${escapeHtml(issue.title)}</div>
+        <span class="issue-category ${issue.category}">${issue.category}</span>
+        <div class="issue-actions">
+            ${canMoveLeft ? `<button class="issue-btn move-left" onclick="moveIssue('${issue.id}', -1)">◀</button>` : ''}
+            ${canMoveRight ? `<button class="issue-btn move-right" onclick="moveIssue('${issue.id}', 1)">▶</button>` : ''}
+            <button class="issue-btn" onclick="editIssue('${issue.id}')">✎</button>
+            <button class="issue-btn delete" onclick="deleteIssue('${issue.id}')">✕</button>
+        </div>
+    `;
+
+    return div;
+}
+
+function moveIssue(id, direction) {
+    const phases = ['waiting', 'implementation', 'testing', 'user_confirm', 'done'];
+    const issue = issuesData.issues.find(i => i.id === id);
+    if (!issue) return;
+
+    const currentIndex = phases.indexOf(issue.phase);
+    const newIndex = currentIndex + direction;
+
+    if (newIndex >= 0 && newIndex < phases.length) {
+        issue.phase = phases[newIndex];
+        issue.updated_at = new Date().toISOString();
+        renderKanbanBoard();
+    }
+}
+
+function showIssueModal(editId = null) {
+    const modal = document.getElementById('issueModal');
+    const titleEl = document.getElementById('issueModalTitle');
+
+    if (editId) {
+        const issue = issuesData.issues.find(i => i.id === editId);
+        if (issue) {
+            titleEl.textContent = 'Upravit úkol';
+            document.getElementById('issueEditId').value = editId;
+            document.getElementById('issueId').value = issue.id;
+            document.getElementById('issueTitle').value = issue.title;
+            document.getElementById('issueDescription').value = issue.description || '';
+            document.getElementById('issueCategory').value = issue.category;
+            document.getElementById('issuePriority').value = issue.priority;
+        }
+    } else {
+        titleEl.textContent = 'Nový úkol';
+        document.getElementById('issueEditId').value = '';
+        const nextId = `ISS-${String(issuesData.issues.length + 1).padStart(3, '0')}`;
+        document.getElementById('issueId').value = nextId;
+        document.getElementById('issueTitle').value = '';
+        document.getElementById('issueDescription').value = '';
+        document.getElementById('issueCategory').value = 'HLINIK';
+        document.getElementById('issuePriority').value = 'normal';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeIssueModal() {
+    document.getElementById('issueModal').style.display = 'none';
+}
+
+function saveIssue() {
+    const editId = document.getElementById('issueEditId').value;
+    const title = document.getElementById('issueTitle').value.trim();
+
+    if (!title) {
+        alert('Název úkolu je povinný.');
+        return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (editId) {
+        const issue = issuesData.issues.find(i => i.id === editId);
+        if (issue) {
+            issue.title = title;
+            issue.description = document.getElementById('issueDescription').value;
+            issue.category = document.getElementById('issueCategory').value;
+            issue.priority = document.getElementById('issuePriority').value;
+            issue.updated_at = now;
+        }
+    } else {
+        const newIssue = {
+            id: document.getElementById('issueId').value,
+            title: title,
+            description: document.getElementById('issueDescription').value,
+            phase: 'waiting',
+            category: document.getElementById('issueCategory').value,
+            priority: document.getElementById('issuePriority').value,
+            created_at: now,
+            updated_at: now
+        };
+        issuesData.issues.push(newIssue);
+    }
+
+    closeIssueModal();
+    renderKanbanBoard();
+}
+
+function editIssue(id) {
+    showIssueModal(id);
+}
+
+function deleteIssue(id) {
+    if (!confirm(`Opravdu smazat úkol ${id}?`)) return;
+    issuesData.issues = issuesData.issues.filter(i => i.id !== id);
+    renderKanbanBoard();
+}
+
+function exportIssuesJSON() {
+    issuesData.meta.updated_at = new Date().toISOString();
+    const blob = new Blob([JSON.stringify(issuesData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'issues.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Soubor issues.json byl stažen. Uložte ho do složky data/ a commitněte do gitu.');
+}
+
+// ============================================
+// TEST SCENARIOS
+// ============================================
+
+async function loadTestsData() {
+    try {
+        const res = await fetch('data/tests.json');
+        if (res.ok) {
+            testsData = await res.json();
+        }
+    } catch (e) {
+        console.warn('Failed to load tests.json, using fallback');
+        testsData = { tests: [], protocols: [], meta: {} };
+    }
+    renderTestScenariosList();
+}
+
+function renderTestScenariosList(filter = 'all') {
+    const container = document.getElementById('testScenariosList');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    let tests = testsData.tests || [];
+    if (filter !== 'all') {
+        tests = tests.filter(t => t.category === filter);
+    }
+
+    if (tests.length === 0) {
+        container.innerHTML = '<p class="text-muted">Žádné testy nalezeny.</p>';
+        return;
+    }
+
+    tests.forEach(test => {
+        const item = document.createElement('div');
+        item.className = 'test-scenario-item';
+        item.dataset.id = test.id;
+        item.onclick = () => showTestScenarioDetail(test.id);
+
+        const categoryClass = `issue-category ${test.category}`;
+
+        item.innerHTML = `
+            <span class="test-scenario-id">${test.id}</span>
+            <div class="test-scenario-title">${escapeHtml(test.title)}</div>
+            <span class="${categoryClass}">${test.category}</span>
+        `;
+
+        container.appendChild(item);
+    });
+}
+
+function filterTestScenarios() {
+    const filter = document.getElementById('testCategoryFilter').value;
+    renderTestScenariosList(filter);
+}
+
+function showTestScenarioDetail(id) {
+    const test = testsData.tests.find(t => t.id === id);
+    if (!test) return;
+
+    currentTestScenario = test;
+
+    // Update list selection
+    document.querySelectorAll('.test-scenario-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.id === id);
+    });
+
+    const container = document.getElementById('testScenarioDetail');
+    if (!container) return;
+
+    // Get protocols for this test
+    const protocols = (testsData.protocols || []).filter(p => p.test_id === id);
+
+    // Simple markdown to HTML conversion
+    const mdContent = simpleMarkdown(test.description_md || '');
+
+    let protocolsHtml = '';
+    if (protocols.length > 0) {
+        protocolsHtml = `
+            <div class="protocols-section">
+                <h3>📋 Protokoly běhů (${protocols.length})</h3>
+                <div class="protocols-list">
+                    ${protocols.map(p => `
+                        <div class="protocol-item">
+                            <span class="protocol-icon">📄</span>
+                            <div class="protocol-info">
+                                <div class="protocol-filename">${p.filename}</div>
+                                <div class="protocol-date">${new Date(p.run_date).toLocaleString('cs-CZ')}</div>
+                            </div>
+                            <span class="protocol-status ${p.status}">${p.status === 'pass' ? '✅ PASS' : '❌ FAIL'}</span>
+                            <div class="protocol-actions">
+                                <button class="btn-secondary" onclick="viewProtocol('${p.filename}')">👁 Zobrazit</button>
+                                <button class="btn-secondary" onclick="deleteProtocol('${p.id}')">🗑</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        protocolsHtml = `
+            <div class="protocols-section">
+                <h3>📋 Protokoly běhů</h3>
+                <p class="text-muted">Zatím žádné protokoly. Vytvořte soubor ve složce data/test_protocols/.</p>
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <div class="test-detail-header">
+            <div class="test-detail-title">${escapeHtml(test.title)}</div>
+            <div class="test-detail-meta">
+                <span>${test.id}</span>
+                <span class="issue-category ${test.category}">${test.category}</span>
+                <span>Vytvořeno: ${new Date(test.created_at).toLocaleDateString('cs-CZ')}</span>
+            </div>
+        </div>
+        <div class="test-detail-content">
+            ${mdContent}
+        </div>
+        <div class="test-detail-actions">
+            <button class="btn-primary" onclick="editTestScenario('${test.id}')">✎ Upravit</button>
+            <button class="btn-secondary" onclick="deleteTestScenario('${test.id}')">🗑 Smazat</button>
+        </div>
+        ${protocolsHtml}
+    `;
+}
+
+function simpleMarkdown(md) {
+    if (!md) return '';
+    return md
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code>$1</code>')
+        .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+        .replace(/^- (.*$)/gim, '<li>$1</li>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/^/, '<p>')
+        .replace(/$/, '</p>');
+}
+
+async function viewProtocol(filename) {
+    const modal = document.getElementById('protocolModal');
+    const titleEl = document.getElementById('protocolModalTitle');
+    const contentEl = document.getElementById('protocolContent');
+
+    titleEl.textContent = filename;
+    contentEl.innerHTML = '<p class="text-muted">Načítám protokol...</p>';
+
+    modal.style.display = 'flex';
+
+    try {
+        const res = await fetch(`data/test_protocols/${filename}`);
+        if (res.ok) {
+            const mdText = await res.text();
+            contentEl.innerHTML = `<div class="test-detail-content">${simpleMarkdown(mdText)}</div>`;
+        } else {
+            contentEl.innerHTML = '<p style="color: var(--accent-red);">Nepodařilo se načíst protokol.</p>';
+        }
+    } catch (e) {
+        contentEl.innerHTML = '<p style="color: var(--accent-red);">Chyba při načítání: ' + e.message + '</p>';
+    }
+}
+
+function closeProtocolModal() {
+    document.getElementById('protocolModal').style.display = 'none';
+}
+
+function showTestScenarioModal(editId = null) {
+    const modal = document.getElementById('testScenarioModal');
+    const titleEl = document.getElementById('testScenarioModalTitle');
+
+    if (editId) {
+        const test = testsData.tests.find(t => t.id === editId);
+        if (test) {
+            titleEl.textContent = 'Upravit test';
+            document.getElementById('testEditId').value = editId;
+            document.getElementById('testId').value = test.id;
+            document.getElementById('testTitle').value = test.title;
+            document.getElementById('testCategory').value = test.category;
+            document.getElementById('testDescriptionMd').value = test.description_md || '';
+        }
+    } else {
+        titleEl.textContent = 'Nový test';
+        document.getElementById('testEditId').value = '';
+        const nextId = `TEST-${String((testsData.tests?.length || 0) + 1).padStart(3, '0')}`;
+        document.getElementById('testId').value = nextId;
+        document.getElementById('testTitle').value = '';
+        document.getElementById('testCategory').value = 'HLINIK';
+        document.getElementById('testDescriptionMd').value = '';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeTestScenarioModal() {
+    document.getElementById('testScenarioModal').style.display = 'none';
+}
+
+function saveTestScenario() {
+    const editId = document.getElementById('testEditId').value;
+    const title = document.getElementById('testTitle').value.trim();
+    const description = document.getElementById('testDescriptionMd').value.trim();
+
+    if (!title || !description) {
+        alert('Název a zadání testu jsou povinné.');
+        return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (editId) {
+        const test = testsData.tests.find(t => t.id === editId);
+        if (test) {
+            test.title = title;
+            test.category = document.getElementById('testCategory').value;
+            test.description_md = description;
+        }
+    } else {
+        const newTest = {
+            id: document.getElementById('testId').value,
+            title: title,
+            category: document.getElementById('testCategory').value,
+            created_at: now,
+            description_md: description
+        };
+        if (!testsData.tests) testsData.tests = [];
+        testsData.tests.push(newTest);
+    }
+
+    closeTestScenarioModal();
+    renderTestScenariosList();
+
+    // Show detail if we just edited current
+    if (editId && currentTestScenario?.id === editId) {
+        showTestScenarioDetail(editId);
+    }
+}
+
+function editTestScenario(id) {
+    showTestScenarioModal(id);
+}
+
+function deleteTestScenario(id) {
+    if (!confirm(`Opravdu smazat test ${id}?`)) return;
+    testsData.tests = testsData.tests.filter(t => t.id !== id);
+    renderTestScenariosList();
+    document.getElementById('testScenarioDetail').innerHTML = `
+        <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
+            Vyberte test ze seznamu pro zobrazení detailů a protokolů.
+        </div>
+    `;
+}
+
+function deleteProtocol(protocolId) {
+    if (!confirm('Opravdu smazat tento protokol?')) return;
+    testsData.protocols = testsData.protocols.filter(p => p.id !== protocolId);
+    if (currentTestScenario) {
+        showTestScenarioDetail(currentTestScenario.id);
+    }
+}
+
+function exportTestsJSON() {
+    testsData.meta.updated_at = new Date().toISOString();
+    const blob = new Blob([JSON.stringify(testsData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tests.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Soubor tests.json byl stažen. Uložte ho do složky data/ a commitněte do gitu.');
+}
+
+// ============================================
+// DEFINITIONS
+// ============================================
+
+async function loadDefinitionsData() {
+    try {
+        const res = await fetch('data/definitions.json');
+        if (res.ok) {
+            definitionsData = await res.json();
+        }
+    } catch (e) {
+        console.warn('Failed to load definitions.json, using fallback');
+        definitionsData = { definitions: [], categories: ['IRIS', 'HLINIK', 'Ostatní'], meta: { current_phase: 35 } };
+    }
+    renderDefinitionsList();
+}
+
+function renderDefinitionsList() {
+    const container = document.getElementById('definitionsList');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    let defs = definitionsData.definitions || [];
+
+    // Apply category filter
+    if (currentDefCategoryFilter !== 'all') {
+        defs = defs.filter(d => d.category === currentDefCategoryFilter);
+    }
+
+    // Apply status filter
+    if (currentDefStatusFilter === 'approved') {
+        defs = defs.filter(d => d.user_approved === true);
+    } else if (currentDefStatusFilter === 'pending') {
+        defs = defs.filter(d => !d.user_approved);
+    }
+
+    if (defs.length === 0) {
+        container.innerHTML = '<p class="text-muted">Žádné definice odpovídající filtru.</p>';
+        return;
+    }
+
+    defs.forEach(def => {
+        const card = document.createElement('div');
+        card.className = `definition-card ${def.user_approved ? 'approved' : 'pending'}`;
+
+        const approvalBadge = def.user_approved
+            ? `<span class="approval-badge approved">✅ Schváleno</span><span class="approval-phase">Phase ${def.approved_phase}</span>`
+            : `<span class="approval-badge pending">⏳ Neschváleno</span>`;
+
+        card.innerHTML = `
+            <div class="definition-header">
+                <div class="definition-id-category">
+                    <span class="definition-id">${def.id}</span>
+                    <span class="definition-category ${def.category}">${def.category}</span>
+                </div>
+                <div class="definition-approval">
+                    ${approvalBadge}
+                </div>
+            </div>
+            <div class="definition-title">${escapeHtml(def.title)}</div>
+            <div class="definition-description">${escapeHtml(def.description)}</div>
+            <div class="definition-actions">
+                <div class="definition-crud">
+                    <button class="btn-secondary" onclick="editDefinition('${def.id}')">✎ Upravit</button>
+                    <button class="btn-secondary" onclick="deleteDefinition('${def.id}')">🗑 Smazat</button>
+                </div>
+                ${!def.user_approved ? `<button class="btn-approve" onclick="approveDefinition('${def.id}')">✅ Schválit</button>` : ''}
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function filterDefinitions(category) {
+    currentDefCategoryFilter = category;
+
+    // Update button states
+    document.querySelectorAll('[data-def-category]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.defCategory === category);
+    });
+
+    renderDefinitionsList();
+}
+
+function filterDefinitionsByStatus(status) {
+    currentDefStatusFilter = status;
+
+    // Update button states
+    document.querySelectorAll('[data-def-status]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.defStatus === status);
+    });
+
+    renderDefinitionsList();
+}
+
+function showDefinitionModal(editId = null) {
+    const modal = document.getElementById('definitionModal');
+    const titleEl = document.getElementById('definitionModalTitle');
+
+    if (editId) {
+        const def = definitionsData.definitions.find(d => d.id === editId);
+        if (def) {
+            titleEl.textContent = 'Upravit definici';
+            document.getElementById('defEditId').value = editId;
+            document.getElementById('defId').value = def.id;
+            document.getElementById('defTitle').value = def.title;
+            document.getElementById('defDescription').value = def.description;
+            document.getElementById('defCategory').value = def.category;
+        }
+    } else {
+        titleEl.textContent = 'Nová definice';
+        document.getElementById('defEditId').value = '';
+        const nextId = `DEF-${String((definitionsData.definitions?.length || 0) + 1).padStart(3, '0')}`;
+        document.getElementById('defId').value = nextId;
+        document.getElementById('defTitle').value = '';
+        document.getElementById('defDescription').value = '';
+        document.getElementById('defCategory').value = 'IRIS';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeDefinitionModal() {
+    document.getElementById('definitionModal').style.display = 'none';
+}
+
+function saveDefinition(keepOpen = false) {
+    const editId = document.getElementById('defEditId').value;
+    const title = document.getElementById('defTitle').value.trim();
+    const description = document.getElementById('defDescription').value.trim();
+    const categoryVal = document.getElementById('defCategory').value;
+
+    if (!title || !description) {
+        alert('Název a popis jsou povinné.');
+        return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (editId) {
+        const def = definitionsData.definitions.find(d => d.id === editId);
+        if (def) {
+            def.title = title;
+            def.description = description;
+            def.category = categoryVal;
+        }
+    } else {
+        const newDef = {
+            id: document.getElementById('defId').value,
+            title: title,
+            description: description,
+            category: categoryVal,
+            user_approved: false,
+            approved_phase: null,
+            created_at: now
+        };
+        if (!definitionsData.definitions) definitionsData.definitions = [];
+        definitionsData.definitions.push(newDef);
+    }
+
+    renderDefinitionsList();
+
+    if (keepOpen) {
+        // Reset form for next entry
+        document.getElementById('defEditId').value = '';
+        document.getElementById('defTitle').value = '';
+        document.getElementById('defDescription').value = '';
+        // Keep category selected
+
+        // Generate next ID
+        const nextId = `DEF-${String((definitionsData.definitions?.length || 0) + 1).padStart(3, '0')}`;
+        document.getElementById('defId').value = nextId;
+
+        // Focus title for rapid entry
+        document.getElementById('defTitle').focus();
+    } else {
+        closeDefinitionModal();
+    }
+}
+
+function editDefinition(id) {
+    showDefinitionModal(id);
+}
+
+function deleteDefinition(id) {
+    if (!confirm(`Opravdu smazat definici ${id}?`)) return;
+    definitionsData.definitions = definitionsData.definitions.filter(d => d.id !== id);
+    renderDefinitionsList();
+}
+
+function approveDefinition(id) {
+    const def = definitionsData.definitions.find(d => d.id === id);
+    if (!def) return;
+
+    const currentPhase = definitionsData.meta?.current_phase || 35;
+
+    def.user_approved = true;
+    def.approved_phase = currentPhase;
+
+    renderDefinitionsList();
+}
+
+function exportDefinitionsJSON() {
+    definitionsData.meta.updated_at = new Date().toISOString();
+    const blob = new Blob([JSON.stringify(definitionsData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'definitions.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Soubor definitions.json byl stažen. Uložte ho do složky data/ a commitněte do gitu.');
+}
+
+// Global exports
+window.showIssueModal = showIssueModal;
+window.closeIssueModal = closeIssueModal;
+window.saveIssue = saveIssue;
+window.editIssue = editIssue;
+window.deleteIssue = deleteIssue;
+window.moveIssue = moveIssue;
+window.exportIssuesJSON = exportIssuesJSON;
+
+window.showTestScenarioModal = showTestScenarioModal;
+window.closeTestScenarioModal = closeTestScenarioModal;
+window.saveTestScenario = saveTestScenario;
+window.editTestScenario = editTestScenario;
+window.deleteTestScenario = deleteTestScenario;
+window.filterTestScenarios = filterTestScenarios;
+window.viewProtocol = viewProtocol;
+window.closeProtocolModal = closeProtocolModal;
+window.deleteProtocol = deleteProtocol;
+window.exportTestsJSON = exportTestsJSON;
+
+window.showDefinitionModal = showDefinitionModal;
+window.closeDefinitionModal = closeDefinitionModal;
+window.saveDefinition = saveDefinition;
+window.editDefinition = editDefinition;
+window.deleteDefinition = deleteDefinition;
+window.approveDefinition = approveDefinition;
+window.filterDefinitions = filterDefinitions;
+window.filterDefinitionsByStatus = filterDefinitionsByStatus;
+window.exportDefinitionsJSON = exportDefinitionsJSON;
+

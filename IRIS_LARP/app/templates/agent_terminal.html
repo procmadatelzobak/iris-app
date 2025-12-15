@@ -200,7 +200,16 @@
 <script src="/static/js/socket_client.js"></script>
 <script src="/static/js/sound_engine.js"></script>
 <script>
-    const token = localStorage.getItem('token');
+    // Get token: URL param > sessionStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    let token = urlParams.get('token') || sessionStorage.getItem('token');
+
+    if (token) {
+        sessionStorage.setItem('token', token);
+    } else {
+        window.location.href = '/';
+    }
+
     const sessionIdDisplay = document.getElementById('sessionIdDisplay');
     const chatHistory = document.getElementById('chatHistory');
     const timerLimitDisplay = document.getElementById('timerLimitDisplay');

@@ -339,9 +339,9 @@ class RelationGraph {
                 const dy = a.y - b.y;
                 const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
-                // Increased interaction radius for better spread
-                if (dist < 280) { // Even wider range
-                    const force = (this.options.repulsionStrength * 4.0) / (dist * dist); // Very strong repulsion
+                // Extreme interaction radius for maximum spread
+                if (dist < 800) { // Range increased to 800
+                    const force = (this.options.repulsionStrength * 25.0) / (dist * dist); // 25x base strength
                     const fx = (dx / dist) * force;
                     const fy = (dy / dist) * force;
                     a.vx += fx;
@@ -358,7 +358,7 @@ class RelationGraph {
             const dy = link.target.y - link.source.y;
             const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
-            const optimalDist = 120;
+            const optimalDist = 500; // Increased from 250 to 500
             const force = (dist - optimalDist) * this.options.attractionStrength;
             const fx = (dx / dist) * force;
             const fy = (dy / dist) * force;

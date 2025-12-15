@@ -47,10 +47,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
     return user
 
 async def get_current_user_cookie(request: Request, db: Session = Depends(get_db)):
-    token = request.cookies.get("access_token")
+    # Query param takes priority (for tab-isolated sessions)
+    token = request.query_params.get("token")
     if not token:
-        # Check query param
-        token = request.query_params.get("token")
+        # Fallback to cookie
+        token = request.cookies.get("access_token")
     
     if not token:
         raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/"})

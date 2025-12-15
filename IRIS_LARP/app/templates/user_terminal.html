@@ -169,8 +169,16 @@
 <script src="/static/js/socket_client.js"></script>
 <script src="/static/js/sound_engine.js"></script>
 <script>
-    const token = localStorage.getItem('token');
-    if (!token) window.location.href = '/';
+    // Get token: URL param > sessionStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    let token = urlParams.get('token') || sessionStorage.getItem('token');
+
+    if (token) {
+        // Persist to sessionStorage for WebSocket and API calls
+        sessionStorage.setItem('token', token);
+    } else {
+        window.location.href = '/';
+    }
 
     const chatHistory = document.getElementById('chatHistory');
     const creditsDisplay = document.getElementById('creditsDisplay');

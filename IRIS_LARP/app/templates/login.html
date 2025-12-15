@@ -47,7 +47,8 @@
                 <h3 class="text-yellow-500 font-bold animate-pulse text-xs tracking-widest">
                     ⚠ TESTOVACÍ REŽIM: RYCHLÉ PŘIHLÁŠENÍ AKTIVNÍ ⚠
                 </h3>
-                <button onclick="quickLogin('root')" class="text-xs bg-purple-900 text-purple-200 px-2 py-1 border border-purple-500 hover:bg-purple-700 font-bold">
+                <button onclick="quickLogin('root')"
+                    class="text-xs bg-purple-900 text-purple-200 px-2 py-1 border border-purple-500 hover:bg-purple-700 font-bold">
                     [ ROOT PŘÍSTUP ]
                 </button>
             </div>
@@ -57,7 +58,8 @@
                 <div class="flex flex-col gap-1 border-r border-gray-800 pr-2">
                     <div class="text-red-500 font-bold mb-2 text-center">SPRÁVCI</div>
                     {% for u in users if u.role.value == 'admin' %}
-                    <button onclick="quickLogin('{{ u.username }}')" class="p-1 border border-red-900 text-red-400 hover:bg-gray-800 text-center">
+                    <button onclick="quickLogin('{{ u.username }}')"
+                        class="p-1 border border-red-900 text-red-400 hover:bg-gray-800 text-center">
                         {{ u.username|upper }}
                     </button>
                     {% endfor %}
@@ -137,12 +139,10 @@
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem('token', data.access_token);
-                // Cookie is set server-side via Set-Cookie header (path=/)
-
-                // Redirect based on role
-                // We can just go to /auth/terminal. The backend will serve the right template.
-                window.location.href = '/auth/terminal';
+                sessionStorage.setItem('token', data.access_token);
+                // Cookie is set server-side but may be shared across tabs
+                // Pass token in URL for reliable tab-isolated auth
+                window.location.href = '/auth/terminal?token=' + encodeURIComponent(data.access_token);
             } else {
                 errorMsg.textContent = data.detail || 'Access Denied';
                 errorMsg.classList.remove('hidden');

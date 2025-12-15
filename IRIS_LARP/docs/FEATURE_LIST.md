@@ -176,7 +176,14 @@
 
 ### Network Graph
 - ✅ Canvas-based visualization of User-Agent connections
+- ✅ Canvas-based visualization of User-Agent connections
 - ✅ Updates on shift changes
+
+### Translation Editor (Phase 35 - Issue #55)
+- ✅ **Web-based Editor**: Edit `czech.json`, `crazy.json`, `english.json`
+- ✅ **Flattened View**: Edit nested keys directly
+- ✅ **Search & Filter**: Quickly find keys/values
+- ✅ **Git Integration**: Save changes back to disk
 
 ---
 

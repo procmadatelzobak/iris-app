@@ -211,7 +211,7 @@ async def list_translation_files():
         "files": [
             {"code": "cz", "name": "Čeština (czech.json)"},
             {"code": "crazy", "name": "Crazy Čeština (crazy.json)"},
-            # "en" and "iris" can be added if needed, but requirements mentioned cz and crazy
+            {"code": "en", "name": "English (english.json)"},
         ]
     }
 
