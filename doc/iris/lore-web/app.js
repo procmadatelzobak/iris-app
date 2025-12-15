@@ -10,6 +10,7 @@
 let rolesData = [];
 let relationsData = [];
 let configData = {};
+const state = { manuals: {} };
 
 // ============================================
 // INITIALIZATION
@@ -738,7 +739,7 @@ function exportBriefingPDF() {
 }
 
 function exportManualPDF(type) {
-    const manual = manualContent[type];
+    const manual = state.manuals[type || currentManualType];
     if (!manual) return;
 
     const printContent = generateManualHTML(manual);
