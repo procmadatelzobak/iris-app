@@ -354,10 +354,12 @@ class GameState:
                 "temperature": self.temperature,
                 "is_overloaded": self.is_overloaded
             })))
-            task.add_done_callback(
-                lambda t: logger.debug("Panic broadcast task failed: %s", t.exception())
-                if t.exception() else None
-            )
+            def _log_panic_task(task):
+                exc = task.exception()
+                if exc:
+                    logger.warning("Panic broadcast task failed: %s", exc)
+
+            task.add_done_callback(_log_panic_task)
         except RuntimeError as exc:
             logger.debug("No running event loop for panic broadcast: %s", exc)
 
