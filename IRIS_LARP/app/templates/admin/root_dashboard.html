@@ -143,6 +143,7 @@
             <div class="nav-btn" onclick="switchView('economy')" id="nav-economy">GLOBAL ECO</div>
             <div class="nav-btn" onclick="switchView('time')" id="nav-time">CHRONOS</div>
             <div class="nav-btn" onclick="switchView('surveillance')" id="nav-surveillance">PANOPTICON</div>
+            <div class="nav-btn" onclick="switchView('simulation')" id="nav-simulation">SIMULATION</div>
             <div class="nav-btn" onclick="switchView('lore')" id="nav-lore">LORE</div>
         </div>
         <div class="flex items-center gap-4">
@@ -560,6 +561,107 @@
         </div>
     </div>
 </div>
+</div>
+
+<!-- VIEW: SIMULATION (LLM Hour Test) -->
+<div id="view-simulation" class="view-container hidden">
+    <div class="god-panel">
+        <div class="god-title">🧪 LLM HOUR SIMULATION</div>
+        <p class="text-sm text-gray-400 mb-4">
+            Komplexní hodinový testovací scénář simulující všech 20 uživatelů pomocí Gemini 2.5 Flash.
+            Uživatelé pracují 10 minut, posílají zprávy každé 3 minuty, chodí na pauzy.
+            Agenti odpovídají okamžitě. Správci provádí admin akce.
+        </p>
+        
+        <!-- Status Panel -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-gray-900 p-4 border border-gray-700">
+                <div class="text-xs text-gray-500 mb-1">STAV</div>
+                <div class="text-2xl font-bold" id="simState">IDLE</div>
+            </div>
+            <div class="bg-gray-900 p-4 border border-gray-700">
+                <div class="text-xs text-gray-500 mb-1">PROGRESS</div>
+                <div class="text-2xl font-bold text-yellow-500" id="simProgress">0%</div>
+            </div>
+            <div class="bg-gray-900 p-4 border border-gray-700">
+                <div class="text-xs text-gray-500 mb-1">UPLYNULÝ ČAS</div>
+                <div class="text-2xl font-bold" id="simElapsed">00:00</div>
+            </div>
+            <div class="bg-gray-900 p-4 border border-gray-700">
+                <div class="text-xs text-gray-500 mb-1">ZBÝVÁ</div>
+                <div class="text-2xl font-bold" id="simRemaining">--:--</div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-800 h-4 mb-6 border border-gray-700">
+            <div class="h-full bg-gradient-to-r from-yellow-600 to-yellow-400 transition-all duration-1000" 
+                 id="simProgressBar" style="width: 0%"></div>
+        </div>
+        
+        <!-- Control Buttons -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <button class="btn-god border-green-500 text-green-500 hover:bg-green-900 py-3" 
+                    onclick="startSimulation(false)" id="btnStartFull">
+                ▶️ SPUSTIT (1 HODINA)
+            </button>
+            <button class="btn-god border-blue-500 text-blue-500 hover:bg-blue-900 py-3" 
+                    onclick="startSimulation(true)" id="btnStartShort">
+                ⏱️ SHORT TEST (5 MIN)
+            </button>
+            <button class="btn-god border-red-500 text-red-500 hover:bg-red-900 py-3" 
+                    onclick="stopSimulation()" id="btnStop" disabled>
+                ⏹️ ZASTAVIT
+            </button>
+            <button class="btn-god py-3" onclick="refreshSimStatus()">
+                🔄 REFRESH STATUS
+            </button>
+        </div>
+        
+        <!-- Stats Panel -->
+        <div class="god-title mt-4">📊 STATISTIKY</div>
+        <div class="grid grid-cols-6 gap-3 mb-6">
+            <div class="bg-black p-3 border border-gray-800 text-center">
+                <div class="text-xs text-gray-500">USERS</div>
+                <div class="text-xl font-bold text-blue-400" id="simUsers">0</div>
+            </div>
+            <div class="bg-black p-3 border border-gray-800 text-center">
+                <div class="text-xs text-gray-500">AGENTS</div>
+                <div class="text-xl font-bold text-pink-400" id="simAgents">0</div>
+            </div>
+            <div class="bg-black p-3 border border-gray-800 text-center">
+                <div class="text-xs text-gray-500">ADMINS</div>
+                <div class="text-xl font-bold text-yellow-400" id="simAdmins">0</div>
+            </div>
+            <div class="bg-black p-3 border border-gray-800 text-center">
+                <div class="text-xs text-gray-500">ZPRÁVY</div>
+                <div class="text-xl font-bold text-green-400" id="simMessages">0</div>
+            </div>
+            <div class="bg-black p-3 border border-gray-800 text-center">
+                <div class="text-xs text-gray-500">ÚKOLY</div>
+                <div class="text-xl font-bold text-purple-400" id="simTasks">0</div>
+            </div>
+            <div class="bg-black p-3 border border-gray-800 text-center">
+                <div class="text-xs text-gray-500">CHYBY</div>
+                <div class="text-xl font-bold text-red-400" id="simErrors">0</div>
+            </div>
+        </div>
+        
+        <!-- Live Log -->
+        <div class="god-title">📜 LIVE LOG</div>
+        <div id="simLogStream" 
+             class="font-mono text-xs text-gray-400 h-64 overflow-y-auto p-3 bg-black border border-gray-800">
+            <div class="text-gray-600">Čekám na spuštění simulace...</div>
+        </div>
+    </div>
+    
+    <!-- History Panel -->
+    <div class="god-panel mt-6">
+        <div class="god-title">📂 HISTORIE SIMULACÍ</div>
+        <div id="simHistory" class="space-y-2">
+            <div class="text-gray-600 text-sm">Načítám historii...</div>
+        </div>
+    </div>
 </div>
 
 <!-- VIEW: LORE (Documentation) -->
@@ -1272,6 +1374,267 @@
 
     // Call on init
     setTimeout(loadLanguageSettings, 1200);
+
+    // ============================================
+    // SIMULATION CONTROLS
+    // ============================================
+    
+    let simStatusInterval = null;
+    
+    window.startSimulation = async (shortTest) => {
+        const mode = shortTest ? 'SHORT TEST (5 min)' : 'FULL (1 hodina)';
+        if (!confirm(`Spustit simulaci ${mode}?\n\nSimulace bude běžet na pozadí.`)) return;
+        
+        try {
+            const res = await fetch('/api/admin/simulation/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ short_test: shortTest })
+            });
+            
+            const data = await res.json();
+            
+            if (data.status === 'started') {
+                addSimLog('SUCCESS', `Simulace spuštěna: ${mode}`);
+                updateSimButtons(true);
+                startSimStatusPolling();
+            } else {
+                addSimLog('ERROR', data.message || 'Nepodařilo se spustit simulaci');
+            }
+            
+            if (data.data) {
+                updateSimStatus(data.data);
+            }
+        } catch (e) {
+            addSimLog('ERROR', `Chyba: ${e.message}`);
+        }
+    };
+    
+    window.stopSimulation = async () => {
+        if (!confirm('Zastavit běžící simulaci?')) return;
+        
+        try {
+            const res = await fetch('/api/admin/simulation/stop', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            const data = await res.json();
+            addSimLog('INFO', data.message || 'Zastavuji simulaci...');
+            
+            if (data.data) {
+                updateSimStatus(data.data);
+            }
+        } catch (e) {
+            addSimLog('ERROR', `Chyba: ${e.message}`);
+        }
+    };
+    
+    window.refreshSimStatus = async () => {
+        try {
+            const res = await fetch('/api/admin/simulation/status', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            const data = await res.json();
+            updateSimStatus(data);
+        } catch (e) {
+            console.error('Simulation status error:', e);
+        }
+    };
+    
+    function updateSimStatus(data) {
+        // State
+        const stateEl = document.getElementById('simState');
+        if (stateEl) {
+            stateEl.innerText = (data.state || 'idle').toUpperCase();
+            stateEl.className = 'text-2xl font-bold';
+            if (data.state === 'running') stateEl.classList.add('text-green-500');
+            else if (data.state === 'failed') stateEl.classList.add('text-red-500');
+            else if (data.state === 'completed') stateEl.classList.add('text-blue-500');
+            else stateEl.classList.add('text-gray-500');
+        }
+        
+        // Progress
+        const progress = data.progress_percent || 0;
+        document.getElementById('simProgress').innerText = `${progress.toFixed(1)}%`;
+        document.getElementById('simProgressBar').style.width = `${progress}%`;
+        
+        // Time
+        const elapsed = data.elapsed_seconds || 0;
+        const remaining = data.remaining_seconds || 0;
+        document.getElementById('simElapsed').innerText = formatTime(elapsed);
+        document.getElementById('simRemaining').innerText = formatTime(remaining);
+        
+        // Stats from summary
+        if (data.summary && data.summary.stats) {
+            const stats = data.summary.stats;
+            document.getElementById('simUsers').innerText = stats.users_active || 0;
+            document.getElementById('simAgents').innerText = stats.agents_active || 0;
+            document.getElementById('simAdmins').innerText = stats.admins_active || 0;
+            document.getElementById('simMessages').innerText = stats.total_messages || 0;
+            document.getElementById('simTasks').innerText = stats.total_tasks || 0;
+            document.getElementById('simErrors').innerText = stats.total_errors || 0;
+        }
+        
+        // Update buttons based on state
+        const isRunning = data.state === 'running' || data.state === 'stopping';
+        updateSimButtons(isRunning);
+        
+        // Stop polling if simulation ended
+        if (data.state !== 'running' && data.state !== 'stopping' && simStatusInterval) {
+            stopSimStatusPolling();
+        }
+    }
+    
+    function updateSimButtons(isRunning) {
+        const btnStartFull = document.getElementById('btnStartFull');
+        const btnStartShort = document.getElementById('btnStartShort');
+        const btnStop = document.getElementById('btnStop');
+        
+        if (btnStartFull) btnStartFull.disabled = isRunning;
+        if (btnStartShort) btnStartShort.disabled = isRunning;
+        if (btnStop) btnStop.disabled = !isRunning;
+        
+        // Visual feedback
+        if (isRunning) {
+            btnStartFull?.classList.add('opacity-50');
+            btnStartShort?.classList.add('opacity-50');
+            btnStop?.classList.remove('opacity-50');
+        } else {
+            btnStartFull?.classList.remove('opacity-50');
+            btnStartShort?.classList.remove('opacity-50');
+            btnStop?.classList.add('opacity-50');
+        }
+    }
+    
+    function startSimStatusPolling() {
+        if (simStatusInterval) clearInterval(simStatusInterval);
+        simStatusInterval = setInterval(async () => {
+            await refreshSimStatus();
+            await fetchSimLogs();
+        }, 3000); // Poll every 3 seconds
+    }
+    
+    function stopSimStatusPolling() {
+        if (simStatusInterval) {
+            clearInterval(simStatusInterval);
+            simStatusInterval = null;
+        }
+    }
+    
+    async function fetchSimLogs() {
+        try {
+            const res = await fetch('/api/admin/simulation/logs?limit=50', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            
+            if (data.logs && data.logs.length > 0) {
+                const logDiv = document.getElementById('simLogStream');
+                logDiv.innerHTML = '';
+                
+                data.logs.slice(-30).forEach(log => {
+                    const time = log.time ? log.time.split('T')[1]?.split('.')[0] : '';
+                    const levelColors = {
+                        'INFO': 'text-blue-400',
+                        'SUCCESS': 'text-green-400',
+                        'WARNING': 'text-yellow-400',
+                        'ERROR': 'text-red-400',
+                        'PHASE': 'text-purple-400',
+                        'LLM': 'text-cyan-400',
+                        'USER': 'text-white',
+                        'AGENT': 'text-pink-400',
+                        'ADMIN': 'text-yellow-500'
+                    };
+                    const color = levelColors[log.level] || 'text-gray-400';
+                    
+                    const entry = document.createElement('div');
+                    entry.className = `mb-1 ${color}`;
+                    entry.innerText = `[${time}] [${log.level}] ${log.message}`;
+                    logDiv.appendChild(entry);
+                });
+                
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+        } catch (e) {
+            console.error('Fetch logs error:', e);
+        }
+    }
+    
+    function addSimLog(level, message) {
+        const logDiv = document.getElementById('simLogStream');
+        const time = new Date().toLocaleTimeString();
+        const levelColors = {
+            'INFO': 'text-blue-400',
+            'SUCCESS': 'text-green-400',
+            'ERROR': 'text-red-400'
+        };
+        const color = levelColors[level] || 'text-gray-400';
+        
+        const entry = document.createElement('div');
+        entry.className = `mb-1 ${color}`;
+        entry.innerText = `[${time}] [${level}] ${message}`;
+        logDiv.appendChild(entry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+    
+    async function loadSimHistory() {
+        try {
+            const res = await fetch('/api/admin/simulation/history', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            
+            const historyDiv = document.getElementById('simHistory');
+            if (!data.runs || data.runs.length === 0) {
+                historyDiv.innerHTML = '<div class="text-gray-600 text-sm">Žádné předchozí simulace</div>';
+                return;
+            }
+            
+            historyDiv.innerHTML = '';
+            data.runs.forEach(run => {
+                const date = new Date(run.timestamp).toLocaleString('cs-CZ');
+                const statusColor = run.status === 'success' ? 'text-green-500' : 'text-red-500';
+                
+                const entry = document.createElement('div');
+                entry.className = 'flex justify-between items-center p-2 border border-gray-800 bg-black hover:bg-gray-900';
+                entry.innerHTML = `
+                    <div>
+                        <div class="text-sm">${run.scenario_name}</div>
+                        <div class="text-xs text-gray-500">${date}</div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-xs text-gray-400">${run.duration}s</span>
+                        <span class="text-sm font-bold ${statusColor}">${run.status?.toUpperCase()}</span>
+                    </div>
+                `;
+                historyDiv.appendChild(entry);
+            });
+        } catch (e) {
+            console.error('Load history error:', e);
+        }
+    }
+    
+    function formatTime(seconds) {
+        if (!seconds || seconds <= 0) return '--:--';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    // Initialize simulation view when switching to it
+    const originalSwitchView = window.switchView;
+    window.switchView = function(view) {
+        originalSwitchView(view);
+        if (view === 'simulation') {
+            refreshSimStatus();
+            loadSimHistory();
+        }
+    };
 
 </script>
 {% endblock %}

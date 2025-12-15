@@ -10,5 +10,19 @@
       "avg_latency": 0,
       "errors": 0
     }
+  },
+  {
+    "timestamp": "2025-12-15T01:23:13.284100",
+    "scenario_name": "LLM Short Test (5 min)",
+    "status": "success",
+    "duration": 30.0,
+    "filename": "llm_sim_1765761793.json",
+    "stats": {
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "total_messages": 16,
+      "errors": 0
+    }
   }
 ]
