@@ -156,10 +156,10 @@
         </button>
     </div>
 
-    <!-- View A: MONITOR (Station 1) -->
-    <div id="view-monitor" class="view-container hidden pt-4">
-        <!-- Monitor Tabs -->
-        <div class="flex gap-4 mb-4 border-b-4 border-gray-800 pb-2 bg-black/50 p-2">
+    <!-- View A: MONITOR (General, Logs, Graph) -->
+    <!-- Force height to fill viewport minus header/padding to ensure graph is large -->
+    <div id="view-monitor" class="view-section hidden h-[calc(100vh-100px)] flex flex-col">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-2 flex-none bg-black/50 p-2">
             <button class="nav-btn active editable-label" data-key="tab_all" onclick="switchMonitorTab('all')"
                 id="mtab-all">VŠEVIDOUCÍ</button>
             <button class="nav-btn editable-label" data-key="tab_chats" onclick="switchMonitorTab('chats')"

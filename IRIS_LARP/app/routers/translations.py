@@ -14,13 +14,22 @@ from typing import Dict, Optional
 import html
 import json
 import re
+import os
 
 from ..dependencies import get_current_admin, get_current_user
 from ..logic.gamestate import gamestate
+from ..config import BASE_DIR
 from ..translations import load_translations, merge_translations, clear_cache
 from ..logic.routing import routing_logic
 
 router = APIRouter(prefix="/api/translations", tags=["translations"])
+
+TRANSLATION_FILES = {
+    "cz": "czech.json",
+    "crazy": "crazy.json",
+    "en": "english.json",
+    "iris": "iris.json"
+}
 
 
 class CustomLabelUpdate(BaseModel):
@@ -189,3 +198,68 @@ async def get_language_options(user=Depends(get_current_user)):
         ],
         "current": gamestate.language_mode
     }
+
+
+@router.get("/files/list")
+async def list_translation_files(user=Depends(get_current_user)):
+    """
+    List available translation files for editing.
+    """
+    return {
+        "status": "ok",
+        "files": [
+            {"code": "cz", "name": "Čeština (czech.json)"},
+            {"code": "crazy", "name": "Crazy Čeština (crazy.json)"},
+            # "en" and "iris" can be added if needed, but requirements mentioned cz and crazy
+        ]
+    }
+
+
+@router.get("/files/{code}")
+async def get_translation_file_content(code: str, user=Depends(get_current_user)):
+    """
+    Get raw content of a translation file.
+    """
+    if code not in TRANSLATION_FILES:
+        raise HTTPException(status_code=404, detail="File not found")
+        
+    filename = TRANSLATION_FILES[code]
+    file_path = BASE_DIR / "app" / "translations" / filename
+    
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found on disk")
+        
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = json.load(f)
+        return content
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading file: {str(e)}")
+
+
+@router.post("/files/{code}")
+async def save_translation_file_content(code: str, content: Dict = Body(...), admin=Depends(get_current_admin)):
+    """
+    Save content to a translation file (ROOT/ADMIN only).
+    """
+    if code not in TRANSLATION_FILES:
+        raise HTTPException(status_code=404, detail="File not found")
+        
+    filename = TRANSLATION_FILES[code]
+    file_path = BASE_DIR / "app" / "translations" / filename
+    
+    try:
+        # Validate JSON by dumping it first (although Body(...) ensures it's valid JSON)
+        json_str = json.dumps(content, indent=2, ensure_ascii=False)
+        
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(json_str)
+            
+        # Clear cache to ensure immediate effect if this language is active
+        clear_cache()
+        
+        # Broadcast update trigger (optional, maybe overkill to reload everything)
+        
+        return {"status": "saved", "file": filename}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error writing file: {str(e)}")

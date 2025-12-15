@@ -135,10 +135,26 @@ function initGrid() {
 document.addEventListener('DOMContentLoaded', () => {
     applyTranslations();
     initGrid();
-    initSocket(); // Assuming this exists or is called elsewhere? 
-    // Wait, the file ended with window functions. 
-    // We should ensure applyTranslations runs.
+    initSocket();
+    loadLoreData(); // Fetch graph data
 });
+
+// --- LORE DATA (v1.8) ---
+window.loreData = { roles: [], relations: [] };
+
+async function loadLoreData() {
+    try {
+        const res = await fetch('/api/admin/lore/data', {
+            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+        });
+        if (res.ok) {
+            window.loreData = await res.json();
+            console.log("Lore data loaded:", window.loreData.relations.length, "relations");
+        }
+    } catch (e) {
+        console.error("Failed to load lore data", e);
+    }
+}
 
 // Update UI based on State
 function updateUI() {
@@ -410,6 +426,53 @@ function startGraphLoop() {
             ctx.fillStyle = '#f8f';
             ctx.font = 'bold 10px monospace';
             ctx.fillText(`A${agentId}`, agX + 10, agY + 10);
+
+            // Store positions for narrative graph
+            // User ID format: U01..U08, Agent ID: A01..A08 (matching roles.json)
+            const uKey = `U${i.toString().padStart(2, '0')}`;
+            const aKey = `A${agentId.toString().padStart(2, '0')}`;
+
+            if (!window.nodePos) window.nodePos = {};
+            window.nodePos[uKey] = { x, y };
+            window.nodePos[aKey] = { x: agX, y: agY };
+        }
+
+        // --- DRAW NARRATIVE LINKS (v1.8) ---
+        if (window.loreData && window.loreData.relations) {
+            ctx.save();
+            window.loreData.relations.forEach(rel => {
+                const p1 = window.nodePos[rel.source];
+                const p2 = window.nodePos[rel.target];
+
+                if (p1 && p2) {
+                    // Narrative Link Style
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+
+                    // Color based on type
+                    let color = 'rgba(255, 255, 255, 0.1)'; // Default weak
+                    let width = 1;
+                    let dash = [];
+
+                    switch (rel.type) {
+                        case 'romance': color = 'rgba(233, 30, 99, 0.6)'; width = 2; break; // Pink
+                        case 'blackmail': color = 'rgba(244, 67, 54, 0.6)'; width = 2; dash = [5, 5]; break; // Red Dashed
+                        case 'rival': color = 'rgba(255, 152, 0, 0.5)'; width = 1.5; dash = [2, 2]; break; // Orange
+                        case 'plot': color = 'rgba(156, 39, 176, 0.5)'; width = 1.5; break; // Purple
+                        case 'trade': color = 'rgba(76, 175, 80, 0.4)'; width = 1; break; // Green
+                        default: color = 'rgba(150, 150, 150, 0.2)';
+                    }
+
+                    // Highlight if hover (TODO: Add hover logic for canvas lines if needed, but for now simple visual)
+
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = width;
+                    ctx.setLineDash(dash);
+                    ctx.stroke();
+                }
+            });
+            ctx.restore();
         }
 
         // Update and draw particles (batched by color for performance)

@@ -428,6 +428,40 @@ async def get_control_state(admin=Depends(get_current_admin)):
         "is_overloaded": gamestate.is_overloaded
     }
 
+# v1.8 Visualization Data
+@router.get("/lore/data")
+async def get_lore_data(admin=Depends(get_current_admin)):
+    """Serve lore data for graph visualization"""
+    try:
+        # Navigate to doc/iris/lore-web/data from BASE_DIR (assumed to be IRIS_LARP root or similar)
+        # BASE_DIR is usually IRIS_LARP.
+        # roles.json is in ../doc/iris/lore-web/data/roles.json from IRIS_LARP
+        
+        # Determine path safely
+        # BASE_DIR is defined in config.py, usually absolute path to IRIS_LARP
+        lore_data_dir = BASE_DIR.parent / "doc" / "iris" / "lore-web" / "data"
+        
+        roles_path = lore_data_dir / "roles.json"
+        relations_path = lore_data_dir / "relations.json"
+        
+        data = {
+            "roles": [],
+            "relations": []
+        }
+        
+        if roles_path.exists():
+            with open(roles_path, "r") as f:
+                data["roles"] = json.load(f)
+                
+        if relations_path.exists():
+            with open(relations_path, "r") as f:
+                data["relations"] = json.load(f)
+                
+        return data
+    except Exception as e:
+        print(f"Error loading lore data: {e}")
+        return {"roles": [], "relations": [], "error": str(e)}
+
 # v1.4 Endpoints
 
 class TimerAction(BaseModel):

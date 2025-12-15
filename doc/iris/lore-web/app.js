@@ -108,6 +108,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('Calling initTests...');
     initTests();
+
+    // Init Translation Editor
+    initLanguagesEditor();
 });
 
 async function loadData() {
@@ -163,7 +166,8 @@ const sectionCategories = {
     'tests': 'hlinik',
     'loreweb-doc': 'about',
     'compliance': 'about',
-    'exporty': 'about'
+    'exporty': 'about',
+    'jazyky': 'timeline' // Put under 'Průběh' category as requested
 };
 
 let currentCategory = 'lore';
@@ -2449,4 +2453,222 @@ function getFallbackManuals() {
             "content": "<h1>IRIS Systém - Příručka pro ROOT</h1><p>Plná kontrola nad systémem, konfigurace AI a fyzikálních konstant.</p>"
         }
     };
+}
+
+// ============================================
+// TRANSLATION EDITOR
+// ============================================
+
+let currentTranslationFile = null;
+let currentTranslationData = {};
+
+function initLanguagesEditor() {
+    const btnLoad = document.getElementById('btnLoadLang');
+    const btnSave = document.getElementById('btnSaveLang');
+    const select = document.getElementById('langSelect');
+    const searchInput = document.getElementById('langSearch');
+
+    if (btnLoad) {
+        btnLoad.addEventListener('click', loadSelectedLanguage);
+    }
+
+    if (btnSave) {
+        btnSave.addEventListener('click', saveCurrentLanguage);
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            filterTranslationTable(e.target.value);
+        });
+    }
+
+    // Load available files list on init
+    fetchLanguageFilesList();
+}
+
+async function fetchLanguageFilesList() {
+    const select = document.getElementById('langSelect');
+    if (!select) return;
+
+    try {
+        const res = await fetch('/api/translations/files/list');
+        if (res.ok) {
+            const data = await res.json();
+            select.innerHTML = '<option value="" disabled selected>Vyberte soubor...</option>';
+            data.files.forEach(file => {
+                const opt = document.createElement('option');
+                opt.value = file.code;
+                opt.textContent = file.name;
+                select.appendChild(opt);
+            });
+        } else {
+            console.warn('Failed to fetch language files list');
+            /* Fallback for local testing without backend */
+            if (window.location.protocol === 'file:') {
+                select.innerHTML = `
+                    <option value="" disabled selected>Vyberte soubor (mock)...</option>
+                    <option value="cz">Čeština (mock)</option>
+                    <option value="crazy">Crazy (mock)</option>
+                 `;
+            } else {
+                select.innerHTML = '<option value="" disabled selected>Chyba načítání seznamu</option>';
+            }
+        }
+    } catch (e) {
+        console.error('Error fetching language list:', e);
+        // FORCE FALLBACK if fetch fails (e.g. network error on file://)
+        if (window.location.protocol === 'file:') {
+            select.innerHTML = `
+                <option value="" disabled selected>Vyberte soubor (mock)...</option>
+                <option value="cz">Čeština (mock)</option>
+                <option value="crazy">Crazy (mock)</option>
+             `;
+        } else {
+            select.innerHTML = '<option value="" disabled selected>Chyba načítání seznamu</option>';
+        }
+    }
+}
+
+async function loadSelectedLanguage() {
+    const select = document.getElementById('langSelect');
+    const container = document.getElementById('langEditorContainer');
+    const loading = document.getElementById('langLoading');
+
+    if (!select.value) {
+        alert('Prosím vyberte soubor.');
+        return;
+    }
+
+    const langCode = select.value;
+    currentTranslationFile = langCode;
+
+    // Show loading
+    container.style.display = 'none';
+    loading.style.display = 'block';
+    loading.textContent = 'Načítání dat...';
+
+    try {
+        let data = {};
+        if (window.location.protocol === 'file:' || langCode.endsWith('(mock)')) {
+            // Mock data
+            data = {
+                "login.title": "Vítejte v systému IRIS",
+                "login.btn": "Vstoupit",
+                "admin_dashboard.title": "Správa systému"
+            };
+            await new Promise(r => setTimeout(r, 500));
+        } else {
+            const res = await fetch(`/api/translations/files/${langCode}`);
+            if (!res.ok) throw new Error('Failed to load file');
+            data = await res.json();
+        }
+
+        currentTranslationData = data;
+        renderTranslationTable(data);
+
+        loading.style.display = 'none';
+        container.style.display = 'block';
+
+    } catch (e) {
+        console.error('Load error:', e);
+        loading.textContent = 'Chyba při načítání: ' + e.message;
+    }
+}
+
+function renderTranslationTable(data) {
+    const tbody = document.getElementById('langTableBody');
+    tbody.innerHTML = '';
+
+    // Sort keys
+    const sortedKeys = Object.keys(data).sort();
+
+    sortedKeys.forEach(key => {
+        const tr = document.createElement('tr');
+        const val = data[key];
+
+        // Use textarea for long values, input for short
+        const isLong = val.length > 50;
+        const inputHtml = isLong
+            ? `<textarea class="audit-input lang-value" data-key="${key}" rows="3" style="width:100%">${escapeHtml(val)}</textarea>`
+            : `<input type="text" class="audit-input lang-value" data-key="${key}" value="${escapeHtml(val)}" style="width:100%">`;
+
+        tr.innerHTML = `
+            <td style="vertical-align:top; font-family:monospace; color:var(--text-muted); padding-top:10px;">${key}</td>
+            <td>${inputHtml}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function filterTranslationTable(query) {
+    const q = query.toLowerCase();
+    const rows = document.querySelectorAll('#langTableBody tr');
+
+    rows.forEach(row => {
+        const key = row.querySelector('td:first-child').textContent.toLowerCase();
+        const inputs = row.querySelector('.lang-value');
+        const val = inputs.value.toLowerCase();
+
+        if (key.includes(q) || val.includes(q)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function updateCurrentDataFromUI() {
+    const inputs = document.querySelectorAll('.lang-value');
+    inputs.forEach(input => {
+        const key = input.dataset.key;
+        currentTranslationData[key] = input.value;
+    });
+}
+
+async function saveCurrentLanguage() {
+    if (!currentTranslationFile) return;
+
+    // Update data object from UI inputs
+    updateCurrentDataFromUI();
+
+    const btnSave = document.getElementById('btnSaveLang');
+    const originalText = btnSave.textContent;
+    btnSave.textContent = 'Ukládání...';
+    btnSave.disabled = true;
+
+    try {
+        if (window.location.protocol === 'file:') {
+            alert('File protocol - save simulated (check console).');
+            console.log('Saving data:', currentTranslationData);
+            await new Promise(r => setTimeout(r, 800));
+        } else {
+            const res = await fetch(`/api/translations/files/${currentTranslationFile}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentTranslationData)
+            });
+
+            if (!res.ok) throw new Error('Save failed');
+
+            const result = await res.json();
+            alert(`Soubor ${result.file} byl úspěšně uložen!`);
+        }
+    } catch (e) {
+        console.error('Save error:', e);
+        alert('Chyba při ukládání: ' + e.message);
+    } finally {
+        btnSave.textContent = originalText;
+        btnSave.disabled = false;
+    }
+}
+
+// Utility
+function escapeHtml(text) {
+    if (!text) return "";
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

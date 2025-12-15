@@ -84,9 +84,6 @@
             <a href="#timeline" class="submenu-link" data-section="timeline">
                 <span class="submenu-icon">⏱️</span> Průběh
             </a>
-            <a href="#jazyky" class="submenu-link" data-section="jazyky">
-                <span class="submenu-icon">🌐</span> Jazyky
-            </a>
         </div>
         <!-- HLINIK submenu -->
         <div class="submenu-group" data-category="hlinik" style="display: none;">
@@ -727,51 +724,6 @@
                         </div>
                     </div>
                 </article>
-            </div>
-        </section>
-
-        <!-- Jazyky Section -->
-        <section id="section-jazyky" class="content-section">
-            <div class="section-header">
-                <h1>Editor Překladů</h1>
-                <p class="section-subtitle">Úprava jazykových souborů systému IRIS (Load/Save from Git)</p>
-            </div>
-
-            <div class="dashboard-card full-width">
-                <div class="editor-controls" style="display:flex; gap:1rem; margin-bottom:1rem; align-items:center;">
-                    <label for="langSelect">Vyber soubor:</label>
-                    <select id="langSelect" class="audit-select" style="min-width:200px">
-                        <option value="" disabled selected>Načítání...</option>
-                    </select>
-
-                    <button id="btnLoadLang" class="btn-primary">Načíst</button>
-                    <div style="flex-grow:1"></div>
-                    <button id="btnSaveLang" class="btn-primary"
-                        style="background-color: var(--accent-gold); color: black;">💾 Uložit do Git repozitáře</button>
-                </div>
-
-                <div id="langEditorContainer" class="translations-editor" style="display:none;">
-                    <div class="search-box" style="margin-bottom:1rem;">
-                        <input type="text" id="langSearch" placeholder="Hledat klíč nebo hodnotu..." class="audit-input"
-                            style="width:100%">
-                    </div>
-
-                    <table class="data-table" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th style="width:30%">Klíč (Key)</th>
-                                <th style="width:70%">Hodnota (Value)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="langTableBody">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="langLoading" style="text-align:center; padding:2rem; color:var(--text-muted);">
-                    Vyberte jazyk pro editaci.
-                </div>
             </div>
         </section>
 
@@ -2094,8 +2046,8 @@
         </div>
     </div>
 
-    <script src="js/graph.js?v=20251215_fix4"></script>
-    <script src="app.js?v=20251215_fix4"></script>
+    <script src="js/graph.js?v=20251215_fix3"></script>
+    <script src="app.js?v=20251215_fix3"></script>
 </body>
 
 </html>

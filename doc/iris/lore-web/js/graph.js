@@ -312,6 +312,102 @@ class RelationGraph {
         return colors[type] || '#666';
     }
 
+    startSimulation() {
+        const animate = () => {
+            this.tickCount++;
+
+            // Only update physics if not fully cooled
+            if (!this.simulationCooled) {
+                this.updatePhysics();
+            }
+
+            this.draw();
+            requestAnimationFrame(animate);
+        };
+        animate();
+    }
+
+    updatePhysics() {
+        let totalVelocity = 0;
+
+        // 1. Repulsion (Node-Node)
+        for (let i = 0; i < this.nodes.length; i++) {
+            for (let j = i + 1; j < this.nodes.length; j++) {
+                const a = this.nodes[i];
+                const b = this.nodes[j];
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+                if (dist < 200) {
+                    const force = (this.options.repulsionStrength * 1.5) / (dist * dist);
+                    const fx = (dx / dist) * force;
+                    const fy = (dy / dist) * force;
+                    a.vx += fx;
+                    a.vy += fy;
+                    b.vx -= fx;
+                    b.vy -= fy;
+                }
+            }
+        }
+
+        // 2. Attraction (Links)
+        for (const link of this.links) {
+            const dx = link.target.x - link.source.x;
+            const dy = link.target.y - link.source.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+            const optimalDist = 120;
+            const force = (dist - optimalDist) * this.options.attractionStrength;
+            const fx = (dx / dist) * force;
+            const fy = (dy / dist) * force;
+
+            link.source.vx += fx;
+            link.source.vy += fy;
+            link.target.vx -= fx;
+            link.target.vy -= fy;
+        }
+
+        // 3. Zonal Gravity (Admins=Top, Others=Bottom)
+        const colWidth = this.width / 4;
+        const topY = this.height * 0.25;
+        const bottomY = this.height * 0.75;
+
+        const targets = {
+            'agent': { x: colWidth * 0.8, y: bottomY },
+            'admin': { x: colWidth * 2, y: topY },
+            'user': { x: colWidth * 3.2, y: bottomY }
+        };
+
+        for (const node of this.nodes) {
+            if (node === this.draggedNode) continue;
+
+            const target = targets[node.type];
+
+            // Horizontal and vertical pull
+            node.vx += (target.x - node.x) * this.options.centeringStrength;
+            node.vy += (target.y - node.y) * this.options.centeringStrength;
+
+            // Apply velocity with damping
+            node.x += node.vx;
+            node.y += node.vy;
+            node.vx *= this.options.damping;
+            node.vy *= this.options.damping;
+
+            // Boundary constraints
+            const margin = node.radius + 8;
+            node.x = Math.max(margin, Math.min(this.width - margin, node.x));
+            node.y = Math.max(margin, Math.min(this.height - margin, node.y));
+
+            totalVelocity += Math.abs(node.vx) + Math.abs(node.vy);
+        }
+
+        // Cool down after settling
+        if (this.tickCount > 150 && totalVelocity < 0.5) {
+            this.simulationCooled = true;
+        }
+    }
+
     draw() {
         this.ctx.clearRect(0, 0, this.width, this.height);
 

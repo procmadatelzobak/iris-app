@@ -39,6 +39,11 @@
 - [x] Vytvoření tohoto logu.
 - [ ] Aktualizace `task.md` a `implementation_plan.md`.
 
+### Fáze 37: Visualization & Stabilization
+- [ ] `PHASE_37_IMPLEMENTATION.md`: Created.
+- [ ] Admin Dashboard Graph Enhancement.
+- [ ] Tests & Bug Fixes.
+
 ### Fáze 2: Backend Core (Power & Economy)
 - [ ] `gamestate.py`: Implementace `PowerManager` (Load calc) a `AgentTimer`.
 - [ ] `economy.py` (New? or `admin_api.py` logic): Implementace `AdminTreasury`.

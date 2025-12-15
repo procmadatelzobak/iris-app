@@ -1,7 +1,7 @@
 {
-  "temperature": 39.0,
+  "temperature": 20.0,
   "global_shift_offset": 0,
-  "treasury_balance": 1000,
+  "treasury_balance": 530,
   "chernobyl_mode": "normal",
   "is_overloaded": false,
   "power_capacity": 100,
