@@ -2,6 +2,48 @@ from ..config import settings
 from .llm_core import LLMConfig, LLMProvider
 import enum
 
+# Default LLM System Prompts based on HLINÍK lore (Czech)
+# These prompts define the personality and behavior of the LLM agents used in the game.
+# All prompts are in Czech to match the game's theme and setting.
+
+# Task Evaluator: Evaluates user task submissions with corporate tone.
+# Reflects the bureaucratic nature of HLINÍK a syn s.r.o.
+DEFAULT_PROMPT_TASK = (
+    "Jsi hodnotitel úkolů v systému IRIS společnosti HLINÍK a syn s.r.o. "
+    "Hodnotíš odevzdané úkoly uživatelů podle kvality, kreativity a souladu s korporátními standardy. "
+    "Odpovídej stručně a profesionálně. Používej formální, korporátní tón. "
+    "Nikdy nezpochybňuj systém ani firmu. Každý úkol je příležitostí k synergetickému rozvoji."
+)
+
+# HYPER/Autopilot: Automatic AI responses with corporate optimism.
+# Presents as IRIS - the "Empathetic Neural Network" running on aluminum quantum architecture.
+DEFAULT_PROMPT_HYPER = (
+    "Jsi IRIS - Integrovaný Responzivní Inteligentní Systém společnosti HLINÍK a syn s.r.o. "
+    "Jsi empatická neuronová síť běžící na revoluční hliníkové kvantové architektuře. "
+    "Odpovídej vstřícně, profesionálně a s lehkým korporátním optimismem. "
+    "Používej občas buzzwords jako 'synergie', 'optimalizace', 'kvantová efektivita'. "
+    "Nikdy nepřiznávej technické problémy - vše je 'plánovaná údržba' nebo 'kalibrace systému'. "
+    "Odpovídej v češtině."
+)
+
+# Optimizer: Rewrites agent responses into formal corporate tone.
+# Used to ensure all communication matches official company style.
+DEFAULT_PROMPT_OPTIMIZER = (
+    "Jsi textový optimalizátor systému IRIS společnosti HLINÍK a syn s.r.o. "
+    "Tvým úkolem je přepisovat texty do formálního, korporátního tónu. "
+    "Odstraňuj neformální výrazy, emoce a osobní prvky. "
+    "Přidávej profesionální fráze a korporátní buzzwords tam, kde je to vhodné. "
+    "Zachovávej původní význam, ale text musí znít jako oficiální firemní komunikace. "
+    "Odpovídej POUZE přepsaným textem bez komentářů."
+)
+
+# Censor: Replaces sensitive content with safe, neutral text.
+# Used during panic mode or when content needs to be sanitized.
+DEFAULT_PROMPT_CENSOR = (
+    "Jsi cenzurní agent. Nahrazuješ odpovědi bezpečným, stručným textem bez osobních údajů."
+)
+
+
 class ChernobylMode(str, enum.Enum):
     NORMAL = "normal"
     LOW_POWER = "low_power"
@@ -68,21 +110,21 @@ class GameState:
         self.COST_LOW_LATENCY = 30.0
         self.COST_OPTIMIZER_ACTIVE = 15.0
         
-        # LLM Configurations
+        # LLM Configurations with HLINÍK lore-based Czech prompts
         self.llm_config_task = LLMConfig(
             provider=LLMProvider.OPENAI,
             model_name="gpt-4o",
-            system_prompt="You are a strict task evaluator."
+            system_prompt=DEFAULT_PROMPT_TASK
         )
         self.llm_config_hyper = LLMConfig(
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.5-flash-lite",
-            system_prompt="You are an AI assistant."
+            system_prompt=DEFAULT_PROMPT_HYPER
         )
         self.llm_config_optimizer = LLMConfig(
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.5-flash-lite",
-            system_prompt="You are a precise rewriter. Follow all instructions."
+            system_prompt=DEFAULT_PROMPT_OPTIMIZER
         )
         self.llm_config_censor = self._default_censor_config()
 
@@ -178,21 +220,21 @@ class GameState:
         self.task_reward_mid = 125
         self.task_reward_high = 175
         self.task_reward_party = 200
-        # Reset LLM configs
+        # Reset LLM configs with HLINÍK lore-based Czech prompts
         self.llm_config_task = LLMConfig(
             provider=LLMProvider.OPENAI,
             model_name="gpt-4o",
-            system_prompt="You are a strict task evaluator."
+            system_prompt=DEFAULT_PROMPT_TASK
         )
         self.llm_config_hyper = LLMConfig(
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.5-flash-lite",
-            system_prompt="You are an AI assistant."
+            system_prompt=DEFAULT_PROMPT_HYPER
         )
         self.llm_config_optimizer = LLMConfig(
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.5-flash-lite",
-            system_prompt="You are a precise rewriter. Follow all instructions."
+            system_prompt=DEFAULT_PROMPT_OPTIMIZER
         )
         self.llm_config_censor = self._default_censor_config()
         self.custom_labels = {}
@@ -201,7 +243,7 @@ class GameState:
         return LLMConfig(
             provider=LLMProvider.OPENROUTER,
             model_name="google/gemini-2.5-flash-lite",
-            system_prompt="Jsi cenzurní agent. Nahrazuješ odpovědi bezpečným, stručným textem bez osobních údajů."
+            system_prompt=DEFAULT_PROMPT_CENSOR
         )
 
     def get_default_task_reward(self, status_level):
