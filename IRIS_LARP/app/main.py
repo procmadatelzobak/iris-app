@@ -1,4 +1,3 @@
-from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -6,7 +5,7 @@ from contextlib import asynccontextmanager
 import os
 from .routers import auth, sockets, admin_api, translations, docs, simulation
 from .database import init_db
-from .config import settings
+from .config import settings, BASE_DIR
 from .seed import seed_data
 import asyncio
 import traceback
@@ -99,7 +98,7 @@ async def lifespan(app: FastAPI):
     from .logic.gamestate import gamestate
     from .logic.routing import routing_logic
     
-    data_dir = Path(__file__).resolve().parent.parent / "data"
+    data_dir = BASE_DIR / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     state_file = data_dir / "gamestate.json"
     
@@ -131,20 +130,18 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=lifespan)
 
 # Static Files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-base_dir = Path(__file__).resolve().parent.parent
-lore_web_dir = base_dir.parent / "doc" / "iris" / "lore-web"
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+lore_web_dir = BASE_DIR.parent / "doc" / "iris" / "lore-web"
 
 if lore_web_dir.exists():
     # Phase 34: Consolidated Lore Web
     app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir), html=True), name="lore-web")
     app.mount("/organizer-wiki", StaticFiles(directory=str(lore_web_dir), html=True), name="wiki")
 
-app.mount("/docs/images", StaticFiles(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs", "images")), name="docs_images")
+app.mount("/docs/images", StaticFiles(directory=BASE_DIR / "docs" / "images"), name="docs_images")
 
 # Templates
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=BASE_DIR / "app" / "templates")
 
 # Routers
 app.include_router(auth.router)

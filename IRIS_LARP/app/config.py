@@ -1,14 +1,18 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_DB_PATH = BASE_DIR / "data" / "iris.db"
 
 class Settings:
     PROJECT_NAME: str = "IRIS System"
     VERSION: str = "1.0.0"
     
     # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./data/iris.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
     
     # Security
     SECRET_KEY: str = os.getenv("SECRET_KEY", "insecure-change-me-for-production")
