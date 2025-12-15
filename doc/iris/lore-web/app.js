@@ -745,7 +745,10 @@ function exportManualPDF(type) {
         return;
     }
     const manual = state.manuals[manualType];
-    if (!manual) return;
+    if (!manual) {
+        console.warn(`Manual '${manualType}' nebyl nalezen.`);
+        return;
+    }
 
     const printContent = generateManualHTML(manual);
     openPrintWindow(printContent, `Prirucka_${manualType}`);
