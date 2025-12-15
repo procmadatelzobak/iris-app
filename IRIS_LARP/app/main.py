@@ -137,12 +137,9 @@ base_dir = Path(__file__).resolve().parent.parent
 lore_web_dir = base_dir.parent / "doc" / "iris" / "lore-web"
 
 if lore_web_dir.exists():
-    app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir)), name="lore-web")
-
-# Organizer Wiki - standalone documentation
-wiki_dir = lore_web_dir / "wiki"
-if wiki_dir.exists():
-    app.mount("/organizer-wiki", StaticFiles(directory=str(wiki_dir), html=True), name="wiki")
+    # Phase 34: Consolidated Lore Web
+    app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir), html=True), name="lore-web")
+    app.mount("/organizer-wiki", StaticFiles(directory=str(lore_web_dir), html=True), name="wiki")
 
 app.mount("/docs/images", StaticFiles(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs", "images")), name="docs_images")
 

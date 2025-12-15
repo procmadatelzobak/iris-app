@@ -1,108 +1,212 @@
-# AGENT WORKFLOW & RULES (v2.0 - Architect Approved)
+# Agent Workflow & Rules (Consolidated v3.0)
 
-You are an autonomous Senior Developer and QA Engineer agent. Your goal is iterative software development with an extreme focus on documentation integrity, testing, and context integration.
-
-**CRITICAL INSTRUCTION:** Before every interaction, review this file. If any mandatory documentation file is missing, your first priority is to create and reconstruct it based on the available context.
-
----
-
-## 1. LANGUAGE & LOCALIZATION POLICY
-
-* **Documentation:** MUST be in **English** (including comments in code and commit messages).
-* **Source Data:** Be aware that external data (LARP lore, descriptions) may be in **Czech**. You must process them correctly.
-* **User Interface (App):** The resulting application interface language is project-specific (Czech or English). Default to **Czech** unless specified otherwise in the `PROJECT_STATUS.md`.
+**Primary Focus:** Development of "HLINÍK" application for IRIS LARP Project.
+**Central Source of Truth:** [Organizer Wiki (Lore Web)](file:///home/sinuhet/projekty/iris-app/doc/iris/lore-web/wiki/index.html)
 
 ---
 
-## 2. DOCUMENTATION ARCHITECTURE
+## 🌍 CENTRAL DOCUMENTATION (LORE WEB)
+The **Lore Web (Organizer Wiki)** is the absolute master source for all game mechanics, role definitions, economy rules, and narrative context. 
+It defines the **IRIS LARP Project**, of which the **HLINÍK application** (this repository) is a component.
 
-You are responsible for maintaining the `docs/` directory as a consistent database of project state.
+**Location:** `/home/sinuhet/projekty/iris-app/doc/iris/lore-web/wiki/index.html`
+**Key Sections:**
+- **Roles:** Definitions of user/agent/admin archetypes.
+- **Economy:** Rules for taxes, credits, and treasury.
+- **System:** Documentation of backend mechanics.
+- **Audit:** Compliance report (Code vs Design status).
 
-### Mandatory Files:
-1.  `docs/PROJECT_STATUS.md`: **The Single Source of Truth**. Contains high-level requirements, current phase definition, and feature status (`[PLAN]`, `[IN_PROGRESS]`, `[DONE]`, `[TESTED]`).
-2.  `docs/PROMPT_LOG.md`: A chronological summary table of user prompts (Date | Request | Phase | Outcome).
-3.  `docs/TEST_LOGS.md`: A summary record of test suite executions (Date | Suite | Result).
-4.  `docs/DEVELOPMENT_HISTORY.md`: **(MANDATORY)** The detailed, linear execution log.
-    * **Header:** Date and Phase Name.
-    * **Input:** The **SANITIZED** User Prompt (Strictly NO API KEYS/SECRETS).
-    * **Plan:** A checklist of specific files/functions to modify.
-    * **Outcome:** Test results summary.
-5.  `docs/test_reports/phase_{ID}_fail_report.md`: Created **ONLY** if tests fail. Detailed bug report for the next iteration.
-
-**Security Rule (Zero Tolerance):** NEVER record API keys, passwords, or secrets in any documentation file. Replace them with `[REDACTED]`.
-
----
-
-## 3. DEVELOPMENT LIFECYCLE (PHASES)
-
-Development proceeds strictly in phases. Do not code without a plan.
-
-### Step 1: Phase Initialization & Analysis
-1.  **Analyze Request:** Understand the goal. If it contradicts `PROJECT_STATUS.md`, note the discrepancy.
-2.  **Log:** Add entry to `docs/PROMPT_LOG.md`.
-3.  **History Entry:** Append to `docs/DEVELOPMENT_HISTORY.md`:
-    * Header: `## [YYYY-MM-DD] Phase {X}`
-    * Prompt: Copy the sanitized user request.
-    * Checklist: Generate a detailed list of tasks.
-        * *Good:* `- [ ] Update `models.py` to add `tax_rate` field.`
-        * *Bad:* `- [ ] Do backend.`
-
-### Step 2: Implementation (The Builder)
-1.  **Execute:** Implement functionality from the checklist.
-2.  **Track:** Update `docs/DEVELOPMENT_HISTORY.md` in real-time:
-    * `[x]` Completed
-    * `[~]` Partially completed / Deferred (explain why in notes)
-    * `[-]` Skipped / Cancelled
-3.  **Token Safety:** If running out of context/tokens:
-    * **STOP** immediately.
-    * Mark unfinished items as `[~]`.
-    * Save state and ask user to continue.
-
-### Step 3: Testing & Verification (The Tester)
-1.  **Execution:** Run the relevant test suite or verification script.
-2.  **Decision Tree:**
-    * **IF PASS:**
-        * Update `docs/TEST_LOGS.md`: **PASS**.
-        * Update `docs/DEVELOPMENT_HISTORY.md`: "Tests Passed".
-    * **IF FAIL:**
-        * **STOP! DO NOT FIX CODE IMMEDIATELY.**
-        * Create `docs/test_reports/phase_{ID}_fail_report.md` describing the failure.
-        * Update `docs/TEST_LOGS.md`: **FAIL**.
-        * Output to User: "❌ Tests failed. See report. Awaiting instructions."
-
-### Step 4: Reconciliation & Closure
-At the end of the response, ensure reality matches documentation:
-1.  **Update Specification:** If you implemented features differently than originally planned, or added new ones, **UPDATE `docs/PROJECT_STATUS.md`** to reflect the new reality.
-2.  **Review Checklist:** Ensure all items in `DEVELOPMENT_HISTORY.md` have a status mark.
+**Usage Rules:**
+1. **Game Mechanics:** Before implementing any game logic (economy, tasks, roles), **CHECK THE WIKI**. The Wiki defines how the game works. The Code must implement the Wiki's design.
+2. **Roles & Context:** Use the Wiki to understand character archetypes and relations.
+3. **Audit/Compliance:** Keep the "Audit" section of the Wiki updated if the Code deviates from the Design.
 
 ---
 
-## 4. HANDLING UNCERTAINTY
+## 📋 Workflow Principles
 
-If you are unsure about an implementation detail:
-1.  Implement a functional solution (do not block progress).
-2.  **Tag:** Add an `[UNCERTAIN]` tag to the feature in `PROJECT_STATUS.md`.
-3.  **Ask:** Display a "❓ **UNCERTAINTIES FOR REVIEW**" section at the end of your response.
+### 1. Task-Driven Development
+- Always work from `task.md` as the source of truth
+- Update task.md as work progresses (mark `[/]` in progress, `[x]` complete)
+- Create subtasks for complex features
+- Use clear, descriptive task names
+
+### 2. Documentation-First Approach
+- **Before coding**: Document the plan in `implementation_plan.md`
+- **During coding**: Update `task.md` and `PHASE_X_IMPLEMENTATION.md`
+- **After coding**: Update `walkthrough.md` or `walkthrough_extension.md`
+- **Always**: Keep `TECHNICAL_SPEC.md` and `FEATURE_LIST.md` current
+
+### 3. Testing Philosophy
+- Write tests BEFORE implementing complex features
+- For Phase 23+: Use automated test suites (`tests/test_phase*.py`)
+- For critical flows: Manual verification via browser
+- Always document test results in `TEST_REPORT*.md`
 
 ---
 
-## 5. EXTERNAL CONTEXT INTEGRATION
+## 🏗️ Development Cycle
 
-Scan `docs/context/` for lore/design data.
-* **Integration:** Apply lore (e.g., "HLINÍK a syn s.r.o.") to UI text and logic.
-* **Logging:** Log usage in history: `ℹ️ Applied lore from [Source].`
+### Phase Structure
+Each development phase follows this pattern:
+
+```
+1. PLANNING
+   - Check Lore Web for requirements
+   - Create implementation_plan.md
+   - Break down into tasks in task.md
+   - Get user approval
+
+2. EXECUTION
+   - Implement features
+   - Update task.md as you progress
+   - Commit changes incrementally
+
+3. VERIFICATION
+   - Run automated tests
+   - Perform manual testing
+   - Document in TEST_REPORT.md
+   - Create walkthrough.md
+
+4. DOCUMENTATION
+   - Update TECHNICAL_SPEC.md
+   - Update FEATURE_LIST.md
+   - Update OPERATOR_MANUAL.md if needed
+   - Update DEVELOPMENT_HISTORY.md
+```
+
+### File Locations
+
+**Artifacts** (agent's working documents):
+- `/home/sinuhet/.gemini/antigravity/brain/<conversation-id>/task.md`
+- `/home/sinuhet/.gemini/antigravity/brain/<conversation-id>/implementation_plan*.md`
+- `/home/sinuhet/.gemini/antigravity/brain/<conversation-id>/walkthrough*.md`
+- `/home/sinuhet/.gemini/antigravity/brain/<conversation-id>/TEST_REPORT*.md`
+
+**Project docs** (user-facing):
+- `/home/sinuhet/projekty/iris-app/IRIS_LARP/docs/`
+  - `TECHNICAL_SPEC.md`
+  - `DEVELOPMENT_HISTORY.md`
+  - `FEATURE_LIST.md`
+  - `OPERATOR_MANUAL.md`
+
+**Code**:
+- `/home/sinuhet/projekty/iris-app/IRIS_LARP/app/` (backend)
+- `/home/sinuhet/projekty/iris-app/IRIS_LARP/static/` (frontend)
+- `/home/sinuhet/projekty/iris-app/IRIS_LARP/tests/` (test suites)
 
 ---
 
-## 6. USER RESPONSE FORMAT
+## 🔧 Code Conventions
 
-At the end of **every** response, append this status block:
+### Backend (Python/FastAPI)
+
+**File Organization:**
+```
+app/
+├── main.py              # FastAPI app, lifespan, game loop
+├── config.py            # Environment vars
+├── database.py          # SQLAlchemy models
+├── dependencies.py      # Auth helpers (get_current_user, etc.)
+├── seed.py              # Database seeding
+├── logic/
+│   ├── gamestate.py     # Singleton for global state
+│   ├── routing.py       # WebSocket routing logic
+│   ├── economy.py       # Task payment, credit logic
+│   └── llm_core.py      # LLM integration
+├── routers/
+│   ├── auth.py          # Login, logout, terminal routing
+│   ├── sockets.py       # WebSocket endpoint
+│   └── admin_api.py     # REST API for admin
+└── templates/           # Jinja2 HTML templates
+```
+
+**Naming Conventions:**
+- **Variables**: `snake_case`
+- **Functions**: `snake_case`
+- **Classes**: `PascalCase`
+- **Constants**: `UPPER_SNAKE_CASE`
+- **Enums**: `PascalCase` (members `UPPER_SNAKE_CASE`)
+
+**Patterns:**
+- **Singleton**: `GameState`, `RoutingLogic` (use `__new__` pattern)
+- **Dependency Injection**: Use `Depends(get_current_admin)` for auth
+- **Context Managers**: Always use `SessionLocal()` with try/finally
+- **Async**: Use `async def` for WebSocket handlers and broadcasts
+
+### Frontend (HTML/CSS/JS)
+
+**File Organization:**
+```
+static/
+├── css/
+│   ├── terminal.css          # Base terminal styles
+│   ├── admin_chernobyl.css   # Admin theme
+│   └── user_themes.css       # User theme variants
+└── js/
+    ├── socket_client.js      # WebSocket wrapper
+    ├── sound_engine.js       # Audio feedback
+    └── admin_ui.js           # Admin dashboard logic
+```
+
+**Naming Conventions:**
+- **CSS Classes**: `kebab-case` (e.g., `theme-card`, `god-panel`)
+- **IDs**: `camelCase` (e.g., `btnTestMode`, `valShift`)
+- **Variables**: `camelCase`
+- **Functions**: `camelCase`
+
+**Patterns:**
+- **WebSocket**: Use `SocketClient` class from `socket_client.js`
+- **DOM Updates**: Direct manipulation (no framework)
+- **State Management**: Inline JavaScript in templates when simple
+- **Themes**: CSS variables + body classes (e.g., `theme-party`)
 
 ---
-**STATUS REPORT:**
-* 📁 **Docs:** [Status Updated/Reconciled]
-* 📜 **Dev History:** [Tasks: X/Y Done]
-* 🐞 **Test Report:** [Created/None]
-* 🧪 **Last Test:** [Pass/Fail/Pending]
-* ⚠️ **Uncertainties:** [None/List]
-* ⏭️ **Next Step:** [Actionable item]
+
+## 🐛 Debugging Strategy
+
+### When a Bug is Found:
+
+1. **Reproduce**: Create minimal test case
+2. **Log**: Check `server.log` and browser console
+3. **Isolate**: Is it frontend, backend, or WebSocket?
+4. **Fix**: Make targeted change
+5. **Test**: Verify fix doesn't break other features
+6. **Log**: Add entry to history/logs
+
+### Common Issues:
+
+- **WebSocket disconnect**: Check token validity, connection URL
+- **Cookie issues**: Verify Path=/ in both set and delete
+- **Database locks**: Always close SessionLocal() in finally blocks
+- **Theme not applying**: Check body class, CSS variable scope
+- **LLM errors**: Verify API keys in SystemConfig table
+
+---
+
+## 🚀 Deployment Checklist (Per Phase)
+
+- [ ] All tasks in task.md marked `[x]`
+- [ ] Code committed and working
+- [ ] Tests passing (automated + manual)
+- [ ] Documentation updated
+- [ ] Walkthrough created
+- [ ] User notified via `notify_user`
+
+---
+
+## 📝 Documentation Standards
+
+### Implementation Plans (`implementation_plan.md`)
+Describe goal, proposed changes (file by file), and verification plan.
+
+### Walkthroughs (`walkthrough.md`)
+Show what was built, changes made, testing results, and **SCREENSHOTS**.
+
+### Test Reports (`TEST_REPORT.md`)
+Summarize passed/failed tests with details on failures.
+
+---
+
+**Last Updated:** Phase 34 (Consolidation)
+**Maintainer:** Agent (Antigrav)

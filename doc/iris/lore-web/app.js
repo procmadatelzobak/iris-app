@@ -29,15 +29,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadData() {
     try {
         // Load roles
-        const rolesResponse = await fetch('../data/roles.json');
+        const rolesResponse = await fetch('data/roles.json');
         rolesData = await rolesResponse.json();
 
         // Load relations
-        const relationsResponse = await fetch('../data/relations.json');
+        const relationsResponse = await fetch('data/relations.json');
         relationsData = await relationsResponse.json();
 
         // Load config
-        const configResponse = await fetch('../data/config.json');
+        const configResponse = await fetch('data/config.json');
         configData = await configResponse.json();
 
         console.log('Data loaded:', { roles: rolesData.length, relations: relationsData.length });
