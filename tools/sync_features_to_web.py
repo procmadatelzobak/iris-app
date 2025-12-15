@@ -13,12 +13,34 @@ import re
 from pathlib import Path
 from datetime import datetime
 
+# Configuration constants
+MIN_KEYWORD_LENGTH = 3  # Minimum keyword length for test matching
+
 
 def parse_feature_list(content: str) -> list[dict]:
     """
     Parse FEATURE_LIST.md and extract features with their status.
     
-    Returns a list of feature dictionaries.
+    Args:
+        content: The raw markdown content of FEATURE_LIST.md
+        
+    Returns:
+        A list of feature dictionaries with the following structure:
+        - id: Unique feature identifier (e.g., "feat_001")
+        - category: Main category from H2 header (e.g., "Core Features")
+        - subcategory: Subcategory from H3 header
+        - role: Role assignment derived from category (User/Agent/Admin/Root/AI/All)
+        - name: Feature name extracted from list item
+        - description: Feature description (if provided after colon)
+        - status: Implementation status (DONE/PARTIAL/TODO/IN_PROGRESS)
+        - test_status: Test status (initially None, filled by match_tests_to_features)
+        
+    Expected markdown format:
+        ## 1. Category Name
+        ### Subcategory
+        - ✅ **Feature Name**: Description
+        - ⚠️ Partial feature
+        - ❌ Missing feature
     """
     features = []
     current_category = ""
@@ -126,14 +148,44 @@ def parse_feature_list(content: str) -> list[dict]:
 
 def parse_test_logs(content: str) -> dict:
     """
-    Parse TEST_LOGS.md and extract test results.
+    Parse TEST_LOGS.md and extract test results for matching with features.
     
-    Returns a dictionary mapping keywords to test results.
+    Args:
+        content: The raw markdown content of TEST_LOGS.md
+        
+    Returns:
+        A dictionary mapping keywords (lowercase) to test result dictionaries:
+        - last_test_date: Date of the test (YYYY-MM-DD format or None)
+        - test_result: Result status (PASS/FAIL/PENDING/Not Run)
+        - test_type: Type of test (Automated/Manual)
+        - test_suite: Name of the test suite
+        - notes: Additional notes about the test
+        
+    Expected markdown format:
+        ## Automated Tests
+        | Date | Test Suite | Scope | Result | Notes |
+        | 2025-12-15 | verify.py | Feature X | **PASS** | ... |
+        
+        ## Manual Verification Required
+        - [ ] **Feature Name**: Description of verification
+        - [x] **Completed Check**: Already verified
     """
     test_results = {}
     
     # Parse automated tests table
-    table_pattern = r'\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*\*\*?(PASS|FAIL|Not Run)\*?\*?\s*\|\s*([^|]*)\s*\|'
+    # Pattern breakdown:
+    # - Group 1: Date (YYYY-MM-DD)
+    # - Group 2: Test suite name
+    # - Group 3: Scope/feature being tested
+    # - Group 4: Result (PASS/FAIL/Not Run, optionally bold)
+    # - Group 5: Notes
+    table_pattern = (
+        r'\|\s*(\d{4}-\d{2}-\d{2})\s*\|'  # Date column
+        r'\s*([^|]+)\s*\|'                  # Test suite column
+        r'\s*([^|]+)\s*\|'                  # Scope column
+        r'\s*\*\*?(PASS|FAIL|Not Run)\*?\*?\s*\|'  # Result column (with optional bold)
+        r'\s*([^|]*)\s*\|'                  # Notes column
+    )
     
     for match in re.finditer(table_pattern, content):
         date = match.group(1)
@@ -146,7 +198,7 @@ def parse_test_logs(content: str) -> dict:
         keywords = scope.lower().split()
         
         for keyword in keywords:
-            if len(keyword) > 3:  # Skip short words
+            if len(keyword) > MIN_KEYWORD_LENGTH:  # Skip short words
                 test_results[keyword] = {
                     "last_test_date": date,
                     "test_result": result,
@@ -156,6 +208,7 @@ def parse_test_logs(content: str) -> dict:
                 }
     
     # Parse manual verification items
+    # Pattern: - [ ] **Name**: Description or - [x] **Name**: Description
     manual_pattern = r'-\s*\[(x| )\]\s*\*\*([^*]+)\*\*:\s*(.+)'
     for match in re.finditer(manual_pattern, content):
         checked = match.group(1) == 'x'
@@ -164,7 +217,7 @@ def parse_test_logs(content: str) -> dict:
         
         keywords = item_name.lower().split()
         for keyword in keywords:
-            if len(keyword) > 3:
+            if len(keyword) > MIN_KEYWORD_LENGTH:
                 test_results[keyword] = {
                     "last_test_date": None,
                     "test_result": "PASS" if checked else "PENDING",
@@ -179,6 +232,18 @@ def parse_test_logs(content: str) -> dict:
 def match_tests_to_features(features: list[dict], test_results: dict) -> list[dict]:
     """
     Match test results to features based on keyword matching.
+    
+    Uses a simple keyword-based matching algorithm:
+    1. Extract keywords from feature name and description
+    2. Check if any keyword exists in the test_results dictionary
+    3. If found, assign the test status to the feature
+    
+    Args:
+        features: List of feature dictionaries from parse_feature_list
+        test_results: Dictionary of test results from parse_test_logs
+        
+    Returns:
+        The features list with test_status field populated based on matches
     """
     for feature in features:
         feature_keywords = (feature["name"] + " " + feature["description"]).lower().split()

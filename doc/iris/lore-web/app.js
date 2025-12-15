@@ -1316,7 +1316,9 @@ let currentStatusFilter = 'all';
 async function loadAndRenderFeatures() {
     try {
         const response = await fetch('data/features.json');
-        if (!response.ok) throw new Error('HTTP error: ' + response.status);
+        if (!response.ok) {
+            throw new Error(`Failed to load features data: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json();
         
         featuresDataLoaded = data.features || [];
@@ -1330,8 +1332,8 @@ async function loadAndRenderFeatures() {
         
         console.log('Features loaded:', featuresDataLoaded.length);
     } catch (e) {
-        console.warn("Failed to load features.json, using fallback data", e);
-        // Use fallback inline data
+        console.warn("Failed to load features.json:", e.message, "- using minimal fallback data (5 sample features)");
+        // Use fallback inline data when JSON is unavailable
         featuresDataLoaded = getFallbackFeaturesData();
         featuresStats = { total: featuresDataLoaded.length, done: 0, partial: 0, todo: 0 };
         renderFeaturesTableFromJSON();
