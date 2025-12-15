@@ -11,15 +11,17 @@ class TestPhase22(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        from app.database import init_db
         # Ensure users exist
         from app.seed import seed_data
         # Clean DB for verification?
         # seed_data() resets usually? Or creates if missing?
         # We assume seed_data works safely.
         try:
-             seed_data()
+            init_db()
+            seed_data()
         except:
-             pass 
+            pass 
              
         gamestate.treasury_balance = 1000
         gamestate.power_capacity = 100

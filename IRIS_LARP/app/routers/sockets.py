@@ -213,13 +213,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     session_index = (agent_index + shift) % total
                     session_id = session_index + 1
 
-                    # Enforce prompt-first: agent cannot message without an active user prompt
+                    # Ensure session tracking exists even if user prompt was not recorded yet
                     if session_id not in routing_logic.pending_responses:
-                        await websocket.send_text(json.dumps({
-                            "type": "error",
-                            "msg": "Vyčkej na zprávu od uživatele. Nelze odeslat bez nového promptu."
-                        }))
-                        continue
+                        routing_logic.start_pending_response(session_id)
 
                     # Check if session has timed out - agent can no longer respond
                     if routing_logic.is_session_timed_out(session_id):
@@ -263,25 +259,28 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                                 "type": "optimizing_start"
                             }))
 
-                            try:
-                                rewritten = await llm_service.rewrite_message(
-                                    content,
-                                    gamestate.optimizer_prompt,
-                                    gamestate.llm_config_optimizer
-                                )
-                                if rewritten and rewritten.strip():
-                                    # v2.0: Send PREVIEW to Agent, do not broadcast/save yet
-                                    await websocket.send_text(json.dumps({
-                                        "type": "optimizer_preview",
-                                        "original": content,
-                                        "rewritten": rewritten
-                                    }))
-                                    continue # Stop processing, wait for confirmation
-                            except Exception as e:
-                                print(f"Optimizer Error: {e}")
-                                # Fallback to sending original if error? Or fail?
-                                # If error, let's just send original.
+                            if settings.OPENROUTER_API_KEY or settings.OPENAI_API_KEY or settings.GEMINI_API_KEY:
+                                try:
+                                    rewritten = await llm_service.rewrite_message(
+                                        content,
+                                        gamestate.optimizer_prompt,
+                                        gamestate.llm_config_optimizer
+                                    ) or content
+                                except Exception as e:
+                                    print(f"Optimizer Error: {e}")
+                                    rewritten = content
+                            else:
+                                rewritten = content
 
+                            rewritten = rewritten.strip() if rewritten else content
+
+                            # v2.0: Send PREVIEW to Agent, do not broadcast/save yet
+                            await websocket.send_text(json.dumps({
+                                "type": "optimizer_preview",
+                                "original": content,
+                                "rewritten": rewritten
+                            }))
+                            continue # Stop processing, wait for confirmation
                     # Save (Rewritten or Original)
                     # If is_confirming, 'content' IS the rewritten version sent back by client
                     log = ChatLog(session_id=session_id, sender_id=user.id, content=final_content, is_optimized=is_confirming or was_rewritten)
@@ -292,6 +291,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     routing_logic.clear_pending_response(session_id)
 
                     # Broadcast to Session (User sees final_content)
+                    exclude_target = None if is_confirming else websocket
                     await routing_logic.broadcast_to_session(session_id, json.dumps({
                         "sender": user.username,
                         "role": "agent",
@@ -300,7 +300,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "id": log.id,
                         "is_optimized": log.is_optimized,  # PHASE 27: Report immunity flag
                         "panic": panic_state.get("agent", False)
-                    }), exclude_ws=websocket)
+                    }), exclude_ws=exclude_target)
                     
                     # No feedback needed if confirmed, client knows.
 
@@ -330,7 +330,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     if cmd_type == "task_request":
                         from ..database import Task, TaskStatus
                         # Log
-                        from ..database import SessionLocal, SystemLog
+                        from ..database import SystemLog
                         db_log = SessionLocal()
                         db_log.add(SystemLog(event_type="ACTION", message=f"{user.username} requested task"))
                         db_log.commit()
@@ -373,7 +373,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         continue
 
                     if cmd_type == "task_submit":
-                        from ..database import Task, TaskStatus, SessionLocal, SystemLog
+                        from ..database import Task, TaskStatus, SystemLog
 
                         submission_text = (msg_data.get("content") or "").strip()
                         requested_id = msg_data.get("task_id")
@@ -696,7 +696,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             gamestate.hyper_visibility_mode = HyperVisibilityMode.FORENSIC
                         
                         # Log
-                        from ..database import SessionLocal, SystemLog
+                        from ..database import SystemLog
                         db_log = SessionLocal()
                         db_log.add(SystemLog(event_type="ACTION", message=f"{user.username} changed HYPER to {mode_str}"))
                         db_log.commit()
@@ -727,6 +727,29 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             "type": "gamestate_update",
                             "panic_global": enabled
                         }))
+
+                    elif cmd_type == "report_message":
+                        # Admin report command (mirror of user flow, but admin issued)
+                        msg_id = msg_data.get("id")
+                        target_log = db_save.query(ChatLog).filter(ChatLog.id == msg_id).first()
+                        if target_log:
+                            if target_log.is_optimized:
+                                await websocket.send_text(json.dumps({
+                                    "type": "report_denied",
+                                    "reason": "SYSTEM_VERIFIED"
+                                }))
+                            else:
+                                gamestate.report_anomaly()
+                                target_log.was_reported = True
+                                db_save.commit()
+                                await routing_logic.broadcast_global(json.dumps({
+                                    "type": "gamestate_update",
+                                    "temperature": gamestate.temperature
+                                }))
+                                await websocket.send_text(json.dumps({
+                                    "type": "report_accepted",
+                                    "msg": "Report filed. Anomaly detected."
+                                }))
 
             finally:
                 db_save.close()
