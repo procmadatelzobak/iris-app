@@ -154,6 +154,11 @@ app.include_router(translations.router)
 app.include_router(docs.router)
 app.include_router(simulation.router)
 
+@app.get("/health")
+async def health():
+    version = getattr(settings, "VERSION", None) or "unknown"
+    return {"status": "ok", "version": version}
+
 @app.get("/")
 async def root(request: Request):
     # Test Mode Logic
