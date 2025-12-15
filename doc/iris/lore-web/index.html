@@ -385,7 +385,8 @@
                     <h3>📋 O projektu HLINÍK</h3>
                     <p class="lead" style="color: var(--text-primary);">
                         HLINÍK a syn s.r.o. je fiktivní startup, který prodává "revoluční AI asistenta" IRIS.
-                        Ve skutečnosti za AI sedí lidští operátoři (Agenti), kteří předstírají, že jsou umělá inteligence.
+                        Ve skutečnosti za AI sedí lidští operátoři (Agenti), kteří předstírají, že jsou umělá
+                        inteligence.
                         Tato dokumentace popisuje aktuální stav implementace systému.
                     </p>
                 </div>
@@ -467,7 +468,8 @@
                             <div class="timeline-marker">Phase 11-20</div>
                             <div class="timeline-content">
                                 <h4>AI integrace & UX</h4>
-                                <p>OpenAI, message optimizer, autopilot, zvukové efekty, glitch efekty, redesign terminálů.</p>
+                                <p>OpenAI, message optimizer, autopilot, zvukové efekty, glitch efekty, redesign
+                                    terminálů.</p>
                             </div>
                         </div>
                         <div class="timeline-item">
@@ -481,7 +483,8 @@
                             <div class="timeline-marker">Phase 31-34</div>
                             <div class="timeline-content">
                                 <h4>Stabilizace & Testování</h4>
-                                <p>State persistence, bezpečnost, Playwright E2E testy, task grading, organizátorská wiki.</p>
+                                <p>State persistence, bezpečnost, Playwright E2E testy, task grading, organizátorská
+                                    wiki.</p>
                             </div>
                         </div>
                     </div>
@@ -543,22 +546,53 @@
         <!-- Audit Content - Phase 34 (Latest) -->
         <div id="audit-2025-12-15" class="audit-content active">
             <div class="dashboard-grid">
-                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-green);">
-                    <h3>✅ Celkový stav shody - Phase 34</h3>
-                    <p class="lead" style="color: var(--text-primary);">Aplikace je plně funkční a odpovídá hernímu designu
-                        popsanému v dokumentaci <strong>IRIS 4.0 Phase 34 HLINIK</strong>. Jádro systému (role, ekonomika,
-                        komunikace) je shodné. Existují minoritní odchylky v názvosloví ovládacích prvků organizátorů.</p>
-                    <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025</p>
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                        <div>
+                            <h3>⚠️ Celkový stav shody - Phase 34 (Final)</h3>
+                            <p class="lead" style="color: var(--text-primary);">Aplikace je funkční (Beta). Manuální
+                                testy a lore
+                                integrace jsou <strong>100% compliant</strong>. Automatizovaný stress-test odhalil
+                                problémy s
+                                autentizací při vysoké zátěži.</p>
+                            <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025</p>
+                        </div>
+                        <button class="btn-primary" onclick="showManual('audit_34')">📄 Otevřít kompletní
+                            report</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="border-color: var(--accent-red)">
+                    <h3>🔥 Kritické Nálezy</h3>
+                    <ul class="quick-links">
+                        <li>
+                            <strong style="color: var(--accent-red)">Load Test (WS):</strong>
+                            <span>Simulace 20 klientů selhala (HTTP 403).</span>
+                        </li>
+                        <li>
+                            <strong style="color: var(--accent-orange)">Naming:</strong>
+                            <span>Nekonzistence 'S01' vs 'Admin 1'.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>✅ Ověřená Funkčnost</h3>
+                    <ul class="quick-links">
+                        <li><strong>Wiki & Lore:</strong> Dokumentace odpovídá Phase 34.</li>
+                        <li><strong>Panic Mode:</strong> Implementován a funkční.</li>
+                        <li><strong>Ekonomika:</strong> Daně, pokuty, bonusy fungují.</li>
+                        <li><strong>Authentication:</strong> Login flow funkční.</li>
+                    </ul>
                 </div>
 
                 <div class="dashboard-card">
                     <h3>⚠️ Názvosloví Stanic (Mapping)</h3>
-                    <p>Aplikace používá krycí názvy pro stanice dashboardu, které se liší od popisných názvů v dokumentaci.</p>
-                    <table class="data-table" style="margin-top: 1rem;">
+                    <table class="data-table">
                         <thead>
                             <tr>
                                 <th>Dokumentace</th>
-                                <th>Aplikace (Krycí název)</th>
+                                <th>Aplikace</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -567,7 +601,7 @@
                                 <td><strong style="color: var(--accent-green)">UMYVADLO</strong></td>
                             </tr>
                             <tr>
-                                <td>Kontrola (Nastavení)</td>
+                                <td>Kontrola</td>
                                 <td><strong style="color: var(--accent-gold)">ROZKOŠ</strong></td>
                             </tr>
                             <tr>
@@ -582,56 +616,17 @@
                     </table>
                 </div>
 
-                <div class="dashboard-card">
+                <div class="dashboard-card full-width">
                     <h3>🧩 Implementované funkce navíc</h3>
-                    <ul class="quick-links">
-                        <li>
-                            <strong>Filtr Pravdy (HyperVis):</strong>
-                            <em style="color: var(--text-muted)">Aplikace umožňuje přepínat vizuální filtry (Černá skříňka,
-                                Forezka), což není detailně v příručkách.</em>
-                        </li>
-                        <li>
-                            <strong>Řízení spotřeby:</strong>
-                            <em style="color: var(--text-muted)">Možnost nastavit režim (Úspora / Přetížení) ovlivňující
-                                "Tlak páry".</em>
-                        </li>
-                        <li>
-                            <strong>Organizátorská Wiki:</strong>
-                            <em style="color: var(--text-muted)">Nová sekce pro dokumentaci projektu HLINÍK s přehledem funkcí.</em>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>🔧 Technické rozdíly</h3>
-                    <ul class="quick-links">
-                        <li>
-                            <strong>Vztahová mapa:</strong>
-                            <em style="color: var(--text-muted)">Aplikace obsahuje canvas pro graf, ale plná interaktivita
-                                (jako zde na wiki) je omezena.</em>
-                        </li>
-                        <li>
-                            <strong>Verze:</strong>
-                            <em style="color: var(--text-muted)">Aplikace běží na v35 (Dev), dokumentace je fixována na v34
-                                (Stable).</em>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>📊 Ověřené parametry</h3>
-                    <div class="version-info">
-                        <div class="version-item">
-                            <span class="label">Daň:</span>
-                            <span class="value" style="color: var(--accent-green)">20% (Shoda)</span>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                        <div>
+                            <strong>Filtr Pravdy (HyperVis):</strong><br>
+                            <em style="color: var(--text-muted)">Přepínání vizuálních filtrů (Blackbox/Forensic).</em>
                         </div>
-                        <div class="version-item">
-                            <span class="label">Startovní kredity:</span>
-                            <span class="value" style="color: var(--accent-green)">100 NC (Shoda)</span>
-                        </div>
-                        <div class="version-item">
-                            <span class="label">Počet Agentů:</span>
-                            <span class="value" style="color: var(--accent-green)">8 (Shoda)</span>
+                        <div>
+                            <strong>Řízení spotřeby:</strong><br>
+                            <em style="color: var(--text-muted)">Režimy (Low Power / Overclock) ovlivňující "Tlak
+                                páry".</em>
                         </div>
                     </div>
                 </div>
@@ -643,7 +638,7 @@
             <div class="dashboard-grid">
                 <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-blue);">
                     <h3>✅ Stav shody - Phase 33</h3>
-                    <p class="lead" style="color: var(--text-primary);">Implementace E2E testů pomocí Playwright. 
+                    <p class="lead" style="color: var(--text-primary);">Implementace E2E testů pomocí Playwright.
                         Automatizované testování všech hlavních uživatelských cest.</p>
                     <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 1. prosince 2025</p>
                 </div>
@@ -653,7 +648,8 @@
                     <ul class="quick-links">
                         <li>
                             <strong>Test Suite A:</strong>
-                            <em style="color: var(--text-muted)">8 bloků testovacích scénářů (login → task → purgatory).</em>
+                            <em style="color: var(--text-muted)">8 bloků testovacích scénářů (login → task →
+                                purgatory).</em>
                         </li>
                         <li>
                             <strong>Server Fixture:</strong>
@@ -683,7 +679,8 @@
             <div class="dashboard-grid">
                 <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
                     <h3>✅ Stav shody - Phase 31</h3>
-                    <p class="lead" style="color: var(--text-primary);">Zavedení state persistence a bezpečnostních vylepšení. 
+                    <p class="lead" style="color: var(--text-primary);">Zavedení state persistence a bezpečnostních
+                        vylepšení.
                         Automatické ukládání stavu hry při vypnutí serveru.</p>
                     <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. listopadu 2025</p>
                 </div>

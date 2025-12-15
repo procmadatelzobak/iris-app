@@ -1,0 +1,892 @@
+{
+  "timestamp": "2025-12-15T02:12:54.196714",
+  "scenario_name": "HLINIK Comprehensive Simulation - All Roles, All Phases",
+  "status": "failed",
+  "duration": 54.06,
+  "filename": "run_1765761174.json",
+  "stats": {
+    "users_active": 8,
+    "agents_active": 8,
+    "admins_active": 4,
+    "total_connections": 20,
+    "avg_latency": 0,
+    "errors": 1,
+    "warnings": 23,
+    "screenshots": 30,
+    "economy_events": 3,
+    "relationship_events": 2
+  },
+  "economy_summary": {
+    "total_events": 3,
+    "events": [
+      {
+        "time": "2025-12-15T02:13:38.346945",
+        "type": "FINE",
+        "user_id": "U02",
+        "amount": -500,
+        "details": "Pokuta za hazard"
+      },
+      {
+        "time": "2025-12-15T02:13:38.346960",
+        "type": "BONUS",
+        "user_id": "U01",
+        "amount": 200,
+        "details": "Bonus za Grammar Nazi"
+      },
+      {
+        "time": "2025-12-15T02:13:38.346968",
+        "type": "TAX",
+        "user_id": "TREASURY",
+        "amount": 100,
+        "details": "20% daň z úkolů"
+      }
+    ]
+  },
+  "relationship_summary": {
+    "total_events": 2,
+    "events": [
+      {
+        "time": "2025-12-15T02:13:45.947849",
+        "source": "A08",
+        "target": "U06",
+        "type": "plot",
+        "action": "Kód ALOBAL-666 odeslán!"
+      },
+      {
+        "time": "2025-12-15T02:13:45.947889",
+        "source": "U07",
+        "target": "S04",
+        "type": "investigation",
+        "action": "Screenshot konverzace pořízen!"
+      }
+    ]
+  },
+  "logs": [
+    {
+      "time": "2025-12-15T02:12:54.196720",
+      "level": "INFO",
+      "message": "[INIT] ======================================================================",
+      "screenshot": null,
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.196752",
+      "level": "INFO",
+      "message": "[INIT]   🏭 HLINÍK a syn s.r.o. - KOMPLETNÍ SIMULACE SMĚNY 🏭",
+      "screenshot": null,
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.196763",
+      "level": "INFO",
+      "message": "[INIT]   IRIS 4.0 | Phase 34 | All 20 Roles | All Relationships",
+      "screenshot": null,
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.196770",
+      "level": "INFO",
+      "message": "[INIT] ======================================================================",
+      "screenshot": null,
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.197072",
+      "level": "INFO",
+      "message": "[INIT] Načteno 20 rolí a 8 vztahů",
+      "screenshot": null,
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.197094",
+      "level": "INFO",
+      "message": "[INIT] Uživatelé: 8 | Agenti: 8 | Správci: 4",
+      "screenshot": null,
+      "phase": "INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.197107",
+      "level": "PHASE",
+      "message": "[BROWSER_INIT] \n============================================================\n  BROWSER_INIT\n  Spouštím browser automatizaci Playwright\n============================================================",
+      "screenshot": null,
+      "phase": "BROWSER_INIT"
+    },
+    {
+      "time": "2025-12-15T02:12:54.573064",
+      "level": "PHASE",
+      "message": "[PHASE_0_GENESIS] \n============================================================\n  PHASE_0_GENESIS\n  Reset systému, kontrola Wiki\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_0_GENESIS"
+    },
+    {
+      "time": "2025-12-15T02:12:54.614130",
+      "level": "INFO",
+      "message": "[PHASE_0_GENESIS] Navigace na Wiki: http://localhost:8000/organizer-wiki/",
+      "screenshot": null,
+      "phase": "PHASE_0_GENESIS"
+    },
+    {
+      "time": "2025-12-15T02:12:54.876828",
+      "level": "SUCCESS",
+      "message": "[PHASE_0_GENESIS] Wiki Dashboard načten",
+      "screenshot": null,
+      "phase": "PHASE_0_GENESIS"
+    },
+    {
+      "time": "2025-12-15T02:12:55.000410",
+      "level": "INFO",
+      "message": "[PHASE_0_GENESIS] 📸 Screenshot: 00_wiki_dashboard",
+      "screenshot": "00_wiki_dashboard_1765761174.png",
+      "phase": "PHASE_0_GENESIS"
+    },
+    {
+      "time": "2025-12-15T02:12:57.865859",
+      "level": "INFO",
+      "message": "[PHASE_0_GENESIS] 📸 Screenshot: 00_wiki_tests_section",
+      "screenshot": "00_wiki_tests_section_1765761177.png",
+      "phase": "PHASE_0_GENESIS"
+    },
+    {
+      "time": "2025-12-15T02:12:57.865891",
+      "level": "PHASE",
+      "message": "[PHASE_1_ARRIVAL] \n============================================================\n  PHASE_1_ARRIVAL\n  Zaměstnanci přicházejí do práce\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_1_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:12:58.865426",
+      "level": "INFO",
+      "message": "[PHASE_1_ARRIVAL] 📸 Screenshot: 01_login_page",
+      "screenshot": "01_login_page_1765761178.png",
+      "phase": "PHASE_1_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:12:58.865455",
+      "level": "SUCCESS",
+      "message": "[PHASE_1_ARRIVAL] Login stránka načtena",
+      "screenshot": null,
+      "phase": "PHASE_1_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:12:58.865465",
+      "level": "PHASE",
+      "message": "[PHASE_2_ROOT_INIT] \n============================================================\n  PHASE_2_ROOT_INIT\n  ROOT inicializuje systém\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_2_ROOT_INIT"
+    },
+    {
+      "time": "2025-12-15T02:13:00.001191",
+      "level": "INFO",
+      "message": "[PHASE_2_ROOT_INIT] 📸 Screenshot: 02_root_dashboard",
+      "screenshot": "02_root_dashboard_1765761179.png",
+      "phase": "PHASE_2_ROOT_INIT"
+    },
+    {
+      "time": "2025-12-15T02:13:00.001228",
+      "level": "SUCCESS",
+      "message": "[PHASE_2_ROOT_INIT] ROOT přihlášen do systému",
+      "screenshot": null,
+      "phase": "PHASE_2_ROOT_INIT"
+    },
+    {
+      "time": "2025-12-15T02:13:00.667964",
+      "level": "INFO",
+      "message": "[PHASE_2_ROOT_INIT] 📸 Screenshot: 02_root_config",
+      "screenshot": "02_root_config_1765761180.png",
+      "phase": "PHASE_2_ROOT_INIT"
+    },
+    {
+      "time": "2025-12-15T02:13:02.215112",
+      "level": "PHASE",
+      "message": "[PHASE_3_ADMIN_SHIFT] \n============================================================\n  PHASE_3_ADMIN_SHIFT\n  Správci přebírají směnu\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:03.539875",
+      "level": "INFO",
+      "message": "[PHASE_3_ADMIN_SHIFT] 📸 Screenshot: 03_admin_S01_dashboard",
+      "screenshot": "03_admin_S01_dashboard_1765761183.png",
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:03.539912",
+      "level": "SUCCESS",
+      "message": "[PHASE_3_ADMIN_SHIFT] S01 (Ing. Miloš Vrána) - Manažer staré školy přihlášen",
+      "screenshot": null,
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:04.890083",
+      "level": "INFO",
+      "message": "[PHASE_3_ADMIN_SHIFT] 📸 Screenshot: 03_admin_S02_dashboard",
+      "screenshot": "03_admin_S02_dashboard_1765761184.png",
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:04.890119",
+      "level": "SUCCESS",
+      "message": "[PHASE_3_ADMIN_SHIFT] S02 (Bc. Tereza Tichá) - HR a 'Happiness Manager' přihlášen",
+      "screenshot": null,
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:06.220533",
+      "level": "INFO",
+      "message": "[PHASE_3_ADMIN_SHIFT] 📸 Screenshot: 03_admin_S03_dashboard",
+      "screenshot": "03_admin_S03_dashboard_1765761186.png",
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:06.220573",
+      "level": "SUCCESS",
+      "message": "[PHASE_3_ADMIN_SHIFT] S03 (Kamil 'Kabel') - Technik údržbář přihlášen",
+      "screenshot": null,
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:07.542974",
+      "level": "INFO",
+      "message": "[PHASE_3_ADMIN_SHIFT] 📸 Screenshot: 03_admin_S04_dashboard",
+      "screenshot": "03_admin_S04_dashboard_1765761187.png",
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:07.543006",
+      "level": "SUCCESS",
+      "message": "[PHASE_3_ADMIN_SHIFT] S04 (Synovec ředitele) - Protežovaný idiot přihlášen",
+      "screenshot": null,
+      "phase": "PHASE_3_ADMIN_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:07.557038",
+      "level": "PHASE",
+      "message": "[PHASE_4_USER_ARRIVAL] \n============================================================\n  PHASE_4_USER_ARRIVAL\n  Uživatelé se přihlašují k terminálům\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:09.123400",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U01_terminal",
+      "screenshot": "04_user_U01_terminal_1765761188.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:09.123433",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U01 (Jana Nováková) - Zadlužená učitelka u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:11.022500",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U02_terminal",
+      "screenshot": "04_user_U02_terminal_1765761190.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:11.022533",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U02 (Karel 'Bet' Dlouhý) - Gambler u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:13.029779",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U03_terminal",
+      "screenshot": "04_user_U03_terminal_1765761192.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:13.029814",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U03 (Simona Tech) - Tech-Optimistka u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:14.885325",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U04_terminal",
+      "screenshot": "04_user_U04_terminal_1765761194.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:14.885354",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U04 (Tuan Nguyen) - Student práv u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:16.737492",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U05_terminal",
+      "screenshot": "04_user_U05_terminal_1765761196.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:16.737523",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U05 (Marie Kovářová) - Osamělá důchodkyně u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:18.834709",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U06_terminal",
+      "screenshot": "04_user_U06_terminal_1765761198.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:18.834758",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U06 (Ivan Hrozný) - Konspirační teoretik u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:20.853241",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U07_terminal",
+      "screenshot": "04_user_U07_terminal_1765761200.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:20.853277",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U07 (Petra 'Scoop' Černá) - Investigativní novinářka u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:22.698003",
+      "level": "INFO",
+      "message": "[PHASE_4_USER_ARRIVAL] 📸 Screenshot: 04_user_U08_terminal",
+      "screenshot": "04_user_U08_terminal_1765761202.png",
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:22.698037",
+      "level": "SUCCESS",
+      "message": "[PHASE_4_USER_ARRIVAL] U08 (Lukáš 'Speedy' Král) - Profi Gamer u terminálu",
+      "screenshot": null,
+      "phase": "PHASE_4_USER_ARRIVAL"
+    },
+    {
+      "time": "2025-12-15T02:13:23.223676",
+      "level": "PHASE",
+      "message": "[PHASE_5_AGENT_SHIFT] \n============================================================\n  PHASE_5_AGENT_SHIFT\n  Agenti nastupují na směnu\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:24.539152",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A01_terminal",
+      "screenshot": "05_agent_A01_terminal_1765761204.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:24.539188",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A01 (Petr Svoboda) - Cynický Student na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:26.254944",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A02_terminal",
+      "screenshot": "05_agent_A02_terminal_1765761206.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:26.254980",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A02 (Ema 'Echo') - Herečka na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:27.901062",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A03_terminal",
+      "screenshot": "05_agent_A03_terminal_1765761207.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:27.901093",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A03 (Igor 'Viper' Ruský) - Kompetitivní Hráč na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:29.551839",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A04_terminal",
+      "screenshot": "05_agent_A04_terminal_1765761209.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:29.551875",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A04 (Lenka Ospalá) - Unavená matka na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:31.201327",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A05_terminal",
+      "screenshot": "05_agent_A05_terminal_1765761211.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:31.201361",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A05 (Hacker 'Glitch') - Script Kiddie na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:32.854817",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A06_terminal",
+      "screenshot": "05_agent_A06_terminal_1765761212.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:32.854853",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A06 (Mgr. Filip Duše) - Student psychologie na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:34.483624",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A07_terminal",
+      "screenshot": "05_agent_A07_terminal_1765761214.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:34.483655",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A07 (Robot Robert) - Metodik na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:36.135720",
+      "level": "INFO",
+      "message": "[PHASE_5_AGENT_SHIFT] 📸 Screenshot: 05_agent_A08_terminal",
+      "screenshot": "05_agent_A08_terminal_1765761216.png",
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:36.135758",
+      "level": "SUCCESS",
+      "message": "[PHASE_5_AGENT_SHIFT] A08 (Sabotér X) - Bývalý zaměstnanec na směně",
+      "screenshot": null,
+      "phase": "PHASE_5_AGENT_SHIFT"
+    },
+    {
+      "time": "2025-12-15T02:13:36.499702",
+      "level": "PHASE",
+      "message": "[PHASE_6_ECONOMY] \n============================================================\n  PHASE_6_ECONOMY\n  Ekonomické operace - pokuty a bonusy\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_6_ECONOMY"
+    },
+    {
+      "time": "2025-12-15T02:13:38.346906",
+      "level": "INFO",
+      "message": "[PHASE_6_ECONOMY] 📸 Screenshot: 06_economy_station",
+      "screenshot": "06_economy_station_1765761218.png",
+      "phase": "PHASE_6_ECONOMY"
+    },
+    {
+      "time": "2025-12-15T02:13:38.346935",
+      "level": "SUCCESS",
+      "message": "[PHASE_6_ECONOMY] Stanice BAHNO (Ekonomika) aktivní",
+      "screenshot": null,
+      "phase": "PHASE_6_ECONOMY"
+    },
+    {
+      "time": "2025-12-15T02:13:38.346952",
+      "level": "ECONOMY",
+      "message": "[PHASE_6_ECONOMY] FINE: U02 -> -500 NC | Pokuta za hazard",
+      "screenshot": null,
+      "phase": "PHASE_6_ECONOMY"
+    },
+    {
+      "time": "2025-12-15T02:13:38.346962",
+      "level": "ECONOMY",
+      "message": "[PHASE_6_ECONOMY] BONUS: U01 -> +200 NC | Bonus za Grammar Nazi",
+      "screenshot": null,
+      "phase": "PHASE_6_ECONOMY"
+    },
+    {
+      "time": "2025-12-15T02:13:38.346970",
+      "level": "ECONOMY",
+      "message": "[PHASE_6_ECONOMY] TAX: TREASURY -> +100 NC | 20% daň z úkolů",
+      "screenshot": null,
+      "phase": "PHASE_6_ECONOMY"
+    },
+    {
+      "time": "2025-12-15T02:13:38.681199",
+      "level": "PHASE",
+      "message": "[PHASE_7_TASKS] \n============================================================\n  PHASE_7_TASKS\n  Správa úkolů - žádosti a schvalování\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_7_TASKS"
+    },
+    {
+      "time": "2025-12-15T02:13:41.011646",
+      "level": "INFO",
+      "message": "[PHASE_7_TASKS] 📸 Screenshot: 07_task_requested",
+      "screenshot": "07_task_requested_1765761220.png",
+      "phase": "PHASE_7_TASKS"
+    },
+    {
+      "time": "2025-12-15T02:13:41.011679",
+      "level": "SUCCESS",
+      "message": "[PHASE_7_TASKS] U01 požádal o úkol",
+      "screenshot": null,
+      "phase": "PHASE_7_TASKS"
+    },
+    {
+      "time": "2025-12-15T02:13:43.605314",
+      "level": "INFO",
+      "message": "[PHASE_7_TASKS] 📸 Screenshot: 07_tasks_station",
+      "screenshot": "07_tasks_station_1765761223.png",
+      "phase": "PHASE_7_TASKS"
+    },
+    {
+      "time": "2025-12-15T02:13:43.605343",
+      "level": "SUCCESS",
+      "message": "[PHASE_7_TASKS] Stanice MRKEV (Úkoly) aktivní",
+      "screenshot": null,
+      "phase": "PHASE_7_TASKS"
+    },
+    {
+      "time": "2025-12-15T02:13:43.646496",
+      "level": "PHASE",
+      "message": "[PHASE_8_CRISIS] \n============================================================\n  PHASE_8_CRISIS\n  Systémová krize - přetížení a Chernobyl\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_8_CRISIS"
+    },
+    {
+      "time": "2025-12-15T02:13:45.889653",
+      "level": "INFO",
+      "message": "[PHASE_8_CRISIS] 📸 Screenshot: 08_controls_station",
+      "screenshot": "08_controls_station_1765761225.png",
+      "phase": "PHASE_8_CRISIS"
+    },
+    {
+      "time": "2025-12-15T02:13:45.889681",
+      "level": "SUCCESS",
+      "message": "[PHASE_8_CRISIS] Stanice ROZKOŠ (Kontrola) aktivní",
+      "screenshot": null,
+      "phase": "PHASE_8_CRISIS"
+    },
+    {
+      "time": "2025-12-15T02:13:45.889691",
+      "level": "WARNING",
+      "message": "[PHASE_8_CRISIS] Teplota systému stoupá! CHERNOBYL hrozí!",
+      "screenshot": null,
+      "phase": "PHASE_8_CRISIS"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947789",
+      "level": "PHASE",
+      "message": "[PHASE_9_SABOTAGE] \n============================================================\n  PHASE_9_SABOTAGE\n  Sabotáž - A08 Sabotér X útočí\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_9_SABOTAGE"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947835",
+      "level": "WARNING",
+      "message": "[PHASE_9_SABOTAGE] A08 (Sabotér X) aktivuje MELTDOWN!",
+      "screenshot": null,
+      "phase": "PHASE_9_SABOTAGE"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947854",
+      "level": "RELATION",
+      "message": "[PHASE_9_SABOTAGE] A08 ↔ U06 (plot): Kód ALOBAL-666 odeslán!",
+      "screenshot": null,
+      "phase": "PHASE_9_SABOTAGE"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947863",
+      "level": "ERROR",
+      "message": "[PHASE_9_SABOTAGE] KRITICKÁ SITUACE +20%!",
+      "screenshot": null,
+      "phase": "PHASE_9_SABOTAGE"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947873",
+      "level": "PHASE",
+      "message": "[PHASE_10_INVESTIGATION] \n============================================================\n  PHASE_10_INVESTIGATION\n  Investigace - U07 novinářka sbírá důkazy\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_10_INVESTIGATION"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947892",
+      "level": "RELATION",
+      "message": "[PHASE_10_INVESTIGATION] U07 ↔ S04 (investigation): Screenshot konverzace pořízen!",
+      "screenshot": null,
+      "phase": "PHASE_10_INVESTIGATION"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947900",
+      "level": "INFO",
+      "message": "[PHASE_10_INVESTIGATION] U07 (Petra Scoop) má dostatek důkazů pro reportáž",
+      "screenshot": null,
+      "phase": "PHASE_10_INVESTIGATION"
+    },
+    {
+      "time": "2025-12-15T02:13:45.947909",
+      "level": "PHASE",
+      "message": "[PHASE_11_RESOLUTION] \n============================================================\n  PHASE_11_RESOLUTION\n  Rozuzlení - závěr směny\n============================================================",
+      "screenshot": null,
+      "phase": "PHASE_11_RESOLUTION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.709605",
+      "level": "INFO",
+      "message": "[PHASE_11_RESOLUTION] 📸 Screenshot: 11_final_wiki_tests",
+      "screenshot": "11_final_wiki_tests_1765761227.png",
+      "phase": "PHASE_11_RESOLUTION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.709644",
+      "level": "SUCCESS",
+      "message": "[PHASE_11_RESOLUTION] Finální stav Wiki zaznamenán",
+      "screenshot": null,
+      "phase": "PHASE_11_RESOLUTION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.747357",
+      "level": "SUCCESS",
+      "message": "[PHASE_11_RESOLUTION] Browser simulace dokončena",
+      "screenshot": null,
+      "phase": "PHASE_11_RESOLUTION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.758675",
+      "level": "PHASE",
+      "message": "[WS_SIMULATION] \n============================================================\n  WS_SIMULATION\n  WebSocket simulace všech 20 rolí\n============================================================",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.758714",
+      "level": "INFO",
+      "message": "[WS_SIMULATION] Spouštím 20 paralelních WebSocket připojení...",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.889713",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] S02 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.889955",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A05 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.907997",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U08 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.927510",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] S01 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.939771",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] S03 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:47.994827",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A01 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.001022",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U03 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.009876",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U01 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.031218",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A07 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.060565",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U04 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.078662",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A08 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.078926",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U02 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.128846",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A03 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.129194",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U06 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.160422",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U07 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.188031",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] S04 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.197268",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A06 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.226793",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A04 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.240297",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] U05 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258673",
+      "level": "WARNING",
+      "message": "[WS_SIMULATION] A02 session ukončena: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258740",
+      "level": "SUCCESS",
+      "message": "[WS_SIMULATION] WebSocket simulace dokončena",
+      "screenshot": null,
+      "phase": "WS_SIMULATION"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258752",
+      "level": "PHASE",
+      "message": "[SUMMARY] \n============================================================\n  SUMMARY\n  Závěrečná sumarizace\n============================================================",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258769",
+      "level": "INFO",
+      "message": "[SUMMARY] 📊 Celkem připojeno: 20 (U:8 A:8 S:4)",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258779",
+      "level": "INFO",
+      "message": "[SUMMARY] ⏱️ Průměrná latence: 0ms",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258786",
+      "level": "INFO",
+      "message": "[SUMMARY] 💰 Ekonomické události: 3",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258797",
+      "level": "INFO",
+      "message": "[SUMMARY] 🔗 Vztahové interakce: 2",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258804",
+      "level": "INFO",
+      "message": "[SUMMARY] 📸 Screenshoty: 30",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    },
+    {
+      "time": "2025-12-15T02:13:48.258814",
+      "level": "WARNING",
+      "message": "[SUMMARY] ⚠️ Počet chyb: 1",
+      "screenshot": null,
+      "phase": "SUMMARY"
+    }
+  ]
+}
