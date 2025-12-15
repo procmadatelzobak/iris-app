@@ -23,7 +23,7 @@ def test_json_validity():
     print("Testing JSON validity...")
     translations_dir = Path(__file__).parent
     
-    for filename in ["czech.json", "iris.json"]:
+    for filename in ["czech.json", "iris.json", "english.json", "crazy.json"]:
         filepath = translations_dir / filename
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -132,6 +132,44 @@ def test_czech_iris_mode():
     print()
 
 
+def test_english_mode():
+    """Test English language mode."""
+    print("Testing English mode...")
+    # Test English translations
+    result = translations_module.get_translation("login.username_label", "en")
+    if result == "IDENTIFIER":
+        print(f"  ✓ english mode: login.username_label = '{result}'")
+    else:
+        print(f"  ✗ english mode: login.username_label = '{result}' (expected 'IDENTIFIER')")
+    
+    result = translations_module.get_translation("common.yes", "en")
+    if result == "Yes":
+        print(f"  ✓ english mode: common.yes = '{result}'")
+    else:
+        print(f"  ✗ english mode: common.yes = '{result}' (expected 'Yes')")
+    
+    print()
+
+
+def test_crazy_mode():
+    """Test Crazy Czech language mode."""
+    print("Testing Crazy Czech mode...")
+    # Test crazy translations
+    result = translations_module.get_translation("login.username_label", "crazy")
+    if result == "PŘEZDÍVKA KÁMOŠE":
+        print(f"  ✓ crazy mode: login.username_label = '{result}'")
+    else:
+        print(f"  ✗ crazy mode: login.username_label = '{result}' (expected 'PŘEZDÍVKA KÁMOŠE')")
+    
+    result = translations_module.get_translation("user_terminal.logout", "crazy")
+    if result == "ÚTĚK!":
+        print(f"  ✓ crazy mode: user_terminal.logout = '{result}'")
+    else:
+        print(f"  ✗ crazy mode: user_terminal.logout = '{result}' (expected 'ÚTĚK!')")
+    
+    print()
+
+
 def test_custom_overrides():
     """Test custom admin override priority."""
     print("Testing custom admin overrides...")
@@ -199,6 +237,8 @@ if __name__ == "__main__":
         count_translations()
         test_sample_translations()
         test_czech_iris_mode()
+        test_english_mode()
+        test_crazy_mode()
         test_custom_overrides()
         
         print("=" * 60)

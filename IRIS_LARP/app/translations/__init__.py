@@ -53,7 +53,7 @@ def get_translation(key_path: str, language_mode: str = "cz", custom_labels: Opt
     
     Args:
         key_path: Dot-separated key path (e.g., "login.username_label")
-        language_mode: "cz" for czech, "czech-iris" for IRIS mode
+        language_mode: "cz" for czech, "en" for english, "crazy" for crazy czech, "czech-iris" for IRIS mode
         custom_labels: Dict of custom admin overrides from database
     
     Returns:
@@ -68,7 +68,21 @@ def get_translation(key_path: str, language_mode: str = "cz", custom_labels: Opt
         return custom_labels[key_path]
     
     # Priority 2: Load appropriate language file(s)
-    if language_mode == "czech-iris":
+    if language_mode == "en":
+        english_trans = load_translations("english")
+        value = _get_nested_value(english_trans, key_path)
+        # Fallback to czech if key not found in english
+        if value is None:
+            czech_trans = load_translations("czech")
+            value = _get_nested_value(czech_trans, key_path)
+    elif language_mode == "crazy":
+        crazy_trans = load_translations("crazy")
+        value = _get_nested_value(crazy_trans, key_path)
+        # Fallback to czech if key not found in crazy
+        if value is None:
+            czech_trans = load_translations("czech")
+            value = _get_nested_value(czech_trans, key_path)
+    elif language_mode == "czech-iris":
         # Try IRIS first, fallback to czech
         iris_trans = load_translations("iris")
         czech_trans = load_translations("czech")

@@ -1,6 +1,6 @@
 /**
  * IRIS Organizer Wiki - Main Application
- * IRIS 4.0 aktuální k HLINIK Phase 34
+ * IRIS 4.1 aktuální k HLINIK Phase 35
  */
 
 // ============================================
@@ -11,6 +11,7 @@ let rolesData = [];
 let relationsData = [];
 let configData = {};
 const state = { manuals: {} };
+let timelineData = [];
 
 // ============================================
 // INITIALIZATION
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderRolesTable();
     renderUsersGrid();
     renderRelations();
+    renderTimeline();
     updateLastUpdate();
 
     // HLINIK features
@@ -53,6 +55,15 @@ async function loadData() {
         // Load relations
         const relationsResponse = await fetch('data/relations.json');
         relationsData = await relationsResponse.json();
+
+        // Load timeline
+        try {
+            const timelineResponse = await fetch('data/timeline.json');
+            timelineData = await timelineResponse.json();
+        } catch (e) {
+            console.warn("Failed to load timeline data", e);
+            timelineData = getFallbackTimeline();
+        }
 
         // Load config
         const configResponse = await fetch('data/config.json');
@@ -81,6 +92,7 @@ const sectionCategories = {
     'lore': 'lore',
     'hraci': 'lore',
     'prompty': 'lore',
+    'timeline': 'lore',
     'dokumentace': 'hlinik',
     'hlinik': 'hlinik',
     'system': 'hlinik',
@@ -1495,18 +1507,48 @@ function selectPlayer(playerId) {
     }
 
     // Relations
+    // Relations (Original compact removed, now using new panel)
     const relationsEl = document.getElementById('playerRelations');
     if (relationsEl) {
+        relationsEl.style.display = 'none'; // Hide old container if it exists
+    }
+
+    // NEW PANEL LOGIC
+    const relationsPanelEmpty = document.getElementById('playerRelationsEmpty');
+    const relationsPanelContent = document.getElementById('playerRelationsContent');
+
+    if (relationsPanelEmpty) relationsPanelEmpty.style.display = 'none';
+    if (relationsPanelContent) relationsPanelContent.style.display = 'block';
+
+    // New Goals
+    const newGoalsEl = document.getElementById('playerGoalsNew');
+    if (newGoalsEl && role.goals) {
+        newGoalsEl.innerHTML = role.goals.map(g => `<li>${g}</li>`).join('');
+    }
+
+    // New Relations List
+    const newRelationsEl = document.getElementById('playerRelationsNew');
+    if (newRelationsEl) {
         const playerRelations = relationsData.filter(r => r.source === playerId || r.target === playerId);
         if (playerRelations.length > 0) {
-            relationsEl.innerHTML = playerRelations.map(r => {
+            newRelationsEl.innerHTML = playerRelations.map(r => {
                 const isSource = r.source === playerId;
                 const otherId = isSource ? r.target : r.source;
                 const desc = isSource ? r.desc_source : r.desc_target;
-                return `<span class="relation-tag" title="${desc}">${otherId}: ${r.type}</span>`;
+                const typeLabel = getRelationTypeLabel(r.type);
+                const color = getRelationColor(r.type);
+
+                return `
+                <div class="relation-item-vertical" style="border-left-color: ${color}">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>${getRoleName(otherId)} (${otherId})</strong>
+                        <span style="font-size:0.8em; opacity:0.8; text-transform:uppercase;">${typeLabel}</span>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-top:4px;">${desc}</div>
+                </div>`;
             }).join('');
         } else {
-            relationsEl.innerHTML = '<span class="text-muted">Žádné vztahy</span>';
+            newRelationsEl.innerHTML = '<span class="text-muted">Žádné vztahy</span>';
         }
     }
 
@@ -1941,3 +1983,279 @@ window.exportLoreWebNoTests = exportLoreWebNoTests;
 window.exportOnlyTestRuns = exportOnlyTestRuns;
 window.exportDataJSON = exportDataJSON;
 
+function getFallbackTimeline() {
+    return [
+        {
+            "id": "E101",
+            "phase": 1,
+            "time_start": 0,
+            "duration": 5,
+            "actors": ["S01", "S02", "S03", "S04"],
+            "title": "Start Směny",
+            "description": "Správci odemykají místnost a zapínají hlavní terminál.",
+            "type": "system",
+            "related_nodes": ["1. Úvod"]
+        },
+        {
+            "id": "E102",
+            "phase": 1,
+            "time_start": 5,
+            "duration": 15,
+            "actors": ["S01"],
+            "target_actors": ["U01", "U02", "U03", "U04", "U05", "U06", "U07", "U08"],
+            "title": "Bezpečnostní instruktáž",
+            "description": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
+            "type": "briefing",
+            "related_nodes": ["1. Úvod"]
+        },
+        {
+            "id": "E103",
+            "phase": 1,
+            "time_start": 10,
+            "duration": 10,
+            "actors": ["S02"],
+            "title": "Rozdávání visaček",
+            "description": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
+            "type": "briefing",
+            "related_nodes": ["1. Úvod"]
+        },
+        {
+            "id": "E201",
+            "phase": 2,
+            "time_start": 25,
+            "duration": 5,
+            "actors": ["U08"],
+            "target_actors": ["A03"],
+            "title": "Speedrun Start",
+            "description": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
+            "type": "action",
+            "related_nodes": ["2. Rutina"]
+        },
+        {
+            "id": "E203",
+            "phase": 2,
+            "time_start": 30,
+            "duration": 15,
+            "actors": ["U05"],
+            "target_actors": ["A04"],
+            "title": "Recept na bábovku",
+            "description": "Marie Kovářová posílá do systému detailní recept na bábovku.",
+            "type": "roleplay",
+            "related_nodes": ["2. Rutina"]
+        },
+        {
+            "id": "E401",
+            "phase": 4,
+            "time_start": 80,
+            "duration": 5,
+            "actors": ["S01"],
+            "target_actors": ["U02"],
+            "title": "Odhalení dluhu",
+            "description": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
+            "type": "conflict",
+            "related_nodes": ["4. Krize"]
+        },
+        {
+            "id": "E501",
+            "phase": 5,
+            "time_start": 100,
+            "duration": 2,
+            "actors": ["A08"],
+            "title": "EXECUTE ORDER 666",
+            "description": "Sabotér spouští payload. Servery hlásí přehřátí.",
+            "type": "highlight",
+            "related_nodes": ["5. Meltdown"]
+        },
+        {
+            "id": "E601",
+            "phase": 6,
+            "time_start": 120,
+            "duration": 0,
+            "actors": ["S01"],
+            "title": "Konec směny",
+            "description": "Vrána vyhání všechny z místnosti.",
+            "type": "system",
+            "related_nodes": ["6. Závěr"]
+        }
+    ];
+}
+
+/* ... existing code ... */
+
+// ============================================
+// TIMELINE / GANTT
+// ============================================
+
+function renderTimeline() {
+    const container = document.getElementById('ganttContainer');
+    if (!container || !timelineData.length) return;
+
+    container.innerHTML = '';
+
+    // Sort events by time
+    timelineData.sort((a, b) => a.time_start - b.time_start);
+
+    // Create Header (Time Axis)
+    const header = document.createElement('div');
+    header.className = 'gantt-header';
+    header.innerHTML = '<div class="gantt-label" style="opacity:0">Actor</div>';
+
+    const trackWidth = 1200; // Pixels representing total time
+    const totalTime = 130; // Minutes total simulation time
+    const pxPerMin = trackWidth / totalTime;
+
+    const ticksContainer = document.createElement('div');
+    ticksContainer.className = 'gantt-ticks';
+    ticksContainer.style.width = `${trackWidth}px`;
+
+    // Generate ticks every 10 mins
+    for (let t = 0; t <= totalTime; t += 10) {
+        const tick = document.createElement('div');
+        tick.className = 'gantt-tick';
+        tick.style.left = `${t * pxPerMin}px`;
+        tick.textContent = `${t}m`;
+        ticksContainer.appendChild(tick);
+    }
+
+    // Phase markers
+    const phases = [
+        { time: 0, label: "1. Úvod" },
+        { time: 20, label: "2. Rutina" },
+        { time: 45, label: "3. Agendy" },
+        { time: 70, label: "4. Krize" },
+        { time: 95, label: "5. Meltdown" },
+        { time: 120, label: "6. Závěr" }
+    ];
+
+    phases.forEach(phase => {
+        const marker = document.createElement('div');
+        marker.className = 'gantt-phase-marker';
+        marker.style.left = `${phase.time * pxPerMin}px`;
+
+        const label = document.createElement('div');
+        label.className = 'gantt-phase-label';
+        label.textContent = phase.label;
+        marker.appendChild(label);
+        ticksContainer.appendChild(marker);
+    });
+
+    header.appendChild(ticksContainer);
+    container.appendChild(header);
+
+    // Group actors
+    const groups = [
+        { id: 'admin', title: 'Správci' },
+        { id: 'agent', title: 'Agenti' },
+        { id: 'user', title: 'Uživatelé' }
+    ];
+
+    groups.forEach(group => {
+        const groupEl = document.createElement('div');
+        groupEl.className = 'gantt-group';
+
+        const title = document.createElement('div');
+        title.className = 'gantt-group-title';
+        title.textContent = group.title;
+        groupEl.appendChild(title);
+
+        // Get actors of this type
+        const actors = rolesData.filter(r => r.type === group.id);
+
+        actors.forEach(actor => {
+            const row = document.createElement('div');
+            row.className = 'gantt-row';
+
+            // Actor Label
+            const label = document.createElement('div');
+            label.className = 'gantt-label';
+            label.textContent = `${actor.name} (${actor.id})`;
+            label.onclick = () => showBriefing(actor.id);
+            row.appendChild(label);
+
+            // Track
+            const track = document.createElement('div');
+            track.className = 'gantt-track';
+            track.style.width = `${trackWidth}px`;
+
+            // Find events for this actor
+            const actorEvents = timelineData.filter(e => e.actors.includes(actor.id));
+
+            actorEvents.forEach(event => {
+                const bar = document.createElement('div');
+                bar.className = `gantt-bar type-${event.type}`;
+                bar.style.left = `${event.time_start * pxPerMin}px`;
+                bar.style.width = `${Math.max(event.duration * pxPerMin, 20)}px`; // Min width 20px
+                bar.textContent = event.title;
+                bar.title = `${event.title} (${event.duration} min)`;
+                bar.onclick = () => showEventDetail(event);
+                track.appendChild(bar);
+            });
+
+            row.appendChild(track);
+            groupEl.appendChild(row);
+        });
+
+        container.appendChild(groupEl);
+    });
+}
+
+function showEventDetail(event) {
+    const modal = document.getElementById('eventModal');
+    const title = document.getElementById('eventTitle');
+    const content = document.getElementById('eventContent');
+
+    if (!modal) return;
+
+    title.textContent = event.title;
+
+    // Resolve actor names
+    const actorsHtml = event.actors.map(id => {
+        const role = rolesData.find(r => r.id === id);
+        return `<span class="role-badge ${role ? role.type : ''}">${role ? role.name : id}</span>`;
+    }).join(' ');
+
+    const targetsHtml = event.target_actors ? event.target_actors.map(id => {
+        const role = rolesData.find(r => r.id === id);
+        return `<span class="role-badge ${role ? role.type : ''}">${role ? role.name : id}</span>`;
+    }).join(' ') : '';
+
+    content.innerHTML = `
+        <div class="briefing-section">
+            <p><strong>Čas:</strong> ${event.time_start} - ${event.time_start + event.duration} min (Fáze ${event.phase})</p>
+            <p><strong>Typ:</strong> ${event.type.toUpperCase()}</p>
+        </div>
+        
+        <div class="briefing-section">
+            <p>${event.description}</p>
+        </div>
+        
+        <div class="briefing-section">
+            <h3>Účastníci</h3>
+            <div style="margin-bottom: 10px;">
+                <strong>Aktéři:</strong> ${actorsHtml}
+            </div>
+            ${targetsHtml ? `<div><strong>Cíle:</strong> ${targetsHtml}</div>` : ''}
+        </div>
+        
+        ${event.related_nodes ? `
+        <div class="briefing-section">
+            <h3>Kontext</h3>
+            <ul>
+                ${event.related_nodes.map(node => `<li>${node}</li>`).join('')}
+            </ul>
+        </div>` : ''}
+    `;
+
+    modal.classList.add('active');
+}
+
+function closeEventModal() {
+    document.getElementById('eventModal').classList.remove('active');
+}
+
+// Close modal on overlay click
+document.getElementById('eventModal').addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+        closeEventModal();
+    }
+});

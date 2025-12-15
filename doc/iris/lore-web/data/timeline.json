@@ -1,0 +1,277 @@
+[
+    {
+        "id": "E101",
+        "phase": 1,
+        "time_start": 0,
+        "duration": 5,
+        "actors": [
+            "S01",
+            "S02",
+            "S03",
+            "S04"
+        ],
+        "title": "Start Směny",
+        "description": "Správci odemykají místnost a zapínají hlavní terminál.",
+        "type": "system",
+        "related_nodes": [
+            "1. Úvod"
+        ]
+    },
+    {
+        "id": "E102",
+        "phase": 1,
+        "time_start": 5,
+        "duration": 15,
+        "actors": [
+            "S01"
+        ],
+        "target_actors": [
+            "U01",
+            "U02",
+            "U03",
+            "U04",
+            "U05",
+            "U06",
+            "U07",
+            "U08"
+        ],
+        "title": "Bezpečnostní instruktáž",
+        "description": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
+        "type": "briefing",
+        "related_nodes": [
+            "1. Úvod"
+        ]
+    },
+    {
+        "id": "E103",
+        "phase": 1,
+        "time_start": 10,
+        "duration": 10,
+        "actors": [
+            "S02"
+        ],
+        "title": "Rozdávání visaček",
+        "description": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
+        "type": "briefing",
+        "related_nodes": [
+            "1. Úvod"
+        ]
+    },
+    {
+        "id": "E201",
+        "phase": 2,
+        "time_start": 25,
+        "duration": 5,
+        "actors": [
+            "U08"
+        ],
+        "target_actors": [
+            "A03"
+        ],
+        "title": "Speedrun Start",
+        "description": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
+        "type": "action",
+        "related_nodes": [
+            "2. Rutina"
+        ]
+    },
+    {
+        "id": "E202",
+        "phase": 2,
+        "time_start": 26,
+        "duration": 10,
+        "actors": [
+            "A03"
+        ],
+        "target_actors": [
+            "U08"
+        ],
+        "title": "Výzva přijata",
+        "description": "Igor 'Viper' reaguje na spam Gamera okamžitým uzavíráním ticketů.",
+        "type": "action",
+        "related_nodes": [
+            "2. Rutina",
+            "rival"
+        ]
+    },
+    {
+        "id": "E203",
+        "phase": 2,
+        "time_start": 30,
+        "duration": 15,
+        "actors": [
+            "U05"
+        ],
+        "target_actors": [
+            "A04"
+        ],
+        "title": "Recept na bábovku",
+        "description": "Marie Kovářová posílá do systému detailní recept na bábovku.",
+        "type": "roleplay",
+        "related_nodes": [
+            "2. Rutina"
+        ]
+    },
+    {
+        "id": "E204",
+        "phase": 2,
+        "time_start": 32,
+        "duration": 5,
+        "actors": [
+            "A04"
+        ],
+        "title": "Autopilot Engage",
+        "description": "Lenka Ospalá zapíná makro 'Mňam, to zní skvěle' a jde si na chvíli zdřímnout.",
+        "type": "action",
+        "related_nodes": [
+            "2. Rutina"
+        ]
+    },
+    {
+        "id": "E301",
+        "phase": 3,
+        "time_start": 50,
+        "duration": 20,
+        "actors": [
+            "U06"
+        ],
+        "title": "Hledání pravdy",
+        "description": "Ivan Hrozný analyzuje blikání LED diod na routeru a hledá v tom morseovku.",
+        "type": "investigation",
+        "related_nodes": [
+            "3. Agendy"
+        ]
+    },
+    {
+        "id": "E302",
+        "phase": 3,
+        "time_start": 55,
+        "duration": 5,
+        "actors": [
+            "A08"
+        ],
+        "target_actors": [
+            "U06"
+        ],
+        "title": "Únik dat 01",
+        "description": "Sabotér X posílá šifrovanou zprávu 'ALOBAL' do chatu Ivana Hrozného.",
+        "type": "plot",
+        "related_nodes": [
+            "3. Agendy"
+        ]
+    },
+    {
+        "id": "E303",
+        "phase": 3,
+        "time_start": 60,
+        "duration": 15,
+        "actors": [
+            "U07"
+        ],
+        "target_actors": [
+            "S04"
+        ],
+        "title": "Lichocení",
+        "description": "Novinářka předstírá obdiv k vizi Synovce ředitele, aby z něj vytáhla informace.",
+        "type": "investigation",
+        "related_nodes": [
+            "3. Agendy"
+        ]
+    },
+    {
+        "id": "E401",
+        "phase": 4,
+        "time_start": 80,
+        "duration": 5,
+        "actors": [
+            "S01"
+        ],
+        "target_actors": [
+            "U02"
+        ],
+        "title": "Odhalení dluhu",
+        "description": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
+        "type": "conflict",
+        "related_nodes": [
+            "4. Krize"
+        ]
+    },
+    {
+        "id": "E402",
+        "phase": 4,
+        "time_start": 81,
+        "duration": 5,
+        "actors": [
+            "S02"
+        ],
+        "title": "Krizová intervence",
+        "description": "Tereza Tichá hází mezi Vránu a Gamblera hrst karamelek.",
+        "type": "action",
+        "related_nodes": [
+            "4. Krize"
+        ]
+    },
+    {
+        "id": "E501",
+        "phase": 5,
+        "time_start": 100,
+        "duration": 2,
+        "actors": [
+            "A08"
+        ],
+        "title": "EXECUTE ORDER 666",
+        "description": "Sabotér spouští payload. Servery hlásí přehřátí.",
+        "type": "highlight",
+        "related_nodes": [
+            "5. Meltdown"
+        ]
+    },
+    {
+        "id": "E502",
+        "phase": 5,
+        "time_start": 102,
+        "duration": 10,
+        "actors": [
+            "U06"
+        ],
+        "target_actors": [
+            "S03"
+        ],
+        "title": "Konfrontace",
+        "description": "Ivan Hrozný křičí na Kabela, že 'kabely vedou do nikam!'",
+        "type": "conflict",
+        "related_nodes": [
+            "5. Meltdown"
+        ]
+    },
+    {
+        "id": "E503",
+        "phase": 5,
+        "time_start": 105,
+        "duration": 5,
+        "actors": [
+            "S01"
+        ],
+        "title": "PANIC MODE",
+        "description": "Ředitel mačká červené tlačítko 'SHUTDOWN'. Nic se nestane, protože není zapojené.",
+        "type": "highlight",
+        "related_nodes": [
+            "5. Meltdown"
+        ]
+    },
+    {
+        "id": "E601",
+        "phase": 6,
+        "time_start": 120,
+        "duration": 0,
+        "actors": [
+            "S01"
+        ],
+        "title": "Konec směny",
+        "description": "Vrána vyhání všechny z místnosti.",
+        "type": "system",
+        "related_nodes": [
+            "6. Závěr"
+        ]
+    }
+]

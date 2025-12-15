@@ -1,10 +1,78 @@
 [
   {
+    "timestamp": "2025-12-15T13:22:37.000000",
+    "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+    "status": "success",
+    "duration": 4.699824810028076,
+    "filename": "scenario_complex_1765801357.json",
+    "stats": {
+      "steps_total": 4,
+      "steps_passed": 4,
+      "hyper_response": "ok",
+      "optimizer_active": true
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:42:00.000000",
+    "scenario_name": "Phase 35: Critical Failure & Recovery Protocol",
+    "status": "success",
+    "duration": 720.0,
+    "filename": "manual_test_recovery.json",
+    "stats": {
+      "total_tests": 12,
+      "passed": 11,
+      "critical_bugs": 1,
+      "fixed_bugs": 1,
+      "screenshots": 3
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:07:26.000000",
+    "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+    "status": "success",
+    "duration": 4.7751359939575195,
+    "filename": "scenario_complex_1765800446.json",
+    "stats": {
+      "steps_total": 4,
+      "steps_passed": 4,
+      "hyper_response": "ok",
+      "optimizer_active": true
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:04:19.000000",
+    "scenario_name": "Phase 35: LLM Functional Test",
+    "status": "success",
+    "duration": 1.92,
+    "filename": "llm_func_1765800257.json",
+    "stats": {
+      "provider": "OPENAI",
+      "model": "gpt-3.5-turbo",
+      "prompt_len": 45,
+      "response_len": 531,
+      "sanity_check": "passed"
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:03:39.000000",
+    "scenario_name": "Phase 35: LLM Functional Test",
+    "status": "success",
+    "duration": 0.59,
+    "filename": "llm_func_1765800218.json",
+    "stats": {
+      "provider": "OPENROUTER",
+      "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
+      "prompt_len": 45,
+      "response_len": 191,
+      "sanity_check": "passed"
+    }
+  },
+  {
     "timestamp": "2025-12-15T08:49:31.000000",
     "scenario_name": "HLINIK Manual Testing - Comprehensive UI/UX and Functionality Audit",
     "status": "failed",
     "duration": 540.0,
-    "duration_note": "Celkový čas testování včetně analýzy a dokumentace",
+    "duration_note": "Celkov\u00fd \u010das testov\u00e1n\u00ed v\u010detn\u011b anal\u00fdzy a dokumentace",
     "filename": "manual_test_1765789771.json",
     "stats": {
       "tested_roles": 3,
