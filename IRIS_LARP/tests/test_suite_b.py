@@ -11,11 +11,20 @@ import time
 from unittest.mock import AsyncMock, patch
 from fastapi.testclient import TestClient
 from app.main import app
+from app.config import settings
 from app.database import SessionLocal, User, Task, TaskStatus, ChatLog, SystemLog, UserRole, init_db
 from app.logic.gamestate import gamestate, ChernobylMode, HyperVisibilityMode
 from app.seed import seed_data
 
 client = TestClient(app)
+
+
+def test_health_endpoint():
+    response = client.get("/health")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload.get("status") == "ok"
+    assert payload.get("version") == settings.VERSION
 
 
 # ============================================================================
