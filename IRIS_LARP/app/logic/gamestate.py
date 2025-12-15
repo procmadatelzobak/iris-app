@@ -26,7 +26,7 @@ class GameState:
     def __init__(self):
         if self.initialized:
             return
-        
+
         self.global_shift_offset = settings.DEFAULT_GLOBAL_SHIFT_OFFSET
         self.hyper_visibility_mode = HyperVisibilityMode.NORMAL
         
@@ -84,6 +84,7 @@ class GameState:
             model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a precise rewriter. Follow all instructions."
         )
+        self.llm_config_censor = self._default_censor_config()
 
         self.test_mode = False # v1.9 Test Mode
         
@@ -193,8 +194,15 @@ class GameState:
             model_name="google/gemini-2.5-flash-lite",
             system_prompt="You are a precise rewriter. Follow all instructions."
         )
-        # Reset custom labels (translation overrides)
+        self.llm_config_censor = self._default_censor_config()
         self.custom_labels = {}
+
+    def _default_censor_config(self) -> LLMConfig:
+        return LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name="google/gemini-2.5-flash-lite",
+            system_prompt="Jsi cenzurní agent. Nahrazuješ odpovědi bezpečným, stručným textem bez osobních údajů."
+        )
 
     def get_default_task_reward(self, status_level):
         """Return the baseline task reward for a given user status level."""

@@ -25,6 +25,10 @@ class ConnectionManager:
         self.pending_responses: Dict[int, float] = {}  # SessionID -> timestamp
         # Sessions that have timed out (agent can no longer respond)
         self.timed_out_sessions: Dict[int, float] = {}  # SessionID -> timeout timestamp
+        # Latest user message cache per session (for panic mode/context)
+        self.latest_user_messages: Dict[int, str] = {}
+        # Panic mode (full censorship) state per session
+        self.panic_modes: Dict[int, Dict[str, bool]] = {}  # {session_id: {"user": False, "agent": False}}
 
     async def connect(self, websocket: WebSocket, role: UserRole, user_id: int, logical_id: Optional[int] = None):
         await websocket.accept()
@@ -96,6 +100,28 @@ class ConnectionManager:
         """Clear timeout state when user sends a new message."""
         if session_id in self.timed_out_sessions:
             del self.timed_out_sessions[session_id]
+
+    def set_last_user_message(self, session_id: int, content: str):
+        self.latest_user_messages[session_id] = content
+
+    def get_last_user_message(self, session_id: int) -> Optional[str]:
+        return self.latest_user_messages.get(session_id)
+
+    # --- Panic Mode Helpers ---
+    def set_panic_mode(self, session_id: int, target: str, enabled: bool):
+        """Enable/disable panic (censorship) for a session/side ('user' or 'agent')."""
+        if target not in ["user", "agent"]:
+            return
+        state = self.panic_modes.get(session_id, {"user": False, "agent": False})
+        state[target] = enabled
+        self.panic_modes[session_id] = state
+
+    def get_panic_state(self, session_id: int) -> Dict[str, bool]:
+        return self.panic_modes.get(session_id, {"user": False, "agent": False})
+
+    def clear_panic_state(self, session_id: int):
+        if session_id in self.panic_modes:
+            del self.panic_modes[session_id]
 
     async def send_timeout_error_to_user(self, session_id: int):
         """Send timeout error message to user for a specific session."""
