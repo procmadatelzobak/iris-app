@@ -54,8 +54,9 @@ class LanguageModeUpdate(BaseModel):
     @field_validator('language_mode')
     @classmethod
     def validate_mode(cls, v):
-        if v not in ["cz", "czech-iris"]:
-            raise ValueError('Invalid language mode. Must be "cz" or "czech-iris"')
+        valid_modes = ["cz", "en", "crazy", "czech-iris"]
+        if v not in valid_modes:
+            raise ValueError(f'Invalid language mode. Must be one of: {", ".join(valid_modes)}')
         return v
 
 
@@ -68,15 +69,18 @@ async def get_translations(user=Depends(get_current_user)):
     language_mode = gamestate.language_mode
     custom_labels = gamestate.custom_labels
     
-    # Load base translations
-    czech_trans = load_translations("czech")
-    
-    if language_mode == "czech-iris":
+    # Load base translations based on language mode
+    if language_mode == "en":
+        translations = load_translations("english")
+    elif language_mode == "crazy":
+        translations = load_translations("crazy")
+    elif language_mode == "czech-iris":
         # Load and merge IRIS overrides
+        czech_trans = load_translations("czech")
         iris_trans = load_translations("iris")
         translations = merge_translations(czech_trans, iris_trans)
-    else:
-        translations = czech_trans
+    else:  # default "cz"
+        translations = load_translations("czech")
     
     return {
         "status": "ok",
@@ -179,6 +183,8 @@ async def get_language_options(user=Depends(get_current_user)):
         "status": "ok",
         "options": [
             {"value": "cz", "label": "Čeština (výchozí)"},
+            {"value": "en", "label": "English"},
+            {"value": "crazy", "label": "Crazy Čeština 🤪"},
             {"value": "czech-iris", "label": "Čeština + IRIS Terminologie"}
         ],
         "current": gamestate.language_mode

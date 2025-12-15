@@ -59,7 +59,9 @@ Tento adresář obsahuje kompletní překladový systém pro IRIS aplikaci. Zde 
 
 | Soubor | Účel | Velikost | Status |
 |--------|------|----------|--------|
-| `czech.json` | České překlady pro celé UI | 212 klíčů | ✅ Ready |
+| `czech.json` | České překlady pro celé UI | 219 klíčů | ✅ Ready |
+| `english.json` | Anglické překlady pro celé UI | 219 klíčů | ✅ Ready |
+| `crazy.json` | Crazy Czech překlady (LARP efekt) | 219 klíčů | ✅ Ready |
 | `iris.json` | LARP admin terminologie | 38 klíčů | ✅ Ready |
 | `__init__.py` | Python loading modul | ~4KB | ✅ Functional |
 | `test_translations.py` | Automatizované testy | ~6KB | ✅ Passing |
@@ -230,8 +232,8 @@ Tento adresář obsahuje kompletní překladový systém pro IRIS aplikaci. Zde 
 
 ---
 
-**Poslední update:** 2025-12-14  
-**Verze dokumentace:** 1.0.0  
+**Poslední update:** 2025-12-15  
+**Verze dokumentace:** 1.1.0 (Phase 36)  
 **Status:** ✅ Complete & Ready
 
 ---
