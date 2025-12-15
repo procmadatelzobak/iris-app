@@ -16,15 +16,31 @@ from pathlib import Path
 
 from ..dependencies import get_current_root
 
-# Add tests to path for importing simulation module
-_tests_path = Path(__file__).resolve().parent.parent.parent / "tests" / "scenarios"
-if str(_tests_path.parent) not in sys.path:
-    sys.path.insert(0, str(_tests_path.parent.parent))
+# ============================================================================
+# Simulation Module Import
+# ============================================================================
+# The simulation module is located in tests/scenarios/ which is outside the
+# app package. We need to add the IRIS_LARP directory to sys.path to allow
+# importing it. This approach is used because:
+# 1. The simulation can be run standalone from command line
+# 2. The simulation is also accessible via this API router
+# 3. Moving it into app/ would break standalone execution
+# 
+# Alternative: Move llm_hour_simulation.py to app/services/ if standalone
+# execution is no longer needed.
+# ============================================================================
+_iris_larp_path = Path(__file__).resolve().parent.parent.parent  # IRIS_LARP/
+if str(_iris_larp_path) not in sys.path:
+    sys.path.insert(0, str(_iris_larp_path))
 
 try:
     from tests.scenarios.llm_hour_simulation import get_simulation, SimulationState
-except ImportError:
+except ImportError as e:
     # Fallback: Define minimal stubs if import fails
+    # This allows the router to load even if simulation module has issues
+    import logging
+    logging.warning(f"Could not import simulation module: {e}")
+    
     from enum import Enum
     class SimulationState(str, Enum):
         IDLE = "idle"

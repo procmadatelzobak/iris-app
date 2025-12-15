@@ -695,8 +695,41 @@ class LLMHourSimulation:
         return actions.get(action, action)
         
     def _mock_llm_response(self, participant: ParticipantProfile, prompt: str) -> str:
-        """Mock LLM odpověď pro testování (bez skutečného API volání)"""
-        # This is a mock - real implementation would call Gemini API
+        """
+        Mock LLM odpověď pro testování (bez skutečného API volání).
+        
+        Pro integraci skutečného Gemini 2.5 Flash:
+        ==========================================
+        
+        1. Nastavte GEMINI_API_KEY v .env souboru
+        
+        2. Importujte LLM service:
+           ```python
+           from app.logic.llm_core import llm_service, LLMConfig, LLMProvider
+           ```
+        
+        3. Nahraďte tuto metodu voláním:
+           ```python
+           config = LLMConfig(
+               provider=LLMProvider.GEMINI,
+               model_name="gemini-2.5-flash",
+               system_prompt=participant.system_prompt
+           )
+           history = [{"role": "user", "content": prompt}]
+           response = llm_service.generate_response(config, history)
+           ```
+        
+        4. Ošetřete chyby:
+           - Timeout: Nastavte maximální čas odpovědi (10s)
+           - Rate limit: Implementujte exponential backoff
+           - API chyby: Logujte a použijte fallback odpověď
+        
+        5. Očekávaný formát odpovědi:
+           - Krátký text (max 100 slov)
+           - V češtině
+           - Odpovídající charakteru postavy
+        """
+        # Mock responses for testing without API calls
         responses = {
             "user": [
                 "Dobrý den, potřebuji pomoct s úkolem.",

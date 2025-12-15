@@ -1513,10 +1513,12 @@
     
     function startSimStatusPolling() {
         if (simStatusInterval) clearInterval(simStatusInterval);
+        // Poll every 5 seconds to reduce server load
+        // Note: Consider WebSocket for real-time updates in high-traffic scenarios
         simStatusInterval = setInterval(async () => {
             await refreshSimStatus();
             await fetchSimLogs();
-        }, 3000); // Poll every 3 seconds
+        }, 5000);
     }
     
     function stopSimStatusPolling() {
