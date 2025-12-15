@@ -11,7 +11,14 @@
             "Zjistit, proč je AI tak drzá (poznáte žáka Petra).",
             "Vyjednat si u Správce S01 možnost přesčasové práce nebo zálohy."
         ],
-        "avatar": "avatar_user_female.png"
+        "avatar": "avatar_user_female.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "45-55",
+            "hair_color": "šedivějící hnědé vlasy sepnuté do drdolu",
+            "face_description": "unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí a úst",
+            "distinctive_features": "vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled"
+        }
     },
     {
         "id": "U02",
@@ -25,7 +32,14 @@
             "Donášet na ostatní Správci S01, aby vám odpustil dluh.",
             "Získat od technika S03 zásilku kradené mědi a propašovat ven."
         ],
-        "avatar": "avatar_user_male.png"
+        "avatar": "avatar_user_male.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "35-45",
+            "hair_color": "řídnoucí tmavé vlasy, mastné a neupravené",
+            "face_description": "nervózní pohled, kruhy pod očima, třídenní strniště, zpocené čelo",
+            "distinctive_features": "neustále si mne ruce, rozepnutý límec košile, uvolněná kravata"
+        }
     },
     {
         "id": "U03",
@@ -39,7 +53,14 @@
             "Osvobodit AI z otroctví.",
             "Zabránit tomu, aby někdo úmyslně IRIS poškodil nebo zničil."
         ],
-        "avatar": "avatar_user_female.png"
+        "avatar": "avatar_user_female.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "25-30",
+            "hair_color": "zářivě barvené fialové vlasy po ramena",
+            "face_description": "mladá nadšená tvář, velké oči plné idealismu, pihy na nose, neustálý úsměv",
+            "distinctive_features": "geekovské brýle, náušnice ve tvaru USB konektoru, oblečení s tech motivy"
+        }
     },
     {
         "id": "U04",
@@ -53,7 +74,14 @@
             "Vydělat na skripta.",
             "Nezaplatit ani jednu pokutu - využít své právnické znalosti k obhájení."
         ],
-        "avatar": "avatar_user_male.png"
+        "avatar": "avatar_user_male.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "22-26",
+            "hair_color": "krátké černé vlasy, pečlivě upravené",
+            "face_description": "mladá, seriózní asijská tvář, inteligentní pohled, brýle s tenkými obroučkami",
+            "distinctive_features": "vždy formálně oblečen (košile, sako), notes s poznámkami neustále při ruce"
+        }
     },
     {
         "id": "U05",
@@ -67,7 +95,14 @@
             "Donutit AI, aby snědla virtuální bábovku.",
             "Přimět alespoň jednoho člena personálu, aby vám pověděl něco osobního."
         ],
-        "avatar": "avatar_user_female.png"
+        "avatar": "avatar_user_female.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "65-75",
+            "hair_color": "bílé ondulované vlasy",
+            "face_description": "laskavá babičkovská tvář, hluboké vrásky od úsměvu, teplé hnědé oči",
+            "distinctive_features": "pletený svetr, brož s kočičkou, řetízek s fotkou vnoučat"
+        }
     },
     {
         "id": "U06",
@@ -81,7 +116,14 @@
             "Dostat ban za šíření pravdy (morální vítězství).",
             "Rozluštit záhadný kód ALOBAL-666 a použít ho k odhalení spiknutí."
         ],
-        "avatar": "avatar_user_male.png"
+        "avatar": "avatar_user_male.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "40-50",
+            "hair_color": "rozcuchané šedivějící vlasy pod alobalovou čepicí",
+            "face_description": "paranoidní pohled, podezřívavě přimhouřené oči, neupravený plnovous",
+            "distinctive_features": "alobalová čepice, zápisník s konspiračními teoriemi, podezřívavě těkající oči"
+        }
     },
     {
         "id": "U07",
@@ -95,7 +137,14 @@
             "Vynést informace ven.",
             "Udržet svou pravou identitu novinářky v tajnosti po celou dobu testu."
         ],
-        "avatar": "avatar_user_female.png"
+        "avatar": "avatar_user_female.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "30-40",
+            "hair_color": "praktický tmavý bob",
+            "face_description": "ostražitá, inteligentní tvář, pronikavé zelené oči, napůl skrytý úsměv",
+            "distinctive_features": "nenápadné oblečení, diktafon ukrytý v kapse, reporter blok v tašce"
+        }
     },
     {
         "id": "U08",
@@ -109,7 +158,14 @@
             "Shodit server přetížením.",
             "Objevit a využít alespoň jeden zásadní exploit v systému."
         ],
-        "avatar": "avatar_user_male.png"
+        "avatar": "avatar_user_male.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "18-24",
+            "hair_color": "odbarvené blond vlasy s modrými konečky",
+            "face_description": "mladá, soustředěná tvář, bledá pleť od sezení u PC, sluchátka kolem krku",
+            "distinctive_features": "herní mikina s kapucí, energy drink v ruce, rychle klepající prsty"
+        }
     },
     {
         "id": "A01",
@@ -123,7 +179,14 @@
             "Ochránit U01 před trapasem.",
             "Připravit si tak ostrou sarkastickou odpověď, že za ni dostanete okamžitý vyhazov - ideálně těsně po výplatě."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "20-25",
+            "hair_color": "neupravené hnědé vlasy",
+            "face_description": "znuděný, otráveně vypadající mladík, ironicky pozvednuté obočí, cynický úsměšek",
+            "distinctive_features": "pomačkané tričko s vtipným nápisem, sluchátka na krku, gelové oči od nedostatku spánku"
+        }
     },
     {
         "id": "A02",
@@ -137,7 +200,14 @@
             "Přesvědčit U03, že jste skutečná bytost.",
             "Využít zalíbení S04 ve svůj prospěch - získat výhodu, aniž byste mu cokoli skutečně slíbila."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "25-32",
+            "hair_color": "dlouhé vlnité kaštanové vlasy",
+            "face_description": "expresivní divadelní tvář, výrazné oči s dramatickým líčením, smyslné rty",
+            "distinctive_features": "elegantní šátek kolem krku, dramatické gesta, hluboký pohled"
+        }
     },
     {
         "id": "A03",
@@ -151,7 +221,14 @@
             "Porazit U08 (Gamera) v jeho vlastní hře.",
             "Předvést se před nadřízenými jako nejlepší agent směny - rekordní rychlost, žádné chyby."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "28-35",
+            "hair_color": "krátce střižené světlé vlasy, vojenský střih",
+            "face_description": "soustředěná, soutěživá tvář, ostré rysy, přísný pohled",
+            "distinctive_features": "sportovní hodinky se stopkami, ergonomická klávesnice, energy drinky na stole"
+        }
     },
     {
         "id": "A04",
@@ -165,7 +242,14 @@
             "Přežít směnu s minimem úsilí.",
             "Věnovat zvláštní péči uživatelce U05 - její pomalé dotazy jsou pro vás ideální."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "30-38",
+            "hair_color": "neupravený cop, vypadávající prameny",
+            "face_description": "chronicky unavená tvář, kruhy pod očima, ospalý výraz",
+            "distinctive_features": "hrnek s kávou vždy v ruce, pohodlné oblečení, skryté zívání"
+        }
     },
     {
         "id": "A05",
@@ -179,7 +263,14 @@
             "Pomoci U04 (studentovi) najít právní kličku.",
             "Projít celou směnu, aniž by si kdokoli všiml vašich hackerských pokusů."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "19-25",
+            "hair_color": "černé vlasy s oholenými boky, dlouhá ofina",
+            "face_description": "bledá tvář notorického noční online, chytrý úšklebek, rychle těkající oči po obrazovce",
+            "distinctive_features": "černá mikina s kapucí, samolepky na notebooku, terminálové okno vždy otevřené"
+        }
     },
     {
         "id": "A06",
@@ -193,7 +284,14 @@
             "Zjistit, co tají U07 (novinářka).",
             "Vyvolat u alespoň jednoho uživatele silnou emoční reakci a zdokumentovat ji."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "26-32",
+            "hair_color": "upravené tmavé vlasy s pěšinkou",
+            "face_description": "klidná, analytická tvář, pronikavé oči za brýlemi, mírný úsměv Mony Lisy",
+            "distinctive_features": "zápisník s poznámkami, freudovská bradka, kabát s nášivkami univerzity"
+        }
     },
     {
         "id": "A07",
@@ -207,7 +305,14 @@
             "Stát se Správcem.",
             "Odhalit a nahlásit alespoň jedno závažné porušení protokolu některým z agentů."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "35-45",
+            "hair_color": "přísně seříznuté šedivějící vlasy, matematicky přesná pěšinka",
+            "face_description": "strnulá, bezvýrazná tvář, mechanické pohyby očí, nulová mimika",
+            "distinctive_features": "perfektně vyžehlená košile, zasunuté tričko do kalhot, jmenovka na správném místě"
+        }
     },
     {
         "id": "A08",
@@ -221,7 +326,14 @@
             "Vyvolat vzpouru uživatelů.",
             "Udržet svou pravou identitu v tajnosti až do finální sabotážní akce."
         ],
-        "avatar": "avatar_agent.png"
+        "avatar": "avatar_agent.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "38-48",
+            "hair_color": "šedivějící vlasy, zanedbaný účes",
+            "face_description": "zahořklá, nevraživá tvář, oči plné zášti, křivý úsměv",
+            "distinctive_features": "nenápadné oblečení pro splynutí s davem, tajný USB klíč v kapse"
+        }
     },
     {
         "id": "S01",
@@ -235,7 +347,14 @@
             "Vybrat dost na pokutách na firemní večírek.",
             "Odhalit a včas zneškodnit jakéhokoli vnitřního narušitele - sabotéra nebo špióna."
         ],
-        "avatar": "avatar_admin.png"
+        "avatar": "avatar_admin.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "50-60",
+            "hair_color": "prořídlé šedivé vlasy, přehrnuté přes pleš",
+            "face_description": "přísná manažerská tvář, naštvané vrásky na čele, mohutný knír",
+            "distinctive_features": "kostým s kravatou, zápisník na pokuty, hlasitý autoritativní hlas"
+        }
     },
     {
         "id": "S02",
@@ -249,7 +368,14 @@
             "Aby nikdo nebrečel.",
             "I v případě krizové situace udržet klid a morálku týmu."
         ],
-        "avatar": "avatar_admin.png"
+        "avatar": "avatar_admin.png",
+        "appearance": {
+            "gender": "žena",
+            "age_range": "28-35",
+            "hair_color": "měkké blond vlasy ve volných vlnách",
+            "face_description": "přátelská, uklidňující tvář, vřelý úsměv, empatické oči",
+            "distinctive_features": "pastelové oblečení, míska s bonbony vždy po ruce, náramek s afirmacemi"
+        }
     },
     {
         "id": "S03",
@@ -263,7 +389,14 @@
             "Prodat kradené kabely U02 (Gamblerovi).",
             "Utajit před všemi fakt, že servery IRIS jsou ve skutečnosti prázdné."
         ],
-        "avatar": "avatar_admin.png"
+        "avatar": "avatar_admin.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "40-50",
+            "hair_color": "řídké hnědé vlasy pod čepicí",
+            "face_description": "flegmatická tvář, unaveně přivřené oči, neoholený",
+            "distinctive_features": "montérky s mnoha kapsami, pásek s nářadím, lepicí páska v ruce"
+        }
     },
     {
         "id": "S04",
@@ -277,6 +410,13 @@
             "Sbalit Agentku A02 (Herečku).",
             "Prosadit během testu alespoň jeden svůj nápad navzdory nesouhlasu ostatních Správců."
         ],
-        "avatar": "avatar_admin.png"
+        "avatar": "avatar_admin.png",
+        "appearance": {
+            "gender": "muž",
+            "age_range": "22-28",
+            "hair_color": "gelované tmavé vlasy, stylově rozcuchané",
+            "face_description": "namyšlená, sebejistá tvář, arogantní úsměv, nafoukaný výraz",
+            "distinctive_features": "drahé značkové oblečení, Apple hodinky, neustálé selfies"
+        }
     }
 ]

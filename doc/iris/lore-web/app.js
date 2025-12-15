@@ -80,6 +80,7 @@ const sectionCategories = {
     'manualy': 'lore',
     'lore': 'lore',
     'hraci': 'lore',
+    'prompty': 'lore',
     'dokumentace': 'hlinik',
     'hlinik': 'hlinik',
     'system': 'hlinik',
@@ -247,15 +248,22 @@ function renderDashboard() {
     const agents = rolesData.filter(r => r.type === 'agent');
     const admins = rolesData.filter(r => r.type === 'admin');
 
-    document.getElementById('statUsers').textContent = users.length;
-    document.getElementById('statAgents').textContent = agents.length;
-    document.getElementById('statAdmins').textContent = admins.length;
-    document.getElementById('statRelations').textContent = relationsData.length;
+    const statUsers = document.getElementById('statUsers');
+    const statAgents = document.getElementById('statAgents');
+    const statAdmins = document.getElementById('statAdmins');
+    const statRelations = document.getElementById('statRelations');
+
+    if (statUsers) statUsers.textContent = users.length;
+    if (statAgents) statAgents.textContent = agents.length;
+    if (statAdmins) statAdmins.textContent = admins.length;
+    if (statRelations) statRelations.textContent = relationsData.length;
 }
 
 function updateLastUpdate() {
+    const lastUpdate = document.getElementById('lastUpdate');
+    if (!lastUpdate) return;
     const now = new Date();
-    document.getElementById('lastUpdate').textContent = now.toLocaleDateString('cs-CZ', {
+    lastUpdate.textContent = now.toLocaleDateString('cs-CZ', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -268,6 +276,7 @@ function updateLastUpdate() {
 
 function renderRolesTable() {
     const tbody = document.getElementById('rolesTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     rolesData.forEach(role => {
@@ -304,6 +313,7 @@ function getRoleTypeLabel(type) {
 
 function renderUsersGrid() {
     const grid = document.getElementById('usersGrid');
+    if (!grid) return;
     grid.innerHTML = '';
 
     // Show all roles, not just users
@@ -343,6 +353,7 @@ function renderRelations() {
 
 function renderRelationsList() {
     const list = document.getElementById('relationsList');
+    if (!list) return;
     list.innerHTML = '';
 
     relationsData.forEach(rel => {
@@ -401,6 +412,7 @@ function getRelationColor(type) {
 
 function renderRelationsGraph() {
     const svg = document.getElementById('relationsGraph');
+    if (!svg || !svg.parentElement) return;
     const width = svg.parentElement.clientWidth;
     const height = 400;
 
@@ -524,6 +536,23 @@ function showBriefing(roleId) {
             <p>${role.description}</p>
         </div>
         
+        ${role.appearance ? `
+        <div class="briefing-section">
+            <h3>🎭 Vzhled postavy</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div>
+                    <p><strong>Pohlaví:</strong> ${role.appearance.gender}</p>
+                    <p><strong>Věk:</strong> ${role.appearance.age_range} let</p>
+                    <p><strong>Vlasy:</strong> ${role.appearance.hair_color}</p>
+                </div>
+                <div>
+                    <p><strong>Obličej:</strong> ${role.appearance.face_description}</p>
+                    <p><strong>Výrazné rysy:</strong> ${role.appearance.distinctive_features}</p>
+                </div>
+            </div>
+        </div>
+        ` : ''}
+        
         <div class="briefing-section">
             <h3>🎯 Cíle mise</h3>
             <ul class="briefing-goals">
@@ -646,16 +675,92 @@ function closeManual() {
 async function initTests() {
     try {
         const response = await fetch('data/test_runs/index.json');
+        if (!response.ok) throw new Error('HTTP error: ' + response.status);
         const runs = await response.json();
         renderTestRunsList(runs);
     } catch (e) {
-        console.error("Failed to load test runs", e);
-        document.getElementById('testRunsList').innerHTML = '<p class="text-muted">Zatím žádné záznamy testů.</p>';
+        console.warn("Failed to load test runs via fetch, using fallback data", e);
+        // Use fallback data when CORS blocks fetch (file:// protocol)
+        renderTestRunsList(getFallbackTestRuns());
     }
+}
+
+function getFallbackTestRuns() {
+    // Fallback test runs data - used when CORS blocks fetch from file:// URLs
+    return [
+        {
+            "timestamp": "2025-12-15T08:49:31.000000",
+            "scenario_name": "HLINIK Manual Testing - Comprehensive UI/UX and Functionality Audit",
+            "status": "failed",
+            "duration": 540.0,
+            "filename": "manual_test_1765789771.json",
+            "stats": {
+                "tested_roles": 3,
+                "total_tests": 18,
+                "passed": 10,
+                "failed": 5,
+                "warnings": 3,
+                "critical_bugs": 1,
+                "screenshots": 6,
+                "users_active": 3,
+                "avg_latency": 145,
+                "errors": 5
+            }
+        },
+        {
+            "timestamp": "2025-12-15T02:38:33.071673",
+            "scenario_name": "LLM Hour Simulation",
+            "status": "success",
+            "duration": 60.01,
+            "filename": "llm_sim_1765762713.json",
+            "stats": {
+                "users_active": 8,
+                "agents_active": 8,
+                "admins_active": 4,
+                "total_messages": 85,
+                "errors": 0,
+                "avg_latency": 42
+            }
+        },
+        {
+            "timestamp": "2025-12-15T02:37:44.385145",
+            "scenario_name": "LLM Hour Simulation",
+            "status": "success",
+            "duration": 38.46,
+            "filename": "llm_sim_1765762664.json",
+            "stats": {
+                "users_active": 8,
+                "agents_active": 8,
+                "admins_active": 4,
+                "total_messages": 14,
+                "errors": 0,
+                "avg_latency": 38
+            }
+        },
+        {
+            "timestamp": "2025-12-15T02:36:49.600431",
+            "scenario_name": "LLM Hour Simulation",
+            "status": "success",
+            "duration": 42.51,
+            "filename": "llm_sim_1765762609.json",
+            "stats": {
+                "users_active": 8,
+                "agents_active": 8,
+                "admins_active": 4,
+                "total_messages": 15,
+                "errors": 0,
+                "avg_latency": 35
+            }
+        }
+    ];
 }
 
 function renderTestRunsList(runs) {
     const list = document.getElementById('testRunsList');
+    if (!list) {
+        console.error('testRunsList element not found in DOM');
+        return;
+    }
     list.innerHTML = '';
 
     if (!runs || runs.length === 0) {
@@ -710,10 +815,23 @@ async function loadTestRunDetail(runMeta) {
 function renderTestDetail(data) {
     const detailContainer = document.getElementById('testRunDetail');
 
+    // Detect test type based on data structure
+    const isManualTest = data.summary || data.test_cases || data.bug_reports;
+    const stats = data.stats || data.summary || {};
+
+    // Determine subtitle based on test type
+    let subtitle = '';
+    if (isManualTest) {
+        const testedRoles = stats.tested_roles || [];
+        subtitle = `${testedRoles.length || stats.tested_roles || 0} rolí testováno | ${stats.total_tests || 0} testů`;
+    } else {
+        subtitle = `${stats.users_active || 0} Users Active`;
+    }
+
     let html = `
         <div class="section-header" style="margin-bottom: 20px;">
             <h2>${data.scenario_name}</h2>
-            <p class="section-subtitle">${new Date(data.timestamp).toLocaleString('cs-CZ')} | ${data.stats.users_active} Users Active</p>
+            <p class="section-subtitle">${new Date(data.timestamp).toLocaleString('cs-CZ')} | ${subtitle}</p>
         </div>
         
         <div class="version-info" style="margin-bottom: 20px; padding: 15px; background: var(--bg-primary); border-radius: 8px;">
@@ -721,44 +839,126 @@ function renderTestDetail(data) {
                 <span class="label">Status</span>
                 <span class="value" style="color: ${data.status === 'success' ? 'var(--accent-green)' : 'var(--accent-red)'}">${data.status.toUpperCase()}</span>
             </div>
+    `;
+
+    // Add appropriate stats based on test type
+    if (isManualTest) {
+        html += `
+            <div class="version-item">
+                <span class="label">Prošlo</span>
+                <span class="value" style="color: var(--accent-green)">✅ ${stats.passed || 0}</span>
+            </div>
+            <div class="version-item">
+                <span class="label">Selhalo</span>
+                <span class="value" style="color: ${(stats.failed || 0) > 0 ? 'var(--accent-red)' : 'var(--text-primary)'}">${stats.failed || 0}</span>
+            </div>
+            <div class="version-item">
+                <span class="label">Kritické bugy</span>
+                <span class="value" style="color: ${(stats.critical_bugs || 0) > 0 ? 'var(--accent-red)' : 'var(--text-primary)'}">${stats.critical_bugs || 0}</span>
+            </div>
+        `;
+    } else {
+        html += `
             <div class="version-item">
                 <span class="label">Prům. Latence</span>
-                <span class="value">${data.stats.avg_latency} ms</span>
+                <span class="value">${stats.avg_latency || 'N/A'} ms</span>
             </div>
             <div class="version-item">
                 <span class="label">Chyby</span>
-                <span class="value" style="color: ${data.stats.errors > 0 ? 'var(--accent-red)' : 'var(--text-primary)'}">${data.stats.errors}</span>
-            </div>
-        </div>
-        
-        <h3>📜 Průběh testu (Log Stream)</h3>
-        <div class="log-container">
-    `;
-
-    data.logs.forEach(log => {
-        let imageHtml = '';
-        if (log.screenshot) {
-            imageHtml = `
-                <div class="log-img-wrapper">
-                    <img src="data/test_runs/runs/${log.screenshot}" loading="lazy" alt="Screenshot" onclick="window.open(this.src, '_blank')" style="cursor:zoom-in">
-                    <div class="log-img-caption">📸 Screenshot: ${log.screenshot}</div>
-                </div>
-            `;
-        }
-
-        html += `
-            <div class="log-entry">
-                <div class="log-time">${log.time.split('T')[1].split('.')[0]}</div>
-                <div class="log-level ${log.level}">${log.level}</div>
-                <div class="log-message">
-                    ${log.message}
-                    ${imageHtml}
-                </div>
+                <span class="value" style="color: ${(stats.errors || 0) > 0 ? 'var(--accent-red)' : 'var(--text-primary)'}">${stats.errors || 0}</span>
             </div>
         `;
-    });
+    }
 
     html += `</div>`;
+
+    // Render bug reports for manual tests
+    if (data.bug_reports && data.bug_reports.length > 0) {
+        html += `<h3 style="margin: 20px 0 10px 0;">🐛 Nalezené bugy (${data.bug_reports.length})</h3>`;
+        data.bug_reports.forEach(bug => {
+            const severityColor = bug.severity === 'CRITICAL' ? 'var(--accent-red)' :
+                bug.severity === 'HIGH' ? 'var(--accent-orange)' : 'var(--accent-gold)';
+            html += `
+                <div class="dashboard-card" style="margin-bottom: 10px; border-left: 4px solid ${severityColor};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong>${bug.id}: ${bug.title}</strong>
+                        <span style="background: ${severityColor}; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">${bug.severity}</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">${bug.description}</p>
+                    ${bug.screenshot ? `<div style="margin-top: 8px;"><img src="data/test_runs/runs/${bug.screenshot}" loading="lazy" style="max-width: 100%; border-radius: 4px; cursor: zoom-in;" onclick="window.open(this.src, '_blank')"></div>` : ''}
+                </div>
+            `;
+        });
+    }
+
+    // Render test cases for manual tests
+    if (data.test_cases && data.test_cases.length > 0) {
+        html += `<h3 style="margin: 20px 0 10px 0;">🧪 Test Cases (${data.test_cases.length})</h3>`;
+        html += `<table class="data-table"><thead><tr><th>ID</th><th>Název</th><th>Status</th><th>Kategorie</th></tr></thead><tbody>`;
+        data.test_cases.forEach(tc => {
+            const statusColor = tc.status === 'PASSED' ? 'var(--accent-green)' :
+                tc.status === 'FAILED' ? 'var(--accent-red)' : 'var(--accent-orange)';
+            const statusIcon = tc.status === 'PASSED' ? '✅' : tc.status === 'FAILED' ? '❌' : '⚠️';
+            html += `<tr>
+                <td><code>${tc.id}</code></td>
+                <td>${tc.name}</td>
+                <td style="color: ${statusColor}">${statusIcon} ${tc.status}</td>
+                <td>${tc.category}</td>
+            </tr>`;
+        });
+        html += `</tbody></table>`;
+    }
+
+    // Render recommendations for manual tests
+    if (data.recommendations && data.recommendations.length > 0) {
+        html += `<h3 style="margin: 20px 0 10px 0;">💡 Doporučení</h3>`;
+        data.recommendations.forEach(rec => {
+            const priorityColor = rec.priority === 'CRITICAL' ? 'var(--accent-red)' :
+                rec.priority === 'HIGH' ? 'var(--accent-orange)' : 'var(--accent-gold)';
+            html += `
+                <div class="dashboard-card" style="margin-bottom: 10px; border-left: 4px solid ${priorityColor};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong>${rec.title}</strong>
+                        <span style="background: ${priorityColor}; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">${rec.priority}</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">${rec.description}</p>
+                </div>
+            `;
+        });
+    }
+
+    // Render logs
+    if (data.logs && data.logs.length > 0) {
+        html += `<h3 style="margin: 20px 0 10px 0;">📜 Průběh testu (Log Stream)</h3>`;
+        html += `<div class="log-container">`;
+
+        data.logs.forEach(log => {
+            let imageHtml = '';
+            if (log.screenshot) {
+                imageHtml = `
+                    <div class="log-img-wrapper">
+                        <img src="data/test_runs/runs/${log.screenshot}" loading="lazy" alt="Screenshot" onclick="window.open(this.src, '_blank')" style="cursor:zoom-in">
+                        <div class="log-img-caption">📸 Screenshot: ${log.screenshot}</div>
+                    </div>
+                `;
+            }
+
+            const levelClass = log.level === 'ERROR' ? 'failed' : log.level === 'SUCCESS' ? 'passed' : '';
+            html += `
+                <div class="log-entry">
+                    <div class="log-time">${log.time.split('T')[1].split('.')[0]}</div>
+                    <div class="log-level ${levelClass}">${log.level}</div>
+                    <div class="log-message">
+                        ${log.message}
+                        ${imageHtml}
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+    }
+
     detailContainer.innerHTML = html;
 }
 

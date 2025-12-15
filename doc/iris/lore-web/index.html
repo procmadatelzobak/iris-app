@@ -78,6 +78,9 @@
             <a href="#hraci" class="submenu-link" data-section="hraci">
                 <span class="submenu-icon">🎮</span> Hráči
             </a>
+            <a href="#prompty" class="submenu-link" data-section="prompty">
+                <span class="submenu-icon">🎨</span> Prompty
+            </a>
         </div>
         <!-- HLINIK submenu -->
         <div class="submenu-group" data-category="hlinik" style="display: none;">
@@ -1459,6 +1462,201 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prompty Section -->
+    <section id="section-prompty" class="content-section">
+        <div class="section-header">
+            <h1>Šablony promptů pro generování</h1>
+            <p class="section-subtitle">Univerzální prompty pro AI generování avatarů a situačních obrázků hráčů</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Úvod -->
+            <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
+                <h3>🎨 O generování obrázků</h3>
+                <p style="line-height: 1.8; color: var(--text-primary);">
+                    Každý hráč v systému IRIS má v datech uložené vlastnosti vzhledu (<code>appearance</code>), které
+                    slouží jako základ pro generování unikátních avatarů pomocí AI (DALL-E, Midjourney, Stable Diffusion
+                    apod.).
+                    Níže jsou šablony promptů s proměnnými, které se automaticky nahradí daty konkrétního hráče.
+                </p>
+            </div>
+
+            <!-- Proměnné -->
+            <div class="dashboard-card full-width">
+                <h3>📋 Dostupné proměnné</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Proměnná</th>
+                            <th>Popis</th>
+                            <th>Příklad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>{{role.id}}</code></td>
+                            <td>ID hráče</td>
+                            <td>U01</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.name}}</code></td>
+                            <td>Jméno postavy</td>
+                            <td>Jana Nováková</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.archetype}}</code></td>
+                            <td>Archetyp/role</td>
+                            <td>Zadlužená učitelka</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.description}}</code></td>
+                            <td>Podrobný popis postavy</td>
+                            <td>Středoškolská učitelka češtiny...</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.appearance.gender}}</code></td>
+                            <td>Pohlaví</td>
+                            <td>žena</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.appearance.age_range}}</code></td>
+                            <td>Věková kategorie</td>
+                            <td>45-55</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.appearance.hair_color}}</code></td>
+                            <td>Barva a styl vlasů</td>
+                            <td>šedivějící hnědé vlasy sepnuté do drdolu</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.appearance.face_description}}</code></td>
+                            <td>Popis obličeje</td>
+                            <td>unavená, ale laskavá tvář učitelky, brýle...</td>
+                        </tr>
+                        <tr>
+                            <td><code>{{role.appearance.distinctive_features}}</code></td>
+                            <td>Výrazné rysy</td>
+                            <td>vždy upravený účes, perleťové náušnice</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Avatar Prompt -->
+            <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-user);">
+                <h3>📸 Prompt: Avatar (fotka do občanky)</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-muted);">
+                    Generuje formální portrétní fotografii ve stylu průkazové fotky. Výstup se ukládá jako
+                    <code>avatar_{role.id}.png</code>.
+                </p>
+                <div class="code-block"
+                    style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
+                    Vygeneruj realistickou portrétní fotografii pro doklad totožnosti.
+
+                    OSOBA:
+                    - Pohlaví: {{role.appearance.gender}}
+                    - Věk: {{role.appearance.age_range}} let
+                    - Vlasy: {{role.appearance.hair_color}}
+                    - Obličej: {{role.appearance.face_description}}
+                    - Výrazné rysy: {{role.appearance.distinctive_features}}
+
+                    STYL FOTOGRAFIE:
+                    - Formální průkazová fotografie (pas, občanka)
+                    - Neutrální světle šedé nebo bílé pozadí
+                    - Osoba se dívá přímo do objektivu
+                    - Neutrální nebo jemný úsměv
+                    - Měkké, rovnoměrné osvětlení bez stínů
+                    - Profesionální studijní kvalita
+                    - Ořez: od ramen nahoru (portrait bust)
+
+                    TECHNICKÉ POŽADAVKY:
+                    - Poměr stran: 3:4 (výška > šířka)
+                    - Vysoké rozlišení, ostrý obraz
+                    - Realistický fotografický styl (ne ilustrace)</div>
+            </div>
+
+            <!-- Work Situation Prompt -->
+            <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-agent);">
+                <h3>💼 Prompt: Typická pracovní situace</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-muted);">
+                    Generuje obrázek hráče v typické situaci u terminálu IRIS. Používá se avatar jako reference pro
+                    zachování konzistentní tváře.
+                    Výstup se ukládá jako <code>work_{role.id}.png</code>.
+                </p>
+                <div class="code-block"
+                    style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
+                    Vygeneruj realistickou fotografii osoby v pracovní situaci.
+                    MUSÍ to být IDENTICKÁ OSOBA jako na přiloženém referenčním avataru.
+
+                    REFERENČNÍ AVATAR: [vložit avatar_{role.id}.png]
+
+                    VZHLED OSOBY (MUSÍ PŘESNĚ ODPOVÍDAT AVATARU):
+                    - Pohlaví: {{role.appearance.gender}}
+                    - Věk: {{role.appearance.age_range}} let
+                    - Vlasy: {{role.appearance.hair_color}}
+                    - Obličej: {{role.appearance.face_description}}
+                    - Výrazné rysy: {{role.appearance.distinctive_features}}
+
+                    KONTEXT POSTAVY:
+                    - Role: {{role.archetype}}
+                    - Charakter: {{role.description}}
+
+                    SCÉNA:
+                    Osoba sedí u počítačového terminálu v moderní, mírně dystopické
+                    kanceláři společnosti HLINÍK. Interaguje se systémem IRIS.
+                    - Atmosféra: industriální, korporátní, lehce tísnivá
+                    - Osvětlení: neonové modré a oranžové akcenty, tlumené stropní světlo
+                    - Prostředí: otevřená kancelář, terminály, kabely, výstražné cedule
+
+                    KOMPOZICE:
+                    - Osoba v popředí (3/4 záběr, viditelná tvář a tělo po pás)
+                    - Terminál a pracovní deska v záběru
+                    - Pozadí: další termínály, ostatní zaměstnanci rozmazaně
+
+                    STYL:
+                    - Cinematic quality, filmová estetika
+                    - Cyberpunk office aesthetic
+                    - Realistická fotografie (ne ilustrace)
+                    - Moody lighting, kontrast světla a stínu</div>
+            </div>
+
+            <!-- Použití -->
+            <div class="dashboard-card full-width">
+                <h3>🔧 Postup generování</h3>
+                <ol style="color: var(--text-primary); line-height: 2;">
+                    <li>Načti data hráče z <code>roles.json</code> podle jeho ID</li>
+                    <li>Nahraď všechny proměnné <code>{{...}}</code> skutečnými hodnotami</li>
+                    <li>Vygeneruj avatar pomocí prvního promptu</li>
+                    <li>Ulož výsledek jako <code>avatar_{role.id}.png</code></li>
+                    <li>Použij vygenerovaný avatar jako referenci pro druhý prompt</li>
+                    <li>Vygeneruj pracovní situaci pomocí druhého promptu</li>
+                    <li>Ulož výsledek jako <code>work_{role.id}.png</code></li>
+                </ol>
+            </div>
+
+            <!-- Příklad -->
+            <div class="dashboard-card full-width" style="background: var(--bg-secondary);">
+                <h3>📝 Příklad: U01 (Jana Nováková)</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-muted);">Ukázka vyplněného avatar promptu:</p>
+                <div class="code-block"
+                    style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem; white-space: pre-wrap; line-height: 1.5;">
+                    Vygeneruj realistickou portrétní fotografii pro doklad totožnosti.
+
+                    OSOBA:
+                    - Pohlaví: žena
+                    - Věk: 45-55 let
+                    - Vlasy: šedivějící hnědé vlasy sepnuté do drdolu
+                    - Obličej: unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí a
+                    úst
+                    - Výrazné rysy: vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled
+
+                    STYL FOTOGRAFIE:
+                    - Formální průkazová fotografie (pas, občanka)
+                    ...</div>
             </div>
         </div>
     </section>
