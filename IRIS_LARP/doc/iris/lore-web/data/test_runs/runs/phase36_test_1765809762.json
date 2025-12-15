@@ -1,0 +1,331 @@
+{
+  "timestamp": "2025-12-15T14:42:36.241996",
+  "scenario_name": "Phase 36: Advanced Multi-User Workflow & Economy Integration",
+  "tester": "Automated Test Runner (Simulated)",
+  "status": "partial",
+  "duration": 6.003843,
+  "duration_note": "API-level simulation (browser automation not available)",
+  "filename": "phase36_test_1765809762.json",
+  "summary": {
+    "tested_roles": [
+      "ROOT",
+      "ADMIN",
+      "USER",
+      "AGENT"
+    ],
+    "total_tests": 8,
+    "passed": 0,
+    "failed": 2,
+    "simulated": 6,
+    "warnings": 0,
+    "critical_bugs": 0,
+    "fixed_bugs": 0,
+    "screenshots": 0
+  },
+  "environment": {
+    "test_mode": "simulation",
+    "app_version": "Phase 36",
+    "automation": "API-only (browser automation recommended for full test)"
+  },
+  "bug_reports": [],
+  "test_cases": [
+    {
+      "id": "TC-P36-001",
+      "name": "Server Health Check",
+      "category": "Baseline",
+      "status": "FAILED",
+      "description": "Verify IRIS server is running and responsive",
+      "expected": "Server returns 200 OK",
+      "actual": "Server is not responding"
+    },
+    {
+      "id": "TC-P36-002",
+      "name": "Authentication Endpoint",
+      "category": "Baseline",
+      "status": "FAILED",
+      "description": "Verify login endpoint is accessible",
+      "expected": "Login page loads",
+      "actual": "Exception: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f624c154200>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "id": "TC-P36-010",
+      "name": "Task Workflow Simulation",
+      "category": "Task System",
+      "status": "SIMULATED",
+      "description": "Simulate complete task lifecycle",
+      "expected": "Task: Request → Approval → Completion → Payment",
+      "actual": "Simulated - requires browser automation for full test",
+      "note": "This test requires authenticated sessions and WebSocket connections"
+    },
+    {
+      "id": "TC-P36-020",
+      "name": "Economy Operations",
+      "category": "Economy",
+      "status": "SIMULATED",
+      "description": "Test concurrent economy transactions",
+      "expected": "Bonuses, fines, and purgatory mode function correctly",
+      "actual": "Simulated - requires authenticated admin sessions"
+    },
+    {
+      "id": "TC-P36-030",
+      "name": "Power Mode Controls",
+      "category": "Admin Controls",
+      "status": "SIMULATED",
+      "description": "Test NORMÁL, ÚSPORA, PŘETÍŽENÍ modes",
+      "expected": "Mode changes affect system-wide behavior",
+      "actual": "Simulated - requires admin session at ROZKOŠ station"
+    },
+    {
+      "id": "TC-P36-040",
+      "name": "Shift Rotation Mechanism",
+      "category": "Assignment System",
+      "status": "SIMULATED",
+      "description": "Test User-Agent pairing rotation",
+      "expected": "Shift rotation updates all pairings, messages route correctly",
+      "actual": "Simulated - requires admin trigger and message testing"
+    },
+    {
+      "id": "TC-P36-050",
+      "name": "HyperVis Filters",
+      "category": "Admin Monitoring",
+      "status": "SIMULATED",
+      "description": "Test ŽÁDNÝ, ČERNÁ SKŘÍŇKA, FORENZNÍ filters",
+      "expected": "Filters change visibility of internal state",
+      "actual": "Simulated - requires admin at UMYVADLO station"
+    },
+    {
+      "id": "TC-P36-060",
+      "name": "WebSocket Synchronization",
+      "category": "Real-time Communication",
+      "status": "SIMULATED",
+      "description": "Test real-time updates across multiple clients",
+      "expected": "Updates appear within 1 second across all connected clients",
+      "actual": "Simulated - requires multiple WebSocket connections"
+    }
+  ],
+  "economy_events": [
+    {
+      "time": "2025-12-15T14:42:37.244778",
+      "type": "TASK_PAYMENT",
+      "user_id": "U01",
+      "amount": 400,
+      "details": "[SIMULATED] Task completion payment"
+    },
+    {
+      "time": "2025-12-15T14:42:37.244781",
+      "type": "TAX",
+      "user_id": "TREASURY",
+      "amount": 100,
+      "details": "[SIMULATED] 20% task tax collected"
+    },
+    {
+      "time": "2025-12-15T14:42:38.244946",
+      "type": "BONUS",
+      "user_id": "U02",
+      "amount": 300,
+      "details": "[SIMULATED] Admin bonus for good performance"
+    },
+    {
+      "time": "2025-12-15T14:42:38.244949",
+      "type": "FINE",
+      "user_id": "U03",
+      "amount": -1200,
+      "details": "[SIMULATED] Fine for rule violation - triggers purgatory"
+    }
+  ],
+  "relationship_events": [],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "title": "Implement Full Browser Automation",
+      "description": "Use Playwright or similar to execute complete end-to-end tests with real user interactions"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Add WebSocket Test Client",
+      "description": "Create dedicated WebSocket client for testing real-time synchronization"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Expand API Test Coverage",
+      "description": "Add more API endpoint tests for task, economy, and admin operations"
+    }
+  ],
+  "logs": [
+    {
+      "time": "2025-12-15T14:42:36.242002",
+      "level": "INFO",
+      "message": "======================================================================",
+      "phase": "INIT",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.242036",
+      "level": "INFO",
+      "message": "  🏭 IRIS LARP - PHASE 36 ADVANCED TEST SUITE 🏭",
+      "phase": "INIT",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.242053",
+      "level": "INFO",
+      "message": "  Automated Test Runner - Advanced Workflow & Economy",
+      "phase": "INIT",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.242067",
+      "level": "INFO",
+      "message": "======================================================================",
+      "phase": "INIT",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.242077",
+      "level": "INFO",
+      "message": "=== PHASE 1: Environment Setup & Baseline ===",
+      "phase": "PHASE1",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.243709",
+      "level": "ERROR",
+      "message": "Server health check FAILED - Server not running",
+      "phase": "PHASE1",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.244501",
+      "level": "ERROR",
+      "message": "Failed to access login page: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f624c154200>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+      "phase": "PHASE1",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.244524",
+      "level": "INFO",
+      "message": "Note: Full authentication tests require browser automation",
+      "phase": "PHASE1",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:36.244531",
+      "level": "INFO",
+      "message": "Skipping detailed login tests in API-only mode",
+      "phase": "PHASE1",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:37.244711",
+      "level": "INFO",
+      "message": "=== PHASE 2: Multi-User Task Workflow ===",
+      "phase": "PHASE2",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:37.244769",
+      "level": "INFO",
+      "message": "Task workflow simulation noted - requires full browser automation",
+      "phase": "PHASE2",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:38.244888",
+      "level": "INFO",
+      "message": "=== PHASE 3: Economy Stress Test ===",
+      "phase": "PHASE3",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:38.244952",
+      "level": "INFO",
+      "message": "Economy stress test simulated",
+      "phase": "PHASE3",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:39.245075",
+      "level": "INFO",
+      "message": "=== PHASE 4: Admin Power Modes ===",
+      "phase": "PHASE4",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:39.245136",
+      "level": "INFO",
+      "message": "Power mode test simulated",
+      "phase": "PHASE4",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:40.245285",
+      "level": "INFO",
+      "message": "=== PHASE 5: Shift Rotation & Agent Assignment ===",
+      "phase": "PHASE5",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:40.245344",
+      "level": "INFO",
+      "message": "Shift rotation test simulated",
+      "phase": "PHASE5",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:41.245465",
+      "level": "INFO",
+      "message": "=== PHASE 6: HyperVis Filter Modes ===",
+      "phase": "PHASE6",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:41.245536",
+      "level": "INFO",
+      "message": "HyperVis filter test simulated",
+      "phase": "PHASE6",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:42.245661",
+      "level": "INFO",
+      "message": "=== PHASE 7: Real-time Synchronization ===",
+      "phase": "PHASE7",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:42.245748",
+      "level": "INFO",
+      "message": "Real-time sync test simulated",
+      "phase": "PHASE7",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:42.245761",
+      "level": "INFO",
+      "message": "======================================================================",
+      "phase": "COMPLETE",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:42.245777",
+      "level": "SUCCESS",
+      "message": "Test execution complete",
+      "phase": "COMPLETE",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:42.245808",
+      "level": "INFO",
+      "message": "Total tests: 8",
+      "phase": "COMPLETE",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T14:42:42.245826",
+      "level": "INFO",
+      "message": "Warnings: 0, Errors: 2",
+      "phase": "COMPLETE",
+      "screenshot": null
+    }
+  ]
+}
