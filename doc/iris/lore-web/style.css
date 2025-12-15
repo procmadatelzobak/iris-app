@@ -1486,3 +1486,322 @@ a:hover {
         width: 100%;
     }
 }
+
+/* ============================================
+   PLAYERS SECTION
+   ============================================ */
+
+.players-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-lg);
+    height: calc(100vh - 200px);
+    min-height: 600px;
+}
+
+.players-list-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    overflow-y: auto;
+}
+
+.players-group {
+    margin-bottom: var(--space-lg);
+}
+
+.group-header {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.group-user {
+    background: rgba(74, 158, 255, 0.15);
+    color: var(--color-user);
+}
+
+.group-agent {
+    background: rgba(233, 30, 99, 0.15);
+    color: var(--color-agent);
+}
+
+.group-admin {
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--color-admin);
+}
+
+.player-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.player-list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.player-list-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-accent);
+}
+
+.player-list-item.active {
+    border-color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.player-list-item .code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    min-width: 36px;
+    text-align: center;
+}
+
+.player-list-item.type-user .code {
+    background: rgba(74, 158, 255, 0.2);
+    color: var(--color-user);
+}
+
+.player-list-item.type-agent .code {
+    background: rgba(233, 30, 99, 0.2);
+    color: var(--color-agent);
+}
+
+.player-list-item.type-admin .code {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--color-admin);
+}
+
+.player-list-item .name {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Player Card Panel */
+.player-card-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow-y: auto;
+}
+
+.player-card-panel .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    text-align: center;
+    padding: var(--space-xl);
+}
+
+.player-card-panel .empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-md);
+}
+
+.player-card {
+    padding: var(--space-lg);
+}
+
+.player-card-header {
+    display: flex;
+    gap: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--space-lg);
+}
+
+.player-avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    border: 3px solid var(--accent-gold);
+}
+
+.player-header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-code {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+    display: inline-block;
+    margin-bottom: var(--space-sm);
+    width: fit-content;
+}
+
+.player-card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.player-archetype {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.player-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.info-section h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-sm);
+}
+
+.info-section p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.goals-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.goals-list li {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.goals-list li:last-child {
+    border-bottom: none;
+}
+
+.goals-list li::before {
+    content: '🎯';
+    flex-shrink: 0;
+}
+
+.relations-compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.relation-tag {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.player-card-footer {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   EXPORT SECTION
+   ============================================ */
+
+.export-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.export-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.export-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.export-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+}
+
+.export-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.export-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
+    line-height: 1.5;
+}
+
+.export-status {
+    margin-top: var(--space-md);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.export-status.success {
+    color: var(--accent-green);
+}
+
+.export-status.error {
+    color: var(--accent-red);
+}
+
+@media (max-width: 900px) {
+    .players-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .players-list-panel {
+        max-height: 300px;
+    }
+}

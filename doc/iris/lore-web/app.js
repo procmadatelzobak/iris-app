@@ -978,7 +978,7 @@ const featuresData = [
     { status: "✅", category: "core", name: "Session Routing", desc: "8 izolovaných kanálů s dynamickým přiřazením" },
     { status: "✅", category: "core", name: "Ekonomický systém", desc: "Kredity, daně, Treasury, Purgatory mód" },
     { status: "✅", category: "core", name: "Task systém", desc: "Schvalování, hodnocení, výplata úkolů" },
-    
+
     // User Features
     { status: "✅", category: "user", name: "Retro terminál", desc: "CRT efekty, 4 témata (Low/Mid/High/Party)" },
     { status: "✅", category: "user", name: "Chat s agentem", desc: "Posílání a přijímání zpráv v reálném čase" },
@@ -986,7 +986,7 @@ const featuresData = [
     { status: "✅", category: "user", name: "Purgatory mód", desc: "Blokace chatu při záporném zůstatku, úkoly povoleny" },
     { status: "✅", category: "user", name: "Party mód", desc: "Speciální téma s animovanými bublinami" },
     { status: "✅", category: "user", name: "Správa úkolů", desc: "Žádost o úkol, odevzdání, sledování stavu" },
-    
+
     // Agent Features
     { status: "✅", category: "agent", name: "Agent terminál", desc: "Monochromatický retro design" },
     { status: "✅", category: "agent", name: "Message Optimizer", desc: "AI přepis zpráv s potvrzením před odesláním" },
@@ -994,7 +994,7 @@ const featuresData = [
     { status: "✅", category: "agent", name: "Response Timer", desc: "Žlutý progress bar s časovým limitem" },
     { status: "✅", category: "agent", name: "Visibility módy", desc: "Normal, Blackbox, Forensic, Ephemeral" },
     { status: "✅", category: "agent", name: "Typing sync", desc: "Real-time synchronizace psaní" },
-    
+
     // Admin Features
     { status: "✅", category: "admin", name: "Dashboard Hub", desc: "4 stanice: Monitor, Control, Economy, Tasks" },
     { status: "✅", category: "admin", name: "Panopticon", desc: "Přehled všech 8 relací, systémové logy" },
@@ -1002,13 +1002,13 @@ const featuresData = [
     { status: "✅", category: "admin", name: "Úkoly", desc: "Schvalování, editace, hodnocení s LLM" },
     { status: "✅", category: "admin", name: "Kontrola", desc: "Shift, teplota, AI optimizer, visibility" },
     { status: "✅", category: "admin", name: "Network graf", desc: "Canvas vizualizace User-Agent spojení" },
-    
+
     // ROOT Features
     { status: "✅", category: "admin", name: "ROOT Dashboard", desc: "Elite admin interface s 5 taby" },
     { status: "✅", category: "admin", name: "Test Mode", desc: "Quick login tlačítka pro testování" },
     { status: "✅", category: "admin", name: "AI Config", desc: "Nastavení Optimizer a Autopilot modelů" },
     { status: "✅", category: "admin", name: "Chronos", desc: "Časová manipulace, override teploty" },
-    
+
     // AI Features
     { status: "✅", category: "ai", name: "Multi-provider", desc: "OpenAI, OpenRouter, Gemini" },
     { status: "✅", category: "ai", name: "Task Generation", desc: "LLM generování popisů úkolů" },
@@ -1026,10 +1026,10 @@ function renderFeaturesTable() {
     featuresData.forEach(feature => {
         const tr = document.createElement('tr');
         tr.dataset.featureCategory = feature.category;
-        
-        const statusColor = feature.status === '✅' ? 'var(--accent-green)' : 
-                           feature.status === '⚠️' ? 'var(--accent-orange)' : 'var(--text-muted)';
-        
+
+        const statusColor = feature.status === '✅' ? 'var(--accent-green)' :
+            feature.status === '⚠️' ? 'var(--accent-orange)' : 'var(--text-muted)';
+
         const categoryLabels = {
             'core': '🏗️ Jádro',
             'user': '👥 Uživatel',
@@ -1093,3 +1093,347 @@ function switchAudit(auditId) {
 
 // Make function globally available
 window.switchAudit = switchAudit;
+
+// ============================================
+// PLAYERS SECTION
+// ============================================
+
+let currentPlayerId = null;
+
+function initPlayers() {
+    renderPlayerLists();
+}
+
+function renderPlayerLists() {
+    const users = rolesData.filter(r => r.type === 'user');
+    const agents = rolesData.filter(r => r.type === 'agent');
+    const admins = rolesData.filter(r => r.type === 'admin');
+
+    const usersContainer = document.getElementById('playerListUsers');
+    const agentsContainer = document.getElementById('playerListAgents');
+    const adminsContainer = document.getElementById('playerListAdmins');
+
+    if (usersContainer) usersContainer.innerHTML = users.map(r => createPlayerListItem(r)).join('');
+    if (agentsContainer) agentsContainer.innerHTML = agents.map(r => createPlayerListItem(r)).join('');
+    if (adminsContainer) adminsContainer.innerHTML = admins.map(r => createPlayerListItem(r)).join('');
+
+    // Add click handlers
+    document.querySelectorAll('.player-list-item').forEach(item => {
+        item.addEventListener('click', () => selectPlayer(item.dataset.id));
+    });
+}
+
+function createPlayerListItem(role) {
+    return `
+        <div class="player-list-item type-${role.type}" data-id="${role.id}">
+            <span class="code">${role.id}</span>
+            <span class="name">${role.name}</span>
+        </div>
+    `;
+}
+
+function selectPlayer(playerId) {
+    currentPlayerId = playerId;
+    const role = rolesData.find(r => r.id === playerId);
+    if (!role) return;
+
+    // Update list active state
+    document.querySelectorAll('.player-list-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.id === playerId);
+    });
+
+    // Show card
+    const emptyState = document.getElementById('playerCardEmpty');
+    const cardEl = document.getElementById('playerCard');
+    if (emptyState) emptyState.style.display = 'none';
+    if (cardEl) cardEl.style.display = 'block';
+
+    // Fill card data
+    document.getElementById('playerCode').textContent = role.id;
+    document.getElementById('playerName').textContent = role.name;
+    document.getElementById('playerArchetype').textContent = role.archetype;
+    document.getElementById('playerDescription').textContent = role.description;
+    document.getElementById('playerAbility').textContent = role.ability;
+
+    // Avatar
+    const avatarEl = document.getElementById('playerAvatar');
+    if (avatarEl) {
+        avatarEl.src = role.avatar ? `assets/${role.avatar}` : 'assets/avatar_default.png';
+        avatarEl.onerror = () => { avatarEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="%23gold" font-size="40">' + role.id.charAt(0) + '</text></svg>'; };
+    }
+
+    // Goals
+    const goalsEl = document.getElementById('playerGoals');
+    if (goalsEl && role.goals) {
+        goalsEl.innerHTML = role.goals.map(g => `<li>${g}</li>`).join('');
+    }
+
+    // Relations
+    const relationsEl = document.getElementById('playerRelations');
+    if (relationsEl) {
+        const playerRelations = relationsData.filter(r => r.source === playerId || r.target === playerId);
+        if (playerRelations.length > 0) {
+            relationsEl.innerHTML = playerRelations.map(r => {
+                const isSource = r.source === playerId;
+                const otherId = isSource ? r.target : r.source;
+                const desc = isSource ? r.desc_source : r.desc_target;
+                return `<span class="relation-tag" title="${desc}">${otherId}: ${r.type}</span>`;
+            }).join('');
+        } else {
+            relationsEl.innerHTML = '<span class="text-muted">Žádné vztahy</span>';
+        }
+    }
+}
+
+function showBriefingForPlayer(playerId) {
+    const role = rolesData.find(r => r.id === playerId);
+    if (role) {
+        showBriefing(role.id);
+    }
+}
+
+// ============================================
+// PDF EXPORT
+// ============================================
+
+function exportPlayerPDF(playerId) {
+    const role = rolesData.find(r => r.id === playerId);
+    if (!role) return;
+
+    const briefingHTML = generateBriefingHTML(role);
+    printToPDF(briefingHTML, `Briefing_${role.id}_${role.name.replace(/\s+/g, '_')}`);
+}
+
+function exportBriefingPDF() {
+    const role = rolesData.find(r => r.id === currentPlayerId);
+    if (role) {
+        exportPlayerPDF(role.id);
+    }
+}
+
+function generateBriefingHTML(role) {
+    const relations = relationsData.filter(r => r.source === role.id || r.target === role.id);
+    const relationsHTML = relations.map(r => {
+        const isSource = r.source === role.id;
+        const desc = isSource ? r.desc_source : r.desc_target;
+        return `<li><strong>${isSource ? r.target : r.source}:</strong> ${desc}</li>`;
+    }).join('');
+
+    return `
+        <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #d4af37; padding-bottom: 20px;">
+                <h1 style="color: #d4af37; margin: 0;">IRIS 4.1 | BRIEFING</h1>
+                <h2 style="color: #333; margin: 10px 0;">${role.id}: ${role.name}</h2>
+                <p style="color: #666; font-style: italic; margin: 0;">${role.archetype}</p>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #d4af37; border-bottom: 1px solid #ddd; padding-bottom: 5px;">📝 Popis</h3>
+                <p style="color: #333; line-height: 1.6;">${role.description}</p>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #d4af37; border-bottom: 1px solid #ddd; padding-bottom: 5px;">⚡ Schopnost</h3>
+                <p style="color: #333; line-height: 1.6;">${role.ability}</p>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #d4af37; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎯 Cíle</h3>
+                <ul style="color: #333; line-height: 1.8;">
+                    ${(role.goals || []).map(g => `<li>${g}</li>`).join('')}
+                </ul>
+            </div>
+            
+            ${relations.length > 0 ? `
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #d4af37; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🔗 Vztahy</h3>
+                <ul style="color: #333; line-height: 1.8;">${relationsHTML}</ul>
+            </div>
+            ` : ''}
+            
+            <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #999; font-size: 0.9em;">
+                IRIS 4.1 | HLINIK Phase 35 | Důvěrné
+            </div>
+        </div>
+    `;
+}
+
+function printToPDF(html, filename) {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>${filename}</title>
+            <style>
+                @media print {
+                    body { margin: 0; }
+                }
+            </style>
+        </head>
+        <body>${html}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+        printWindow.print();
+    }, 250);
+}
+
+// ============================================
+// BULK EXPORTS
+// ============================================
+
+async function exportAllBriefings() {
+    const statusEl = document.getElementById('briefingsExportStatus');
+    if (statusEl) statusEl.textContent = 'Generuji briefingy...';
+
+    try {
+        // Create HTML bundle
+        let allBriefings = `
+            <!DOCTYPE html>
+            <html lang="cs">
+            <head>
+                <meta charset="UTF-8">
+                <title>IRIS 4.1 - Všechny briefingy</title>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    .briefing { page-break-after: always; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+                    .briefing:last-child { page-break-after: avoid; }
+                    h1 { color: #d4af37; text-align: center; }
+                    h2 { color: #333; text-align: center; }
+                    h3 { color: #d4af37; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+                    p, li { color: #333; line-height: 1.6; }
+                    .header { text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px; }
+                    .archetype { color: #666; font-style: italic; }
+                    .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #999; font-size: 0.9em; }
+                </style>
+            </head>
+            <body>
+        `;
+
+        for (const role of rolesData) {
+            allBriefings += `<div class="briefing">${generateBriefingHTML(role)}</div>`;
+        }
+
+        allBriefings += '</body></html>';
+
+        // Download as HTML
+        const blob = new Blob([allBriefings], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'IRIS_4.1_Briefingy.html';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        if (statusEl) {
+            statusEl.textContent = '✅ Staženo! Otevřete v prohlížeči a tiskněte jako PDF.';
+            statusEl.className = 'export-status success';
+        }
+    } catch (err) {
+        console.error('Export error:', err);
+        if (statusEl) {
+            statusEl.textContent = '❌ Chyba při exportu';
+            statusEl.className = 'export-status error';
+        }
+    }
+}
+
+async function exportLoreWeb() {
+    const statusEl = document.getElementById('loreWebExportStatus');
+    if (statusEl) statusEl.textContent = 'Připravuji export...';
+
+    try {
+        // Fetch all files and create a download
+        const files = [
+            'index.html',
+            'style.css',
+            'app.js',
+            'data/roles.json',
+            'data/relations.json',
+            'data/config.json',
+            'data/manuals.json'
+        ];
+
+        const fileContents = {};
+        for (const file of files) {
+            try {
+                const res = await fetch(file);
+                if (res.ok) {
+                    fileContents[file] = await res.text();
+                }
+            } catch (e) {
+                console.warn(`Could not fetch ${file}`);
+            }
+        }
+
+        // Create simple HTML manifest
+        let manifest = `IRIS Lore Web Export\n====================\nVerze: 4.1\nDatum: ${new Date().toISOString()}\n\nSoubory:\n`;
+        for (const [name, content] of Object.entries(fileContents)) {
+            manifest += `- ${name} (${content.length} bytes)\n`;
+        }
+
+        // Download manifest
+        const blob = new Blob([manifest], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Lore_Web_Export_Info.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        if (statusEl) {
+            statusEl.innerHTML = '✅ Pro kompletní export použijte <code>export_text.sh</code> na serveru.';
+            statusEl.className = 'export-status success';
+        }
+    } catch (err) {
+        console.error('Export error:', err);
+        if (statusEl) {
+            statusEl.textContent = '❌ Chyba při exportu';
+            statusEl.className = 'export-status error';
+        }
+    }
+}
+
+function exportTextOnly() {
+    alert('Pro textový export spusťte na serveru:\\n\\ncd doc/iris && ./export_text.sh');
+}
+
+function exportDataJSON() {
+    const data = {
+        version: '4.1',
+        phase: 35,
+        exported: new Date().toISOString(),
+        roles: rolesData,
+        relations: relationsData
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'IRIS_4.1_data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Initialize players when navigating to section
+document.addEventListener('DOMContentLoaded', () => {
+    // Delay initialization until data is loaded
+    setTimeout(() => {
+        if (rolesData.length > 0) {
+            initPlayers();
+        }
+    }, 500);
+});
+
+// Make functions globally available
+window.showBriefingForPlayer = showBriefingForPlayer;
+window.exportPlayerPDF = exportPlayerPDF;
+window.exportBriefingPDF = exportBriefingPDF;
+window.exportAllBriefings = exportAllBriefings;
+window.exportLoreWeb = exportLoreWeb;
+window.exportTextOnly = exportTextOnly;
+window.exportDataJSON = exportDataJSON;

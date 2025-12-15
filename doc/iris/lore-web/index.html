@@ -62,6 +62,14 @@
                 <span class="nav-icon">🧪</span>
                 <span>Testy</span>
             </a>
+            <a href="#hraci" class="nav-link" data-section="hraci">
+                <span class="nav-icon">🎮</span>
+                <span>Hráči</span>
+            </a>
+            <a href="#exporty" class="nav-link" data-section="exporty">
+                <span class="nav-icon">📥</span>
+                <span>Exporty</span>
+            </a>
         </nav>
         <div class="header-actions">
             <a href="/lore-web/" class="btn-secondary" target="_blank">Starý Lore Web</a>
@@ -806,6 +814,124 @@
                     <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
                     Vyberte záznam testu ze seznamu pro zobrazení detailů.
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hráči Section -->
+    <section id="section-hraci" class="content-section">
+        <div class="section-header">
+            <h1>Přehled hráčů</h1>
+            <p class="section-subtitle">Karty všech 20 postav s briefingy a exporty</p>
+        </div>
+
+        <div class="players-layout">
+            <!-- Left Panel: Player List -->
+            <div class="players-list-panel">
+                <div class="players-group" data-role="user">
+                    <h4 class="group-header group-user">👥 Uživatelé (8)</h4>
+                    <div id="playerListUsers" class="player-list"></div>
+                </div>
+                <div class="players-group" data-role="agent">
+                    <h4 class="group-header group-agent">🤖 Agenti (8)</h4>
+                    <div id="playerListAgents" class="player-list"></div>
+                </div>
+                <div class="players-group" data-role="admin">
+                    <h4 class="group-header group-admin">👔 Správci (4)</h4>
+                    <div id="playerListAdmins" class="player-list"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Player Card -->
+            <div class="player-card-panel" id="playerCardPanel">
+                <div class="empty-state" id="playerCardEmpty">
+                    <span class="empty-icon">👈</span>
+                    <p>Vyberte hráče ze seznamu pro zobrazení karty.</p>
+                </div>
+                <div class="player-card" id="playerCard" style="display: none;">
+                    <div class="player-card-header">
+                        <img id="playerAvatar" src="" alt="Avatar" class="player-avatar-large">
+                        <div class="player-header-info">
+                            <span class="player-code" id="playerCode">U01</span>
+                            <h2 id="playerName">Jméno postavy</h2>
+                            <span class="player-archetype" id="playerArchetype">Archetyp</span>
+                        </div>
+                    </div>
+                    <div class="player-card-body">
+                        <div class="info-section">
+                            <h4>📝 Popis</h4>
+                            <p id="playerDescription">Popis postavy...</p>
+                        </div>
+                        <div class="info-section">
+                            <h4>⚡ Schopnost</h4>
+                            <p id="playerAbility">Schopnost...</p>
+                        </div>
+                        <div class="info-section">
+                            <h4>🎯 Cíle</h4>
+                            <ul id="playerGoals" class="goals-list"></ul>
+                        </div>
+                        <div class="info-section">
+                            <h4>🔗 Vztahy</h4>
+                            <div id="playerRelations" class="relations-compact"></div>
+                        </div>
+                    </div>
+                    <div class="player-card-footer">
+                        <button class="btn-primary" onclick="showBriefingForPlayer(currentPlayerId)">
+                            📋 Zobrazit briefing
+                        </button>
+                        <button class="btn-secondary" onclick="exportPlayerPDF(currentPlayerId)">
+                            📄 Export PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exporty Section -->
+    <section id="section-exporty" class="content-section">
+        <div class="section-header">
+            <h1>Exporty</h1>
+            <p class="section-subtitle">Hromadné stahování dokumentace a briefingů</p>
+        </div>
+
+        <div class="export-grid">
+            <div class="export-card">
+                <div class="export-icon">📋</div>
+                <h3>Všechny briefingy</h3>
+                <p>Stáhne ZIP obsahující PDF brief pro každou z 20 postav.</p>
+                <button class="btn-primary" onclick="exportAllBriefings()" id="btnExportBriefings">
+                    📥 Stáhnout briefingy (ZIP)
+                </button>
+                <div class="export-status" id="briefingsExportStatus"></div>
+            </div>
+
+            <div class="export-card">
+                <div class="export-icon">🌐</div>
+                <h3>Celý Lore Web</h3>
+                <p>Stáhne kompletní webové rozhraní včetně dat a stylů.</p>
+                <button class="btn-primary" onclick="exportLoreWeb()" id="btnExportLoreWeb">
+                    📥 Stáhnout Lore Web (ZIP)
+                </button>
+                <div class="export-status" id="loreWebExportStatus"></div>
+            </div>
+
+            <div class="export-card">
+                <div class="export-icon">📝</div>
+                <h3>Textový export</h3>
+                <p>Stáhne dokumentaci bez obrázků (pouze texty a data).</p>
+                <button class="btn-secondary" onclick="exportTextOnly()">
+                    📥 Stáhnout texty (ZIP)
+                </button>
+            </div>
+
+            <div class="export-card">
+                <div class="export-icon">📊</div>
+                <h3>Data JSON</h3>
+                <p>Stáhne surová data (roles.json, relations.json).</p>
+                <button class="btn-secondary" onclick="exportDataJSON()">
+                    📥 Stáhnout JSON
+                </button>
             </div>
         </div>
     </section>
