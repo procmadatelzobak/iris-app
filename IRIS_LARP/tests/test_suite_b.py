@@ -41,7 +41,7 @@ def test_root_login_page_shows_quick_buttons_when_test_mode(clean_gamestate):
     response = client.get("/")
     assert response.status_code == 200
     body = response.text.lower()
-    assert "testovací režim" in body
+    assert "quicklogin('root')" in body
     assert "user1" in body
     assert "agent1" in body
 
