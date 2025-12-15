@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-12-15T17:41:02.691994",
+  "scenario_name": "HLINIK Workflow Automation",
+  "status": "success",
+  "steps": [
+    {
+      "step": "task_request",
+      "status": "passed"
+    },
+    {
+      "step": "admin_approve",
+      "status": "passed",
+      "details": {
+        "llm_used": true
+      }
+    },
+    {
+      "step": "user_submit",
+      "status": "passed"
+    },
+    {
+      "step": "admin_grade",
+      "status": "passed",
+      "reward": 120
+    },
+    {
+      "step": "verification",
+      "status": "passed"
+    }
+  ],
+  "stats": {},
+  "duration": 2.1234164237976074
+}

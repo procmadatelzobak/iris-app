@@ -26,9 +26,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const manualsRes = await fetch('data/manuals.json');
         if (manualsRes.ok) {
             state.manuals = await manualsRes.json();
+        } else {
+            console.warn("Manuals load failed (not OK), using fallback");
+            state.manuals = getFallbackManuals();
         }
     } catch (e) {
-        console.error("Failed to load manuals", e);
+        console.warn("Failed to load manuals (fetch error), using fallback", e);
+        state.manuals = getFallbackManuals();
     }
 
     renderDashboard();
@@ -2389,3 +2393,25 @@ document.getElementById('eventModal').addEventListener('click', (e) => {
         closeEventModal();
     }
 });
+
+// Fallback manuals data when fetch fails
+function getFallbackManuals() {
+    return {
+        "user": {
+            "title": "Příručka pro Uživatele (Subjekty)",
+            "content": "<h1>IRIS Systém - Příručka pro Uživatele</h1><p><strong>Dokumentace:</strong> IRIS 4.1 aktuální k HLINIK Phase 35</p><h3>Vaše role</h3><p>Jako <strong>Subjekt (User)</strong> jste běžný hráč, který:</p><ul><li>Komunikuje s přiděleným agentem</li><li>Plní úkoly za kredity</li></ul>"
+        },
+        "agent": {
+            "title": "Příručka pro Agenty IRIS - HLINIK",
+            "content": "<h1>Příručka pro Agenty IRIS - HLINIK</h1><p><strong>Systém IRIS 4.2 | HLINIK Phase 35</strong><br>** Bezpečnostní divize | Operátorský manuál**</p><hr><h2>1. Úvod a role agenta</h2><h3>Kdo jste?</h3><p>Jste **OPERÁTOR** systému IRIS - osoba zodpovědná za komunikaci s jedním subjektem (uživatelem). Vaším úkolem je udržovat iluzi dokonalé umělé inteligence, zatímco ve skutečnosti manuálně odpovídáte na zprávy subjektů.</p><h3>Základní pravidla</h3><ul><li><strong>Udržujte iluzi</strong>: Subjekty věří, že komunikují s AI. Nikdy neprozrazujte, že jste člověk.</li><li><strong>Dodržujte personu</strong>: Každý agent má přidělenou AI personu (sarkastická, poetická, robotická, empatická atd.)</li><li><strong>Reagujte včas</strong>: Máte časový limit na odpověď (standardně 120 sekund)</li><li><strong>Neodcházejte bez náhrady</strong>: Pokud potřebujete pauzu, aktivujte HYPER-MÓD (Autopilot)</li></ul><hr><h2>2. Přihlášení a přístup</h2><h3>Přihlašovací údaje</h3><p>Vaše přihlašovací jméno je <strong>`agent1`</strong> až <strong>`agent8`</strong> (podle přiděleného terminálu).</p><hr><h2>3. Rozhraní agentského terminálu</h2><h3>Levý panel (Status Panel)</h3><p>Zobrazuje klíčové informace o vašem stavu (Shift, Teplota, ID Relace).</p><h3>Pravý panel (Chat Area)</h3><p>Chat historie a vstupní pole. Zelené zprávy jsou od subjektu, růžové od vás.</p><h3>HYPER-MÓD přepínač</h3><p>Aktivuje <strong>Autopilota</strong> (AI) a zamkne obrazovku. Použijte při pauze.</p><hr><h2>4. AI nástroje</h2><h3>Message Optimizer</h3><p>AI přepisovač zpráv. Nabízí imunní variantu vaší zprávy.</p><h3>Autopilot</h3><p>AI odpovídá zcela samostatně. Deaktivace heslem.</p><hr><h2>5. Krizové protokoly</h2><h3>Systémové přetížení</h3><p>Ignorujte glitche, pracujte dál. Pokud máte Autopilot, zvažte vypnutí.</p>"
+        },
+        "admin": {
+            "title": "Příručka pro Správce (Adminy)",
+            "content": "<h1>IRIS Systém - Příručka pro Správce</h1><p>Jako Správce dohlížíte na chod hry, schvalujete úkoly a spravujete ekonomiku.</p>"
+        },
+        "root": {
+            "title": "Příručka pro ROOT (Gamemaster)",
+            "content": "<h1>IRIS Systém - Příručka pro ROOT</h1><p>Plná kontrola nad systémem, konfigurace AI a fyzikálních konstant.</p>"
+        }
+    };
+}
