@@ -206,8 +206,8 @@ a:hover {
     justify-content: center;
     min-height: 48px;
     position: sticky;
-    top: 60px;
-    /* Height of main-header */
+    top: 77px;
+    /* Adjusted to match actual main-header height (measured: 76.59px, rounded to 77px) */
     z-index: 90;
     backdrop-filter: blur(8px);
 }
