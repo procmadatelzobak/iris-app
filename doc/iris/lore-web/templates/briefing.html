@@ -12,7 +12,8 @@
 <div class="role-detail-header {{role_type_class}}">
     <div style="display:flex; gap: 20px; align-items:center;">
         <img src="assets/images/{{avatar}}"
-            style="width: 100px; height: 100px; border-radius: 8px; border: 2px solid var(--border-color); object-fit: cover;">
+            style="width: 100px; height: 100px; border-radius: 8px; border: 2px solid var(--border-color); object-fit: cover; cursor: zoom-in;"
+            onclick="openImageModal(this.src, 'Avatar: {{name}}')">
         <div>
             <h2 style="margin:0">{{name}}</h2>
             <div style="font-family: var(--font-mono); color: rgba(255,255,255,0.7); margin-top: 5px;">{{id}} |
@@ -43,6 +44,6 @@
     </div>
 </div>
 
-{{section_work_image}}
+
 
 {{relations_section}}

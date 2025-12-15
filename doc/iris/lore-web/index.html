@@ -2363,6 +2363,16 @@ Popište, co se má otestovat...
         </div>
     </div>
 
+    <!-- Image Zoom Modal -->
+    <div class="modal-overlay" id="imageModal" style="display: none; background: rgba(0,0,0,0.9); z-index: 2000;">
+        <span class="close" onclick="closeImageModal()"
+            style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+        <img class="modal-content" id="img01" style="margin: auto; display: block; max-width: 90%; max-height: 90vh;">
+        <div id="caption"
+            style="margin: auto; display: block; width: 80%; max-width: 700px; text-align: center; color: #ccc; padding: 10px 0; height: 150px;">
+        </div>
+    </div>
+
     <!-- Exporty Section -->
     <section id="section-exporty" class="content-section">
 

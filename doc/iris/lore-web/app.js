@@ -419,7 +419,10 @@ function renderUsersGrid() {
         card.innerHTML = `
             <div class="user-card-header ${roleTypeClass}" style="display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <img src="assets/images/${role.avatar || 'avatar_user_male.png'}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">
+                    <img src="assets/images/${role.avatar || 'avatar_user_male.png'}" 
+                         alt="${role.name}"
+                         style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover; cursor: zoom-in;"
+                         onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
                     <span class="user-id" style="font-weight:bold;">${role.name}</span>
                 </div>
                 <span style="font-size: 0.8rem; opacity: 0.7;">${role.type.toUpperCase()}</span>
@@ -521,7 +524,7 @@ function renderRelationsList(filterPlayerId = null) {
                         </div>
                         <div class="relation-card-body">
                             <div class="relation-participant">
-                                <img src="assets/avatars/${source.avatar}" alt="${source.name}" class="relation-avatar" onerror="this.src='assets/avatars/avatar_user_male.png'">
+                                <img src="assets/images/${source.avatar}" alt="${source.name}" class="relation-avatar" onerror="this.src='assets/images/avatar_user_male.png'" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
                                 <div class="relation-participant-info">
                                     <span class="relation-name clickable-name" onclick="showBriefing('${source.id}')">${source.name}</span>
                                     <span class="relation-role-type type-${source.type}">${source.type === 'admin' ? 'Správce' : source.type === 'agent' ? 'Agent' : 'Uživatel'}</span>
@@ -529,7 +532,7 @@ function renderRelationsList(filterPlayerId = null) {
                             </div>
                             <div class="relation-arrow">→</div>
                             <div class="relation-participant">
-                                <img src="assets/avatars/${target.avatar}" alt="${target.name}" class="relation-avatar" onerror="this.src='assets/avatars/avatar_user_male.png'">
+                                <img src="assets/images/${target.avatar}" alt="${target.name}" class="relation-avatar" onerror="this.src='assets/images/avatar_user_male.png'" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
                                 <div class="relation-participant-info">
                                     <span class="relation-name clickable-name" onclick="showBriefing('${target.id}')">${target.name}</span>
                                     <span class="relation-role-type type-${target.type}">${target.type === 'admin' ? 'Správce' : target.type === 'agent' ? 'Agent' : 'Uživatel'}</span>
@@ -656,7 +659,7 @@ function showBriefing(roleId) {
                 <img src="assets/images/${role.work_image}" 
                      alt="Typická pracovní situace" 
                      style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid var(--border-color); cursor: zoom-in; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"
-                     onclick="window.open(this.src, '_blank')"
+                     onclick="openImageModal(this.src, this.alt)"
                      title="Klikni pro zvětšení">
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">Klikni na obrázek pro zvětšení</p>
             </div>
@@ -683,7 +686,8 @@ function showBriefing(roleId) {
 
     const relationsPanelData = {
         relations_list: relationsList,
-        nodes_list: nodesList
+        nodes_list: nodesList,
+        section_work_image: workImageSection
     };
     const relationsSection = fillTemplate(templates.relations_panel, relationsPanelData);
 
@@ -700,7 +704,8 @@ function showBriefing(roleId) {
         ability: role.ability,
         goals_list: goalsList,
         section_appearance: appearanceSection,
-        section_work_image: workImageSection,
+        section_appearance: appearanceSection,
+        // section_work_image moved to relations panel
         relations_section: relationsSection
     };
 
@@ -3540,3 +3545,38 @@ window.filterDefinitions = filterDefinitions;
 window.filterDefinitionsByStatus = filterDefinitionsByStatus;
 window.exportDefinitionsJSON = exportDefinitionsJSON;
 
+
+// ============================================
+// IMAGE ZOOM MODAL
+// ============================================
+
+function openImageModal(src, alt) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('img01');
+    const captionText = document.getElementById('caption');
+
+    modal.style.display = "block";
+    modalImg.src = src;
+    captionText.innerHTML = alt || '';
+
+    // Close on click outside image
+    modal.onclick = function (event) {
+        if (event.target === modal) {
+            closeImageModal();
+        }
+    };
+
+    // Close on Escape key
+    document.addEventListener('keydown', handleEscClose);
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').style.display = "none";
+    document.removeEventListener('keydown', handleEscClose);
+}
+
+function handleEscClose(e) {
+    if (e.key === "Escape") {
+        closeImageModal();
+    }
+}
