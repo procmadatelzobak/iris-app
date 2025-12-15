@@ -342,6 +342,8 @@ class GameState:
             return
 
         total_sessions = getattr(settings, "TOTAL_SESSIONS", 0)
+        if total_sessions < 1:
+            return
         for i in range(1, total_sessions + 1):
             routing_logic.set_panic_mode(i, "user", enabled)
             routing_logic.set_panic_mode(i, "agent", enabled)
@@ -354,13 +356,13 @@ class GameState:
                 "temperature": self.temperature,
                 "is_overloaded": self.is_overloaded
             })))
-            def _log_panic_task(task):
-                exc = task.exception()
-                if exc:
-                    logger.warning("Panic broadcast task failed: %s", exc)
-
-            task.add_done_callback(_log_panic_task)
+            task.add_done_callback(self._log_panic_task)
         except RuntimeError as exc:
             logger.debug("No running event loop for panic broadcast: %s", exc)
+
+    def _log_panic_task(self, task):
+        exc = task.exception()
+        if exc:
+            logger.warning("Panic broadcast task failed: %s", exc)
 
 gamestate = GameState()
