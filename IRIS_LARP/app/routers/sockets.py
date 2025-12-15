@@ -118,8 +118,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             "online": routing_logic.get_online_status()
         }))
     
-            "online": routing_logic.get_online_status()
-        }))
+
     
     # Send Custom Labels (v1.4)
     if user.role != UserRole.ADMIN:
