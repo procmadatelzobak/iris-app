@@ -3,56 +3,98 @@
         "source": "U01",
         "target": "A01",
         "type": "past",
-        "desc_source": "Poznala jste Petra (A01). Je to váš bývalý žák.",
-        "desc_target": "Jana (U01) je vaše učitelka. Trapas."
+        "desc_source": "Poznala jste Petra (A01). Je to vas byvaly zak.",
+        "desc_target": "Jana (U01) je vase ucitelka. Trapas."
     },
     {
         "source": "U02",
         "target": "S03",
         "type": "trade",
-        "desc_source": "Kupujete od S03 kradenou měď, abyste splatil dluhy.",
-        "desc_target": "Prodáváte U02 firemní majetek."
+        "desc_source": "Kupujete od S03 kradenou med, abyste splatil dluhy.",
+        "desc_target": "Prodavate U02 firemni majetek."
     },
     {
         "source": "U02",
         "target": "S01",
         "type": "blackmail",
-        "desc_source": "S01 ví o vašich dluzích. Musíte donášet.",
-        "desc_target": "Držíte U02 v šachu."
+        "desc_source": "S01 vi o vasich dluzich. Musite donasset.",
+        "desc_target": "Drzite U02 v sachu."
     },
     {
         "source": "U03",
         "target": "A02",
         "type": "romance",
-        "desc_source": "Milujete tu AI. Je tak poetická!",
-        "desc_target": "U03 je do vaší role blázen. Je to creepy."
+        "desc_source": "Milujete tu AI. Je tak poeticka!",
+        "desc_target": "U03 je do vasi role blazen. Je to creepy."
     },
     {
         "source": "A08",
         "target": "U06",
         "type": "plot",
-        "desc_source": "Potřebujete, aby U06 (Konspirátor) zadal kód 'ALOBAL-666'.",
-        "desc_target": "Někdo zevnitř (A08) vám posílá šifry."
+        "desc_source": "Potrebujete, aby U06 (Konspirator) zadal kod ALOBAL-666.",
+        "desc_target": "Nekdo zevnitr (A08) vam posila sifry."
     },
     {
         "source": "A04",
         "target": "U05",
         "type": "empathy",
-        "desc_source": "U05 vám připomíná vaši mámu. Nemůžete na ni být zlá.",
-        "desc_target": "Ta AI (A04) je taková unavená, chudinka."
+        "desc_source": "U05 vam pripomina vasi mamu. Nemuzete na ni byt zla.",
+        "desc_target": "Ta AI (A04) je takova unavena, chudinka."
     },
     {
         "source": "U08",
         "target": "A03",
         "type": "rival",
-        "desc_source": "Ta AI (A03) je nějaká moc rychlá. To je bot? Zničím ho.",
-        "desc_target": "U08 si myslí, že je rychlý. Ukážu mu, co je to rychlost."
+        "desc_source": "Ta AI (A03) je nejaka moc rychla. To je bot? Znicim ho.",
+        "desc_target": "U08 si mysli, ze je rychly. Ukazum mu, co je to rychlost."
     },
     {
         "source": "U07",
         "target": "S04",
         "type": "investigation",
-        "desc_source": "S04 je klíč. Je hloupý, určitě něco prokecne.",
-        "desc_target": "Ta ženská (U07) po mně pořád kouká. Asi se jí líbím."
+        "desc_source": "S04 je klic. Je hloupy, urcite neco prokecne.",
+        "desc_target": "Ta zenska (U07) po mne porad kouka. Asi se ji libim."
+    },
+    {
+        "source": "A05",
+        "target": "U04",
+        "type": "alliance",
+        "desc_source": "Nasli jste skulinu v NDA smlouve a chcete U04 (mlademu pravnikovi) pomoci ji vyuzit.",
+        "desc_target": "Nektere odpovedi IRIS vam prijdou podezrele napomocne - jako by vam insider (A05) napovidal pravni tipy."
+    },
+    {
+        "source": "S04",
+        "target": "A02",
+        "type": "affection",
+        "desc_source": "Libi se vam Ema (A02) a otevrene po ni jdete, zahrnujete ji lichotkami a sliby.",
+        "desc_target": "Spravce S04 po vas vyjel a nadbiha vam. Udrzujete profesionalni fasadu - nechcete ho urazit, ale drzite si odstup."
+    },
+    {
+        "source": "A07",
+        "target": "S04",
+        "type": "ambition",
+        "desc_source": "Pohrdate protekcnim S04; je to nemehlo, co nic nedela. Mel byste zastavat jeho misto vy.",
+        "desc_target": "Agent A07 vas neustale otravuje pravidly a nejspis chce vasi zidli. Stve vas, ale diky stryci si na vas netroufne."
+    },
+    {
+        "source": "S02",
+        "target": "A06",
+        "type": "conflict",
+        "desc_source": "Vsimate si, ze agent A06 umyslne stresuje uzivatele svymi otazkami. Tohle nemuzete dovolit - nekolikrat ho napomenete.",
+        "desc_target": "Spravkyne S02 vam kazi experimenty svou prehnanou peci o uzivatele. Nechape, ze vse delate pro vedu."
+    },
+    {
+        "source": "S02",
+        "target": "U05",
+        "type": "care",
+        "desc_source": "Je vam lito pani Kovarove (U05). Snazite se, aby mezi ostatnimi nasla kamarady a citila se dobre.",
+        "desc_target": "Spravkyne S02 se o vas stara skoro jako o vnucku. Je mila, ale vy radeji travite cas psanim s AI."
+    },
+    {
+        "source": "S03",
+        "target": "U06",
+        "type": "suspicion",
+        "desc_source": "U06 se podezrele mota okolo serveru a sitovych kabelu. Musite ho nenapane odradit driv, nez neco zjisti.",
+        "desc_target": "Technik S03 vas porad sleduje a omezuje vase pokusy dostat se k technice. Urcite neco skryva o systemu - mozna prave hlinik je tou stopou."
     }
 ]

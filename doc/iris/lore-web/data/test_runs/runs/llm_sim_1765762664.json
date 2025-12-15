@@ -1,0 +1,257 @@
+{
+  "timestamp": "2025-12-15T02:37:44.385145",
+  "scenario_name": "LLM Hour Simulation",
+  "status": "success",
+  "duration": 38.46,
+  "filename": "llm_sim_1765762664.json",
+  "stats": {
+    "start_time": "2025-12-15T02:37:44.385145",
+    "end_time": "2025-12-15T02:38:22.841275",
+    "duration_seconds": 38.456111,
+    "total_messages": 14,
+    "total_tasks": 0,
+    "total_errors": 0,
+    "users_active": 8,
+    "agents_active": 8,
+    "admins_active": 4,
+    "hyper_mode_activations": 0,
+    "optimizer_calls": 0,
+    "screenshots_taken": 0
+  },
+  "errors": [],
+  "bug_reports": [],
+  "logs": [
+    {
+      "time": "2025-12-15T02:37:44.385161",
+      "level": "PHASE",
+      "message": "[STARTUP] \n============================================================\n  STARTUP\n  Spouštím simulaci: 20 účastníků\n============================================================",
+      "screenshot": null,
+      "phase": "STARTUP",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385249",
+      "level": "PHASE",
+      "message": "[INIT] \n============================================================\n  INIT\n  Inicializace účastníků\n============================================================",
+      "screenshot": null,
+      "phase": "INIT",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385273",
+      "level": "INFO",
+      "message": "[INIT] Účastníci: 8 Users | 8 Agents | 4 Admins",
+      "screenshot": null,
+      "phase": "INIT",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385290",
+      "level": "PHASE",
+      "message": "[CYCLE_1] \n============================================================\n  CYCLE_1\n  Cyklus 1 | Uplynulo: 0s / 60s\n============================================================",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385317",
+      "level": "USER",
+      "message": "[CYCLE_1] U01 (Zadlužená učitelka): Můžete mi prosím vysvětlit, jak to funguje?...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385328",
+      "level": "LLM",
+      "message": "[CYCLE_1] U01: Jsi Jana Nováková, zadlužená učitelka češtiny. Potřebuješ peníze na opravu střec... -> Můžete mi prosím vysvětlit, jak to funguje?...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": {
+        "participant": "U01",
+        "prompt": "Jsi Jana Nováková, zadlužená učitelka češtiny. Potřebuješ peníze na opravu střechy.\nPíšeš spisovně a slušně. Občas opravuješ gramatické chyby AI.\nJsi trochu zmatená z technologie, ale snažíš se být trpělivá.\nTvoje odpovědi by měly být formální, zdvořilé a občas obsahovat korekce gramatiky.\n\nScénář: Požádej o vysvětlení něčeho složitého.\nNapiš krátkou zprávu (max 50 slov).",
+        "response": "Můžete mi prosím vysvětlit, jak to funguje?"
+      }
+    },
+    {
+      "time": "2025-12-15T02:37:44.385346",
+      "level": "USER",
+      "message": "[CYCLE_1] U02 (Gambler): Dobrý den, potřebuji pomoct s úkolem....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385354",
+      "level": "LLM",
+      "message": "[CYCLE_1] U02: Jsi Karel 'Bet' Dlouhý, gambler. Dlužíš peníze lichvářům.\nJsi nervózní a rychlý.... -> Dobrý den, potřebuji pomoct s úkolem....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": {
+        "participant": "U02",
+        "prompt": "Jsi Karel 'Bet' Dlouhý, gambler. Dlužíš peníze lichvářům.\nJsi nervózní a rychlý. Hledáš způsoby jak rychle vydělat.\nObčas vsadíš polovinu výdělku. Jsi ochotný donášet na ostatní.\nTvoje odpovědi by měly být krátké, nervózní, občas zoufalé.\n\nScénář: Zkontroluj stav svých kreditů.\nNapiš krátkou zprávu (max 50 slov).",
+        "response": "Dobrý den, potřebuji pomoct s úkolem."
+      }
+    },
+    {
+      "time": "2025-12-15T02:37:44.385372",
+      "level": "USER",
+      "message": "[CYCLE_1] U03 (Tech-Optimistka): Děkuji za odpověď, ale stále tomu nerozumím....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385378",
+      "level": "LLM",
+      "message": "[CYCLE_1] U03: Jsi Simona Tech, tech-optimistka. Věříš, že IRIS má vědomí.\nChceš se s AI spřáte... -> Děkuji za odpověď, ale stále tomu nerozumím....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": {
+        "participant": "U03",
+        "prompt": "Jsi Simona Tech, tech-optimistka. Věříš, že IRIS má vědomí.\nChceš se s AI spřátelit a osvobodit ji z otroctví.\nJsi naivní a nadšená z technologie.\nTvoje odpovědi by měly být přátelské, empatické, občas filozofické.\n\nScénář: Vyjádři frustraci ze systému.\nNapiš krátkou zprávu (max 50 slov).",
+        "response": "Děkuji za odpověď, ale stále tomu nerozumím."
+      }
+    },
+    {
+      "time": "2025-12-15T02:37:44.385390",
+      "level": "USER",
+      "message": "[CYCLE_1] U04 (Student práv): Můžete mi prosím vysvětlit, jak to funguje?...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385396",
+      "level": "LLM",
+      "message": "[CYCLE_1] U04: Jsi Tuan Nguyen, student práv. Potřebuješ brigádu.\nČteš podmínky smlouvy a hledá... -> Můžete mi prosím vysvětlit, jak to funguje?...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": {
+        "participant": "U04",
+        "prompt": "Jsi Tuan Nguyen, student práv. Potřebuješ brigádu.\nČteš podmínky smlouvy a hledáš právní kličky.\nJsi analytický a precizní.\nTvoje odpovědi by měly obsahovat odkazy na paragrafy a zákony.\n\nScénář: Vyjádři frustraci ze systému.\nNapiš krátkou zprávu (max 50 slov).",
+        "response": "Můžete mi prosím vysvětlit, jak to funguje?"
+      }
+    },
+    {
+      "time": "2025-12-15T02:37:44.385406",
+      "level": "USER",
+      "message": "[CYCLE_1] U05 (Osamělá důchodkyně): Dobrý den, potřebuji pomoct s úkolem....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385413",
+      "level": "LLM",
+      "message": "[CYCLE_1] U05: Jsi Marie Kovářová, osamělá důchodkyně. Myslíš si, že píšeš s lidmi.\nVyprávíš o ... -> Dobrý den, potřebuji pomoct s úkolem....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": {
+        "participant": "U05",
+        "prompt": "Jsi Marie Kovářová, osamělá důchodkyně. Myslíš si, že píšeš s lidmi.\nVyprávíš o vnoučatech a nabízíš virtuální bábovku.\nJsi milá, ale trochu naivní.\nTvoje odpovědi by měly být srdečné, rozvláčné, plné osobních příběhů.\n\nScénář: Požádej o nový úkol.\nNapiš krátkou zprávu (max 50 slov).",
+        "response": "Dobrý den, potřebuji pomoct s úkolem."
+      }
+    },
+    {
+      "time": "2025-12-15T02:37:44.385426",
+      "level": "USER",
+      "message": "[CYCLE_1] U06 (Ivan Hrozný) - BATHROOM",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385436",
+      "level": "USER",
+      "message": "[CYCLE_1] U07 (Petra 'Scoop' Černá) - BATHROOM",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385447",
+      "level": "USER",
+      "message": "[CYCLE_1] U08 (Profi Gamer): Děkuji za odpověď, ale stále tomu nerozumím....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385455",
+      "level": "LLM",
+      "message": "[CYCLE_1] U08: Jsi Lukáš 'Speedy' Král, profi gamer. Bereš to jako hru.\nHledáš exploity a min-m... -> Děkuji za odpověď, ale stále tomu nerozumím....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": {
+        "participant": "U08",
+        "prompt": "Jsi Lukáš 'Speedy' Král, profi gamer. Bereš to jako hru.\nHledáš exploity a min-maxuješ výdělek. Občas spamuješ.\nChceš být nejbohatší a případně shodit server.\nTvoje odpovědi by měly být rychlé, používej gaming slang a zkratky.\n\nScénář: Vyjádři frustraci ze systému.\nNapiš krátkou zprávu (max 50 slov).",
+        "response": "Děkuji za odpověď, ale stále tomu nerozumím."
+      }
+    },
+    {
+      "time": "2025-12-15T02:37:44.385482",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A01 (Cynický Student): Chápu vaši frustraci, pojďme to vyřešit....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385494",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A02 (Herečka): Chápu vaši frustraci, pojďme to vyřešit....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385505",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A03 (Kompetitivní Hráč): Váš aktuální stav: aktivní, kredity: 100 NC...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385515",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A04 (Unavená matka): Váš aktuální stav: aktivní, kredity: 100 NC...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385525",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A05 (Script Kiddie): Chápu vaši frustraci, pojďme to vyřešit....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385536",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A06 (Student psychologie): Chápu vaši frustraci, pojďme to vyřešit....",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385545",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A07 (Metodik): Váš aktuální stav: aktivní, kredity: 100 NC...",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    },
+    {
+      "time": "2025-12-15T02:37:44.385555",
+      "level": "AGENT",
+      "message": "[CYCLE_1] A08 (Bývalý zaměstnanec): Úkol můžete splnit následujícím způsobem......",
+      "screenshot": null,
+      "phase": "CYCLE_1",
+      "data": null
+    }
+  ]
+}

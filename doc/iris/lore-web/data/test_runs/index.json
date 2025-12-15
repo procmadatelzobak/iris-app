@@ -1,46 +1,44 @@
 [
   {
-    "timestamp": "2025-12-15T01:38:39.489664",
-    "scenario_name": "Full System Simulation (Load + UI)",
+    "timestamp": "2025-12-15T02:36:49.600431",
+    "scenario_name": "LLM Hour Simulation",
     "status": "success",
-    "duration": 2.83,
-    "filename": "run_1765759119.json",
-    "stats": {
-      "users_active": 12,
-      "avg_latency": 0,
-      "errors": 0
-    }
-  },
-  {
-
-    "timestamp": "2025-12-15T01:23:13.284100",
-    "scenario_name": "LLM Short Test (5 min)",
-    "status": "success",
-    "duration": 30.0,
-    "filename": "llm_sim_1765761793.json",
-
-    "timestamp": "2025-12-15T02:12:54.196714",
-    "scenario_name": "HLINIK Comprehensive Simulation - All Roles, All Phases",
-    "status": "failed",
-    "duration": 54.06,
-    "filename": "run_1765761174.json",
-
+    "duration": 42.51,
+    "filename": "llm_sim_1765762609.json",
     "stats": {
       "users_active": 8,
       "agents_active": 8,
       "admins_active": 4,
-
-      "total_messages": 16,
+      "total_messages": 15,
       "errors": 0
-
-      "total_connections": 20,
-      "avg_latency": 0,
-      "errors": 1,
-      "warnings": 23,
-      "screenshots": 30,
-      "economy_events": 3,
-      "relationship_events": 2
-
+    }
+  },
+  {
+    "timestamp": "2025-12-15T02:37:44.385145",
+    "scenario_name": "LLM Hour Simulation",
+    "status": "success",
+    "duration": 38.46,
+    "filename": "llm_sim_1765762664.json",
+    "stats": {
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "total_messages": 14,
+      "errors": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T02:38:33.071673",
+    "scenario_name": "LLM Hour Simulation",
+    "status": "success",
+    "duration": 60.01,
+    "filename": "llm_sim_1765762713.json",
+    "stats": {
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "total_messages": 85,
+      "errors": 0
     }
   }
 ]

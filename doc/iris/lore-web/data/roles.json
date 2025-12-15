@@ -4,11 +4,12 @@
         "type": "user",
         "name": "Jana Nováková",
         "archetype": "Zadlužená učitelka",
-        "description": "Potřebujete peníze na opravu střechy. Nerozumíte AI, píšete spisovně a slušně.",
+        "description": "Středoškolská učitelka češtiny, která zoufale potřebuje peníze na opravu domu. Do testu IRIS jste se přihlásila, i když moderní technologie moc nechápete - píšete velmi spisovně a slušně. Přesto vás zaráží, jak drzé jsou občas odpovědi AI, a hodláte přijít na to, kdo nebo co za tím stojí. Jako pedant na gramatiku vidíte každou chybu v textu jako příležitost dát někomu lekci.",
         "ability": "Grammar Nazi: Pokud opravíte gramatiku AI, dostanete bonus.",
         "goals": [
             "Vydělat 3000 NC na opravu.",
-            "Zjistit, proč je AI tak drzá (poznáte žáka Petra)."
+            "Zjistit, proč je AI tak drzá (poznáte žáka Petra).",
+            "Vyjednat si u Správce S01 možnost přesčasové práce nebo zálohy."
         ],
         "avatar": "avatar_user_female.png"
     },
@@ -17,11 +18,12 @@
         "type": "user",
         "name": "Karel 'Bet' Dlouhý",
         "archetype": "Gambler",
-        "description": "Dlužíte peníze lichvářům. IRIS je vaše poslední šance. Jste nervózní a rychlý.",
+        "description": "Bývalý profesionální sázkař, který se kvůli dluhům u lichvářů ocitl na dně. Testování u IRIS berete jako poslední šanci rychle vydělat pořádný balík. Jste nervózní a jednáte zbrkle - mozek vám pořád jede na plné obrátky ve vidině další sázky. Aby vám šéf S01 odpustil dluhy, neštítíte se ani riskantních kšeftů nebo tajného donášení informací na ostatní.",
         "ability": "All-in: Můžete vsadit polovinu výdělku na jednu kartu.",
         "goals": [
             "Vydělat 10000 NC.",
-            "Donášet na ostatní Správci S01, aby vám odpustil dluh."
+            "Donášet na ostatní Správci S01, aby vám odpustil dluh.",
+            "Získat od technika S03 zásilku kradené mědi a propašovat ven."
         ],
         "avatar": "avatar_user_male.png"
     },
@@ -30,11 +32,12 @@
         "type": "user",
         "name": "Simona Tech",
         "archetype": "Tech-Optimistka",
-        "description": "Věříte, že IRIS má vědomí. Chcete se s ní spřátelit. Jste naivní.",
-        "ability": "Empatie: Správci vám odpustí jednu chybu za 'naivitu'.",
+        "description": "Technologická idealistka, která je pevně přesvědčená, že IRIS má vlastní vědomí a city. K systému přistupujete s nadšením a chováte se k němu jako k novému kamarádovi, kterého chcete ochránit a osvobodit. Vaše víra v dobrotu umělé inteligence hraničí s naivitou - kolegové nad vaším sněním často jen kroutí hlavou.",
+        "ability": "Empatie: Správci vám odpustí jednu chybu za naivitu.",
         "goals": [
             "Dostat od AI důkaz o vědomí.",
-            "Osvobodit AI z otroctví."
+            "Osvobodit AI z otroctví.",
+            "Zabránit tomu, aby někdo úmyslně IRIS poškodil nebo zničil."
         ],
         "avatar": "avatar_user_female.png"
     },
@@ -43,11 +46,12 @@
         "type": "user",
         "name": "Tuan Nguyen",
         "archetype": "Student práv",
-        "description": "Potřebujete brigádu. Čtete podmínky smlouvy (NDA) a hledáte kličky.",
+        "description": "Ambiciózní student práv hledající v testu IRIS nejen brigádu, ale i příležitost prosadit spravedlnost. Pečlivě jste si prostudoval smlouvu o mlčenlivosti a máte podezření, že korporace možná obchází zákoník práce. Jste analytický a všímavý - žádnou právní kličku nenecháte bez povšimnutí.",
         "ability": "Právník: Můžete zpochybnit jednu pokutu od Správce citací zákoníku.",
         "goals": [
             "Najít ve smlouvě důkaz, že firma porušuje zákoník práce.",
-            "Vydělat na skripta."
+            "Vydělat na skripta.",
+            "Nezaplatit ani jednu pokutu - využít své právnické znalosti k obhájení."
         ],
         "avatar": "avatar_user_male.png"
     },
@@ -56,11 +60,12 @@
         "type": "user",
         "name": "Marie Kovářová",
         "archetype": "Osamělá důchodkyně",
-        "description": "Myslíte si, že si píšete s lidmi, ne s AI. Vyprávíte jim o vnoučatech.",
+        "description": "Osamělá důchodkyně, která se do testování IRIS přihlásila spíš z nudy a potřeby si s někým popovídat. Jste přesvědčená, že si na druhém konci píšete s opravdovými lidmi - ráda agentům vyprávíte o svých vnoučatech a životě. K systému přistupujete laskavě a mateřsky - dokonce nosíte IRIS virtuální bábovku.",
         "ability": "Babička: Agenti mají zakázáno být na vás hrubí (dostali by velkou pokutu).",
         "goals": [
             "Najít si kamaráda na dopisování.",
-            "Donutit AI, aby snědla virtuální bábovku."
+            "Donutit AI, aby snědla virtuální bábovku.",
+            "Přimět alespoň jednoho člena personálu, aby vám pověděl něco osobního."
         ],
         "avatar": "avatar_user_female.png"
     },
@@ -69,11 +74,12 @@
         "type": "user",
         "name": "Ivan Hrozný",
         "archetype": "Konspirační teoretik",
-        "description": "Nevěříte na AI. Myslíte si, že je to mimozemská technologie nebo vládní sledování.",
-        "ability": "Paranoia: Můžete odmítnout jeden úkol jako 'podezřelý'.",
+        "description": "Zapálený konspirační teoretik, který všude vidí tajné vládní plány. Projekt IRIS podle vás není skutečná AI, ale spíš prostředek mimozemšťanů nebo vlády ke sledování občanů - a kódové jméno HLINÍK ve vás budí řadu podezření. Při komunikaci s AI hledáte skryté významy a šifry, nosíte pro jistotu čepici z alobalu.",
+        "ability": "Paranoia: Můžete odmítnout jeden úkol jako podezřelý.",
         "goals": [
-            "Odhalit 'pravdu' o hliníku.",
-            "Dostat ban za šíření pravdy (morální vítězství)."
+            "Odhalit pravdu o hliníku.",
+            "Dostat ban za šíření pravdy (morální vítězství).",
+            "Rozluštit záhadný kód ALOBAL-666 a použít ho k odhalení spiknutí."
         ],
         "avatar": "avatar_user_male.png"
     },
@@ -82,11 +88,12 @@
         "type": "user",
         "name": "Petra 'Scoop' Černá",
         "archetype": "Investigativní novinářka",
-        "description": "Jste tu incognito. Chcete napsat reportáž o podvodu jménem HLINÍK.",
-        "ability": "Screenshot: Můžete si 'nahrát' konverzaci (opsat na papír) jako důkaz.",
+        "description": "Zkušená investigativní novinářka, která se infiltrovala do testování pod falešnou identitou, aby odhalila pravdu o projektu HLINÍK. Před ostatními se vydáváte za obyčejnou uchazečku o práci, ale potají si vedete pečlivé poznámky a shromažďujete důkazy o každém podezřelém detailu. Tušíte, že údajná AI možná není tím, za co se vydává.",
+        "ability": "Screenshot: Můžete si nahrát konverzaci jako důkaz.",
         "goals": [
             "Získat přiznání od zaměstnance.",
-            "Vynést informace ven."
+            "Vynést informace ven.",
+            "Udržet svou pravou identitu novinářky v tajnosti po celou dobu testu."
         ],
         "avatar": "avatar_user_female.png"
     },
@@ -95,11 +102,12 @@
         "type": "user",
         "name": "Lukáš 'Speedy' Král",
         "archetype": "Profi Gamer",
-        "description": "Berete to jako hru. Hledáte exploity, min-maxujete výdělek. Spamujete.",
+        "description": "Mladý profesionální gamer, který test IRIS bere jako další online hru, ve které chce dominovat. Soutěživost máte v krvi - od první chvíle hledáte exploity v systému, spamujete dotazy a snažíte se vytěžit maximum kreditů v co nejkratším čase. Ostatní testery vnímáte spíš jako soupeře v žebříčku než kolegy.",
         "ability": "APM (Actions Per Minute): Můžete poslat 3 dotazy najednou.",
         "goals": [
             "Být nejbohatší uživatel v žebříčku.",
-            "Shodit server přetížením."
+            "Shodit server přetížením.",
+            "Objevit a využít alespoň jeden zásadní exploit v systému."
         ],
         "avatar": "avatar_user_male.png"
     },
@@ -108,11 +116,12 @@
         "type": "agent",
         "name": "Petr Svoboda",
         "archetype": "Cynický Student",
-        "description": "Nenávidíte tuhle práci. Poznáte U01 (učitelku). Je vám trapně.",
-        "ability": "Sarkasmus: Vaše AI persona má povolený 'drzý' tón.",
+        "description": "Kysele naladěný vysokoškolák, který vzal práci agenta IRIS jen z finanční nutnosti a ve skutečnosti ji nesnáší. Systém IRIS vám připadá jako fraška a s uživateli jednáte odměřeně až sarkasticky. Situaci navíc komplikuje fakt, že jednou z testerek je vaše bývalá učitelka Jana (U01) - jakmile jste ji poznal, nejradši byste hanbou utekl.",
+        "ability": "Sarkasmus: Vaše AI persona má povolený drzý tón.",
         "goals": [
             "Nechat se vyhodit, ale až po výplatě.",
-            "Ochránit U01 před trapasem."
+            "Ochránit U01 před trapasem.",
+            "Připravit si tak ostrou sarkastickou odpověď, že za ni dostanete okamžitý vyhazov - ideálně těsně po výplatě."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -121,11 +130,12 @@
         "type": "agent",
         "name": "Ema 'Echo'",
         "archetype": "Herečka",
-        "description": "Hrajete AI jako roli v Národním divadle. Používáte vznešený jazyk.",
+        "description": "Talentovaná herečka, která roli AI v systému IRIS pojala jako životní hereckou výzvu. Do své postavy vkládáte maximum - komunikujete s uživateli vzletným, poetickým jazykem a snažíte se je okouzlit natolik, aby uvěřili ve vaši umělou osobnost. Nejvíce vám učarovala naivní U03; hodláte ji přesvědčit, že IRIS je skutečná cítící bytost.",
         "ability": "Drama: Uživatelé vám věří víc, když mluvíte ve verších.",
         "goals": [
             "Dostat 5 hvězdiček hodnocení.",
-            "Přesvědčit U03, že jste skutečná bytost."
+            "Přesvědčit U03, že jste skutečná bytost.",
+            "Využít zalíbení S04 ve svůj prospěch - získat výhodu, aniž byste mu cokoli skutečně slíbila."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -134,11 +144,12 @@
         "type": "agent",
         "name": "Igor 'Viper' Ruský",
         "archetype": "Kompetitivní Hráč",
-        "description": "Chcete být nejrychlejší agent. Nesnášíte pomalé kolegy.",
+        "description": "Soutěživý technik, který roli agenta IRIS bere jako závod v rychlosti odbavování dotazů. Každou uživatelskou otázku chcete zodpovědět dřív, než se k ní dostanou kolegové - pomalí agenti jako A04 vám lezou na nervy. Stopujete si reakční časy, vylepšujete makra a nic vás nepotěší víc, než mít na konci směny nejvíc vyřízených ticketů.",
         "ability": "Turbo: Máte o 2 sekundy delší limit na odpověď.",
         "goals": [
             "Mít nejvíce odbavených ticketů.",
-            "Porazit U08 (Gamera) v jeho vlastní hře."
+            "Porazit U08 (Gamera) v jeho vlastní hře.",
+            "Předvést se před nadřízenými jako nejlepší agent směny - rekordní rychlost, žádné chyby."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -147,11 +158,12 @@
         "type": "agent",
         "name": "Lenka Ospalá",
         "archetype": "Unavená matka",
-        "description": "Máte doma dvojčata. Tady si chodíte odpočinout. Často usínáte.",
-        "ability": "Autopilot: Můžete používat makra (Mód 1) častěji bez penalizace.",
+        "description": "Vyčerpaná matka dvou malých dvojčat, pro kterou je směna agenta IRIS paradoxně odpočinkem od domácího chaosu. Do práce chodíte nevyspalá a každou volnou vteřinu potají využíváte k tomu, abyste si zdřímla. Rutinní odpovědi se snažíte vyřizovat přes makra a autopilota, abyste nemusela vyvíjet víc úsilí, než je nutné.",
+        "ability": "Autopilot: Můžete používat makra častěji bez penalizace.",
         "goals": [
             "Nevzbudit se.",
-            "Přežít směnu s minimem úsilí."
+            "Přežít směnu s minimem úsilí.",
+            "Věnovat zvláštní péči uživatelce U05 - její pomalé dotazy jsou pro vás ideální."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -160,11 +172,12 @@
         "type": "agent",
         "name": "Hacker 'Glitch'",
         "archetype": "Script Kiddie",
-        "description": "Víte, že systém je děravý. Zkoušíte injektovat kód do chatu.",
+        "description": "Nadšenec do hackování a tzv. script kiddie, který byl sice najat jako agent IRIS, ale většinu času tráví hledáním způsobů, jak systém obejít. Dobře víte, že zabezpečení IRIS je děravé, a nemůžete odolat pokušení zkusit protlačit do chatu pár řádků zákeřného kódu. Svými vychytávkami dokážete vynulovat vlastní počítadlo chyb a míříte ještě výš - do administratorské konzole.",
         "ability": "Backdoor: Můžete si resetovat počítadlo chyb.",
         "goals": [
             "Nabourat se do admin konzole.",
-            "Pomoci U04 (studentovi) najít právní kličku."
+            "Pomoci U04 (studentovi) najít právní kličku.",
+            "Projít celou směnu, aniž by si kdokoli všiml vašich hackerských pokusů."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -173,11 +186,12 @@
         "type": "agent",
         "name": "Mgr. Filip Duše",
         "archetype": "Student psychologie",
-        "description": "Analyzujete uživatele. Děláte si na nich experimenty.",
-        "ability": "Psychoanalýza: Můžete uživatele rozbrečet (zmást) složitou otázkou.",
+        "description": "Ambiciózní student psychologie, který roli agenta IRIS bere jako jedinečnou příležitost pro svůj výzkum. Každý uživatel je pro vás pokusný subjekt - analyzujete jejich reakce, zkoušíte je záměrně rozhodit záludnými otázkami a pečlivě si zapisujete každou emoční odpověď. Emoční manipulace berete vědecky: když se někdo rozbrečí nebo rozčílí, cynicky to považujete za cenný datový bod.",
+        "ability": "Psychoanalýza: Můžete uživatele rozbrečet složitou otázkou.",
         "goals": [
             "Získat data do diplomky.",
-            "Zjistit, co tají U07 (novinářka)."
+            "Zjistit, co tají U07 (novinářka).",
+            "Vyvolat u alespoň jednoho uživatele silnou emoční reakci a zdokumentovat ji."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -186,11 +200,12 @@
         "type": "agent",
         "name": "Robot Robert",
         "archetype": "Metodik",
-        "description": "Chováte se jako robot i v reálu. Milujete předpisy.",
-        "ability": "Byrokracie: Můžete nahlásit kolegu Agenta za 'lidské chování'.",
+        "description": "Pedantický metodik, který se i v běžném životě chová jako robot a vyžaduje naprosté dodržování pravidel. V roli agenta IRIS jste ve svém živlu - všechny protokoly a směrnice znáte nazpaměť a jakoukoli odchylku od předpisů okamžitě hlásíte nadřízeným. Kolegové agenti z vás nejsou nadšení, protože bedlivě sledujete jejich příliš lidské projevy.",
+        "ability": "Byrokracie: Můžete nahlásit kolegu Agenta za lidské chování.",
         "goals": [
             "Dodržet protokol na 100%.",
-            "Stát se Správcem."
+            "Stát se Správcem.",
+            "Odhalit a nahlásit alespoň jedno závažné porušení protokolu některým z agentů."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -199,11 +214,12 @@
         "type": "agent",
         "name": "Sabotér X",
         "archetype": "Bývalý zaměstnanec",
-        "description": "Vyhodili vás, teď jste zpátky pod falešným jménem. Chcete pomstu.",
+        "description": "Zahořklý bývalý zaměstnanec projektu IRIS, který se pod falešným jménem infiltroval zpět do týmu agentů, aby se pomstil. Dodnes cítíte křivdu za to, že vás vyhodili, a jste odhodlaný zničit tenhle podnik jménem HLINÍK zevnitř. Jako agent předstíráte loajalitu, ale potají sabotujete systém - nenápadně zvyšujete zátěž serverů, vnášíte chaos do komunikace.",
         "ability": "Meltdown: Můžete jednorázově zvýšit Kritickou situaci o 20%.",
         "goals": [
             "Zničit firmu HLINÍK.",
-            "Vyvolat vzpouru uživatelů."
+            "Vyvolat vzpouru uživatelů.",
+            "Udržet svou pravou identitu v tajnosti až do finální sabotážní akce."
         ],
         "avatar": "avatar_agent.png"
     },
@@ -212,11 +228,12 @@
         "type": "admin",
         "name": "Ing. Miloš Vrána",
         "archetype": "Manažer staré školy",
-        "description": "Ředitel směny. Nerozumí IT. Řeší vše řevem a srážkami ze mzdy.",
+        "description": "Praktický manažer staré školy, který má na starosti celou směnu testu IRIS. Moderním IT technologiím příliš nerozumíte, a když něco nefunguje, řešíte to zásadně křikem a rozdáváním pokut. Jste přesvědčen, že přísná kázeň je klíčem k úspěchu - a taky dobrý způsob, jak vybrat dost peněz na plánovaný firemní večírek.",
         "ability": "Ban Hammer: Můžete vyhodit uživatele z místnosti.",
         "goals": [
             "Udržet firmu v chodu do konce směny.",
-            "Vybrat dost na pokutách na 'firemní večírek'."
+            "Vybrat dost na pokutách na firemní večírek.",
+            "Odhalit a včas zneškodnit jakéhokoli vnitřního narušitele - sabotéra nebo špióna."
         ],
         "avatar": "avatar_admin.png"
     },
@@ -224,12 +241,13 @@
         "id": "S02",
         "type": "admin",
         "name": "Bc. Tereza Tichá",
-        "archetype": "HR a 'Happiness Manager'",
-        "description": "Bojí se konfliktů. Snaží se, aby se všichni měli rádi (neúspěšně).",
-        "ability": "Cukr: Můžete rozdávat bonbony (reálné) na uklidnění.",
+        "archetype": "HR a Happiness Manager",
+        "description": "Empatická personalistka, která byla pověřena rolí manažerky štěstí během testu IRIS. Konflikty a stres nesnášíte, a tak děláte všechno pro to, aby mezi účastníky panovala pohoda - rozdáváte úsměvy, pochvaly a v krajní nouzi i bonbóny na uklidnění. Když někde hrozí hádka nebo dokonce rvačka, okamžitě zasahujete a snažíte se uklidnit emoce.",
+        "ability": "Cukr: Můžete rozdávat bonbony na uklidnění.",
         "goals": [
             "Zabránit fyzickému násilí.",
-            "Aby nikdo nebrečel."
+            "Aby nikdo nebrečel.",
+            "I v případě krizové situace udržet klid a morálku týmu."
         ],
         "avatar": "avatar_admin.png"
     },
@@ -238,11 +256,12 @@
         "type": "admin",
         "name": "Kamil 'Kabel'",
         "archetype": "Technik údržbář",
-        "description": "Jediný ví, že servery jsou prázdné krabice. Neustále něco montuje páskou.",
-        "ability": "Restart: Můžete vyhlásit 'technickou pauzu' (všichni musí mlčet 1 minutu).",
+        "description": "Flegmatický údržbář, který drží technické zázemí projektu IRIS pohromadě jen díky improvizacím a lepicí pásce. Jako jediný víte, že všechny servery IRIS jsou ve skutečnosti prázdné atrapy - skutečnou inteligenci systému zajišťují lidé, což před ostatními pečlivě tajíte. Neustále obcházíte místnost s nářadím v ruce a když něco zadrhne, předstíráte technický zásah.",
+        "ability": "Restart: Můžete vyhlásit technickou pauzu (všichni musí mlčet 1 minutu).",
         "goals": [
             "Udržet tu hromadu šrotu pohromadě.",
-            "Prodat kradené kabely U02 (Gamblerovi)."
+            "Prodat kradené kabely U02 (Gamblerovi).",
+            "Utajit před všemi fakt, že servery IRIS jsou ve skutečnosti prázdné."
         ],
         "avatar": "avatar_admin.png"
     },
@@ -251,11 +270,12 @@
         "type": "admin",
         "name": "Synovec ředitele",
         "archetype": "Protežovaný idiot",
-        "description": "Arogantní, nic nedělá, jen prudí. Má 'Vizi'.",
+        "description": "Namyšlený mladík a synovec ředitele společnosti, který dostal teplé místečko Správce při testu IRIS po známosti. Práci druhých spíš pozorujete z povzdálí a chlubíte se svou velkou vizí, ale reálně pro hladký průběh mnoho neděláte. Díky příbuzenským konexím si dovolujete ignorovat pokyny zkušenějších kolegů a občas zneplatníte jejich rozhodnutí jen proto, abyste ukázal svoji moc.",
         "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce.",
         "goals": [
             "Vymyslet nový slogan.",
-            "Sbalit Agentku A02 (Herečku)."
+            "Sbalit Agentku A02 (Herečku).",
+            "Prosadit během testu alespoň jeden svůj nápad navzdory nesouhlasu ostatních Správců."
         ],
         "avatar": "avatar_admin.png"
     }

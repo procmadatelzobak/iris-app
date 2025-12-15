@@ -1,6 +1,7 @@
 # IRIS Systém - Příručka pro ROOT (Gamemaster)
 
-**Verze:** 2.0  
+**Verze:** 4.1  
+**HLINIK Phase:** 35  
 **Jazyk:** Český  
 **Pro:** Hlavní organizátor hry (Gamemaster)
 
@@ -120,7 +121,7 @@ Kliknutím na záložku **CONFIG** nastavíte AI funkce.
 
 ### 3.4 SYSTEM INFORMATION
 
-**Version** - Aktuální verze systému (Phase 25.0)
+**Version** - Aktuální verze systému (IRIS 4.1 / HLINIK Phase 35)
 **Total Users** - Počet uživatelů v databázi
 **Database** - Typ databáze (SQLite)
 
@@ -246,4 +247,4 @@ journalctl -u iris -f
 
 ---
 
-**Poslední aktualizace:** 2025-12-14
+**Poslední aktualizace:** 2025-12-15 | IRIS 4.1
