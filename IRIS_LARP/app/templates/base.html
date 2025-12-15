@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Fallback styles if Tailwind CDN fails */
-        body { font-family: monospace; background-color: #111827; color: white; }
+        body {
+            font-family: monospace;
+            background-color: #111827;
+            color: white;
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
+
 <body class="bg-gray-900 text-white font-mono">
     {% block content %}{% endblock %}
+
+    <!-- WS Status Indicator -->
+    <div id="ws-status-indicator" title="WebSocket Status: Disconnected"
+        style="position: fixed; top: 15px; right: 15px; width: 12px; height: 12px; border-radius: 50%; background-color: #ef4444; border: 2px solid rgba(0,0,0,0.5); z-index: 9999; box-shadow: 0 0 5px rgba(0,0,0,0.5); transition: background-color 0.3s;">
+    </div>
+
     <script src="/static/js/translations.js"></script>
     {% block scripts %}{% endblock %}
 </body>
+
 </html>

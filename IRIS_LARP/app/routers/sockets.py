@@ -43,6 +43,39 @@ async def get_user_from_token(token: str):
     except JWTError:
         return None
 
+# --- v1.4 Latency Monitor ---
+async def monitor_latency():
+    """Background task to check for agent response timeouts."""
+    while True:
+        try:
+            await asyncio.sleep(5)
+            now = time.time()
+            limit = gamestate.agent_response_window
+            
+            # Iterate over active sessions (Users waiting for Agent)
+            # We need to track who is waiting. 
+            # routing_logic should probably track "last_user_message_at"
+            # For now, let's access routing_logic state if possible or add tracking here.
+            
+            from ..logic.routing import routing_logic
+            
+            # This requires routing_logic to expose effective waiting state.
+            # Let's assume routing_logic has a method or we add one.
+            # Simplified: Check all active user connections in routing_logic
+            
+            for session_id, session_data in routing_logic.active_sessions.items():
+                # Check if it's a USER session and if they are waiting for reply?
+                # Actually, simpler: Use routing_logic to check timeouts.
+                await routing_logic.check_timeouts(now, limit)
+                
+        except Exception as e:
+            print(f"Latency Monitor Error: {e}")
+            await asyncio.sleep(5)
+
+@router.on_event("startup")
+async def startup_event():
+    asyncio.create_task(monitor_latency())
+
 @router.websocket("/ws/connect")
 async def websocket_endpoint(websocket: WebSocket, token: str):
     user = await get_user_from_token(token)
@@ -85,7 +118,23 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             "online": routing_logic.get_online_status()
         }))
     
-    # ... (skipping unchanged lines)
+            "online": routing_logic.get_online_status()
+        }))
+    
+    # Send Custom Labels (v1.4)
+    if user.role != UserRole.ADMIN:
+        from ..config import BASE_DIR
+        import os
+        labels_path = BASE_DIR / "data" / "admin_labels.json"
+        if os.path.exists(labels_path):
+            with open(labels_path, "r") as f:
+                try:
+                    labels = json.load(f)
+                    await websocket.send_text(json.dumps({
+                        "type": "labels_update",
+                        "labels": labels
+                    }))
+                except: pass
 
     
     # Send History on Connect (User/Agent logic)
@@ -177,6 +226,11 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                 msg_data = json.loads(data)
             except:
                 msg_data = {"content": data}
+
+            # Heartbeat - Ping/Pong
+            if msg_data.get("type") == "ping":
+                await websocket.send_text(json.dumps({"type": "pong"}))
+                continue
 
             content = msg_data.get("content")
 

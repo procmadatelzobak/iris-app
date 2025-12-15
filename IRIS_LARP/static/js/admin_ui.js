@@ -263,7 +263,7 @@ window.loadControlState = async function () {
                     buyPowerText.parentElement.classList.add('text-green-400', 'border-green-700');
                 }
             } else {
-                buyPowerText.innerText = 'PŘIHODIT UHLÍ (+50MW) - 1000 CR';
+                buyPowerText.innerText = 'NAVÝŠIT KAPACITU (+50MW) - 1000 CR';
                 if (buyPowerText.parentElement) {
                     buyPowerText.parentElement.classList.remove('text-green-400', 'border-green-700');
                 }
@@ -757,6 +757,114 @@ window.payTask = async function (id) {
     });
     refreshTasks();
 };
+
+// --- CUSTOM LABELS (v1.4) ---
+let editMode = false;
+
+window.toggleEditMode = function () {
+    editMode = !editMode;
+    const btn = document.querySelector('button[data-key="btn_labels"]');
+    if (btn) btn.innerText = editMode ? "💾 ULOŽIT REALITU" : "PŘEPSAT REALITU";
+
+    if (editMode) {
+        document.body.classList.add('edit-mode-active');
+        enableLabelEditing();
+    } else {
+        document.body.classList.remove('edit-mode-active');
+        saveLabels();
+        disableLabelEditing();
+    }
+};
+
+window.disableEditMode = function () {
+    if (!editMode) return;
+    editMode = false;
+    document.body.classList.remove('edit-mode-active');
+    const btn = document.querySelector('button[data-key="btn_labels"]');
+    if (btn) btn.innerText = "PŘEPSAT REALITU";
+    disableLabelEditing();
+}
+
+function enableLabelEditing() {
+    document.querySelectorAll('.editable-label').forEach(el => {
+        el.contentEditable = "true";
+        el.classList.add('editing-highlight');
+        // Prevent enter = new line for simple labels
+        el.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                el.blur();
+            }
+        };
+    });
+    showAdminToast("EDIT MODE ENABLED: Click text to edit");
+}
+
+function disableLabelEditing() {
+    document.querySelectorAll('.editable-label').forEach(el => {
+        el.contentEditable = "false";
+        el.classList.remove('editing-highlight');
+        el.onkeydown = null;
+    });
+}
+
+async function saveLabels() {
+    const labels = {};
+    document.querySelectorAll('.editable-label').forEach(el => {
+        const key = el.dataset.key;
+        if (key) {
+            labels[key] = el.innerText.trim();
+        }
+    });
+
+    try {
+        await fetch('/api/admin/labels', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAuthToken()}`
+            },
+            body: JSON.stringify({ labels })
+        });
+        showAdminToast("REALITY REWRITTEN (Labels Saved)");
+    } catch (e) {
+        console.error("Label save failed", e);
+        showAdminToast("REWRITE FAILED", true);
+    }
+}
+
+// Initial Label Load for Admin
+async function loadAdminLabels() {
+    try {
+        const res = await fetch('/api/admin/labels', {
+            headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+        });
+        if (res.ok) {
+            const labels = await res.json();
+            for (const [key, value] of Object.entries(labels)) {
+                // Update text
+                document.querySelectorAll(`.editable-label[data-key="${key}"]`).forEach(el => {
+                    el.innerText = value;
+                });
+            }
+        }
+    } catch (e) { console.error(e); }
+}
+
+// Hook into init
+document.addEventListener('DOMContentLoaded', () => {
+    // Other inits...
+    loadAdminLabels();
+});
+
+// Toast Helper
+function showAdminToast(msg, isError = false) {
+    const t = document.createElement('div');
+    t.innerText = msg;
+    t.className = `fixed top-20 right-4 p-4 border text-white font-bold z-50 animate-bounce ${isError ? 'bg-red-900 border-red-500' : 'bg-green-900 border-green-500'}`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
 
 window.setTaskRating = function (taskId, value, btn) {
     const hidden = document.getElementById(`rat-${taskId}`);

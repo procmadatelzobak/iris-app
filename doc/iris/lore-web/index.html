@@ -1279,7 +1279,8 @@
                                 Lore obsah je 100% kompletní. Manuální testy odhalily kritický WebSocket bug. LLM
                                 simulace fungují bezchybně.</p>
                             <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025 |
-                                <strong>Analytik:</strong> Claude AI</p>
+                                <strong>Analytik:</strong> Claude AI
+                            </p>
                         </div>
                         <button class="btn-primary" onclick="showManual('audit_35')">📄 Otevřít kompletní
                             report</button>
@@ -1310,13 +1311,17 @@
                 </div>
 
                 <div class="dashboard-card" style="border-color: var(--accent-red)">
-                    <h3>🐛 Kritický Bug</h3>
-                    <div style="background:rgba(244,67,54,0.1); padding:10px; border-radius:6px; margin-top:10px">
-                        <strong style="color: var(--accent-red)">BUG-001: WebSocket Connection Loop</strong>
-                        <p style="font-size: 0.9em; margin-top: 8px;">WS se neustále odpojuje/připojuje. Blokuje
-                            real-time komunikaci.</p>
-                        <p style="font-size: 0.85em; opacity: 0.8; margin-top: 5px;">Postiženo: USER, AGENT, ADMIN, ROOT
+                    <h3>✅ Vyřešené Problémy (Hotfix)</h3>
+                    <div
+                        style="background:rgba(76, 175, 80, 0.1); padding:10px; border-radius:6px; margin-top:10px; border-left: 3px solid var(--accent-green);">
+                        <strong style="color: var(--accent-green)">RESOLVED: WebSocket Connection Loop</strong>
+                        <p style="font-size: 0.9em; margin-top: 8px;">
+                            Implementován <strong>Heartbeat (Ping/Pong)</strong> protokol a ochrana proti cyklickému
+                            reconnectu při chybě autentizace (Code 1008).
+                            Real-time komunikace je nyní stabilní.
                         </p>
+                        <p style="font-size: 0.85em; opacity: 0.8; margin-top: 5px;">Status: <strong
+                                style="color:var(--accent-green)">FIXED</strong> | Patch: 4.2.1</p>
                     </div>
                 </div>
 
@@ -1362,9 +1367,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong style="color: var(--accent-red)">CRITICAL</strong></td>
+                                <td><strong style="color: var(--accent-green)">RESOLVED</strong></td>
                                 <td>WebSocket Stability</td>
-                                <td>Debug connection loop, ověření ping/pong</td>
+                                <td><strike>Debug connection loop</strike> -> <strong>Ping/Pong + Auth Guard</strong>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
@@ -1386,16 +1392,36 @@
                 </div>
 
                 <div class="dashboard-card full-width">
-                    <h3>🧩 Implementované funkce navíc</h3>
+                    <h3>🧩 Funkční Analýza (Gap Analysis)</h3>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
                         <div>
-                            <strong>Filtr Pravdy (HyperVis):</strong><br>
+                            <strong>✅ Filtr Pravdy (HyperVis):</strong><br>
                             <em style="color: var(--text-muted)">Přepínání vizuálních filtrů (Blackbox/Forensic).</em>
                         </div>
                         <div>
-                            <strong>Řízení spotřeby:</strong><br>
+                            <strong>✅ Řízení spotřeby:</strong><br>
                             <em style="color: var(--text-muted)">Režimy (Low Power / Overclock) ovlivňující "Tlak
                                 páry".</em>
+                        </div>
+                        <div>
+                            <strong>✅ Admin Treasury (Ekonomika):</strong><br>
+                            <em style="color: var(--text-muted)">Implementováno:</em> Daně a Power Packy (Backend
+                            Logic).
+                        </div>
+                        <div>
+                            <strong>✅ Agent Timer (Latency):</strong><br>
+                            <em style="color: var(--text-muted)">Implementováno:</em> Servery monitorují odezvu a
+                            vynucují Timeout.
+                        </div>
+                        <div>
+                            <strong>✅ Custom Labels:</strong><br>
+                            <em style="color: var(--text-muted)">Implementováno:</em> Admin Edit Mode a WebSocket
+                            injection (User).
+                        </div>
+                        <div>
+                            <strong>✅ Glitch Protocol:</strong><br>
+                            <em style="color: var(--text-muted)">Implementováno:</em> Vizuální efekty (CSS) spouštěné
+                            Overload stavem.
                         </div>
                     </div>
                 </div>
@@ -1403,10 +1429,12 @@
                 <div class="dashboard-card full-width">
                     <h3>💡 Doporučení k Nasazení</h3>
                     <ol style="margin: 10px 0 0 20px; line-height: 1.8">
-                        <li><strong>Okamžitě:</strong> Opravit WebSocket connection loop (socket_client.js)</li>
+                        <li><strong>OK:</strong> Opravit WebSocket connection loop <span
+                                style="color:var(--accent-green)">(Fixed v4.2.1)</span></li>
                         <li><strong>Před nasazením:</strong> Implementovat exponenciální backoff při reconnect</li>
                         <li><strong>Před nasazením:</strong> Fallback pro chybějící data (cache)</li>
-                        <li><strong>Nice-to-have:</strong> Viditelný indikátor stavu WS připojení</li>
+                        <li><strong>OK:</strong> Viditelný indikátor stavu WS připojení <span
+                                style="color:var(--accent-green)">(Implemented)</span></li>
                     </ol>
                 </div>
             </div>

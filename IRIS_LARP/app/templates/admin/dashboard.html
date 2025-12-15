@@ -102,29 +102,29 @@
         <div class="chernobyl-panel hover:bg-green-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('monitor')">
             <h2 class="text-6xl text-green-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_1">UMYVADLO</h2>
-            <div class="text-green-300 editable-label" data-key="hub_desc_1">MONITORING</div>
+                data-key="hub_station_1">MONITORING</h2>
+            <div class="text-green-300 editable-label" data-key="hub_desc_1">DOHLED</div>
             <div class="mt-auto text-xs text-green-800"><span class="bulb on-green animate-pulse"></span> ONLINE</div>
         </div>
         <div class="chernobyl-panel hover:bg-yellow-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('controls')">
             <h2 class="text-6xl text-yellow-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_2">ROZKOŠ</h2>
+                data-key="hub_station_2">OVLÁDÁNÍ</h2>
             <div class="text-yellow-300 editable-label" data-key="hub_desc_2">KONTROLA</div>
             <div class="mt-auto text-xs text-yellow-800"><span class="bulb on-amber"></span> ACTIVE</div>
         </div>
         <div class="chernobyl-panel hover:bg-blue-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('economy')">
             <h2 class="text-6xl text-blue-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_3">BAHNO</h2>
-            <div class="text-blue-300 editable-label" data-key="hub_desc_3">EKONOMIKA</div>
+                data-key="hub_station_3">EKONOMIKA</h2>
+            <div class="text-blue-300 editable-label" data-key="hub_desc_3">FINANCE</div>
             <div class="mt-auto text-xs text-blue-800"><span class="bulb on-green"></span> STABLE</div>
         </div>
         <div class="chernobyl-panel hover:bg-purple-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
             onclick="openStation('tasks')">
             <h2 class="text-6xl text-purple-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_4">MRKEV</h2>
-            <div class="text-purple-300 editable-label" data-key="hub_desc_4">ÚKOLY</div>
+                data-key="hub_station_4">ÚKOLY</h2>
+            <div class="text-purple-300 editable-label" data-key="hub_desc_4">AGENDA</div>
             <div class="mt-auto text-xs text-purple-800"><span class="bulb on-amber animate-pulse"></span> PENDING</div>
         </div>
     </div>
@@ -143,10 +143,10 @@
             <a href="/doc/view/system" target="_blank"
                 class="chernobyl-btn px-4 py-1 text-sm text-blue-500 border-blue-800 hover:text-white flex items-center justify-center">[
                 SYSTEM ]</a>
-            <button class="chernobyl-btn px-4 py-1 text-sm" data-key="btn_labels" onclick="toggleEditMode()">PŘEPSAT
-                REALITU</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm" data-key="btn_labels" onclick="toggleEditMode()">UPRAVIT
+                POPISKY</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-red-500 border-red-800 editable-label"
-                data-key="btn_reset_sys" onclick="triggerReset()">AUTO-DESTRUKCE</button>
+                data-key="btn_reset_sys" onclick="triggerReset()">RESET SYSTÉMU</button>
             <button class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800"
                 onclick="window.location.href='/auth/logout'">ODHLÁSIT</button>
         </div>
@@ -222,12 +222,12 @@
         <div class="grid grid-cols-2 gap-8">
             <!-- Global Shift -->
             <div class="chernobyl-panel p-6 bg-black">
-                <h3 class="text-4xl text-yellow-500 mb-6 editable-label" data-key="lbl_shift">POSUN REALITY</h3>
+                <h3 class="text-4xl text-yellow-500 mb-6 editable-label" data-key="lbl_shift">POSUN RELACE</h3>
                 <div class="text-8xl font-bold text-white mb-6 text-center border-2 border-yellow-900 p-4"
                     id="controlShift">0</div>
                 <button class="w-full chernobyl-btn py-4 hover:bg-yellow-900 editable-label text-xl"
                     data-key="btn_shift" onclick="triggerShift()">
-                    [ >> ROZTOČIT KOLA OSUDU >> ]
+                    [ >> DALŠÍ FÁZE >> ]
                 </button>
             </div>
 
@@ -252,7 +252,7 @@
             <div class="space-y-6">
                 <!-- Power Management v1.4 -->
                 <div class="chernobyl-panel p-6 bg-black">
-                    <h3 class="text-2xl text-blue-500 mb-4 editable-label" data-key="lbl_energy">TLAK PÁRY</h3>
+                    <h3 class="text-2xl text-blue-500 mb-4 editable-label" data-key="lbl_energy">ZÁTĚŽ SERVERU</h3>
                     <div
                         class="bg-gray-900 border border-blue-900 p-1 mb-4 relative overflow-hidden h-12 chernobyl-inset">
                         <div id="powerBar" class="h-full bg-blue-600 transition-all duration-500 relative"
@@ -269,13 +269,14 @@
                     </div>
                     <button class="w-full chernobyl-btn py-2 hover:bg-blue-900 transition editable-label"
                         data-key="btn_buy_power" onclick="buyPower()" id="btnBuyPower">
-                        [ <span id="buyPowerText">PŘIHODIT UHLÍ (+50MW) - 1000 CR</span> ]
+                        [ <span id="buyPowerText">NAVÝŠIT KAPACITU (+50MW) - 1000 CR</span> ]
                     </button>
                 </div>
 
                 <!-- Instability -->
                 <div class="chernobyl-panel p-6 bg-black">
-                    <h3 class="text-2xl text-red-500 mb-6 editable-label" data-key="lbl_temperature">HLADINA STRESU</h3>
+                    <h3 class="text-2xl text-red-500 mb-6 editable-label" data-key="lbl_temperature">TEPLOTA SYSTÉMU
+                    </h3>
                     <div
                         class="bg-gray-900 border border-red-900 p-1 mb-4 relative overflow-hidden h-12 chernobyl-inset">
                         <!-- Background Grid -->
@@ -297,7 +298,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <span class="text-gray-500 block mb-2 editable-label" data-key="lbl_mode">RYCHLOST BĚHU</span>
+                        <span class="text-gray-500 block mb-2 editable-label" data-key="lbl_mode">REŽIM VÝKONU</span>
                         <div class="flex gap-2">
                             <button
                                 class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:text-white transition editable-label"

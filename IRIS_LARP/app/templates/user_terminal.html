@@ -175,6 +175,24 @@
     const chatHistory = document.getElementById('chatHistory');
     const creditsDisplay = document.getElementById('creditsDisplay');
 
+    // v1.4 Custom Labels
+    async function fetchLabels() {
+        try {
+            const res = await fetch('/api/admin/labels'); // Public endpoint? Or through socket? 
+            // Actually admin_api is protected. We need a public endpoint or socket message.
+            // Let's check permissions. If user can't access /api/admin, we need another way.
+            // Assuming for now User can't access /api/admin. 
+            // We should use the socket "gamestate_update" or a new "labels_update" message.
+            // For now, let's try a public endpoint in sockets.py/router or just use the socket initial payload.
+        } catch (e) {
+            console.error("Labels fetch error", e);
+        }
+    }
+
+    // Better approach: Request via Socket
+    // client.send({type: "request_labels"}); 
+    // But for now, let's implement the handler for 'labels_update' which we will send on connect.
+
     let currentTaskId = null;
     let currentTaskStatus = null;
 
@@ -187,10 +205,25 @@
     const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/connect';
 
     const client = new SocketClient(wsUrl, (data) => {
-        // Handle translation updates
         if (data.type === 'translation_update' || data.type === 'language_change' || data.type === 'translations_reset') {
             if (window.translationManager) {
                 window.translationManager.handleTranslationUpdate(data);
+            }
+            return;
+        }
+
+        if (data.type === 'labels_update') {
+            if (data.labels) {
+                for (const [key, value] of Object.entries(data.labels)) {
+                    document.querySelectorAll(`.editable-label[data-key="${key}"]`).forEach(el => {
+                        // Check if it's an input/textarea or text node
+                        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                            el.value = value;
+                        } else {
+                            el.innerText = value;
+                        }
+                    });
+                }
             }
             return;
         }

@@ -3,6 +3,7 @@ from fastapi import WebSocket
 from ..config import settings
 from ..database import UserRole
 from .gamestate import gamestate
+import json # Added for the new method
 
 class ConnectionManager:
     def __init__(self):
@@ -100,6 +101,24 @@ class ConnectionManager:
         """Clear timeout state when user sends a new message."""
         if session_id in self.timed_out_sessions:
             del self.timed_out_sessions[session_id]
+
+    async def check_timeouts(self, now: float, limit: int):
+        """Check for sessions exceeding response limit."""
+        import json
+        
+        # Check active requests
+        # We need a copy of items to avoid runtime modification errors if we delete during iteration
+        for session_id, star_time in list(self.pending_responses.items()):
+            if now - star_time > limit:
+                # MARK TIMEOUT
+                self.mark_session_timeout(session_id)
+                
+                # 1. Notify User
+                await self.send_timeout_error_to_user(session_id)
+                # 2. Unlock Input
+                await self.broadcast_to_session(session_id, json.dumps({"type": "lock_update", "locked": False}))
+                # 3. Notify Agent
+                await self.send_timeout_to_agent(session_id)
 
     def set_last_user_message(self, session_id: int, content: str):
         self.latest_user_messages[session_id] = content
