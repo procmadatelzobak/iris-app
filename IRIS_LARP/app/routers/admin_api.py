@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from ..dependencies import get_current_admin, get_current_root
 from ..logic.llm_core import llm_service, LLMConfig, LLMProvider
 from ..logic.gamestate import gamestate
+from ..config import BASE_DIR
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -471,8 +472,10 @@ class LabelUpdate(BaseModel):
 async def save_labels(action: LabelUpdate, admin=Depends(get_current_admin)):
     import json
     import os
+    labels_path = BASE_DIR / "data" / "admin_labels.json"
+    labels_path.parent.mkdir(parents=True, exist_ok=True)
     try:
-        with open("data/admin_labels.json", "w") as f:
+        with open(labels_path, "w") as f:
             json.dump(action.labels, f)
         return {"status": "saved"}
     except Exception as e:
@@ -481,10 +484,10 @@ async def save_labels(action: LabelUpdate, admin=Depends(get_current_admin)):
 @router.get("/labels")
 async def get_labels(admin=Depends(get_current_admin)):
     import json
-    import os
-    if os.path.exists("data/admin_labels.json"):
+    labels_path = BASE_DIR / "data" / "admin_labels.json"
+    if labels_path.exists():
         try:
-            with open("data/admin_labels.json", "r") as f:
+            with open(labels_path, "r") as f:
                 return json.load(f)
         except:
             return {}

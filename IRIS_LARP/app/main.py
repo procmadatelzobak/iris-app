@@ -128,12 +128,11 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"ERROR: Could not save GameState: {e}")
 
+base_dir = Path(__file__).resolve().parent.parent
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=lifespan)
 
 # Static Files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-base_dir = Path(__file__).resolve().parent.parent
+app.mount("/static", StaticFiles(directory=base_dir / "static"), name="static")
 lore_web_dir = base_dir.parent / "doc" / "iris" / "lore-web"
 
 if lore_web_dir.exists():
@@ -144,7 +143,7 @@ if lore_web_dir.exists():
 app.mount("/docs/images", StaticFiles(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs", "images")), name="docs_images")
 
 # Templates
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=base_dir / "app" / "templates")
 
 # Routers
 app.include_router(auth.router)
