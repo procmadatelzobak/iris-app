@@ -1,0 +1,140 @@
+{
+  "timestamp": "2025-12-15T01:38:39.489664",
+  "scenario_name": "Full System Simulation (Load + UI)",
+  "status": "success",
+  "duration": 2.83,
+  "filename": "run_1765759119.json",
+  "stats": {
+    "users_active": 12,
+    "avg_latency": 0,
+    "errors": 0
+  },
+  "logs": [
+    {
+      "time": "2025-12-15T01:38:39.489670",
+      "level": "INFO",
+      "message": "Starting complex test scenario...",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:39.489907",
+      "level": "INFO",
+      "message": "Loaded 20 roles for simulation.",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:39.489923",
+      "level": "INFO",
+      "message": "Starting browser automation check...",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:39.854781",
+      "level": "INFO",
+      "message": "Navigating to Wiki at http://localhost:8000/organizer-wiki/...",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:40.155118",
+      "level": "SUCCESS",
+      "message": "Wiki Dashboard loaded.",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:40.219780",
+      "level": "INFO",
+      "message": "Wiki visual captured.",
+      "screenshot": "wiki_check_1765759120.png"
+    },
+    {
+      "time": "2025-12-15T01:38:41.309208",
+      "level": "INFO",
+      "message": "Audit section verified.",
+      "screenshot": "wiki_audit_1765759120.png"
+    },
+    {
+      "time": "2025-12-15T01:38:41.335008",
+      "level": "INFO",
+      "message": "Spawning 12 concurrent connections...",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.490263",
+      "level": "WARNING",
+      "message": "User U07 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.490517",
+      "level": "WARNING",
+      "message": "User U05 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.668144",
+      "level": "WARNING",
+      "message": "User A02 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.723647",
+      "level": "WARNING",
+      "message": "User U06 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.801100",
+      "level": "WARNING",
+      "message": "User U04 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.827662",
+      "level": "WARNING",
+      "message": "User U03 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.833172",
+      "level": "WARNING",
+      "message": "User U01 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.884227",
+      "level": "WARNING",
+      "message": "User U08 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.920937",
+      "level": "WARNING",
+      "message": "User A01 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:41.923584",
+      "level": "WARNING",
+      "message": "User A04 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:42.195053",
+      "level": "WARNING",
+      "message": "User U02 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:42.317102",
+      "level": "WARNING",
+      "message": "User A03 simulation ended: server rejected WebSocket connection: HTTP 403",
+      "screenshot": null
+    },
+    {
+      "time": "2025-12-15T01:38:42.317170",
+      "level": "SUCCESS",
+      "message": "Simulation scenario completed.",
+      "screenshot": null
+    }
+  ]
+}

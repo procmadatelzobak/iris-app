@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderUsersGrid();
     renderRelations();
     updateLastUpdate();
+    initTests();
 });
 
 async function loadData() {
@@ -693,6 +694,125 @@ function showManual(type) {
 
 function closeManual() {
     document.getElementById('manualViewer').classList.remove('active');
+}
+
+// ============================================
+// TESTS VIEWER
+// ============================================
+
+async function initTests() {
+    try {
+        const response = await fetch('data/test_runs/index.json');
+        const runs = await response.json();
+        renderTestRunsList(runs);
+    } catch (e) {
+        console.error("Failed to load test runs", e);
+        document.getElementById('testRunsList').innerHTML = '<p class="text-muted">Zatím žádné záznamy testů.</p>';
+    }
+}
+
+function renderTestRunsList(runs) {
+    const list = document.getElementById('testRunsList');
+    list.innerHTML = '';
+
+    if (!runs || runs.length === 0) {
+        list.innerHTML = '<p class="text-muted">Žádné záznamy.</p>';
+        return;
+    }
+
+    // Sort by timestamp desc
+    runs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    runs.forEach(run => {
+        const item = document.createElement('div');
+        item.className = 'test-run-item';
+        item.onclick = () => loadTestRunDetail(run);
+
+        const date = new Date(run.timestamp).toLocaleString('cs-CZ');
+        const statusClass = run.status === 'success' ? 'passed' : 'failed';
+
+        item.innerHTML = `
+            <div class="test-run-header">
+                <span class="test-status ${statusClass}">${run.status}</span>
+                <span>${run.duration}s</span>
+            </div>
+            <div class="test-meta">
+                <div>${date}</div>
+                <div>${run.scenario_name}</div>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+
+async function loadTestRunDetail(runMeta) {
+    const detailContainer = document.getElementById('testRunDetail');
+    detailContainer.innerHTML = '<p class="text-muted">Načítám detail logu...</p>';
+
+    try {
+        const response = await fetch(`data/test_runs/runs/${runMeta.filename}`);
+        if (!response.ok) throw new Error('File not found');
+        const data = await response.json();
+        renderTestDetail(data);
+    } catch (e) {
+        detailContainer.innerHTML = '<p class="text-muted" style="color:var(--accent-red)">Chyba při načítání detailu logu. Soubor asi neexistuje.</p>';
+        console.error(e);
+    }
+}
+
+function renderTestDetail(data) {
+    const detailContainer = document.getElementById('testRunDetail');
+
+    let html = `
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h2>${data.scenario_name}</h2>
+            <p class="section-subtitle">${new Date(data.timestamp).toLocaleString('cs-CZ')} | ${data.stats.users_active} Users Active</p>
+        </div>
+        
+        <div class="version-info" style="margin-bottom: 20px; padding: 15px; background: var(--bg-primary); border-radius: 8px;">
+            <div class="version-item">
+                <span class="label">Status</span>
+                <span class="value" style="color: ${data.status === 'success' ? 'var(--accent-green)' : 'var(--accent-red)'}">${data.status.toUpperCase()}</span>
+            </div>
+            <div class="version-item">
+                <span class="label">Prům. Latence</span>
+                <span class="value">${data.stats.avg_latency} ms</span>
+            </div>
+            <div class="version-item">
+                <span class="label">Chyby</span>
+                <span class="value" style="color: ${data.stats.errors > 0 ? 'var(--accent-red)' : 'var(--text-primary)'}">${data.stats.errors}</span>
+            </div>
+        </div>
+        
+        <h3>📜 Průběh testu (Log Stream)</h3>
+        <div class="log-container">
+    `;
+
+    data.logs.forEach(log => {
+        let imageHtml = '';
+        if (log.screenshot) {
+            imageHtml = `
+                <div class="log-img-wrapper">
+                    <img src="data/test_runs/runs/${log.screenshot}" loading="lazy" alt="Screenshot" onclick="window.open(this.src, '_blank')" style="cursor:zoom-in">
+                    <div class="log-img-caption">📸 Screenshot: ${log.screenshot}</div>
+                </div>
+            `;
+        }
+
+        html += `
+            <div class="log-entry">
+                <div class="log-time">${log.time.split('T')[1].split('.')[0]}</div>
+                <div class="log-level ${log.level}">${log.level}</div>
+                <div class="log-message">
+                    ${log.message}
+                    ${imageHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    detailContainer.innerHTML = html;
 }
 
 // ============================================

@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-12-15T01:38:39.489664",
+    "scenario_name": "Full System Simulation (Load + UI)",
+    "status": "success",
+    "duration": 2.83,
+    "filename": "run_1765759119.json",
+    "stats": {
+      "users_active": 12,
+      "avg_latency": 0,
+      "errors": 0
+    }
+  }
+]
