@@ -10,6 +10,7 @@
 let rolesData = [];
 let relationsData = [];
 let configData = {};
+const state = { manuals: {} };
 
 // ============================================
 // INITIALIZATION
@@ -523,6 +524,13 @@ document.addEventListener('keydown', (e) => {
 // MANUALS
 // ============================================
 
+const MANUAL_OPEN_FIRST_MESSAGE = 'Nejdříve otevřete manuál';
+
+function notifyManualError(message) {
+    console.warn(message);
+    alert(message);
+}
+
 function showManual(type) {
     const manual = state.manuals[type];
 
@@ -738,11 +746,19 @@ function exportBriefingPDF() {
 }
 
 function exportManualPDF(type) {
-    const manual = manualContent[type];
-    if (!manual) return;
+    const manualType = type || currentManualType;
+    if (!manualType) {
+        notifyManualError(MANUAL_OPEN_FIRST_MESSAGE);
+        return;
+    }
+    const manual = state.manuals[manualType];
+    if (!manual) {
+        notifyManualError(`Manuál typu '${manualType}' nebyl nalezen.`);
+        return;
+    }
 
     const printContent = generateManualHTML(manual);
-    openPrintWindow(printContent, `Prirucka_${type}`);
+    openPrintWindow(printContent, `Prirucka_${manualType}`);
 }
 
 function generateBriefingHTML(role) {
