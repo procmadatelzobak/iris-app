@@ -739,7 +739,12 @@ function exportBriefingPDF() {
 }
 
 function exportManualPDF(type) {
-    const manual = state.manuals[type || currentManualType];
+    const manualType = type || currentManualType;
+    if (!manualType) {
+        alert('Nejdříve otevřete manuál');
+        return;
+    }
+    const manual = state.manuals[manualType];
     if (!manual) return;
 
     const printContent = generateManualHTML(manual);
