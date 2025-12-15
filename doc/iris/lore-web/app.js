@@ -283,7 +283,6 @@ function renderRolesTable() {
         const tr = document.createElement('tr');
         tr.dataset.type = role.type;
         tr.innerHTML = `
-            <td><code>${role.id}</code></td>
             <td><strong>${role.name}</strong></td>
             <td><span class="role-badge ${role.type}">${getRoleTypeLabel(role.type)}</span></td>
             <td>${role.archetype}</td>
@@ -325,7 +324,7 @@ function renderUsersGrid() {
             <div class="user-card-header ${roleTypeClass}" style="display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <img src="assets/images/${role.avatar || 'avatar_user_male.png'}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">
-                    <span class="user-id">${role.id}</span>
+                    <span class="user-id" style="font-weight:bold;">${role.name}</span>
                 </div>
                 <span style="font-size: 0.8rem; opacity: 0.7;">${role.type.toUpperCase()}</span>
             </div>
@@ -365,7 +364,7 @@ function renderRelationsList() {
         card.style.borderLeftColor = getRelationColor(rel.type);
         card.innerHTML = `
             <div class="relation-header">
-                <span class="relation-title">${rel.source} ↔ ${rel.target}</span>
+                <span class="relation-title">${getRoleName(rel.source)} ↔ ${getRoleName(rel.target)}</span>
                 <span class="relation-type ${rel.type}">${getRelationTypeLabel(rel.type)}</span>
             </div>
             <div class="relation-desc">
@@ -424,9 +423,11 @@ function renderRelationsGraph() {
         const angle = (i / rolesData.length) * 2 * Math.PI;
         const radius = Math.min(width, height) * 0.35;
         return {
-            id: role.id,
+            id: role.name,
             name: role.name,
             type: role.type,
+            group: role.type,
+            radius: role.type === 'admin' ? 8 : 6,
             x: width / 2 + Math.cos(angle) * radius,
             y: height / 2 + Math.sin(angle) * radius
         };
@@ -566,6 +567,20 @@ function showBriefing(roleId) {
                 ${role.ability}
             </div>
         </div>
+        
+        ${role.work_image ? `
+        <div class="briefing-section">
+            <h3>📸 Typická situace v práci</h3>
+            <div style="text-align: center;">
+                <img src="assets/images/${role.work_image}" 
+                     alt="Typická pracovní situace" 
+                     style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid var(--border-color); cursor: zoom-in; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"
+                     onclick="window.open(this.src, '_blank')"
+                     title="Klikni pro zvětšení">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">Klikni na obrázek pro zvětšení</p>
+            </div>
+        </div>
+        ` : ''}
         
         <div class="briefing-section">
             <h3>🔗 Vazby a tajemství</h3>
@@ -1437,8 +1452,8 @@ function renderPlayerLists() {
 function createPlayerListItem(role) {
     return `
         <div class="player-list-item type-${role.type}" data-id="${role.id}">
-            <span class="code">${role.id}</span>
-            <span class="name">${role.name}</span>
+            <span class="name" style="font-weight:bold;">${role.name}</span>
+            <span class="code" style="opacity:0.6; font-size:0.8em; margin-left:auto;">${role.archetype}</span>
         </div>
     `;
 }
@@ -1460,7 +1475,7 @@ function selectPlayer(playerId) {
     if (cardEl) cardEl.style.display = 'block';
 
     // Fill card data
-    document.getElementById('playerCode').textContent = role.id;
+    document.getElementById('playerCode').style.display = 'none';
     document.getElementById('playerName').textContent = role.name;
     document.getElementById('playerArchetype').textContent = role.archetype;
     document.getElementById('playerDescription').textContent = role.description;
@@ -1492,6 +1507,37 @@ function selectPlayer(playerId) {
             }).join('');
         } else {
             relationsEl.innerHTML = '<span class="text-muted">Žádné vztahy</span>';
+        }
+    }
+
+    // Appearance
+    const appearanceSection = document.getElementById('playerAppearanceSection');
+    const appearanceEl = document.getElementById('playerAppearance');
+    if (appearanceSection && appearanceEl) {
+        if (role.appearance) {
+            appearanceSection.style.display = 'block';
+            appearanceEl.innerHTML = `
+                <p><strong>Pohlaví:</strong> ${role.appearance.gender}</p>
+                <p><strong>Věk:</strong> ${role.appearance.age_range} let</p>
+                <p><strong>Vlasy:</strong> ${role.appearance.hair_color}</p>
+                <p><strong>Obličej:</strong> ${role.appearance.face_description}</p>
+                <p><strong>Výrazné rysy:</strong> ${role.appearance.distinctive_features}</p>
+            `;
+        } else {
+            appearanceSection.style.display = 'none';
+        }
+    }
+
+    // Work Image
+    const workImageSection = document.getElementById('playerWorkImageSection');
+    const workImageEl = document.getElementById('playerWorkImage');
+    if (workImageSection && workImageEl) {
+        if (role.work_image) {
+            workImageSection.style.display = 'block';
+            workImageEl.src = `assets/images/${role.work_image}`;
+            workImageEl.onerror = () => { workImageSection.style.display = 'none'; };
+        } else {
+            workImageSection.style.display = 'none';
         }
     }
 }

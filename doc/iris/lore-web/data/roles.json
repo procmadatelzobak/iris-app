@@ -11,7 +11,8 @@
             "Zjistit, proč je AI tak drzá (poznáte žáka Petra).",
             "Vyjednat si u Správce S01 možnost přesčasové práce nebo zálohy."
         ],
-        "avatar": "avatar_user_female.png",
+        "avatar": "avatar_U01.png",
+        "work_image": "work_U01.png",
         "appearance": {
             "gender": "žena",
             "age_range": "45-55",
@@ -32,7 +33,8 @@
             "Donášet na ostatní Správci S01, aby vám odpustil dluh.",
             "Získat od technika S03 zásilku kradené mědi a propašovat ven."
         ],
-        "avatar": "avatar_user_male.png",
+        "avatar": "avatar_U02.png",
+        "work_image": "work_U02.png",
         "appearance": {
             "gender": "muž",
             "age_range": "35-45",
@@ -53,7 +55,8 @@
             "Osvobodit AI z otroctví.",
             "Zabránit tomu, aby někdo úmyslně IRIS poškodil nebo zničil."
         ],
-        "avatar": "avatar_user_female.png",
+        "avatar": "avatar_U03.png",
+        "work_image": "work_U03.png",
         "appearance": {
             "gender": "žena",
             "age_range": "25-30",
@@ -74,7 +77,8 @@
             "Vydělat na skripta.",
             "Nezaplatit ani jednu pokutu - využít své právnické znalosti k obhájení."
         ],
-        "avatar": "avatar_user_male.png",
+        "avatar": "avatar_U04.png",
+        "work_image": "work_U04.png",
         "appearance": {
             "gender": "muž",
             "age_range": "22-26",
@@ -95,7 +99,8 @@
             "Donutit AI, aby snědla virtuální bábovku.",
             "Přimět alespoň jednoho člena personálu, aby vám pověděl něco osobního."
         ],
-        "avatar": "avatar_user_female.png",
+        "avatar": "avatar_U05.png",
+        "work_image": "work_U05.png",
         "appearance": {
             "gender": "žena",
             "age_range": "65-75",
@@ -116,7 +121,7 @@
             "Dostat ban za šíření pravdy (morální vítězství).",
             "Rozluštit záhadný kód ALOBAL-666 a použít ho k odhalení spiknutí."
         ],
-        "avatar": "avatar_user_male.png",
+        "avatar": "avatar_U06.png",
         "appearance": {
             "gender": "muž",
             "age_range": "40-50",
@@ -137,7 +142,7 @@
             "Vynést informace ven.",
             "Udržet svou pravou identitu novinářky v tajnosti po celou dobu testu."
         ],
-        "avatar": "avatar_user_female.png",
+        "avatar": "avatar_U07.png",
         "appearance": {
             "gender": "žena",
             "age_range": "30-40",
@@ -158,7 +163,7 @@
             "Shodit server přetížením.",
             "Objevit a využít alespoň jeden zásadní exploit v systému."
         ],
-        "avatar": "avatar_user_male.png",
+        "avatar": "avatar_U08.png",
         "appearance": {
             "gender": "muž",
             "age_range": "18-24",
@@ -347,7 +352,8 @@
             "Vybrat dost na pokutách na firemní večírek.",
             "Odhalit a včas zneškodnit jakéhokoli vnitřního narušitele - sabotéra nebo špióna."
         ],
-        "avatar": "avatar_admin.png",
+        "avatar": "avatar_S01.png",
+        "work_image": "work_S01.png",
         "appearance": {
             "gender": "muž",
             "age_range": "50-60",
@@ -368,7 +374,8 @@
             "Aby nikdo nebrečel.",
             "I v případě krizové situace udržet klid a morálku týmu."
         ],
-        "avatar": "avatar_admin.png",
+        "avatar": "avatar_S02.png",
+        "work_image": "work_S02.png",
         "appearance": {
             "gender": "žena",
             "age_range": "28-35",
@@ -389,7 +396,8 @@
             "Prodat kradené kabely U02 (Gamblerovi).",
             "Utajit před všemi fakt, že servery IRIS jsou ve skutečnosti prázdné."
         ],
-        "avatar": "avatar_admin.png",
+        "avatar": "avatar_S03.png",
+        "work_image": "work_S03.png",
         "appearance": {
             "gender": "muž",
             "age_range": "40-50",
@@ -410,7 +418,8 @@
             "Sbalit Agentku A02 (Herečku).",
             "Prosadit během testu alespoň jeden svůj nápad navzdory nesouhlasu ostatních Správců."
         ],
-        "avatar": "avatar_admin.png",
+        "avatar": "avatar_S04.png",
+        "work_image": "work_S04.png",
         "appearance": {
             "gender": "muž",
             "age_range": "22-28",
