@@ -748,7 +748,7 @@ function exportManualPDF(type) {
     if (!manual) return;
 
     const printContent = generateManualHTML(manual);
-    openPrintWindow(printContent, `Prirucka_${type}`);
+    openPrintWindow(printContent, `Prirucka_${manualType}`);
 }
 
 function generateBriefingHTML(role) {
