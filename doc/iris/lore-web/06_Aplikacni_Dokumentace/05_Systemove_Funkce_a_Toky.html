@@ -26,6 +26,20 @@
     </section>
 
     <section class="card">
+        <h2>Vizualizace klíčových toků</h2>
+        <div class="screenshot-grid">
+            <figure class="screenshot">
+                <img src="/lore-web/assets/hlinik/admin-monitor.png" alt="Admin monitor zobrazující websocket broadcasty v logu" loading="lazy">
+                <figcaption>Live logy v Admin Monitoru – každá systémová událost a broadcast se ihned zapisuje do přehledu.</figcaption>
+            </figure>
+            <figure class="screenshot">
+                <img src="/lore-web/assets/hlinik/root-config.png" alt="ROOT CONFIG panel pro LLM a testovací režim" loading="lazy">
+                <figcaption>ROOT CONFIG – úložiště LLM promptů a toggle Test Mode, které se propisují do GameState a websocketů.</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="card">
         <h2>1) Game loop a broadcast</h2>
         <ul>
             <li><strong>Jednovteřinový tik:</strong> Na startu se spustí asynchronní smyčka, která každou sekundu zpracuje ochlazování teploty, přepočet výkonu a detekci timeoutů agentů.</li>
