@@ -14,6 +14,7 @@ from app.main import app
 from app.config import settings
 from app.database import SessionLocal, User, Task, TaskStatus, ChatLog, SystemLog, UserRole, init_db
 from app.logic.gamestate import gamestate, ChernobylMode, HyperVisibilityMode
+from app.logic.routing import routing_logic
 from app.seed import seed_data
 
 client = TestClient(app)
@@ -123,8 +124,10 @@ def clean_user():
 def clean_gamestate():
     """Reset gamestate before test."""
     gamestate.reset_state()
+    routing_logic.panic_modes = {}
     yield
     gamestate.reset_state()
+    routing_logic.panic_modes = {}
 
 
 # ============================================================================
@@ -468,6 +471,27 @@ class TestGamestateSystem:
         gamestate.temperature = 400.0
         gamestate.check_overload()
         assert gamestate.is_overloaded is True
+
+    def test_check_overload_triggers_panic_and_recovers(self, clean_gamestate):
+        """4.8b: Thermal overload auto-enables global panic and clears after cool-down."""
+        routing_logic.panic_modes = {}
+        gamestate.power_capacity = 100
+        gamestate.power_load = 50
+        gamestate.temperature = gamestate.TEMP_THRESHOLD + 25
+
+        gamestate.check_overload()
+
+        assert gamestate.is_overloaded is True
+        assert routing_logic.get_panic_state(1)["user"] is True
+        assert routing_logic.get_panic_state(1)["agent"] is True
+
+        gamestate.temperature = gamestate.TEMP_THRESHOLD - 20
+        gamestate.power_load = 50
+        gamestate.check_overload()
+
+        assert gamestate.is_overloaded is False
+        assert routing_logic.get_panic_state(1)["user"] is False
+        assert routing_logic.get_panic_state(1)["agent"] is False
 
     def test_buy_power(self, admin_auth, clean_gamestate):
         """4.9: Buy power increases capacity."""
