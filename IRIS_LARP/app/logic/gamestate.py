@@ -6,6 +6,7 @@ import json
 import logging
 
 logger = logging.getLogger(__name__)
+MIN_SESSION_ID = 1
 
 # Default LLM System Prompts based on HLINÍK lore (Czech)
 # These prompts define the personality and behavior of the LLM agents used in the game.
@@ -335,6 +336,7 @@ class GameState:
 
     def _trigger_panic_mode(self, enabled: bool):
         """Auto-toggle global panic (censorship) when thermal overload crosses threshold."""
+        # Imported lazily to avoid circular dependency during module load
         try:
             from .routing import routing_logic
         except ImportError as exc:
@@ -344,7 +346,7 @@ class GameState:
         total_sessions = getattr(settings, "TOTAL_SESSIONS", 0)
         if total_sessions < 1:
             return
-        for i in range(1, total_sessions + 1):
+        for i in range(MIN_SESSION_ID, total_sessions + 1):
             routing_logic.set_panic_mode(i, "user", enabled)
             routing_logic.set_panic_mode(i, "agent", enabled)
 
