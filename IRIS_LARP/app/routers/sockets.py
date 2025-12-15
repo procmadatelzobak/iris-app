@@ -409,6 +409,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                             await websocket.send_text(json.dumps({
                                 "type": "task_update",
                                 "is_active": True,
+                                "task_id": new_task.id,
                                 "status": "pending_approval",
                                 "reward": default_reward,
                                 "description": new_task.prompt_desc

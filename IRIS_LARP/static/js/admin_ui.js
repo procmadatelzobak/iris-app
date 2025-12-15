@@ -558,6 +558,20 @@ window.triggerReset = function () {
 };
 
 // --- ECONOMY ---
+// Helper to safely get nested translation (format: "section.key" or just "key" for top level)
+function t(key, defaultVal) {
+    if (!window.TRANS) return defaultVal;
+
+    // Try admin_dashboard section first as most keys are there
+    if (window.TRANS.admin_dashboard && window.TRANS.admin_dashboard[key]) {
+        return window.TRANS.admin_dashboard[key];
+    }
+    // Try root level
+    if (window.TRANS[key]) return window.TRANS[key];
+
+    return defaultVal;
+}
+
 window.refreshEconomy = async function () {
     try {
         const res = await fetch('/api/admin/data/users', {
@@ -581,14 +595,14 @@ window.refreshEconomy = async function () {
                 <td class="p-2 border border-gray-700 ${statusClass}">${u.status_level.toUpperCase()}</td>
                 <td class="p-2 border border-gray-700 ${u.is_locked ? 'text-red-500' : 'text-gray-500'}">${u.is_locked ? 'LOCKED' : 'OPEN'}</td>
                 <td class="p-2 border border-gray-700 flex flex-wrap gap-1">
-                    <button class="bg-gray-800 text-red-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('fine', ${u.id})">POKUTA</button>
-                    <button class="bg-gray-800 text-green-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('bonus', ${u.id})">ÚPLATEK</button>
-                    <button class="bg-gray-800 text-yellow-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('toggle_lock', ${u.id})">ZÁMEK</button>
+                    <button class="bg-gray-800 text-red-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('fine', ${u.id})">${t('eco_btn_fine', 'POKUTA')}</button>
+                    <button class="bg-gray-800 text-green-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('bonus', ${u.id})">${t('eco_btn_bribe', 'ÚPLATEK')}</button>
+                    <button class="bg-gray-800 text-yellow-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('toggle_lock', ${u.id})">${t('eco_btn_lock', 'ZÁMEK')}</button>
                     <div class="border-l border-gray-600 pl-1 ml-1 flex gap-1">
-                        <button class="text-xs px-1 border border-gray-700 text-gray-500 hover:text-white" onclick="setStatus(${u.id}, 'low')">L</button>
-                        <button class="text-xs px-1 border border-green-900 text-green-500 hover:text-white" onclick="setStatus(${u.id}, 'mid')">M</button>
-                        <button class="text-xs px-1 border border-yellow-900 text-yellow-500 hover:text-white" onclick="setStatus(${u.id}, 'high')">H</button>
-                        <button class="text-xs px-1 border border-pink-900 text-pink-500 hover:text-white" onclick="setStatus(${u.id}, 'party')">P</button>
+                        <button class="text-xs px-1 border border-gray-700 text-gray-500 hover:text-white" onclick="setStatus(${u.id}, 'low')">${t('eco_status_l', 'L')}</button>
+                        <button class="text-xs px-1 border border-green-900 text-green-500 hover:text-white" onclick="setStatus(${u.id}, 'mid')">${t('eco_status_m', 'M')}</button>
+                        <button class="text-xs px-1 border border-yellow-900 text-yellow-500 hover:text-white" onclick="setStatus(${u.id}, 'high')">${t('eco_status_h', 'H')}</button>
+                        <button class="text-xs px-1 border border-pink-900 text-pink-500 hover:text-white" onclick="setStatus(${u.id}, 'party')">${t('eco_status_p', 'P')}</button>
                     </div>
                 </td>
             `;

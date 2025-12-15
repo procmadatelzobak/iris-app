@@ -381,8 +381,21 @@
         <!-- Vztahy Section -->
         <section id="section-vztahy" class="content-section">
             <div class="section-header">
-                <h1>Mapa vztahů</h1>
-                <p class="section-subtitle">Interaktivní síť vazeb mezi postavami</p>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end">
+                    <div>
+                        <h1>Mapa vztahů</h1>
+                        <p class="section-subtitle">Interaktivní síť vazeb mezi postavami</p>
+                    </div>
+                    <div style="text-align:right">
+                        <label for="graphFilter"
+                            style="display:block; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px">Filtrovat
+                            hráče:</label>
+                        <select id="graphFilter" class="audit-select" style="min-width:200px">
+                            <option value="all">Všichni</option>
+                            <!-- Dynamically filled -->
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div class="relations-legend">
@@ -392,14 +405,18 @@
                 <span class="legend-item"><span class="dot dot-romance"></span> Láska</span>
                 <span class="legend-item"><span class="dot dot-plot"></span> Spiknutí</span>
                 <span class="legend-item"><span class="dot dot-rival"></span> Rivalita</span>
+                <span class="legend-item"><span class="dot dot-investigation"></span> Vyšetřování</span>
             </div>
 
-            <div class="relations-container">
-                <svg id="relationsGraph" class="relations-graph"></svg>
+            <div class="relations-container" id="graphContainer">
+                <!-- Canvas and Tooltips injected by graph.js -->
             </div>
 
-            <div class="relations-list" id="relationsList">
-                <!-- Dynamicky naplněno -->
+            <div class="dashboard-card full-width" style="margin-top:2rem">
+                <h3>📋 Seznam vztahů</h3>
+                <div class="relations-list" id="relationsList">
+                    <!-- Dynamicky naplněno -->
+                </div>
             </div>
         </section>
 
@@ -900,7 +917,7 @@
 
                 <div class="dashboard-card full-width">
                     <h3>⚡ Přehled klíčových funkcí (Automaticky generováno)</h3>
-                    
+
                     <!-- Role Filter -->
                     <div class="filter-bar" style="margin-bottom: 0.5rem;">
                         <span style="color: var(--text-muted); margin-right: 0.5rem;">Role:</span>
@@ -912,7 +929,7 @@
                         <button class="filter-btn" data-role-filter="Root">👑 Root</button>
                         <button class="filter-btn" data-role-filter="AI">🧠 AI</button>
                     </div>
-                    
+
                     <!-- Status Filter -->
                     <div class="filter-bar" style="margin-bottom: 1rem;">
                         <span style="color: var(--text-muted); margin-right: 0.5rem;">Stav:</span>
@@ -921,7 +938,7 @@
                         <button class="filter-btn" data-status-filter="PARTIAL">⚠️ Částečně</button>
                         <button class="filter-btn" data-status-filter="TODO">❌ Chybí</button>
                     </div>
-                    
+
                     <div class="roles-table-container" style="max-height: 600px; overflow-y: auto;">
                         <table class="data-table" id="featuresTable">
                             <thead>
@@ -939,8 +956,8 @@
                         </table>
                     </div>
                     <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
-                        <span id="featuresFilterCount">Zobrazeno: -- z --</span> | 
-                        Zdroj: <code>IRIS_LARP/docs/FEATURE_LIST.md</code> | 
+                        <span id="featuresFilterCount">Zobrazeno: -- z --</span> |
+                        Zdroj: <code>IRIS_LARP/docs/FEATURE_LIST.md</code> |
                         Generováno: <span id="featuresGeneratedAt">--</span>
                     </div>
                 </div>
@@ -2019,6 +2036,7 @@
         </div>
     </div>
 
+    <script src="js/graph.js"></script>
     <script src="app.js"></script>
 </body>
 

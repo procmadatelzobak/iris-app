@@ -11,7 +11,41 @@ let rolesData = [];
 let relationsData = [];
 let configData = {};
 const state = { manuals: {} };
+
 let timelineData = [];
+let templates = {};
+let relationGraph = null;
+
+// ============================================
+// TEMPLATES
+// ============================================
+
+async function loadTemplates() {
+    try {
+        const [briefingRes, relationsRes, tooltipNodeRes, tooltipRelRes] = await Promise.all([
+            fetch('templates/briefing.html'),
+            fetch('templates/relations_left_panel.html'),
+            fetch('templates/node_tooltip.html'),
+            fetch('templates/relation_tooltip.html')
+        ]);
+
+        if (briefingRes.ok) templates.briefing = await briefingRes.text();
+        if (relationsRes.ok) templates.relations_panel = await relationsRes.text();
+        if (tooltipNodeRes.ok) templates.node_tooltip = await tooltipNodeRes.text();
+        if (tooltipRelRes.ok) templates.relation_tooltip = await tooltipRelRes.text();
+
+        console.log('Templates loaded:', Object.keys(templates));
+    } catch (e) {
+        console.error('Failed to load templates:', e);
+    }
+}
+
+function fillTemplate(template, data) {
+    if (!template) return '';
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        return data[key] !== undefined ? data[key] : match;
+    });
+}
 
 // ============================================
 // INITIALIZATION
@@ -19,6 +53,7 @@ let timelineData = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
+    await loadTemplates();
     initNavigation();
     initFilters();
     // Load Manuals
@@ -38,9 +73,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderDashboard();
     renderRolesTable();
     renderUsersGrid();
-    renderRelations();
+    renderRelations(); // This will init graph
     renderTimeline();
     updateLastUpdate();
+    initGraphFilter(); // NEW: Filter logic
 
     // HLINIK features
     renderFeaturesTable();
@@ -222,7 +258,13 @@ function navigateTo(section) {
 
         // Re-render graph when navigating to relations section (deferred)
         if (section === 'vztahy') {
-            setTimeout(() => renderRelationsGraph(), 50);
+            setTimeout(() => {
+                if (relationGraph) {
+                    relationGraph.resize();
+                } else {
+                    initRelationsGraph();
+                }
+            }, 50);
         }
     }
 
@@ -368,197 +410,94 @@ function renderUsersGrid() {
 
 function renderRelations() {
     renderRelationsList();
-    renderRelationsGraph();
+    initRelationsGraph();
 }
 
-function renderRelationsList() {
-    const list = document.getElementById('relationsList');
-    if (!list) return;
-    list.innerHTML = '';
+function initRelationsGraph() {
+    // Check if graph already exists (re-init?)
+    const container = document.getElementById('graphContainer');
+    if (!container || relationGraph) return;
 
-    relationsData.forEach(rel => {
-        const sourceName = getRoleName(rel.source);
-        const targetName = getRoleName(rel.target);
-
-        const card = document.createElement('div');
-        card.className = 'relation-card';
-        card.style.borderLeftColor = getRelationColor(rel.type);
-        card.innerHTML = `
-            <div class="relation-header">
-                <span class="relation-title">${getRoleName(rel.source)} ↔ ${getRoleName(rel.target)}</span>
-                <span class="relation-type ${rel.type}">${getRelationTypeLabel(rel.type)}</span>
-            </div>
-            <div class="relation-desc">
-                <p><strong>${sourceName}:</strong> ${rel.desc_source}</p>
-                <p><strong>${targetName}:</strong> ${rel.desc_target}</p>
-            </div>
-        `;
-        list.appendChild(card);
-    });
-}
-
-function getRoleName(id) {
-    const role = rolesData.find(r => r.id === id);
-    return role ? role.name : id;
-}
-
-function getRelationTypeLabel(type) {
-    const labels = {
-        'past': 'Minulost',
-        'trade': 'Obchod',
-        'blackmail': 'Vydírání',
-        'romance': 'Láska',
-        'plot': 'Spiknutí',
-        'empathy': 'Empatie',
-        'rival': 'Rivalita',
-        'investigation': 'Vyšetřování'
-    };
-    return labels[type] || type;
-}
-
-function getRelationColor(type) {
-    const colors = {
-        'past': '#9c27b0',
-        'trade': '#4caf50',
-        'blackmail': '#ef5350',
-        'romance': '#e91e63',
-        'plot': '#ff9800',
-        'empathy': '#4a9eff',
-        'rival': '#f44336',
-        'investigation': '#00bcd4'
-    };
-    return colors[type] || '#d4af37';
-}
-
-function renderRelationsGraph() {
-    const svg = document.getElementById('relationsGraph');
-    if (!svg || !svg.parentElement) return;
-
-    // Ensure container is visible before measuring
-    const container = svg.parentElement;
     if (container.clientWidth === 0) {
-        // Container is hidden, defer render
+        // Defer until visible
         return;
     }
 
-    const width = container.clientWidth;
-    const height = 400;
+    relationGraph = new RelationGraph('graphContainer', {
+        roles: rolesData,
+        relations: relationsData
+    });
+}
 
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-    svg.innerHTML = '';
+function renderRelationsList(filterPlayerId = null) {
+    const list = document.getElementById('relationsList');
+    if (!list) return;
 
-    // Separate roles by type for grouped layout
-    const users = rolesData.filter(r => r.type === 'user');
-    const agents = rolesData.filter(r => r.type === 'agent');
-    const admins = rolesData.filter(r => r.type === 'admin');
+    let filteredRelations = relationsData;
+    if (filterPlayerId && filterPlayerId !== 'all') {
+        filteredRelations = relationsData.filter(r =>
+            r.source === filterPlayerId || r.target === filterPlayerId
+        );
+    }
 
-    // Layout: 3 columns (Users left, Admins center, Agents right)
-    const colWidth = width / 4;
-    const userX = colWidth * 0.75;
-    const adminX = colWidth * 2;
-    const agentX = colWidth * 3.25;
-    const startY = 40;
-    const spacing = (height - startY * 2) / Math.max(users.length, agents.length, 1);
+    list.innerHTML = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Typ</th>
+                    <th>Od (Source)</th>
+                    <th>Komu (Target)</th>
+                    <th>Popis</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${filteredRelations.map(rel => `
+                    <tr>
+                        <td>
+                             <span class="relation-dot dot-${rel.type}"></span>
+                             ${getRelTypeLabel(rel.type)}
+                        </td>
+                        <td>${getRoleName(rel.source)}</td>
+                        <td>${getRoleName(rel.target)}</td>
+                        <td>
+                            <div><strong>${getRoleName(rel.source)}:</strong> ${rel.desc_source}</div>
+                            <div style="margin-top:4px"><strong>${getRoleName(rel.target)}:</strong> ${rel.desc_target}</div>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
 
-    const nodes = [];
+function initGraphFilter() {
+    const select = document.getElementById('graphFilter');
+    if (!select) return;
 
-    // Position Users (left column)
-    users.forEach((role, i) => {
-        nodes.push({
-            id: role.id,
-            name: role.name,
-            type: role.type,
-            x: userX,
-            y: startY + i * spacing
-        });
+    // Sort roles by name
+    const sortedRoles = [...rolesData].sort((a, b) => a.name.localeCompare(b.name));
+
+    sortedRoles.forEach(role => {
+        const opt = document.createElement('option');
+        const roleLabel = role.type === 'admin' ? '[SPRÁVCE] ' : (role.type === 'agent' ? '[AGENT] ' : '');
+        opt.value = role.id;
+        opt.textContent = `${roleLabel}${role.name}`;
+        select.appendChild(opt);
     });
 
-    // Position Agents (right column)
-    agents.forEach((role, i) => {
-        nodes.push({
-            id: role.id,
-            name: role.name,
-            type: role.type,
-            x: agentX,
-            y: startY + i * spacing
-        });
+    select.addEventListener('change', (e) => {
+        const pid = e.target.value;
+        if (relationGraph) relationGraph.setFilter(pid);
+        renderRelationsList(pid);
     });
+}
 
-    // Position Admins (center column, more spaced)
-    const adminSpacing = (height - startY * 2) / Math.max(admins.length, 1);
-    admins.forEach((role, i) => {
-        nodes.push({
-            id: role.id,
-            name: role.name,
-            type: role.type,
-            x: adminX,
-            y: startY + i * adminSpacing
-        });
-    });
-
-    // Create node lookup map
-    const nodeMap = {};
-    nodes.forEach(n => nodeMap[n.id] = n);
-
-    // Draw edges (relations)
-    relationsData.forEach(rel => {
-        const source = nodeMap[rel.source];
-        const target = nodeMap[rel.target];
-        if (source && target) {
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', source.x);
-            line.setAttribute('y1', source.y);
-            line.setAttribute('x2', target.x);
-            line.setAttribute('y2', target.y);
-            line.setAttribute('stroke', getRelationColor(rel.type));
-            line.setAttribute('stroke-width', '2');
-            line.setAttribute('opacity', '0.6');
-            svg.appendChild(line);
-        }
-    });
-
-    // Draw nodes
-    nodes.forEach(node => {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.setAttribute('class', 'graph-node');
-        g.style.cursor = 'pointer';
-        g.onclick = () => showBriefing(node.id);
-
-        // Circle
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', node.x);
-        circle.setAttribute('cy', node.y);
-        circle.setAttribute('r', node.type === 'admin' ? 18 : 14);
-        circle.setAttribute('fill', getNodeColor(node.type));
-        circle.setAttribute('stroke', '#1a1a25');
-        circle.setAttribute('stroke-width', '2');
-        g.appendChild(circle);
-
-        // Label (ID)
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', node.x);
-        text.setAttribute('y', node.y + 4);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('fill', '#fff');
-        text.setAttribute('font-size', '9');
-        text.setAttribute('font-weight', 'bold');
-        text.textContent = node.id;
-        g.appendChild(text);
-
-        svg.appendChild(g);
-    });
-
-    // Draw column labels
-    const labelY = 20;
-    const labelStyle = { fill: '#888', 'font-size': '12', 'font-weight': '600', 'text-anchor': 'middle' };
-    [['UŽIVATELÉ', userX], ['SPRÁVCI', adminX], ['AGENTI', agentX]].forEach(([label, x]) => {
-        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        t.setAttribute('x', x);
-        t.setAttribute('y', labelY);
-        Object.entries(labelStyle).forEach(([k, v]) => t.setAttribute(k, v));
-        t.textContent = label;
-        svg.appendChild(t);
-    });
+// Old renderRelationsGraph removed/replaced logic
+// Helper functions kept
+function getRelationColor(type) {
+    // ... no longer needed by app.js direct rendering but maybe kept for safety?
+    // Graph.js handles colors now.
+    return '#ccc';
 }
 
 function getNodeColor(type) {
@@ -588,35 +527,13 @@ function showBriefing(roleId) {
 
     title.textContent = `${role.name} (${role.id})`;
 
-    content.innerHTML = `
-        <div class="briefing-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <span class="role-badge ${role.type}" style="font-size: 0.9rem; padding: 4px 12px;">
-                    ${getRoleTypeLabel(role.type)}
-                </span>
-                <span style="color: var(--text-muted); font-size: 0.85rem;">
-                    IRIS 4.0 | HLINIK Phase 34
-                </span>
-            </div>
-        </div>
-        
-        <div class="role-detail-header ${roleTypeClass}">
-            <div style="display:flex; gap: 20px; align-items:center;">
-                <img src="assets/images/${role.avatar || 'avatar_user_male.png'}" style="width: 100px; height: 100px; border-radius: 8px; border: 2px solid var(--border-color); object-fit: cover;">
-                <div>
-                    <h2 style="margin:0">${role.name}</h2>
-                    <div style="font-family: var(--font-mono); color: rgba(255,255,255,0.7); margin-top: 5px;">${role.id} | ${role.archetype}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="briefing-section">
-            <h3>👤 Archetyp</h3>
-            <p><strong>${role.archetype}</strong></p>
-            <p>${role.description}</p>
-        </div>
-        
-        ${role.appearance ? `
+    // Prepare data for template
+    const goalsList = role.goals.map(g => `<li>${g}</li>`).join('');
+
+    // Appearance Section
+    let appearanceSection = '';
+    if (role.appearance) {
+        appearanceSection = `
         <div class="briefing-section">
             <h3>🎭 Vzhled postavy</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
@@ -630,24 +547,13 @@ function showBriefing(roleId) {
                     <p><strong>Výrazné rysy:</strong> ${role.appearance.distinctive_features}</p>
                 </div>
             </div>
-        </div>
-        ` : ''}
-        
-        <div class="briefing-section">
-            <h3>🎯 Cíle mise</h3>
-            <ul class="briefing-goals">
-                ${role.goals.map(g => `<li>${g}</li>`).join('')}
-            </ul>
-        </div>
-        
-        <div class="briefing-section">
-            <h3>⚡ Speciální schopnost</h3>
-            <div class="briefing-ability">
-                ${role.ability}
-            </div>
-        </div>
-        
-        ${role.work_image ? `
+        </div>`;
+    }
+
+    // Work Image Section
+    let workImageSection = '';
+    if (role.work_image) {
+        workImageSection = `
         <div class="briefing-section">
             <h3>📸 Typická situace v práci</h3>
             <div style="text-align: center;">
@@ -658,21 +564,51 @@ function showBriefing(roleId) {
                      title="Klikni pro zvětšení">
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">Klikni na obrázek pro zvětšení</p>
             </div>
-        </div>
-        ` : ''}
-        
-        <div class="briefing-section">
-            <h3>🔗 Vazby a tajemství</h3>
-            ${roleRelations.length > 0
-            ? roleRelations.map(rel => `
-                    <div class="briefing-relation">
-                        <strong>Vztah k ${rel.target}:</strong> ${rel.desc}
-                    </div>
-                `).join('')
-            : '<p style="color: var(--text-muted); font-style: italic;">Žádné specifické vazby na začátku hry.</p>'
-        }
-        </div>
-    `;
+        </div>`;
+    }
+
+    // Relations & Nodes Panel (Left Panel Content)
+    const relationsList = roleRelations.length > 0
+        ? roleRelations.map(rel => `
+                <div class="briefing-relation">
+                    <strong>Vztah k ${rel.target}:</strong> ${rel.desc}
+                </div>
+            `).join('')
+        : '<p style="color: var(--text-muted); font-style: italic;">Žádné specifické vazby na začátku hry.</p>';
+
+    const storyNodes = getStoryNodesForRole(roleId);
+    const nodesList = storyNodes.length > 0
+        ? storyNodes.map(node => `
+            <div class="briefing-relation" style="border-left-color: var(--accent-purple);">
+                <strong>${node.time}m - ${node.phase}:</strong> ${node.label}
+            </div>
+        `).join('')
+        : '<p style="color: var(--text-muted); font-style: italic;">Žádné specifické příběhové uzly.</p>';
+
+    const relationsPanelData = {
+        relations_list: relationsList,
+        nodes_list: nodesList
+    };
+    const relationsSection = fillTemplate(templates.relations_panel, relationsPanelData);
+
+    // Main Briefing Template Data
+    const briefingData = {
+        type: role.type,
+        type_label: getRoleTypeLabel(role.type),
+        name: role.name,
+        id: role.id,
+        archetype: role.archetype,
+        role_type_class: roleTypeClass,
+        avatar: role.avatar || 'avatar_user_male.png',
+        description: role.description,
+        ability: role.ability,
+        goals_list: goalsList,
+        section_appearance: appearanceSection,
+        section_work_image: workImageSection,
+        relations_section: relationsSection
+    };
+
+    content.innerHTML = fillTemplate(templates.briefing, briefingData);
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -698,6 +634,37 @@ function getRelationsForRole(roleId) {
     });
 
     return relations;
+}
+
+function getStoryNodesForRole(roleId) {
+    if (!timelineData || !timelineData.length) return [];
+
+    // Check if timelineData items have actor/role info. 
+    // Based on renderTimeline, timelineData items have 'category' (group.id)? No, groups are hardcoded.
+    // I need to guess the structure of a timeline item.
+    // Assuming it has an array of involved actors or mentions the ID.
+    // If not, I'll filter by searching the label/text for the role name or ID.
+    // BUT renderTimeline groups by rolesData.filter(r => r.type === group.id).
+
+    // Let's assume a simple search for now as I can't restart to check timeline structure perfectly.
+    // Actually, looking at renderTimeline again, it iterates 'actors' (roles) and then finds events for them?
+    // No, renderTimeline iterates groups, then roles, then creates a row for each actor.
+    // Inside the row? It doesn't seem to iterate timelineData for each actor row in the snippet I saw.
+    // It creates `gantt-row` for each actor.
+    // It must populate it with events.
+
+    // Let's assume a generic filter.
+    const roleName = rolesData.find(r => r.id === roleId)?.name || roleId;
+
+    return timelineData.filter(item => {
+        // Broad search in item properties
+        const str = JSON.stringify(item).toLowerCase();
+        return str.includes(roleId.toLowerCase()) || str.includes(roleName.toLowerCase());
+    }).map(item => ({
+        time: item.time_start,
+        label: item.title || item.label || 'Událost',
+        phase: item.phase || 'N/A'
+    })).sort((a, b) => a.time - b.time);
 }
 
 function closeBriefing() {

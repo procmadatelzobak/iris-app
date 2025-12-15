@@ -2272,3 +2272,136 @@ a:hover {
     scrollbar-width: thin;
     scrollbar-color: var(--border-accent) var(--bg-primary);
 }
+/* =========================================
+   RELATIONS GRAPH & TOOLTIPS
+   ========================================= */
+
+.relations-container {
+    width: 100%;
+    height: 600px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    outline: none;
+}
+
+/* Tooltip Container */
+.graph-tooltip-container {
+    position: absolute;
+    z-index: 100;
+    pointer-events: none;
+    display: none;
+    /* Transition for smooth movement if desired, but can feel laggy */
+    /* transition: top 0.1s, left 0.1s; */
+}
+
+/* Node Tooltip Card */
+.node-tooltip-card {
+    background: rgba(18, 18, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    width: 280px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.node-tooltip-card.admin { border-left: 3px solid var(--color-admin); }
+.node-tooltip-card.agent { border-left: 3px solid var(--color-agent); }
+.node-tooltip-card.user { border-left: 3px solid var(--color-user); }
+
+.node-tooltip-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.node-tooltip-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    object-fit: cover;
+}
+
+.node-tooltip-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.node-tooltip-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.node-tooltip-body {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.node-tooltip-ability {
+    margin-top: 4px;
+    color: var(--accent-gold);
+}
+
+/* Relation Tooltip Card */
+.relation-tooltip-card {
+    background: rgba(18, 18, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    width: 320px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.relation-tooltip-header {
+    margin-bottom: 8px;
+}
+
+.relation-tooltip-pair {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.relation-tooltip-desc p {
+    margin: 4px 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.relation-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+/* Reuse dot colors for badges background with opacity */
+.relation-type-badge.past { background: rgba(156, 39, 176, 0.2); color: #ce93d8; }
+.relation-type-badge.trade { background: rgba(76, 175, 80, 0.2); color: #81c784; }
+.relation-type-badge.blackmail { background: rgba(239, 83, 80, 0.2); color: #ef9a9a; }
+.relation-type-badge.romance { background: rgba(233, 30, 99, 0.2); color: #f48fb1; }
+.relation-type-badge.plot { background: rgba(255, 152, 0, 0.2); color: #ffcc80; }
+.relation-type-badge.rival { background: rgba(244, 67, 54, 0.2); color: #e57373; }
+.relation-type-badge.investigation { background: rgba(0, 188, 212, 0.2); color: #80deea; }

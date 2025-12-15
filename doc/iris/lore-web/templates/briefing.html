@@ -1,0 +1,48 @@
+<div class="briefing-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <span class="role-badge {{type}}" style="font-size: 0.9rem; padding: 4px 12px;">
+            {{type_label}}
+        </span>
+        <span style="color: var(--text-muted); font-size: 0.85rem;">
+            IRIS 4.0 | HLINIK Phase 34
+        </span>
+    </div>
+</div>
+
+<div class="role-detail-header {{role_type_class}}">
+    <div style="display:flex; gap: 20px; align-items:center;">
+        <img src="assets/images/{{avatar}}"
+            style="width: 100px; height: 100px; border-radius: 8px; border: 2px solid var(--border-color); object-fit: cover;">
+        <div>
+            <h2 style="margin:0">{{name}}</h2>
+            <div style="font-family: var(--font-mono); color: rgba(255,255,255,0.7); margin-top: 5px;">{{id}} |
+                {{archetype}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="briefing-section">
+    <h3>👤 Archetyp</h3>
+    <p><strong>{{archetype}}</strong></p>
+    <p>{{description}}</p>
+</div>
+
+{{section_appearance}}
+
+<div class="briefing-section">
+    <h3>🎯 Cíle mise</h3>
+    <ul class="briefing-goals">
+        {{goals_list}}
+    </ul>
+</div>
+
+<div class="briefing-section">
+    <h3>⚡ Speciální schopnost</h3>
+    <div class="briefing-ability">
+        {{ability}}
+    </div>
+</div>
+
+{{section_work_image}}
+
+{{relations_section}}

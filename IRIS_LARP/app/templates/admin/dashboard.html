@@ -454,6 +454,10 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    // Inject backend translations for JS usage
+    window.TRANS = {{ translations | tojson | safe }};
+</script>
 <script src="/static/js/socket_client.js?v=30.5"></script>
 <script src="/static/js/admin_ui.js?v=30.5"></script>
 {% endblock %}
