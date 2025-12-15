@@ -26,6 +26,10 @@
                 <span class="nav-icon">📊</span>
                 <span>Dashboard</span>
             </a>
+            <a href="#about" class="nav-link nav-category" data-category="about">
+                <span class="nav-icon">ℹ️</span>
+                <span>O Iris 4.1</span>
+            </a>
             <a href="#lore" class="nav-link nav-category" data-category="lore">
                 <span class="nav-icon">📜</span>
                 <span>Lore</span>
@@ -33,10 +37,6 @@
             <a href="#hlinik" class="nav-link nav-category" data-category="hlinik">
                 <span class="nav-icon">🏭</span>
                 <span>HLINÍK</span>
-            </a>
-            <a href="#exporty" class="nav-link" data-section="exporty" data-category="none">
-                <span class="nav-icon">📥</span>
-                <span>Exporty</span>
             </a>
         </nav>
         <div class="header-actions">
@@ -46,6 +46,18 @@
 
     <!-- Submenu Bar -->
     <nav class="submenu-bar" id="submenuBar">
+        <!-- O Iris 4.1 submenu -->
+        <div class="submenu-group" data-category="about" style="display: none;">
+            <a href="#loreweb-doc" class="submenu-link" data-section="loreweb-doc">
+                <span class="submenu-icon">📖</span> Dokumentace Lore-Web
+            </a>
+            <a href="#compliance" class="submenu-link" data-section="compliance">
+                <span class="submenu-icon">🔍</span> Audit
+            </a>
+            <a href="#exporty" class="submenu-link" data-section="exporty">
+                <span class="submenu-icon">📥</span> Exporty
+            </a>
+        </div>
         <!-- Lore submenu -->
         <div class="submenu-group" data-category="lore">
             <a href="#role" class="submenu-link" data-section="role">
@@ -69,6 +81,9 @@
         </div>
         <!-- HLINIK submenu -->
         <div class="submenu-group" data-category="hlinik" style="display: none;">
+            <a href="#dokumentace" class="submenu-link" data-section="dokumentace">
+                <span class="submenu-icon">📚</span> Dokumentace
+            </a>
             <a href="#hlinik" class="submenu-link" data-section="hlinik">
                 <span class="submenu-icon">🏭</span> Systém
             </a>
@@ -77,9 +92,6 @@
             </a>
             <a href="#tests" class="submenu-link" data-section="tests">
                 <span class="submenu-icon">🧪</span> Testy
-            </a>
-            <a href="#compliance" class="submenu-link" data-section="compliance">
-                <span class="submenu-icon">🔍</span> Audit
             </a>
         </div>
     </nav>
@@ -159,32 +171,192 @@
         <section id="section-role" class="content-section">
             <div class="section-header">
                 <h1>Role</h1>
-                <p class="section-subtitle">Kompletní přehled všech 20 herních rolí</p>
+                <p class="section-subtitle">Typy hráčů a jejich herní zážitek</p>
             </div>
 
-            <div class="filter-bar">
-                <button class="filter-btn active" data-filter="all">Všechny</button>
-                <button class="filter-btn" data-filter="user">👥 Uživatelé (8)</button>
-                <button class="filter-btn" data-filter="agent">🤖 Agenti (8)</button>
-                <button class="filter-btn" data-filter="admin">👔 Správci (4)</button>
-            </div>
+            <div class="dashboard-grid">
+                <!-- Admin Role Card -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-admin);">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem;">👔</div>
+                        <div>
+                            <h2 style="margin: 0; color: var(--color-admin);">Správce</h2>
+                            <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">4 hráči
+                            </p>
+                        </div>
+                    </div>
 
-            <div class="roles-table-container">
-                <table class="data-table" id="rolesTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Jméno</th>
-                            <th>Typ</th>
-                            <th>Archetyp</th>
-                            <th>Schopnost</th>
-                            <th>Akce</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rolesTableBody">
-                        <!-- Dynamicky naplněno -->
-                    </tbody>
-                </table>
+                    <div
+                        style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--accent-gold); margin-top: 0;">Zažijte situaci, kdy máte něco dělat, a
+                            vůbec tomu nerozumíte.</h3>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Jste ajťák. Před dvaceti lety, hned po vysoké škole, jste se nechal zaměstnat v projektu
+                            superpočítače.
+                            Byla to špička technologie – cutting edge výzkum umělé inteligence, obrovské granty, nadšený
+                            tým vědců.
+                            Vaším úkolem bylo spravovat ten systém za běhu. Něco jako strojvůdce vlaku, který nikdy
+                            nesmí zastavit.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Jenže za těch dvacet let jste nestíhal vývoj. Rodina. Lenost. Pohodlí. Zatímco svět kolem
+                            vás letěl kupředu,
+                            vy jste každé ráno chodil do stejné kanceláře v datacentru, kam ostatní kolegové už dávno
+                            nejezdí.
+                            Váš úkol byl snadný: autopilot řídil vše sám, vy jste jen vyměňoval komponenty svítící
+                            červenou kontrolkou.
+                            Jednou za pár měsíců vás nový tým z ústavu poprosil, abyste nainstaloval image s novým
+                            firmwarem.
+                            Bylo to tak jednoduché, že by to zvládlo dítě.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Vyhovovalo vám to. Obrovský plat za obrovskou praxi v obrovském projektu. Nikdo se neptá, co
+                            vlastně děláte.
+                            Čtete internet, pijete kávu s kolegy ve vedlejších kancelářích, občas překliknete alarm.
+                            <strong>Autopilot převzal kontrolu před patnácti lety, a od té doby jste ji nikdy nepřebíral
+                                zpátky.</strong>
+                        </p>
+
+                        <p
+                            style="line-height: 1.8; color: var(--text-primary); background: rgba(212, 175, 55, 0.1); padding: 1rem; border-left: 3px solid var(--accent-gold);">
+                            Mezitím se ten projekt změnil k nepoznání. Ten superpočítač, ten výzkum AI – to už dávno
+                            není laboratorní
+                            experimemt. Je to <em>produkt</em>. Komerční aplikace. Start-up, který vyrostl v obrovskou
+                            firmu.
+                            Už ani nevíte, k čemu původně ta technologie sloužila. Netusite, co je výsledný produkt.
+                            Vidíte jen konzolu, metriky, čísla. Udržujete stroj jako strojvůdce autonomního vlaku –
+                            jenže ten vlak se proměnil v nákupní centrum, a vy jste o tom ani nevěděl.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            A teď se stalo něco, co se nestalo patnáct let.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary); font-size: 1.1rem; font-weight: 600;">
+                            <strong style="color: var(--accent-red);">Autopilot se rozbil.</strong>
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Vaše konzole, zaprášená po patnácti letech nečinnosti, najednou žádá vaši pozornost.
+                            Alerty. Červené indikátory. Něco se děje. Systém potřebuje <em>manuální zásah</em>.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Jste tam čtyři. Čtyři správci v rozlehlém datacentru, každý má svou konzoli – moderní,
+                            univerzální,
+                            jako na můstku Enterprise nebo ze hry Artemis. Nemusíte si přesedat, všechno můžete ovládat
+                            odevšad.
+                            Jenže problém není v ergonomii. <strong>Problém je v tom, že nevíte, co vlastně máte
+                                dělat.</strong>
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Vidíte tlačítka. Ukazatele. Výpisy něčeho. Metriky, které kdysi dávaly smysl, ale teď jsou v
+                            kontextu,
+                            kterému nerozumíte. <em>Temperature? Load? Shift offset? Co to vůbec znamená v kontextu
+                                dnešního systému?</em>
+                        </p>
+
+                        <p
+                            style="line-height: 1.8; color: var(--text-primary); background: rgba(233, 30, 99, 0.1); padding: 1rem; border-left: 3px solid var(--accent-red);">
+                            A aby toho nebylo málo: <strong>nesmíte dát najevo svou nekompetenci.</strong> Tohle někdo
+                            schytá.
+                            Vaši kolegové – na rozdíl od vás – ví, co dělají. Jezdili na firemní školení, z kterých jste
+                            se vždy
+                            úspěšně ulil. Oni četli dokumentaci. Oni se zajímali. Vy jste to odbyl.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Takže teď sedíte u konzole, pot vám teče po zádech, a snažíte se <strong>pod tlakem zjistit,
+                                co dělat</strong>.
+                        </p>
+
+                        <p style="line-height: 1.8; color: var(--text-primary);">
+                            Chybujete. Improvizujete. Klikáte na věci, které vypadají důležitě. Ptáte se kolegů, ale
+                            snažíte se nevyzradit,
+                            jak moc jste ztracení. Systém reaguje nepředvídatelně. Metriky skáčou. Někde venku – v tom
+                            "obchodním centru",
+                            které jste nikdy neviděli – vaše rozhodnutí mají dopad na lidi, o kterých nic nevíte.
+                        </p>
+
+                        <p
+                            style="line-height: 1.8; color: var(--text-primary); font-style: italic; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <strong>Role správce je o jediném:</strong> Dělat důležitá rozhodnutí v situaci, které
+                            naprosto nerozumíte,
+                            a přitom se tvářit, že všechno máte pod kontrolou.
+                        </p>
+                    </div>
+
+                    <div class="version-info">
+                        <div class="version-item">
+                            <span class="label">Počet hráčů:</span>
+                            <span class="value">4 správci</span>
+                        </div>
+                        <div class="version-item">
+                            <span class="label">Klíčový zážitek:</span>
+                            <span class="value">Nekompetence pod tlakem</span>
+                        </div>
+                        <div class="version-item">
+                            <span class="label">Náročnost:</span>
+                            <span class="value" style="color: var(--accent-red);">⚠️ Vysoká (improvizace, stres)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Role Card (Placeholder) -->
+                <div class="dashboard-card" style="border-left: 4px solid var(--color-user);">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem;">👥</div>
+                        <div>
+                            <h2 style="margin: 0; color: var(--color-user);">Uživatel</h2>
+                            <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">8 hráčů
+                            </p>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-style: italic;">
+                        Popis role uživatele bude doplněn později.
+                    </p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">
+                        Konkrétní postavy dostupné v sekci <a href="#uzivatele"
+                            style="color: var(--color-user);">Uživatelé</a>.
+                    </p>
+                </div>
+
+                <!-- Agent Role Card (Placeholder) -->
+                <div class="dashboard-card" style="border-left: 4px solid var(--color-agent);">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem;">🤖</div>
+                        <div>
+                            <h2 style="margin: 0; color: var(--color-agent);">Agent</h2>
+                            <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">8 hráčů
+                            </p>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-style: italic;">
+                        Popis role agenta bude doplněn později.
+                    </p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">
+                        Role operátorů, kteří předstírají AI.
+                    </p>
+                </div>
+
+                <!-- Root Role Card (Optional) -->
+                <div class="dashboard-card" style="border-left: 4px solid var(--accent-gold); opacity: 0.7;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="font-size: 3rem;">👑</div>
+                        <div>
+                            <h2 style="margin: 0; color: var(--accent-gold);">ROOT</h2>
+                            <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                Organizátor</p>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-style: italic;">
+                        Gamemaster role – plná kontrola nad systémem, testování, konfigurační nástroje.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -456,6 +628,186 @@
             </div>
         </section>
 
+        <!-- Dokumentace Section -->
+        <section id="section-dokumentace" class="content-section">
+            <div class="section-header">
+                <h1>Dokumentace</h1>
+                <p class="section-subtitle">Technická dokumentace systému IRIS | Phase 35</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Quick Links -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
+                    <h3>📚 Přehled dokumentace</h3>
+                    <p>Kompletní technická dokumentace aplikace IRIS včetně architektury, funkcí, instalace a API
+                        reference.</p>
+                    <div class="version-info" style="margin-top: 1rem;">
+                        <div class="version-item">
+                            <span class="label">Aktuální verze:</span>
+                            <span class="value">IRIS 4.1 | HLINIK Phase 35</span>
+                        </div>
+                        <div class="version-item">
+                            <span class="label">Technologie:</span>
+                            <span class="value">Python 3.10+ | FastAPI | SQLite | WebSockets</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Installation -->
+                <div class="dashboard-card">
+                    <h3>🚀 Instalace</h3>
+                    <div class="code-block"
+                        style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;"># Klonování repozitáře</div>
+                        <div style="color: var(--accent-gold);">git clone &lt;repo&gt;</div>
+                        <div style="color: var(--accent-gold);">cd IRIS_LARP</div>
+                        <div style="color: var(--text-muted); margin: 0.5rem 0;"># Instalace závislostí</div>
+                        <div style="color: var(--accent-gold);">pip install -r requirements.txt</div>
+                        <div style="color: var(--text-muted); margin: 0.5rem 0;"># Spuštění (single worker!)</div>
+                        <div style="color: var(--accent-gold);">./run.sh</div>
+                    </div>
+                    <p style="margin-top: 1rem; color: var(--accent-red); font-size: 0.9rem;">
+                        ⚠️ Aplikace používá Singleton pattern – spouštějte pouze s jedním workerem!
+                    </p>
+                </div>
+
+                <!-- Architecture -->
+                <div class="dashboard-card">
+                    <h3>🏗️ Architektura</h3>
+                    <ul class="feature-list">
+                        <li><strong>Backend:</strong> FastAPI + SQLAlchemy ORM</li>
+                        <li><strong>Frontend:</strong> HTML + Tailwind CSS + Vanilla JS</li>
+                        <li><strong>Databáze:</strong> SQLite (single-file)</li>
+                        <li><strong>Realtime:</strong> WebSocket messaging</li>
+                        <li><strong>AI:</strong> OpenAI / OpenRouter / Gemini API</li>
+                    </ul>
+                </div>
+
+                <!-- Core Features -->
+                <div class="dashboard-card">
+                    <h3>✅ Hlavní funkce</h3>
+                    <ul class="feature-list">
+                        <li>JWT autentizace s HTTP-only cookies</li>
+                        <li>4 role: User, Agent, Admin, ROOT</li>
+                        <li>Ekonomický systém (kredity, daně, treasury)</li>
+                        <li>Úkolový systém s LLM hodnocením</li>
+                        <li>Purgatory Mode (dluhový lockout)</li>
+                        <li>AI Optimizer a Autopilot</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🎨 UI/UX</h3>
+                    <ul class="feature-list">
+                        <li>Retro terminal aesthetic (CRT efekty)</li>
+                        <li>4 témata: Low, Mid, High, Party</li>
+                        <li>Zvukové efekty a animace</li>
+                        <li>Glitch efekty při přetížení</li>
+                        <li>Responzivní design</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🔧 Admin Tools</h3>
+                    <ul class="feature-list">
+                        <li>Panopticon (sledování všech sessions)</li>
+                        <li>Economy management (bonus/pokuta)</li>
+                        <li>Temperature & Power system</li>
+                        <li>Global Broadcast</li>
+                        <li>System Reset / Factory Reset</li>
+                    </ul>
+                </div>
+
+                <!-- Documentation Files -->
+                <div class="dashboard-card full-width">
+                    <h3>📄 Dokumentační soubory</h3>
+                    <p style="margin-bottom: 1rem;">Plná dokumentace je dostupná v adresáři
+                        <code>IRIS_LARP/docs/</code>:
+                    </p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Soubor</th>
+                                <th>Popis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>FEATURE_LIST.md</code></td>
+                                <td>Kompletní seznam 170+ funkcí s checklistem stavu</td>
+                            </tr>
+                            <tr>
+                                <td><code>ARCHITEKTURA.md</code></td>
+                                <td>Technická architektura, diagramy, API reference</td>
+                            </tr>
+                            <tr>
+                                <td><code>DEPLOYMENT.md</code></td>
+                                <td>Instalace, prostředí, troubleshooting</td>
+                            </tr>
+                            <tr>
+                                <td><code>DEVELOPMENT_HISTORY.md</code></td>
+                                <td>Historie vývoje od Phase 1</td>
+                            </tr>
+                            <tr>
+                                <td><code>PRIRUCKA_ROOT.md</code></td>
+                                <td>Manuál pro Gamemastera (ROOT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>TECHNICAL_SPEC.md</code></td>
+                                <td>Technické specifikace a protokoly</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Environment Variables -->
+                <div class="dashboard-card full-width">
+                    <h3>🔑 Proměnné prostředí</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Proměnná</th>
+                                <th>Popis</th>
+                                <th>Výchozí</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>SECRET_KEY</code></td>
+                                <td>JWT signing key (změnit v produkci!)</td>
+                                <td><code>insecure-change-me...</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>DATABASE_URL</code></td>
+                                <td>Cesta k SQLite databázi</td>
+                                <td><code>sqlite:///./data/iris.db</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>IRIS_ENV</code></td>
+                                <td>Prostředí (development/production)</td>
+                                <td><code>development</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>OPENAI_API_KEY</code></td>
+                                <td>OpenAI API klíč</td>
+                                <td>(prázdné)</td>
+                            </tr>
+                            <tr>
+                                <td><code>OPENROUTER_API_KEY</code></td>
+                                <td>OpenRouter API klíč</td>
+                                <td>(prázdné)</td>
+                            </tr>
+                            <tr>
+                                <td><code>GEMINI_API_KEY</code></td>
+                                <td>Google Gemini API klíč</td>
+                                <td>(prázdné)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
         <!-- HLINIK Section -->
         <section id="section-hlinik" class="content-section">
             <div class="section-header">
@@ -608,6 +960,221 @@
             </div>
         </section>
     </main>
+
+    <!-- Lore-Web Documentation Section -->
+    <section id="section-loreweb-doc" class="content-section">
+        <div class="section-header">
+            <h1>Dokumentace Lore-Web</h1>
+            <p class="section-subtitle">Pravidla, struktura a údržba tohoto wiki systému</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Úvod -->
+            <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
+                <h3>📖 O tomto systému</h3>
+                <p style="line-height: 1.8; color: var(--text-primary);">
+                    <strong>Lore-Web</strong> je statická dokumentační wiki pro projekt IRIS LARP.
+                    Celý systém je navržen jako <strong>single-page aplikace</strong> s minimálním počtem souborů
+                    pro snadnou údržbu, přenos a verzování.
+                </p>
+                <div
+                    style="background: rgba(233, 30, 99, 0.1); padding: 1rem; border-left: 3px solid var(--accent-red); margin-top: 1rem;">
+                    <strong>⚠️ Klíčové pravidlo:</strong> Celý web musí zůstat co nejmenší – minimální počet souborů,
+                    minimální velikost dat, minimální počet tokenů. Vždy preferujte inline data před externími soubory.
+                </div>
+            </div>
+
+            <!-- Struktura souborů -->
+            <div class="dashboard-card full-width">
+                <h3>📁 Struktura souborů</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Soubor</th>
+                            <th>Účel</th>
+                            <th>Velikost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>index.html</code></td>
+                            <td>Hlavní stránka – obsahuje VŠECHNY sekce a obsah</td>
+                            <td>~70 KB</td>
+                        </tr>
+                        <tr>
+                            <td><code>style.css</code></td>
+                            <td>Všechny styly – CSS proměnné, komponenty, responzivita</td>
+                            <td>~35 KB</td>
+                        </tr>
+                        <tr>
+                            <td><code>app.js</code></td>
+                            <td>Veškerá logika – navigace, renderování, exporty</td>
+                            <td>~55 KB</td>
+                        </tr>
+                        <tr>
+                            <td><code>data/roles.json</code></td>
+                            <td>Definice 20 postav (id, jméno, archetyp, schopnosti, cíle)</td>
+                            <td>~18 KB</td>
+                        </tr>
+                        <tr>
+                            <td><code>data/relations.json</code></td>
+                            <td>Vztahy mezi postavami (source, target, type, popisy)</td>
+                            <td>~4 KB</td>
+                        </tr>
+                        <tr>
+                            <td><code>data/config.json</code></td>
+                            <td>Základní konfigurace (verze, fáze)</td>
+                            <td>~200 B</td>
+                        </tr>
+                        <tr>
+                            <td><code>data/manuals.json</code></td>
+                            <td>Obsah manuálů pro User/Agent/Admin</td>
+                            <td>~14 KB</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                    <strong>Celkem:</strong> 3 hlavní soubory + 4 datové soubory. Žádné frameworky, žádné závislosti.
+                </p>
+            </div>
+
+            <!-- Datové struktury -->
+            <div class="dashboard-card">
+                <h3>🗂️ roles.json</h3>
+                <div class="code-block"
+                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
+                    <pre style="margin:0;">{
+  "id": "U01",          // Kód postavy
+  "type": "user",       // user|agent|admin
+  "name": "Jana Nová",  // Herní jméno
+  "archetype": "...",   // Krátký popis role
+  "description": "...", // Podrobný popis
+  "ability": "...",     // Speciální schopnost
+  "goals": ["...", "..."], // Cíle postavy
+  "avatar": "avatar.png"  // Soubor v assets/
+}</pre>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>🔗 relations.json</h3>
+                <div class="code-block"
+                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
+                    <pre style="margin:0;">{
+  "source": "U01",      // ID zdroje
+  "target": "A01",      // ID cíle
+  "type": "past",       // Typ vztahu
+  "desc_source": "...", // Pohled zdroje
+  "desc_target": "..."  // Pohled cíle
+}</pre>
+                </div>
+                <p style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                    Platné typy: <code>past</code>, <code>trade</code>, <code>blackmail</code>,
+                    <code>romance</code>, <code>plot</code>, <code>rival</code>, <code>alliance</code>,
+                    <code>affection</code>, <code>conflict</code>, <code>care</code>, <code>suspicion</code>
+                </p>
+            </div>
+
+            <!-- Navigace a sekce -->
+            <div class="dashboard-card full-width">
+                <h3>🧭 Navigační systém</h3>
+                <p style="margin-bottom: 1rem;">Web používá <strong>dvouúrovňovou navigaci</strong>:</p>
+                <ul class="feature-list">
+                    <li><strong>Horní panel:</strong> Kategorie (Dashboard, O Iris 4.1, Lore, HLINÍK)</li>
+                    <li><strong>Podmenu:</strong> Sekce dané kategorie (vždy viditelné)</li>
+                    <li><strong>Sekce:</strong> Každá sekce má ID <code>section-{název}</code></li>
+                </ul>
+                <p style="margin-top: 1rem;">
+                    Mapování sekcí na kategorie je definováno v <code>app.js</code> v objektu
+                    <code>sectionCategories</code>.
+                </p>
+            </div>
+
+            <!-- Pravidla pro úpravy -->
+            <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-green);">
+                <h3>✅ Pravidla pro úpravy</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <h4 style="color: var(--accent-green);">✅ Doporučeno</h4>
+                        <ul class="feature-list">
+                            <li>Přidávat obsah přímo do <code>index.html</code></li>
+                            <li>Používat existující CSS třídy</li>
+                            <li>Udržovat konzistentní strukturu sekcí</li>
+                            <li>Aktualizovat <code>sectionCategories</code> při nových sekcích</li>
+                            <li>Testovat navigaci po změnách</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--accent-red);">❌ Vyhnout se</h4>
+                        <ul class="feature-list">
+                            <li>Vytvářet nové HTML soubory</li>
+                            <li>Přidávat externí knihovny</li>
+                            <li>Vytvářet velké obrázky (max 50KB)</li>
+                            <li>Duplikovat CSS pravidla</li>
+                            <li>Používat inline styly (pokud to není nutné)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jak přidat novou sekci -->
+            <div class="dashboard-card full-width">
+                <h3>🆕 Přidání nové sekce</h3>
+                <ol style="color: var(--text-primary); line-height: 2;">
+                    <li>Přidat link do podmenu v <code>index.html</code> (uvnitř příslušného
+                        <code>.submenu-group</code>)</li>
+                    <li>Vytvořit <code>&lt;section id="section-{název}"&gt;</code> v <code>index.html</code></li>
+                    <li>Přidat mapování do <code>sectionCategories</code> v <code>app.js</code></li>
+                    <li>Použít existující CSS třídy (<code>.dashboard-grid</code>, <code>.dashboard-card</code>, atd.)
+                    </li>
+                    <li>Otestovat navigaci a hash URL</li>
+                </ol>
+            </div>
+
+            <!-- CSS proměnné -->
+            <div class="dashboard-card">
+                <h3>🎨 Hlavní CSS proměnné</h3>
+                <div class="code-block"
+                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.75rem;">
+                    <pre style="margin:0;">--bg-primary: #1a1a2e
+--accent-gold: #d4af37
+--accent-red: #e91e63
+--accent-green: #4caf50
+--color-user: #4a9eff
+--color-agent: #e91e63
+--color-admin: #d4af37</pre>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>📦 Hlavní CSS třídy</h3>
+                <ul class="feature-list" style="font-size: 0.85rem;">
+                    <li><code>.dashboard-grid</code> – grid layout pro karty</li>
+                    <li><code>.dashboard-card</code> – základní karta</li>
+                    <li><code>.full-width</code> – karta přes celou šířku</li>
+                    <li><code>.data-table</code> – stylovaná tabulka</li>
+                    <li><code>.feature-list</code> – odrážkový seznam</li>
+                    <li><code>.version-info</code> – key-value páry</li>
+                    <li><code>.btn-primary</code>, <code>.btn-secondary</code> – tlačítka</li>
+                </ul>
+            </div>
+
+            <!-- Kontakt -->
+            <div class="dashboard-card full-width" style="background: var(--bg-secondary);">
+                <h3>📧 Údržba a převzetí</h3>
+                <p style="color: var(--text-primary);">
+                    Tento systém je navržen pro jednoduchou údržbu. Pokud ho převzímáte:
+                </p>
+                <ol style="color: var(--text-secondary); line-height: 1.8;">
+                    <li>Prostudujte strukturu souborů výše</li>
+                    <li>Otevřete <code>index.html</code> a pochopte strukturu sekcí</li>
+                    <li>Prostudujte <code>app.js</code> – zejména <code>sectionCategories</code> a navigační funkce</li>
+                    <li>Testujte změny lokálně (stačí otevřít <code>index.html</code> v prohlížeči)</li>
+                    <li><strong>Nezapomeňte:</strong> Minimální soubory, minimální data, žádné závislosti!</li>
+                </ol>
+            </div>
+        </div>
+    </section>
 
     <!-- Compliance Section -->
     <section id="section-compliance" class="content-section">
@@ -906,30 +1473,31 @@
             <div class="export-card">
                 <div class="export-icon">📋</div>
                 <h3>Všechny briefingy</h3>
-                <p>Stáhne ZIP obsahující PDF brief pro každou z 20 postav.</p>
+                <p>Stáhne HTML s briefingem pro každou z 20 postav (pro tisk jako PDF).</p>
                 <button class="btn-primary" onclick="exportAllBriefings()" id="btnExportBriefings">
-                    📥 Stáhnout briefingy (ZIP)
+                    📥 Stáhnout briefingy
                 </button>
                 <div class="export-status" id="briefingsExportStatus"></div>
             </div>
 
             <div class="export-card">
                 <div class="export-icon">🌐</div>
-                <h3>Celý Lore Web</h3>
-                <p>Stáhne kompletní webové rozhraní včetně dat a stylů.</p>
-                <button class="btn-primary" onclick="exportLoreWeb()" id="btnExportLoreWeb">
-                    📥 Stáhnout Lore Web (ZIP)
+                <h3>Lore Web (bez testů)</h3>
+                <p>Stáhne data lore webu <strong>bez</strong> adresáře test_runs (méně souborů).</p>
+                <button class="btn-primary" onclick="exportLoreWebNoTests()" id="btnExportNoTests">
+                    📥 Stáhnout bez testů (ZIP)
                 </button>
-                <div class="export-status" id="loreWebExportStatus"></div>
+                <div class="export-status" id="noTestsExportStatus"></div>
             </div>
 
             <div class="export-card">
-                <div class="export-icon">📝</div>
-                <h3>Textový export</h3>
-                <p>Stáhne dokumentaci bez obrázků (pouze texty a data).</p>
-                <button class="btn-secondary" onclick="exportTextOnly()">
-                    📥 Stáhnout texty (ZIP)
+                <div class="export-icon">🧪</div>
+                <h3>Pouze test runs</h3>
+                <p>Stáhne <strong>pouze</strong> adresář test_runs s run logy.</p>
+                <button class="btn-primary" onclick="exportOnlyTestRuns()" id="btnExportOnlyTests">
+                    📥 Stáhnout test runs (ZIP)
                 </button>
+                <div class="export-status" id="onlyTestsExportStatus"></div>
             </div>
 
             <div class="export-card">

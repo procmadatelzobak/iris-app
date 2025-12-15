@@ -80,11 +80,13 @@ const sectionCategories = {
     'manualy': 'lore',
     'lore': 'lore',
     'hraci': 'lore',
+    'dokumentace': 'hlinik',
     'hlinik': 'hlinik',
     'system': 'hlinik',
     'tests': 'hlinik',
-    'compliance': 'hlinik',
-    'exporty': 'none'
+    'loreweb-doc': 'about',
+    'compliance': 'about',
+    'exporty': 'about'
 };
 
 let currentCategory = 'lore';
@@ -1498,6 +1500,152 @@ function exportDataJSON() {
     URL.revokeObjectURL(url);
 }
 
+// ============================================
+// LORE WEB EXPORT (bez test_runs)
+// ============================================
+
+async function exportLoreWebNoTests() {
+    const statusEl = document.getElementById('noTestsExportStatus');
+    if (statusEl) statusEl.textContent = 'Připravuji export...';
+
+    try {
+        // Fetch main files (not test runs)
+        const files = [
+            'index.html',
+            'style.css',
+            'app.js',
+            'data/roles.json',
+            'data/relations.json',
+            'data/config.json',
+            'data/manuals.json'
+        ];
+
+        const fileContents = {};
+        for (const file of files) {
+            try {
+                const res = await fetch(file);
+                if (res.ok) {
+                    fileContents[file] = await res.text();
+                }
+            } catch (e) {
+                console.warn(`Could not fetch ${file}`);
+            }
+        }
+
+        // Create a combined export as single HTML with all JSON embedded
+        let exportHTML = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>IRIS 4.1 Lore Web Export (bez testů)</title>
+    <style>body{font-family:monospace;background:#1a1a2e;color:#e0e0e0;padding:2rem;}h1{color:#d4af37;}pre{background:#252540;padding:1rem;overflow-x:auto;border-radius:8px;}</style>
+</head>
+<body>
+    <h1>IRIS 4.1 Lore Web Export</h1>
+    <p>Datum: ${new Date().toISOString()}</p>
+    <p>Obsah: ${Object.keys(fileContents).length} souborů (bez test_runs)</p>
+    <h2>Soubory:</h2>
+`;
+        for (const [name, content] of Object.entries(fileContents)) {
+            const escaped = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            exportHTML += `<h3>${name}</h3><pre>${escaped.substring(0, 5000)}${content.length > 5000 ? '...(zkráceno)' : ''}</pre>`;
+        }
+        exportHTML += '</body></html>';
+
+        // Download
+        const blob = new Blob([exportHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'IRIS_4.1_LoreWeb_bez_testu.html';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        if (statusEl) {
+            statusEl.textContent = '✅ Staženo!';
+            statusEl.className = 'export-status success';
+        }
+    } catch (err) {
+        console.error('Export error:', err);
+        if (statusEl) {
+            statusEl.textContent = '❌ Chyba při exportu';
+            statusEl.className = 'export-status error';
+        }
+    }
+}
+
+// ============================================
+// TEST RUNS ONLY EXPORT
+// ============================================
+
+async function exportOnlyTestRuns() {
+    const statusEl = document.getElementById('onlyTestsExportStatus');
+    if (statusEl) statusEl.textContent = 'Načítám test runs...';
+
+    try {
+        // Try to fetch test runs index or known files
+        const testRunFiles = [];
+
+        // Attempt to discover test run files (this is limited without server-side)
+        const testRunPatterns = [
+            'data/test_runs/run_001.json',
+            'data/test_runs/run_002.json',
+            'data/test_runs/run_003.json',
+            'data/test_runs/run_004.json',
+            'data/test_runs/run_005.json',
+            'data/test_runs/latest.json',
+            'data/test_runs/index.json'
+        ];
+
+        const fetchedRuns = {};
+        for (const file of testRunPatterns) {
+            try {
+                const res = await fetch(file);
+                if (res.ok) {
+                    fetchedRuns[file] = await res.text();
+                }
+            } catch (e) {
+                // File doesn't exist, skip
+            }
+        }
+
+        if (Object.keys(fetchedRuns).length === 0) {
+            if (statusEl) {
+                statusEl.innerHTML = '⚠️ Žádné test runs nalezeny. Pro plný export spusťte: <code>./export_only_tests.sh</code>';
+                statusEl.className = 'export-status';
+            }
+            return;
+        }
+
+        // Create JSON export
+        const exportData = {
+            version: '4.1',
+            exported: new Date().toISOString(),
+            type: 'test_runs_only',
+            files: fetchedRuns
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'IRIS_4.1_test_runs.json';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        if (statusEl) {
+            statusEl.textContent = `✅ Staženo ${Object.keys(fetchedRuns).length} souborů!`;
+            statusEl.className = 'export-status success';
+        }
+    } catch (err) {
+        console.error('Export error:', err);
+        if (statusEl) {
+            statusEl.textContent = '❌ Chyba při exportu';
+            statusEl.className = 'export-status error';
+        }
+    }
+}
+
 // Initialize players when navigating to section
 document.addEventListener('DOMContentLoaded', () => {
     // Delay initialization until data is loaded
@@ -1513,6 +1661,7 @@ window.showBriefingForPlayer = showBriefingForPlayer;
 window.exportPlayerPDF = exportPlayerPDF;
 window.exportBriefingPDF = exportBriefingPDF;
 window.exportAllBriefings = exportAllBriefings;
-window.exportLoreWeb = exportLoreWeb;
-window.exportTextOnly = exportTextOnly;
+window.exportLoreWebNoTests = exportLoreWebNoTests;
+window.exportOnlyTestRuns = exportOnlyTestRuns;
 window.exportDataJSON = exportDataJSON;
+
