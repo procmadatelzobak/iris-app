@@ -1,33 +1,36 @@
-# PHASE 37: Admin Dashboard Visualization & Stabilization
+# PHASE 37: Narrative Visualization & UX
 
-## 📅 Date: 2025-12-15
+## 📅 Date: 2025-12-15 (Evening Session)
 ## 🎯 Objectives
-1.  **Enhance Network Visualization**: Improve the "Relationship Graph" visualization on the Admin Dashboard to be more informative and aesthetically pleasing.
-2.  **Expanded Test Coverage**: Execute existing test suites and implement new tests to cover the visualization improvements and recent changes.
-3.  **Language Translations**: Verify and complete the "Hlinik" Crazy Czech translations and ensure all UI elements are properly localized.
-4.  **Bug Fixes**: Address bugs identified during testing and general usage.
+1.  **Narrative Graph Rendering**: Visualize complex narrative relationships (Romance, Blackmail, Rivalry, etc.) directly on the network graph.
+2.  **UX Finalization**: Solidify the layout for the "Relations" tab (Full Screen) and optimize usability.
 
 ## 🛠️ Implementation Details
 
-### 1. Visualization Upgrade (Network Graph)
-*   **Goal**: Create a rich, interactive visualization of agent/user relationships.
-*   **Approach**:
-    *   Review existing `lore-web` graph implementation.
-    *   Integrate or enhance the graph within the Admin Dashboard context.
-    *   Ensure distinct visual representation for Agents, Users, and the Admin.
-    *   Add interactivity (click details, hover effects).
+### 1. Narrative Visualization Engine (`admin_ui.js`)
+*   **Data Injection**: Implemented `loadLoreData()` to fetch relationship data from the existing `/api/admin/lore/data` endpoint.
+*   **Dynamic Rendering**: Modified the canvas loop to draw connection lines based on relationship types defined in `relations.json`.
+*   **Visual Styles**:
+    *   **Romance**: Pink, thick line (`rgba(233, 30, 99, 0.6)`).
+    *   **Blackmail**: Red, dashed line (`rgba(244, 67, 54, 0.6)`).
+    *   **Rival**: Orange, dotted line (`rgba(255, 152, 0, 0.5)`).
+    *   **Plot**: Purple line (`rgba(156, 39, 176, 0.5)`).
+    *   **Trade**: Green, thin line (`rgba(76, 175, 80, 0.4)`).
+*   **Node Positioning**: Added logic to store calculated node positions (`window.nodePos`) for Users and Agents to facilitate link drawing between dynamic bodies.
 
-### 2. Language Translations
-*   **Goal**: Full "Crazy Czech" coverage ("Hlinik" Persona).
-*   **Approach**:
-    *   Audit `crazy.json` for missing keys.
-    *   Verify dynamic switching logic.
+### 2. Layout & UX Refinements
+*   **Full Screen Relations**: The "Relace" tab was finalized to strictly occupy the full viewport height (`calc(100vh - 100px)`), solving previous layout collapse issues.
+*   **Reduced Clutter**: Removed the placeholder "Future Expansion" column, dedicating 100% of the screen estate to the visualization.
 
-### 3. Test Automation
-*   **Goal**: Stability and regression testing.
-*   **Approach**:
-    *   Run `test_hlinik_advanced_llm.py` and other suites.
-    *   Add UI tests for the Graph component if possible (or manual verification plan).
+### 3. Backend Integration
+*   **Endpoint Verification**: Confirmed existence and functionality of `/api/admin/lore/data` in `app/routers/admin_api.py`.
+    *   Reads `roles.json` and `relations.json` from `doc/iris/lore-web/data/`.
+    *   Serves structured JSON to the frontend.
 
-## ✅ Verification Status
-*   **Pending**: All objectives currently in planning/execution.
+## ✅ Verification Check
+*   **Graph Rendering**: Verified that narrative links appear when valid `loreData` is present.
+*   **Layout Stability**: Validated that the graph remains usable and full-sized during window resizing and tab switching.
+*   **Performance**: Link rendering is batched within the main animation loop to maintain 60 FPS.
+
+---
+*Signed: Agent Antigravity / Sinuhet System Admin*

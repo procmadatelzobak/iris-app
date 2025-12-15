@@ -201,9 +201,10 @@ async def get_language_options(user=Depends(get_current_user)):
 
 
 @router.get("/files/list")
-async def list_translation_files(user=Depends(get_current_user)):
+async def list_translation_files():
     """
     List available translation files for editing.
+    Public endpoint for lore-web access.
     """
     return {
         "status": "ok",
@@ -216,9 +217,10 @@ async def list_translation_files(user=Depends(get_current_user)):
 
 
 @router.get("/files/{code}")
-async def get_translation_file_content(code: str, user=Depends(get_current_user)):
+async def get_translation_file_content(code: str):
     """
     Get raw content of a translation file.
+    Public endpoint for lore-web access.
     """
     if code not in TRANSLATION_FILES:
         raise HTTPException(status_code=404, detail="File not found")

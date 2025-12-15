@@ -167,7 +167,7 @@ const sectionCategories = {
     'loreweb-doc': 'about',
     'compliance': 'about',
     'exporty': 'about',
-    'jazyky': 'timeline' // Put under 'Průběh' category as requested
+    'jazyky': 'lore' // Under 'Lore' category with other content items
 };
 
 let currentCategory = 'lore';
@@ -2560,7 +2560,13 @@ async function loadSelectedLanguage() {
         } else {
             const res = await fetch(`/api/translations/files/${langCode}`);
             if (!res.ok) throw new Error('Failed to load file');
-            data = await res.json();
+            try {
+                data = await res.json();
+            } catch (e) {
+                // Fallback if content-type is wrong but body is JSON
+                const text = await res.text();
+                data = JSON.parse(text);
+            }
         }
 
         currentTranslationData = data;
@@ -2664,8 +2670,8 @@ async function saveCurrentLanguage() {
 
 // Utility
 function escapeHtml(text) {
-    if (!text) return "";
-    return text
+    if (text === null || text === undefined) return "";
+    return String(text)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")

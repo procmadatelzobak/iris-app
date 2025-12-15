@@ -128,7 +128,7 @@ class RelationGraph {
                     y: centerY + offsetY,
                     vx: 0,
                     vy: 0,
-                    radius: 20 // Uniform radius for everyone
+                    radius: 10 // Smaller nodes
                 };
             });
         };
@@ -340,8 +340,8 @@ class RelationGraph {
                 const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
                 // Increased interaction radius for better spread
-                if (dist < 250) { // Was 200
-                    const force = (this.options.repulsionStrength * 2.5) / (dist * dist); // Stronger repulsion
+                if (dist < 280) { // Even wider range
+                    const force = (this.options.repulsionStrength * 4.0) / (dist * dist); // Very strong repulsion
                     const fx = (dx / dist) * force;
                     const fy = (dy / dist) * force;
                     a.vx += fx;

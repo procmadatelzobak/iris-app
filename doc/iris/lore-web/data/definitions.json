@@ -1,0 +1,77 @@
+{
+    "meta": {
+        "version": "1.0",
+        "current_phase": 35,
+        "updated_at": "2025-12-15T22:00:00"
+    },
+    "categories": [
+        "IRIS",
+        "HLINIK",
+        "Ostatní"
+    ],
+    "definitions": [
+        {
+            "id": "DEF-001",
+            "title": "Uživatel má vlastní webové rozhraní",
+            "description": "Každý uživatel (User) má přístup k vlastnímu terminálu přes webový prohlížeč. Přihlašuje se jménem a heslem, které obdrží od organizátora.",
+            "category": "IRIS",
+            "user_approved": true,
+            "approved_phase": 34,
+            "created_at": "2025-12-01T10:00:00"
+        },
+        {
+            "id": "DEF-002",
+            "title": "Agenti předstírají AI",
+            "description": "Agenti jsou lidští operátoři, kteří odpovídají na dotazy uživatelů a předstírají, že jsou umělá inteligence IRIS. Uživatelé o tomto faktu nevědí.",
+            "category": "IRIS",
+            "user_approved": true,
+            "approved_phase": 33,
+            "created_at": "2025-12-01T10:00:00"
+        },
+        {
+            "id": "DEF-003",
+            "title": "Ekonomický systém používá Neuro-Credits",
+            "description": "Herní měna se nazývá Neuro-Credits (NC). Uživatelé získávají NC za plnění úkolů, mohou je ztrácet pokutami od správců.",
+            "category": "IRIS",
+            "user_approved": true,
+            "approved_phase": 35,
+            "created_at": "2025-12-05T14:00:00"
+        },
+        {
+            "id": "DEF-004",
+            "title": "JWT autentizace s HTTP-only cookies",
+            "description": "Aplikace používá JWT tokeny uložené v HTTP-only cookies pro bezpečnou autentizaci. Token expiruje po 24 hodinách.",
+            "category": "HLINIK",
+            "user_approved": true,
+            "approved_phase": 30,
+            "created_at": "2025-11-15T09:00:00"
+        },
+        {
+            "id": "DEF-005",
+            "title": "Purgatory Mode při záporném zůstatku",
+            "description": "Pokud uživatel dosáhne záporného zůstatku NC, je automaticky přesunut do Purgatory módu. V tomto módu nemůže odesílat zprávy ani plnit úkoly.",
+            "category": "HLINIK",
+            "user_approved": false,
+            "approved_phase": null,
+            "created_at": "2025-12-10T11:00:00"
+        },
+        {
+            "id": "DEF-006",
+            "title": "Shift rotace párování",
+            "description": "Párování mezi uživateli a agenty se periodicky mění podle nastavení Shift systému. Správci mohou shift aktivovat manuálně.",
+            "category": "HLINIK",
+            "user_approved": false,
+            "approved_phase": null,
+            "created_at": "2025-12-12T16:00:00"
+        },
+        {
+            "id": "DEF-007",
+            "title": "Dokumentace je verzována v Git",
+            "description": "Veškerá dokumentace projektu je uložena v Git repozitáři. Změny se commitují a pushují na GitHub.",
+            "category": "Ostatní",
+            "user_approved": true,
+            "approved_phase": 1,
+            "created_at": "2025-10-01T10:00:00"
+        }
+    ]
+}

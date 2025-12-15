@@ -34,6 +34,10 @@
                 <span class="nav-icon">🏭</span>
                 <span>HLINIK</span>
             </a>
+            <a href="#sprava" class="nav-link nav-category" data-category="sprava">
+                <span class="nav-icon">🎯</span>
+                <span>Správa</span>
+            </a>
             <a href="#about" class="nav-link nav-category" data-category="about">
                 <span class="nav-icon">ℹ️</span>
                 <span>O Iris 4.1</span>
@@ -101,6 +105,18 @@
             </a>
             <a href="#tests" class="submenu-link" data-section="tests">
                 <span class="submenu-icon">🧪</span> Testy
+            </a>
+        </div>
+        <!-- Správa submenu -->
+        <div class="submenu-group" data-category="sprava" style="display: none;">
+            <a href="#issues" class="submenu-link" data-section="issues">
+                <span class="submenu-icon">📋</span> Úkoly
+            </a>
+            <a href="#test-scenarios" class="submenu-link" data-section="test-scenarios">
+                <span class="submenu-icon">🧪</span> Testy
+            </a>
+            <a href="#definitions" class="submenu-link" data-section="definitions">
+                <span class="submenu-icon">📖</span> Definice
             </a>
         </div>
     </nav>
@@ -2027,8 +2043,320 @@
         </div>
     </section>
 
+    <!-- Issues Section (Kanban Board) -->
+    <section id="section-issues" class="content-section">
+        <div class="section-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Správa úkolů</h1>
+                    <p class="section-subtitle">Kanban board pro sledování postupu úkolů projektu</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-primary" onclick="showIssueModal()">+ Nový úkol</button>
+                    <button class="btn-secondary" onclick="exportIssuesJSON()">📥 Export JSON</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="kanban-board" id="kanbanBoard">
+            <!-- Dynamically populated -->
+            <div class="kanban-column" data-phase="waiting">
+                <div class="kanban-column-header">
+                    <span class="phase-icon">⏳</span>
+                    <span class="phase-label">Čekání</span>
+                    <span class="phase-count" id="count-waiting">0</span>
+                </div>
+                <div class="kanban-cards" id="cards-waiting"></div>
+            </div>
+            <div class="kanban-column" data-phase="implementation">
+                <div class="kanban-column-header">
+                    <span class="phase-icon">🔧</span>
+                    <span class="phase-label">Implementace</span>
+                    <span class="phase-count" id="count-implementation">0</span>
+                </div>
+                <div class="kanban-cards" id="cards-implementation"></div>
+            </div>
+            <div class="kanban-column" data-phase="testing">
+                <div class="kanban-column-header">
+                    <span class="phase-icon">🧪</span>
+                    <span class="phase-label">Automatický test</span>
+                    <span class="phase-count" id="count-testing">0</span>
+                </div>
+                <div class="kanban-cards" id="cards-testing"></div>
+            </div>
+            <div class="kanban-column" data-phase="user_confirm">
+                <div class="kanban-column-header">
+                    <span class="phase-icon">✅</span>
+                    <span class="phase-label">Uživatelské potvrzení</span>
+                    <span class="phase-count" id="count-user_confirm">0</span>
+                </div>
+                <div class="kanban-cards" id="cards-user_confirm"></div>
+            </div>
+            <div class="kanban-column" data-phase="done">
+                <div class="kanban-column-header">
+                    <span class="phase-icon">✓</span>
+                    <span class="phase-label">Hotovo</span>
+                    <span class="phase-count" id="count-done">0</span>
+                </div>
+                <div class="kanban-cards" id="cards-done"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Scenarios Section -->
+    <section id="section-test-scenarios" class="content-section">
+        <div class="section-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Testovací scénáře</h1>
+                    <p class="section-subtitle">Zadání testů a protokoly jejich průběhu (Markdown)</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-primary" onclick="showTestScenarioModal()">+ Nový test</button>
+                    <button class="btn-secondary" onclick="exportTestsJSON()">📥 Export JSON</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-scenarios-layout">
+            <!-- Left Panel: Test List -->
+            <div class="test-list-panel dashboard-card">
+                <div style="margin-bottom: 1rem;">
+                    <select id="testCategoryFilter" class="audit-select" style="width: 100%;"
+                        onchange="filterTestScenarios()">
+                        <option value="all">Všechny kategorie</option>
+                        <option value="IRIS">🎭 IRIS (LARP)</option>
+                        <option value="HLINIK">🏭 HLINIK (Aplikace)</option>
+                        <option value="Ostatní">📁 Ostatní</option>
+                    </select>
+                </div>
+                <div id="testScenariosList" class="test-scenarios-list">
+                    <p class="text-muted">Načítám testy...</p>
+                </div>
+            </div>
+
+            <!-- Right Panel: Test Detail -->
+            <div class="test-detail-panel dashboard-card" id="testScenarioDetail">
+                <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
+                    Vyberte test ze seznamu pro zobrazení detailů a protokolů.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Definitions Section -->
+    <section id="section-definitions" class="content-section">
+        <div class="section-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Systém definic</h1>
+                    <p class="section-subtitle">Pravidla hry a technické předpoklady s uživatelským schválením</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-primary" onclick="showDefinitionModal()">+ Nová definice</button>
+                    <button class="btn-secondary" onclick="exportDefinitionsJSON()">📥 Export JSON</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar" style="margin-bottom: 1rem;">
+            <span style="color: var(--text-muted); margin-right: 0.5rem;">Kategorie:</span>
+            <button class="filter-btn active" data-def-category="all" onclick="filterDefinitions('all')">Vše</button>
+            <button class="filter-btn" data-def-category="IRIS" onclick="filterDefinitions('IRIS')">🎭 IRIS</button>
+            <button class="filter-btn" data-def-category="HLINIK" onclick="filterDefinitions('HLINIK')">🏭
+                HLINIK</button>
+            <button class="filter-btn" data-def-category="Ostatní" onclick="filterDefinitions('Ostatní')">📁
+                Ostatní</button>
+        </div>
+        <div class="filter-bar" style="margin-bottom: 1.5rem;">
+            <span style="color: var(--text-muted); margin-right: 0.5rem;">Stav:</span>
+            <button class="filter-btn active" data-def-status="all"
+                onclick="filterDefinitionsByStatus('all')">Vše</button>
+            <button class="filter-btn" data-def-status="approved" onclick="filterDefinitionsByStatus('approved')">✅
+                Schválené</button>
+            <button class="filter-btn" data-def-status="pending" onclick="filterDefinitionsByStatus('pending')">⏳
+                Neschválené</button>
+        </div>
+
+        <div id="definitionsList" class="definitions-list">
+            <p class="text-muted">Načítám definice...</p>
+        </div>
+    </section>
+
+    <!-- Issue Modal -->
+    <div class="modal-overlay" id="issueModal" style="display: none;">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="issueModalTitle">Nový úkol</h2>
+                <button class="btn-close" onclick="closeIssueModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="issueEditId">
+                <div class="form-group">
+                    <label>ID (automaticky generováno)</label>
+                    <input type="text" id="issueId" class="audit-input" readonly placeholder="ISS-XXX">
+                </div>
+                <div class="form-group">
+                    <label>Název úkolu *</label>
+                    <input type="text" id="issueTitle" class="audit-input" placeholder="Zadejte název úkolu">
+                </div>
+                <div class="form-group">
+                    <label>Popis</label>
+                    <textarea id="issueDescription" class="audit-input" rows="4"
+                        placeholder="Detailní popis úkolu..."></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Kategorie</label>
+                        <select id="issueCategory" class="audit-select">
+                            <option value="HLINIK">🏭 HLINIK</option>
+                            <option value="IRIS">🎭 IRIS</option>
+                            <option value="Ostatní">📁 Ostatní</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priorita</label>
+                        <select id="issuePriority" class="audit-select">
+                            <option value="low">🔵 Nízká</option>
+                            <option value="normal" selected>⚪ Normální</option>
+                            <option value="high">🔴 Vysoká</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeIssueModal()">Zrušit</button>
+                <button class="btn-primary" onclick="saveIssue()">Uložit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Scenario Modal -->
+    <div class="modal-overlay" id="testScenarioModal" style="display: none;">
+        <div class="modal-container" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="testScenarioModalTitle">Nový test</h2>
+                <button class="btn-close" onclick="closeTestScenarioModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="testEditId">
+                <div class="form-group">
+                    <label>ID (automaticky generováno)</label>
+                    <input type="text" id="testId" class="audit-input" readonly placeholder="TEST-XXX">
+                </div>
+                <div class="form-group">
+                    <label>Název testu *</label>
+                    <input type="text" id="testTitle" class="audit-input" placeholder="Zadejte název testu">
+                </div>
+                <div class="form-group">
+                    <label>Kategorie</label>
+                    <select id="testCategory" class="audit-select">
+                        <option value="HLINIK">🏭 HLINIK</option>
+                        <option value="IRIS">🎭 IRIS</option>
+                        <option value="Ostatní">📁 Ostatní</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Zadání testu (Markdown) *</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                        Napište zadání pro uživatele nebo agenta. Použijte markdown formátování.
+                    </p>
+                    <textarea id="testDescriptionMd" class="audit-input" rows="12" placeholder="# Název testu
+
+## Cíl testu
+Popište, co se má otestovat...
+
+## Kroky
+1. První krok
+2. Druhý krok
+3. **Screenshot**: Zachyťte obrazovku
+
+## Očekávaný výsledek
+..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeTestScenarioModal()">Zrušit</button>
+                <button class="btn-primary" onclick="saveTestScenario()">Uložit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Definition Modal -->
+    <div class="modal-overlay" id="definitionModal" style="display: none;">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="definitionModalTitle">Nová definice</h2>
+                <button class="btn-close" onclick="closeDefinitionModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="defEditId">
+                <div class="form-group">
+                    <label>ID (automaticky generováno)</label>
+                    <input type="text" id="defId" class="audit-input" readonly placeholder="DEF-XXX">
+                </div>
+                <div class="form-group">
+                    <label>Název definice *</label>
+                    <input type="text" id="defTitle" class="audit-input"
+                        placeholder="Stručný název pravidla/předpokladu">
+                </div>
+                <div class="form-group">
+                    <label>Popis *</label>
+                    <textarea id="defDescription" class="audit-input" rows="4"
+                        placeholder="Detailní popis definice..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Kategorie</label>
+                    <select id="defCategory" class="audit-select">
+                        <option value="IRIS">🎭 IRIS (LARP)</option>
+                        <option value="HLINIK">🏭 HLINIK (Aplikace)</option>
+                        <option value="Ostatní">📁 Ostatní</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeDefinitionModal()">Zrušit</button>
+                <button class="btn-primary" onclick="saveDefinition()">Uložit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protocol Viewer Modal -->
+    <div class="modal-overlay" id="protocolModal" style="display: none;">
+        <div class="modal-container" style="max-width: 900px; max-height: 90vh;">
+            <div class="modal-header">
+                <h2 id="protocolModalTitle">Protokol testu</h2>
+                <button class="btn-close" onclick="closeProtocolModal()">✕</button>
+            </div>
+            <div class="modal-body" id="protocolContent" style="overflow-y: auto; max-height: 70vh;">
+                <!-- Markdown content rendered here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeProtocolModal()">Zavřít</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal (existing) -->
+    <div class="modal-overlay" id="eventModal" style="display: none;">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="eventModalTitle">Detail události</h2>
+                <button class="btn-close" onclick="closeEventModal()">✕</button>
+            </div>
+            <div class="modal-body" id="eventModalContent">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeEventModal()">Zavřít</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Exporty Section -->
     <section id="section-exporty" class="content-section">
+
         <div class="section-header">
             <h1>Exporty</h1>
             <p class="section-subtitle">Hromadné stahování dokumentace a briefingů</p>
@@ -2094,8 +2422,8 @@
         </div>
     </div>
 
-    <script src="js/graph.js?v=20251215_fix5"></script>
-    <script src="app.js?v=20251215_fix5"></script>
+    <script src="js/graph.js?v=20251215_fix6"></script>
+    <script src="app.js?v=20251215_fix6"></script>
 </body>
 
 </html>
