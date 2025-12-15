@@ -174,8 +174,8 @@ class GameState:
         if temp_bad and not self.auto_panic_engaged:
             self.auto_panic_engaged = True
             self._trigger_panic_mode(enabled=True)
-        elif self.auto_panic_engaged and not temp_bad and not power_bad:
-            # Clear auto panic once thermal danger subsides and power is stable
+        elif self.auto_panic_engaged and not temp_bad:
+            # Clear auto panic once thermal danger subsides
             self.auto_panic_engaged = False
             self._trigger_panic_mode(enabled=False)
 
@@ -334,7 +334,7 @@ class GameState:
         """Auto-toggle global panic (censorship) when thermal overload crosses threshold."""
         try:
             from .routing import routing_logic
-        except Exception:
+        except ImportError:
             return
 
         total_sessions = getattr(settings, "TOTAL_SESSIONS", 0) or 0

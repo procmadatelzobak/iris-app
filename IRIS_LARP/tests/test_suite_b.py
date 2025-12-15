@@ -124,10 +124,16 @@ def clean_user():
 def clean_gamestate():
     """Reset gamestate before test."""
     gamestate.reset_state()
-    routing_logic.panic_modes = {}
+    reset_panic_modes()
     yield
     gamestate.reset_state()
-    routing_logic.panic_modes = {}
+    reset_panic_modes()
+
+
+def reset_panic_modes():
+    for i in range(1, settings.TOTAL_SESSIONS + 1):
+        routing_logic.set_panic_mode(i, "user", False)
+        routing_logic.set_panic_mode(i, "agent", False)
 
 
 # ============================================================================
@@ -474,7 +480,7 @@ class TestGamestateSystem:
 
     def test_check_overload_triggers_panic_and_recovers(self, clean_gamestate):
         """4.8b: Thermal overload auto-enables global panic and clears after cool-down."""
-        routing_logic.panic_modes = {}
+        reset_panic_modes()
         gamestate.power_capacity = 100
         gamestate.power_load = 50
         gamestate.temperature = gamestate.TEMP_THRESHOLD + 25
