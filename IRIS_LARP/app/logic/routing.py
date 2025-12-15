@@ -142,6 +142,9 @@ class ConnectionManager:
         if session_id in self.panic_modes:
             del self.panic_modes[session_id]
 
+    def reset_panic_modes(self):
+        self.panic_modes = {}
+
     async def send_timeout_error_to_user(self, session_id: int):
         """Send timeout error message to user for a specific session."""
         import json

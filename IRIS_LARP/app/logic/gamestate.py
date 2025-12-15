@@ -1,6 +1,12 @@
 from ..config import settings
 from .llm_core import LLMConfig, LLMProvider
 import enum
+import asyncio
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+MIN_SESSION_ID = 1
 
 # Default LLM System Prompts based on HLINÍK lore (Czech)
 # These prompts define the personality and behavior of the LLM agents used in the game.
@@ -133,6 +139,7 @@ class GameState:
         # Translation System
         self.language_mode = "cz"  # "cz" or "czech-iris"
         self.custom_labels = {}  # Admin-defined custom labels
+        self.auto_panic_engaged = False
         
         self.initialized = True
         
@@ -167,6 +174,15 @@ class GameState:
         power_bad = self.power_load > self.power_capacity
         temp_bad = self.temperature > self.TEMP_THRESHOLD
         self.is_overloaded = power_bad or temp_bad
+
+        if temp_bad and not self.auto_panic_engaged:
+            self.auto_panic_engaged = True
+            self._trigger_panic_mode(enabled=True)
+        elif self.auto_panic_engaged and not temp_bad:
+            # Clear auto panic once thermal danger subsides
+            self.auto_panic_engaged = False
+            self._trigger_panic_mode(enabled=False)
+
         return self.is_overloaded != was_overloaded
 
     def process_tick(self):
@@ -239,6 +255,7 @@ class GameState:
         )
         self.llm_config_censor = self._default_censor_config()
         self.custom_labels = {}
+        self.auto_panic_engaged = False
 
     def _default_censor_config(self) -> LLMConfig:
         return LLMConfig(
@@ -316,5 +333,38 @@ class GameState:
             self.power_load = float(state_data.get("power_load", self.power_load))
         if "optimizer_active" in state_data:
             self.optimizer_active = bool(state_data.get("optimizer_active", self.optimizer_active))
+
+    def _trigger_panic_mode(self, enabled: bool):
+        """Auto-toggle global panic (censorship) when thermal overload crosses threshold."""
+        # Imported lazily to avoid circular dependency during module load
+        try:
+            from .routing import routing_logic
+        except ImportError as exc:
+            logger.warning("Routing logic unavailable for panic toggle: %s", exc)
+            return
+
+        total_sessions = getattr(settings, "TOTAL_SESSIONS", 0)
+        if total_sessions < 1:
+            return
+        for i in range(MIN_SESSION_ID, total_sessions + 1):
+            routing_logic.set_panic_mode(i, "user", enabled)
+            routing_logic.set_panic_mode(i, "agent", enabled)
+
+        try:
+            loop = asyncio.get_running_loop()
+            task = loop.create_task(routing_logic.broadcast_global(json.dumps({
+                "type": "gamestate_update",
+                "panic_global": enabled,
+                "temperature": self.temperature,
+                "is_overloaded": self.is_overloaded
+            })))
+            task.add_done_callback(self._log_panic_task)
+        except RuntimeError as exc:
+            logger.debug("No running event loop for panic broadcast: %s", exc)
+
+    def _log_panic_task(self, task):
+        exc = task.exception()
+        if exc:
+            logger.warning("Panic broadcast task failed: %s", exc)
 
 gamestate = GameState()
