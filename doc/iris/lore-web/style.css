@@ -234,7 +234,7 @@ a:hover {
 
 
     position: fixed;
-    top: 75px;
+    top: 85px;
     left: 0;
     width: 100%;
     /* Height of main-header */
@@ -343,7 +343,7 @@ a:hover {
 
 .main-content {
     padding: var(--space-xl);
-    padding-top: 140px;
+    padding-top: 160px;
     /* Header (approx 80px) + Submenu (approx 50px) + space */
     max-width: 1400px;
     margin: 0 auto;

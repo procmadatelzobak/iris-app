@@ -1,6 +1,7 @@
 # Phase 36: Language System Enhancement - Hlinik Multi-Language Support
-**Status:** ✅ COMPLETE  
+**Status:** ✅ COMPLETE & VERIFIED  
 **Started:** 2025-12-15  
+**Verified:** 2025-12-15  
 **Goal:** Add multi-language support to IRIS/Hlinik system with Czech, English, and Crazy Czech options
 
 ---
@@ -48,9 +49,19 @@ Phase 36 implements enhanced language system for the Hlinik terminal network:
 
 ### Admin Custom Labels Behavior
 
-- Custom labels have **highest priority** in translation lookup
-- Custom labels are stored per-key in `gamestate.custom_labels`
-- When language changes, custom labels remain unchanged
+> [!IMPORTANT]
+> Custom labels have **highest priority** in translation lookup, which means:
+> - **Přejmenovaná tlačítka** (custom labels) zůstávají zachována i po změně jazyka
+> - **Nepřejmenovaná tlačítka** se změní dle aktuálně zvoleného jazyka
+
+**Translation Priority Order:**
+1. ✅ `custom_labels` (admin overrides) - **HIGHEST PRIORITY**
+2. ✅ Language translations (crazy/cz/en)
+3. ✅ Key path fallback
+
+Custom labels are stored per-key in `gamestate.custom_labels`. When language changes:
+- Custom labels remain unchanged
+- Only elements WITHOUT custom labels update to new language
 - Admins can reset all custom labels via ROOT dashboard
 
 ---
@@ -103,7 +114,25 @@ GET /api/translations/
 
 ```bash
 cd IRIS_LARP
-python -m app.translations.test_translations
+python3 -m app.translations.test_translations
+```
+
+### Verified Test Results (2025-12-15)
+
+```
+✓ czech.json is valid JSON
+✓ iris.json is valid JSON
+✓ english.json is valid JSON
+✓ crazy.json is valid JSON
+✓ All required sections present
+Czech translations: 219 keys
+IRIS overrides: 38 keys
+✓ crazy mode: login.username_label = 'PŘEZDÍVKA KÁMOŠE'
+✓ crazy mode: user_terminal.logout = 'ÚTĚK!'
+✓ Custom override works: 'CUSTOM STATION NAME'
+✓ Non-overridden key works: 'IDENTIFIKÁTOR'
+============================================================
+✓ All tests completed!
 ```
 
 ### Manual Testing
@@ -113,6 +142,7 @@ python -m app.translations.test_translations
 3. Verify UI updates with crazy translations
 4. Open another terminal (agent/user) and verify language matches
 5. Switch to English and verify English translations appear
+6. **NEW:** Verify custom-labeled buttons remain unchanged after language switch
 
 ---
 

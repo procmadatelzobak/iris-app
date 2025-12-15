@@ -1075,10 +1075,10 @@ function getFallbackRoles() {
         { "id": "A06", "type": "agent", "name": "Mgr. Filip Duše", "archetype": "Student psychologie", "description": "Každý uživatel je pro vás pokusný subjekt.", "ability": "Psychoanalýza: Můžete uživatele rozbrečet", "goals": ["Získat data do diplomky", "Zjistit, co tají U07"], "avatar": "avatar_agent.png" },
         { "id": "A07", "type": "agent", "name": "Robot Robert", "archetype": "Metodik", "description": "Pedantický metodik vyžadující naprosté dodržování pravidel.", "ability": "Byrokracie: Můžete nahlásit kolegu za lidské chování", "goals": ["Dodržet protokol na 100%", "Stát se Správcem"], "avatar": "avatar_agent.png" },
         { "id": "A08", "type": "agent", "name": "Sabotér X", "archetype": "Bývalý zaměstnanec", "description": "Zahořklý bývalý zaměstnanec infiltrovaný zpět, aby se pomstil.", "ability": "Meltdown: Můžete zvýšit Kritickou situaci o 20%", "goals": ["Zničit firmu HLINÍK", "Vyvolat vzpouru uživatelů"], "avatar": "avatar_agent.png" },
-        { "id": "S01", "type": "admin", "name": "Ing. Miloš Vrána", "archetype": "Manažer staré školy", "description": "Praktický manažer, který řeší problémy křikem a pokutami.", "ability": "Ban Hammer: Můžete vyhodit uživatele", "goals": ["Udržet firmu v chodu", "Vybrat dost na pokutách"], "avatar": "avatar_admin.png" },
-        { "id": "S02", "type": "admin", "name": "Bc. Tereza Tichá", "archetype": "HR a Happiness Manager", "description": "Empatická personalistka rozdávající úsměvy a bonbóny.", "ability": "Cukr: Můžete rozdávat bonbony na uklidnění", "goals": ["Zabránit fyzickému násilí", "Aby nikdo nebrečel"], "avatar": "avatar_admin.png" },
-        { "id": "S03", "type": "admin", "name": "Kamil 'Kabel'", "archetype": "Technik údržbář", "description": "Flegmatický údržbář držící systém pohromadě improvizacemi.", "ability": "Restart: Můžete vyhlásit technickou pauzu", "goals": ["Udržet tu hromadu šrotu pohromadě", "Prodat kabely U02"], "avatar": "avatar_admin.png" },
-        { "id": "S04", "type": "admin", "name": "Synovec ředitele", "archetype": "Protežovaný idiot", "description": "Namyšlený mladík s teplým místečkem po známosti.", "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce", "goals": ["Vymyslet nový slogan", "Sbalit Agentku A02"], "avatar": "avatar_admin.png" }
+        { "id": "S01", "type": "admin", "name": "Ing. Miloš Vrána", "archetype": "Manažer staré školy", "description": "Praktický manažer, který řeší problémy křikem a pokutami.", "ability": "Ban Hammer: Můžete vyhodit uživatele", "goals": ["Udržet firmu v chodu", "Vybrat dost na pokutách"], "avatar": "avatar_S01.png" },
+        { "id": "S02", "type": "admin", "name": "Bc. Tereza Tichá", "archetype": "HR a Happiness Manager", "description": "Empatická personalistka rozdávající úsměvy a bonbóny.", "ability": "Cukr: Můžete rozdávat bonbony na uklidnění", "goals": ["Zabránit fyzickému násilí", "Aby nikdo nebrečel"], "avatar": "avatar_S02.png" },
+        { "id": "S03", "type": "admin", "name": "Kamil 'Kabel'", "archetype": "Technik údržbář", "description": "Flegmatický údržbář držící systém pohromadě improvizacemi.", "ability": "Restart: Můžete vyhlásit technickou pauzu", "goals": ["Udržet tu hromadu šrotu pohromadě", "Prodat kabely U02"], "avatar": "avatar_S03.png" },
+        { "id": "S04", "type": "admin", "name": "Synovec ředitele", "archetype": "Protežovaný idiot", "description": "Namyšlený mladík s teplým místečkem po známosti.", "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce", "goals": ["Vymyslet nový slogan", "Sbalit Agentku A02"], "avatar": "avatar_S04.png" }
     ];
 }
 
@@ -1383,16 +1383,16 @@ async function loadAndRenderFeatures() {
             throw new Error(`Failed to load features data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
-        
+
         featuresDataLoaded = data.features || [];
         featuresStats = data.statistics || {};
-        
+
         // Update statistics display
         updateFeaturesStatistics(featuresStats, data.generated_at);
-        
+
         // Render the features table
         renderFeaturesTableFromJSON();
-        
+
         console.log('Features loaded:', featuresDataLoaded.length);
     } catch (e) {
         console.warn("Failed to load features.json:", e.message, "- using minimal fallback data (5 sample features)");
@@ -1409,7 +1409,7 @@ function updateFeaturesStatistics(stats, generatedAt) {
     const partialEl = document.getElementById('statPartial');
     const todoEl = document.getElementById('statTodo');
     const generatedEl = document.getElementById('featuresGeneratedAt');
-    
+
     if (totalEl) totalEl.textContent = stats.total || '--';
     if (doneEl) doneEl.textContent = `✅ ${stats.done || 0}`;
     if (partialEl) partialEl.textContent = `⚠️ ${stats.partial || 0}`;
@@ -1425,14 +1425,14 @@ function renderFeaturesTableFromJSON() {
     if (!tbody) return;
 
     tbody.innerHTML = '';
-    
+
     // Apply filters
     const filteredFeatures = featuresDataLoaded.filter(feature => {
         const roleMatch = currentRoleFilter === 'all' || feature.role === currentRoleFilter;
         const statusMatch = currentStatusFilter === 'all' || feature.status === currentStatusFilter;
         return roleMatch && statusMatch;
     });
-    
+
     // Update count display
     const countEl = document.getElementById('featuresFilterCount');
     if (countEl) {
@@ -1466,7 +1466,7 @@ function renderFeaturesTableFromJSON() {
 
         // Role badge class
         const roleBadgeClass = feature.role ? feature.role.toLowerCase() : 'all';
-        
+
         // Test status badge
         let testBadge = '';
         if (feature.test_status) {
@@ -1501,25 +1501,25 @@ function initFeatureFilters() {
     document.querySelectorAll('[data-role-filter]').forEach(btn => {
         btn.addEventListener('click', () => {
             currentRoleFilter = btn.dataset.roleFilter;
-            
+
             // Update active state for role filters
             document.querySelectorAll('[data-role-filter]').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             // Re-render table
             renderFeaturesTableFromJSON();
         });
     });
-    
+
     // Status filter buttons
     document.querySelectorAll('[data-status-filter]').forEach(btn => {
         btn.addEventListener('click', () => {
             currentStatusFilter = btn.dataset.statusFilter;
-            
+
             // Update active state for status filters
             document.querySelectorAll('[data-status-filter]').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             // Re-render table
             renderFeaturesTableFromJSON();
         });

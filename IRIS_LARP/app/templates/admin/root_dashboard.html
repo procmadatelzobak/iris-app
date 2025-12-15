@@ -271,7 +271,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <div class="text-lg font-bold">Režim Jazyka Systému</div>
-                        <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní. Změna platí pro všechny terminály v systému.</div>
+                        <div class="text-sm text-gray-500">Vyberte jazykovou variantu pro celé rozhraní. Změna platí pro
+                            všechny terminály v systému.</div>
                     </div>
                     <select id="languageModeSelect" class="bg-black border border-gray-700 p-2 text-white min-w-48"
                         onchange="setLanguageMode(this.value)">
@@ -287,18 +288,16 @@
                     <strong>Crazy Čeština:</strong> Šílená/zábavná varianta češtiny pro LARP efekt<br>
                     <strong>Čeština + IRIS:</strong> LARP-specifická terminologie pro správce (UMYVADLO, BAHNO, atd.)
                 </div>
-                </div>
-                <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                    <div>
-                        <div class="text-sm font-bold">Vlastní Přejmenování Textů</div>
-                        <div class="text-xs text-gray-500">Správci mohou přejmenovat texty v UI pomocí editačního režimu
-                        </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                <div>
+                    <div class="text-sm font-bold">Vlastní Přejmenování Textů</div>
+                    <div class="text-xs text-gray-500">Správci mohou přejmenovat texty v UI pomocí editačního režimu
                     </div>
-                    <button class="btn-god px-4" onclick="resetAllLabels()">
-                        RESETOVAT VŠECHNY VLASTNÍ TEXTY
-                    </button>
                 </div>
-                <div id="languageStatus" class="text-sm text-gray-600 italic"></div>
+                <button class="btn-god px-4" onclick="resetAllLabels()">
+                    RESETOVAT VŠECHNY VLASTNÍ TEXTY
+                </button>
             </div>
         </div>
 
@@ -577,7 +576,7 @@
             Uživatelé pracují 10 minut, posílají zprávy každé 3 minuty, chodí na pauzy.
             Agenti odpovídají okamžitě. Správci provádí admin akce.
         </p>
-        
+
         <!-- Status Panel -->
         <div class="grid grid-cols-4 gap-4 mb-6">
             <div class="bg-gray-900 p-4 border border-gray-700">
@@ -597,32 +596,32 @@
                 <div class="text-2xl font-bold" id="simRemaining">--:--</div>
             </div>
         </div>
-        
+
         <!-- Progress Bar -->
         <div class="w-full bg-gray-800 h-4 mb-6 border border-gray-700">
-            <div class="h-full bg-gradient-to-r from-yellow-600 to-yellow-400 transition-all duration-1000" 
-                 id="simProgressBar" style="width: 0%"></div>
+            <div class="h-full bg-gradient-to-r from-yellow-600 to-yellow-400 transition-all duration-1000"
+                id="simProgressBar" style="width: 0%"></div>
         </div>
-        
+
         <!-- Control Buttons -->
         <div class="grid grid-cols-4 gap-4 mb-6">
-            <button class="btn-god border-green-500 text-green-500 hover:bg-green-900 py-3" 
-                    onclick="startSimulation(false)" id="btnStartFull">
+            <button class="btn-god border-green-500 text-green-500 hover:bg-green-900 py-3"
+                onclick="startSimulation(false)" id="btnStartFull">
                 ▶️ SPUSTIT (1 HODINA)
             </button>
-            <button class="btn-god border-blue-500 text-blue-500 hover:bg-blue-900 py-3" 
-                    onclick="startSimulation(true)" id="btnStartShort">
+            <button class="btn-god border-blue-500 text-blue-500 hover:bg-blue-900 py-3" onclick="startSimulation(true)"
+                id="btnStartShort">
                 ⏱️ SHORT TEST (5 MIN)
             </button>
-            <button class="btn-god border-red-500 text-red-500 hover:bg-red-900 py-3" 
-                    onclick="stopSimulation()" id="btnStop" disabled>
+            <button class="btn-god border-red-500 text-red-500 hover:bg-red-900 py-3" onclick="stopSimulation()"
+                id="btnStop" disabled>
                 ⏹️ ZASTAVIT
             </button>
             <button class="btn-god py-3" onclick="refreshSimStatus()">
                 🔄 REFRESH STATUS
             </button>
         </div>
-        
+
         <!-- Stats Panel -->
         <div class="god-title mt-4">📊 STATISTIKY</div>
         <div class="grid grid-cols-6 gap-3 mb-6">
@@ -651,15 +650,15 @@
                 <div class="text-xl font-bold text-red-400" id="simErrors">0</div>
             </div>
         </div>
-        
+
         <!-- Live Log -->
         <div class="god-title">📜 LIVE LOG</div>
-        <div id="simLogStream" 
-             class="font-mono text-xs text-gray-400 h-64 overflow-y-auto p-3 bg-black border border-gray-800">
+        <div id="simLogStream"
+            class="font-mono text-xs text-gray-400 h-64 overflow-y-auto p-3 bg-black border border-gray-800">
             <div class="text-gray-600">Čekám na spuštění simulace...</div>
         </div>
     </div>
-    
+
     <!-- History Panel -->
     <div class="god-panel mt-6">
         <div class="god-title">📂 HISTORIE SIMULACÍ</div>
@@ -1314,7 +1313,7 @@
         'crazy': 'Crazy Čeština 🤪',
         'czech-iris': 'Čeština + IRIS'
     };
-    
+
     window.setLanguageMode = async (mode) => {
         const status = document.getElementById('languageStatus');
         try {
@@ -1391,13 +1390,13 @@
     // ============================================
     // SIMULATION CONTROLS
     // ============================================
-    
+
     let simStatusInterval = null;
-    
+
     window.startSimulation = async (shortTest) => {
         const mode = shortTest ? 'SHORT TEST (5 min)' : 'FULL (1 hodina)';
         if (!confirm(`Spustit simulaci ${mode}?\n\nSimulace bude běžet na pozadí.`)) return;
-        
+
         try {
             const res = await fetch('/api/admin/simulation/start', {
                 method: 'POST',
@@ -1407,9 +1406,9 @@
                 },
                 body: JSON.stringify({ short_test: shortTest })
             });
-            
+
             const data = await res.json();
-            
+
             if (data.status === 'started') {
                 addSimLog('SUCCESS', `Simulace spuštěna: ${mode}`);
                 updateSimButtons(true);
@@ -1417,7 +1416,7 @@
             } else {
                 addSimLog('ERROR', data.message || 'Nepodařilo se spustit simulaci');
             }
-            
+
             if (data.data) {
                 updateSimStatus(data.data);
             }
@@ -1425,19 +1424,19 @@
             addSimLog('ERROR', `Chyba: ${e.message}`);
         }
     };
-    
+
     window.stopSimulation = async () => {
         if (!confirm('Zastavit běžící simulaci?')) return;
-        
+
         try {
             const res = await fetch('/api/admin/simulation/stop', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            
+
             const data = await res.json();
             addSimLog('INFO', data.message || 'Zastavuji simulaci...');
-            
+
             if (data.data) {
                 updateSimStatus(data.data);
             }
@@ -1445,20 +1444,20 @@
             addSimLog('ERROR', `Chyba: ${e.message}`);
         }
     };
-    
+
     window.refreshSimStatus = async () => {
         try {
             const res = await fetch('/api/admin/simulation/status', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            
+
             const data = await res.json();
             updateSimStatus(data);
         } catch (e) {
             console.error('Simulation status error:', e);
         }
     };
-    
+
     function updateSimStatus(data) {
         // State
         const stateEl = document.getElementById('simState');
@@ -1470,18 +1469,18 @@
             else if (data.state === 'completed') stateEl.classList.add('text-blue-500');
             else stateEl.classList.add('text-gray-500');
         }
-        
+
         // Progress
         const progress = data.progress_percent || 0;
         document.getElementById('simProgress').innerText = `${progress.toFixed(1)}%`;
         document.getElementById('simProgressBar').style.width = `${progress}%`;
-        
+
         // Time
         const elapsed = data.elapsed_seconds || 0;
         const remaining = data.remaining_seconds || 0;
         document.getElementById('simElapsed').innerText = formatTime(elapsed);
         document.getElementById('simRemaining').innerText = formatTime(remaining);
-        
+
         // Stats from summary
         if (data.summary && data.summary.stats) {
             const stats = data.summary.stats;
@@ -1492,26 +1491,26 @@
             document.getElementById('simTasks').innerText = stats.total_tasks || 0;
             document.getElementById('simErrors').innerText = stats.total_errors || 0;
         }
-        
+
         // Update buttons based on state
         const isRunning = data.state === 'running' || data.state === 'stopping';
         updateSimButtons(isRunning);
-        
+
         // Stop polling if simulation ended
         if (data.state !== 'running' && data.state !== 'stopping' && simStatusInterval) {
             stopSimStatusPolling();
         }
     }
-    
+
     function updateSimButtons(isRunning) {
         const btnStartFull = document.getElementById('btnStartFull');
         const btnStartShort = document.getElementById('btnStartShort');
         const btnStop = document.getElementById('btnStop');
-        
+
         if (btnStartFull) btnStartFull.disabled = isRunning;
         if (btnStartShort) btnStartShort.disabled = isRunning;
         if (btnStop) btnStop.disabled = !isRunning;
-        
+
         // Visual feedback
         if (isRunning) {
             btnStartFull?.classList.add('opacity-50');
@@ -1523,7 +1522,7 @@
             btnStop?.classList.add('opacity-50');
         }
     }
-    
+
     function startSimStatusPolling() {
         if (simStatusInterval) clearInterval(simStatusInterval);
         // Poll every 5 seconds to reduce server load
@@ -1533,25 +1532,25 @@
             await fetchSimLogs();
         }, 5000);
     }
-    
+
     function stopSimStatusPolling() {
         if (simStatusInterval) {
             clearInterval(simStatusInterval);
             simStatusInterval = null;
         }
     }
-    
+
     async function fetchSimLogs() {
         try {
             const res = await fetch('/api/admin/simulation/logs?limit=50', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            
+
             if (data.logs && data.logs.length > 0) {
                 const logDiv = document.getElementById('simLogStream');
                 logDiv.innerHTML = '';
-                
+
                 data.logs.slice(-30).forEach(log => {
                     const time = log.time ? log.time.split('T')[1]?.split('.')[0] : '';
                     const levelColors = {
@@ -1566,20 +1565,20 @@
                         'ADMIN': 'text-yellow-500'
                     };
                     const color = levelColors[log.level] || 'text-gray-400';
-                    
+
                     const entry = document.createElement('div');
                     entry.className = `mb-1 ${color}`;
                     entry.innerText = `[${time}] [${log.level}] ${log.message}`;
                     logDiv.appendChild(entry);
                 });
-                
+
                 logDiv.scrollTop = logDiv.scrollHeight;
             }
         } catch (e) {
             console.error('Fetch logs error:', e);
         }
     }
-    
+
     function addSimLog(level, message) {
         const logDiv = document.getElementById('simLogStream');
         const time = new Date().toLocaleTimeString();
@@ -1589,32 +1588,32 @@
             'ERROR': 'text-red-400'
         };
         const color = levelColors[level] || 'text-gray-400';
-        
+
         const entry = document.createElement('div');
         entry.className = `mb-1 ${color}`;
         entry.innerText = `[${time}] [${level}] ${message}`;
         logDiv.appendChild(entry);
         logDiv.scrollTop = logDiv.scrollHeight;
     }
-    
+
     async function loadSimHistory() {
         try {
             const res = await fetch('/api/admin/simulation/history', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            
+
             const historyDiv = document.getElementById('simHistory');
             if (!data.runs || data.runs.length === 0) {
                 historyDiv.innerHTML = '<div class="text-gray-600 text-sm">Žádné předchozí simulace</div>';
                 return;
             }
-            
+
             historyDiv.innerHTML = '';
             data.runs.forEach(run => {
                 const date = new Date(run.timestamp).toLocaleString('cs-CZ');
                 const statusColor = run.status === 'success' ? 'text-green-500' : 'text-red-500';
-                
+
                 const entry = document.createElement('div');
                 entry.className = 'flex justify-between items-center p-2 border border-gray-800 bg-black hover:bg-gray-900';
                 entry.innerHTML = `
@@ -1633,17 +1632,17 @@
             console.error('Load history error:', e);
         }
     }
-    
+
     function formatTime(seconds) {
         if (!seconds || seconds <= 0) return '--:--';
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    
+
     // Initialize simulation view when switching to it
     const originalSwitchView = window.switchView;
-    window.switchView = function(view) {
+    window.switchView = function (view) {
         originalSwitchView(view);
         if (view === 'simulation') {
             refreshSimStatus();
