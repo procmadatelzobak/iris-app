@@ -524,6 +524,13 @@ document.addEventListener('keydown', (e) => {
 // MANUALS
 // ============================================
 
+const MANUAL_OPEN_FIRST_MESSAGE = 'Nejdříve otevřete manuál';
+
+function notifyManualError(message) {
+    console.warn(message);
+    alert(message);
+}
+
 function showManual(type) {
     const manual = state.manuals[type];
 
@@ -741,14 +748,12 @@ function exportBriefingPDF() {
 function exportManualPDF(type) {
     const manualType = type || currentManualType;
     if (!manualType) {
-        alert('Nejdříve otevřete manuál');
+        notifyManualError(MANUAL_OPEN_FIRST_MESSAGE);
         return;
     }
     const manual = state.manuals[manualType];
     if (!manual) {
-        const message = `Manuál typu '${manualType}' nebyl nalezen.`;
-        console.warn(message);
-        alert(message);
+        notifyManualError(`Manuál typu '${manualType}' nebyl nalezen.`);
         return;
     }
 
