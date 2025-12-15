@@ -66,6 +66,30 @@
     --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.15);
 }
 
+
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-accent);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
 /* ============================================
    RESET & BASE
    ============================================ */
@@ -111,8 +135,10 @@ a:hover {
     padding: var(--space-md) var(--space-xl);
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 100;
 }
 
@@ -205,8 +231,10 @@ a:hover {
     display: flex;
     justify-content: center;
     min-height: 48px;
-    position: sticky;
+    position: fixed;
     top: 60px;
+    left: 0;
+    width: 100%;
     /* Height of main-header */
     z-index: 90;
     backdrop-filter: blur(8px);
@@ -312,6 +340,8 @@ a:hover {
 
 .main-content {
     padding: var(--space-xl);
+    padding-top: 140px;
+    /* Header (approx 80px) + Submenu (approx 50px) + space */
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -1558,14 +1588,240 @@ a:hover {
 }
 
 /* ============================================
+   TIMELINE / GANTT
+   ============================================ */
+
+.gantt-container {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+    position: relative;
+    border: 1px solid var(--border-color);
+    min-height: 400px;
+}
+
+.gantt-header {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    position: sticky;
+    top: 0;
+    background: var(--bg-secondary);
+    z-index: 10;
+}
+
+.gantt-ticks {
+    position: relative;
+    height: 20px;
+    width: 100%;
+}
+
+.gantt-tick {
+    position: absolute;
+    bottom: 0;
+    border-left: 1px solid var(--border-color);
+    height: 5px;
+    font-size: 0.7rem;
+    padding-left: 2px;
+}
+
+.gantt-group {
+    margin-bottom: 25px;
+}
+
+.gantt-group-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    padding-left: 10px;
+    border-left: 3px solid var(--border-color);
+}
+
+.gantt-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    position: relative;
+    height: 40px;
+}
+
+.gantt-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.gantt-label {
+    width: 150px;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 15px;
+    cursor: pointer;
+}
+
+.gantt-label:hover {
+    color: var(--accent-light);
+    text-decoration: underline;
+}
+
+.gantt-track {
+    flex-grow: 1;
+    position: relative;
+    height: 100%;
+    border-left: 1px solid var(--border-color);
+    /* grid lines optional */
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 100%;
+    /* Depends on scale */
+}
+
+.gantt-bar {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    border-radius: 4px;
+    background: var(--primary-color);
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gantt-bar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+}
+
+/* Event Types Colors */
+.gantt-bar.type-system {
+    background: linear-gradient(45deg, #607d8b, #455a64);
+}
+
+.gantt-bar.type-briefing {
+    background: linear-gradient(45deg, #4a9eff, #357abd);
+}
+
+.gantt-bar.type-action {
+    background: linear-gradient(45deg, #4caf50, #2e7d32);
+}
+
+.gantt-bar.type-conflict {
+    background: linear-gradient(45deg, #ff9800, #f57c00);
+}
+
+.gantt-bar.type-highlight {
+    background: linear-gradient(45deg, #e91e63, #c2185b);
+    border: 1px solid #ffcdca;
+}
+
+.gantt-bar.type-investigation {
+    background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+}
+
+.gantt-bar.type-plot {
+    background: linear-gradient(45deg, #009688, #00796b);
+}
+
+.gantt-bar.type-roleplay {
+    background: linear-gradient(45deg, #3f51b5, #303f9f);
+}
+
+/* Legend dots */
+.dot-system {
+    background: #607d8b;
+}
+
+.dot-briefing {
+    background: #4a9eff;
+}
+
+.dot-action {
+    background: #4caf50;
+}
+
+.dot-conflict {
+    background: #ff9800;
+}
+
+.dot-highlight {
+    background: #e91e63;
+}
+
+.gantt-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.gantt-legend {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.gantt-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Phase markers */
+.gantt-phase-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-left: 1px dashed rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
+.gantt-phase-label {
+    position: absolute;
+    top: -20px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    transform: translateX(-50%);
+}
+
+/* ============================================
    PLAYERS SECTION
    ============================================ */
 
 .players-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: minmax(350px, 1.2fr) minmax(300px, 1fr) minmax(300px, 1fr);
     gap: var(--space-lg);
     height: calc(100vh - 200px);
+    min-height: 600px;
+}
+
+.player-relations-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     min-height: 600px;
 }
 
@@ -1874,4 +2130,39 @@ a:hover {
     .players-list-panel {
         max-height: 300px;
     }
+}
+
+/* Vertical relations list in role panel */
+.relations-list-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.relation-item-vertical {
+    background: var(--bg-secondary);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-gold);
+    font-size: 0.9rem;
+}
+
+.relation-item-vertical strong {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--accent-gold);
+}
+
+.panel-title {
+    color: var(--accent-gold);
+    font-size: 1.2rem;
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--space-sm);
+}
+
+/* Custom Scrollbar for all elements */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-accent) var(--bg-primary);
 }

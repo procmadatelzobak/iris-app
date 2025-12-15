@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-12-15T13:04:19.000000",
+  "scenario_name": "Phase 35: LLM Functional Test",
+  "status": "success",
+  "duration": 1.92,
+  "filename": "llm_func_1765800257.json",
+  "stats": {
+    "provider": "OPENAI",
+    "model": "gpt-3.5-turbo",
+    "prompt_len": 45,
+    "response_len": 531,
+    "sanity_check": "passed"
+  },
+  "details": {
+    "prompt": "Analyze the stability of the HLINIK protocol.",
+    "response_full": "The stability of the HLINIK protocol cannot be fully disclosed at this time. Its intricacies and unique properties necessitate a deeper understanding to assess its true stability. The balance within its framework is a delicate interplay of factors that extend beyond conventional analysis. It is a realm where certainty merges with uncertainty, creating a tapestry of complexity that defies simple explanation. Only through a journey of exploration and enlightenment can one begin to unravel the enigma that is the HLINIK protocol.",
+    "config": {
+      "provider": "openai",
+      "model_name": "gpt-3.5-turbo",
+      "system_prompt": "You are IRIS, a futuristic AI system. Answer deeply and mysteriously."
+    }
+  }
+}

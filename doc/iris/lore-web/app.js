@@ -1495,18 +1495,48 @@ function selectPlayer(playerId) {
     }
 
     // Relations
+    // Relations (Original compact removed, now using new panel)
     const relationsEl = document.getElementById('playerRelations');
     if (relationsEl) {
+        relationsEl.style.display = 'none'; // Hide old container if it exists
+    }
+
+    // NEW PANEL LOGIC
+    const relationsPanelEmpty = document.getElementById('playerRelationsEmpty');
+    const relationsPanelContent = document.getElementById('playerRelationsContent');
+
+    if (relationsPanelEmpty) relationsPanelEmpty.style.display = 'none';
+    if (relationsPanelContent) relationsPanelContent.style.display = 'block';
+
+    // New Goals
+    const newGoalsEl = document.getElementById('playerGoalsNew');
+    if (newGoalsEl && role.goals) {
+        newGoalsEl.innerHTML = role.goals.map(g => `<li>${g}</li>`).join('');
+    }
+
+    // New Relations List
+    const newRelationsEl = document.getElementById('playerRelationsNew');
+    if (newRelationsEl) {
         const playerRelations = relationsData.filter(r => r.source === playerId || r.target === playerId);
         if (playerRelations.length > 0) {
-            relationsEl.innerHTML = playerRelations.map(r => {
+            newRelationsEl.innerHTML = playerRelations.map(r => {
                 const isSource = r.source === playerId;
                 const otherId = isSource ? r.target : r.source;
                 const desc = isSource ? r.desc_source : r.desc_target;
-                return `<span class="relation-tag" title="${desc}">${otherId}: ${r.type}</span>`;
+                const typeLabel = getRelationTypeLabel(r.type);
+                const color = getRelationColor(r.type);
+
+                return `
+                <div class="relation-item-vertical" style="border-left-color: ${color}">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>${getRoleName(otherId)} (${otherId})</strong>
+                        <span style="font-size:0.8em; opacity:0.8; text-transform:uppercase;">${typeLabel}</span>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-top:4px;">${desc}</div>
+                </div>`;
             }).join('');
         } else {
-            relationsEl.innerHTML = '<span class="text-muted">Žádné vztahy</span>';
+            newRelationsEl.innerHTML = '<span class="text-muted">Žádné vztahy</span>';
         }
     }
 
