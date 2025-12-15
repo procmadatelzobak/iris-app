@@ -611,6 +611,109 @@ a:hover {
     color: var(--color-admin);
 }
 
+/* Additional role badges for features */
+.role-badge.all {
+    background: rgba(128, 128, 128, 0.2);
+    color: var(--text-secondary);
+}
+
+.role-badge.root {
+    background: rgba(156, 39, 176, 0.2);
+    color: #9c27b0;
+}
+
+.role-badge.ai {
+    background: rgba(0, 188, 212, 0.2);
+    color: #00bcd4;
+}
+
+.role-badge.developer {
+    background: rgba(255, 152, 0, 0.2);
+    color: var(--accent-orange);
+}
+
+.role-badge.system {
+    background: rgba(96, 125, 139, 0.2);
+    color: #607d8b;
+}
+
+/* Status badges */
+.badge-done {
+    color: var(--accent-green);
+}
+
+.badge-partial {
+    color: var(--accent-orange);
+}
+
+.badge-todo {
+    color: var(--accent-red);
+}
+
+/* Test status badges */
+.badge-tested {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--accent-green);
+}
+
+.badge-failed {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(239, 83, 80, 0.2);
+    color: var(--accent-red);
+}
+
+.badge-pending {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(255, 152, 0, 0.2);
+    color: var(--accent-orange);
+}
+
+.badge-untested {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(128, 128, 128, 0.1);
+    color: var(--text-muted);
+}
+
+/* Checkbox-like status display (GitHub-style) */
+.feature-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.feature-checkbox::before {
+    content: '☐';
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+.feature-checkbox.checked::before {
+    content: '☑';
+    color: var(--accent-green);
+}
+
+.feature-checkbox.partial::before {
+    content: '◐';
+    color: var(--accent-orange);
+}
+
 .ability-text {
     font-size: 0.85rem;
     color: var(--text-secondary);

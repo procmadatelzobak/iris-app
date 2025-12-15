@@ -1305,111 +1305,178 @@ function openPrintWindow(htmlContent, filename) {
 }
 
 // ============================================
-// HLINIK FEATURES DATA
+// HLINIK FEATURES DATA (Loaded from JSON)
 // ============================================
 
-const featuresData = [
-    // Core Features
-    { status: "✅", category: "core", name: "JWT Autentizace", desc: "Bezpečné přihlašování s HTTP-only cookies" },
-    { status: "✅", category: "core", name: "Role-based Access", desc: "Přístup podle rolí (User/Agent/Admin/Root)" },
-    { status: "✅", category: "core", name: "WebSocket Real-time", desc: "Okamžitá komunikace přes WebSocket" },
-    { status: "✅", category: "core", name: "Session Routing", desc: "8 izolovaných kanálů s dynamickým přiřazením" },
-    { status: "✅", category: "core", name: "Ekonomický systém", desc: "Kredity, daně, Treasury, Purgatory mód" },
-    { status: "✅", category: "core", name: "Task systém", desc: "Schvalování, hodnocení, výplata úkolů" },
+let featuresDataLoaded = [];
+let featuresStats = {};
+let currentRoleFilter = 'all';
+let currentStatusFilter = 'all';
 
-    // User Features
-    { status: "✅", category: "user", name: "Retro terminál", desc: "CRT efekty, 4 témata (Low/Mid/High/Party)" },
-    { status: "✅", category: "user", name: "Chat s agentem", desc: "Posílání a přijímání zpráv v reálném čase" },
-    { status: "✅", category: "user", name: "Report systém", desc: "Nahlášení nevhodných zpráv" },
-    { status: "✅", category: "user", name: "Purgatory mód", desc: "Blokace chatu při záporném zůstatku, úkoly povoleny" },
-    { status: "✅", category: "user", name: "Party mód", desc: "Speciální téma s animovanými bublinami" },
-    { status: "✅", category: "user", name: "Správa úkolů", desc: "Žádost o úkol, odevzdání, sledování stavu" },
+async function loadAndRenderFeatures() {
+    try {
+        const response = await fetch('data/features.json');
+        if (!response.ok) {
+            throw new Error(`Failed to load features data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        
+        featuresDataLoaded = data.features || [];
+        featuresStats = data.statistics || {};
+        
+        // Update statistics display
+        updateFeaturesStatistics(featuresStats, data.generated_at);
+        
+        // Render the features table
+        renderFeaturesTableFromJSON();
+        
+        console.log('Features loaded:', featuresDataLoaded.length);
+    } catch (e) {
+        console.warn("Failed to load features.json:", e.message, "- using minimal fallback data (5 sample features)");
+        // Use fallback inline data when JSON is unavailable
+        featuresDataLoaded = getFallbackFeaturesData();
+        featuresStats = { total: featuresDataLoaded.length, done: 0, partial: 0, todo: 0 };
+        renderFeaturesTableFromJSON();
+    }
+}
 
-    // Agent Features
-    { status: "✅", category: "agent", name: "Agent terminál", desc: "Monochromatický retro design" },
-    { status: "✅", category: "agent", name: "Message Optimizer", desc: "AI přepis zpráv s potvrzením před odesláním" },
-    { status: "✅", category: "agent", name: "Autopilot", desc: "Automatické AI odpovědi" },
-    { status: "✅", category: "agent", name: "Response Timer", desc: "Žlutý progress bar s časovým limitem" },
-    { status: "✅", category: "agent", name: "Visibility módy", desc: "Normal, Blackbox, Forensic, Ephemeral" },
-    { status: "✅", category: "agent", name: "Typing sync", desc: "Real-time synchronizace psaní" },
+function updateFeaturesStatistics(stats, generatedAt) {
+    const totalEl = document.getElementById('statTotalFeatures');
+    const doneEl = document.getElementById('statImplemented');
+    const partialEl = document.getElementById('statPartial');
+    const todoEl = document.getElementById('statTodo');
+    const generatedEl = document.getElementById('featuresGeneratedAt');
+    
+    if (totalEl) totalEl.textContent = stats.total || '--';
+    if (doneEl) doneEl.textContent = `✅ ${stats.done || 0}`;
+    if (partialEl) partialEl.textContent = `⚠️ ${stats.partial || 0}`;
+    if (todoEl) todoEl.textContent = `❌ ${stats.todo || 0}`;
+    if (generatedEl && generatedAt) {
+        const date = new Date(generatedAt);
+        generatedEl.textContent = date.toLocaleString('cs-CZ');
+    }
+}
 
-    // Admin Features
-    { status: "✅", category: "admin", name: "Dashboard Hub", desc: "4 stanice: Monitor, Control, Economy, Tasks" },
-    { status: "✅", category: "admin", name: "Panopticon", desc: "Přehled všech 8 relací, systémové logy" },
-    { status: "✅", category: "admin", name: "Ekonomika", desc: "Pokuty, bonusy, zámky, status levely" },
-    { status: "✅", category: "admin", name: "Úkoly", desc: "Schvalování, editace, hodnocení s LLM" },
-    { status: "✅", category: "admin", name: "Kontrola", desc: "Shift, teplota, AI optimizer, visibility" },
-    { status: "✅", category: "admin", name: "Network graf", desc: "Canvas vizualizace User-Agent spojení" },
-
-    // ROOT Features
-    { status: "✅", category: "admin", name: "ROOT Dashboard", desc: "Elite admin interface s 5 taby" },
-    { status: "✅", category: "admin", name: "Test Mode", desc: "Quick login tlačítka pro testování" },
-    { status: "✅", category: "admin", name: "AI Config", desc: "Nastavení Optimizer a Autopilot modelů" },
-    { status: "✅", category: "admin", name: "Chronos", desc: "Časová manipulace, override teploty" },
-
-    // AI Features
-    { status: "✅", category: "ai", name: "Multi-provider", desc: "OpenAI, OpenRouter, Gemini" },
-    { status: "✅", category: "ai", name: "Task Generation", desc: "LLM generování popisů úkolů" },
-    { status: "✅", category: "ai", name: "Report Immunity", desc: "AI zprávy nelze nahlásit" },
-    { status: "⚠️", category: "ai", name: "Task LLM Config", desc: "Backend existuje, UI není implementováno" },
-    { status: "⚠️", category: "ai", name: "Provider Selection", desc: "Částečná implementace v UI" }
-];
-
-function renderFeaturesTable() {
+function renderFeaturesTableFromJSON() {
     const tbody = document.getElementById('featuresTableBody');
     if (!tbody) return;
 
     tbody.innerHTML = '';
+    
+    // Apply filters
+    const filteredFeatures = featuresDataLoaded.filter(feature => {
+        const roleMatch = currentRoleFilter === 'all' || feature.role === currentRoleFilter;
+        const statusMatch = currentStatusFilter === 'all' || feature.status === currentStatusFilter;
+        return roleMatch && statusMatch;
+    });
+    
+    // Update count display
+    const countEl = document.getElementById('featuresFilterCount');
+    if (countEl) {
+        countEl.textContent = `Zobrazeno: ${filteredFeatures.length} z ${featuresDataLoaded.length}`;
+    }
 
-    featuresData.forEach(feature => {
+    filteredFeatures.forEach(feature => {
         const tr = document.createElement('tr');
-        tr.dataset.featureCategory = feature.category;
+        tr.dataset.featureRole = feature.role;
+        tr.dataset.featureStatus = feature.status;
 
-        const statusColor = feature.status === '✅' ? 'var(--accent-green)' :
-            feature.status === '⚠️' ? 'var(--accent-orange)' : 'var(--text-muted)';
+        // Status icon and color
+        let statusIcon, statusColor;
+        switch (feature.status) {
+            case 'DONE':
+                statusIcon = '✅';
+                statusColor = 'var(--accent-green)';
+                break;
+            case 'PARTIAL':
+                statusIcon = '⚠️';
+                statusColor = 'var(--accent-orange)';
+                break;
+            case 'IN_PROGRESS':
+                statusIcon = '🔄';
+                statusColor = 'var(--accent-blue)';
+                break;
+            default:
+                statusIcon = '❌';
+                statusColor = 'var(--accent-red)';
+        }
 
-        const categoryLabels = {
-            'core': '🏗️ Jádro',
-            'user': '👥 Uživatel',
-            'agent': '🤖 Agent',
-            'admin': '👔 Admin',
-            'ai': '🧠 AI'
-        };
+        // Role badge class
+        const roleBadgeClass = feature.role ? feature.role.toLowerCase() : 'all';
+        
+        // Test status badge
+        let testBadge = '';
+        if (feature.test_status) {
+            if (feature.test_status.includes('PASS')) {
+                testBadge = `<span class="badge-tested">✓ Testováno</span>`;
+            } else if (feature.test_status.includes('FAIL')) {
+                testBadge = `<span class="badge-failed">✗ Selhalo</span>`;
+            } else if (feature.test_status.includes('Pending')) {
+                testBadge = `<span class="badge-pending">⏳ Čeká</span>`;
+            } else if (feature.test_status === 'Untested') {
+                testBadge = `<span class="badge-untested">—</span>`;
+            } else {
+                testBadge = `<span class="badge-untested">${feature.test_status}</span>`;
+            }
+        } else {
+            testBadge = `<span class="badge-untested">—</span>`;
+        }
 
         tr.innerHTML = `
-            <td style="color: ${statusColor}; text-align: center;">${feature.status}</td>
-            <td><span class="role-badge" style="background: var(--bg-secondary);">${categoryLabels[feature.category] || feature.category}</span></td>
+            <td style="color: ${statusColor}; text-align: center; font-size: 1.1rem;">${statusIcon}</td>
+            <td><span class="role-badge ${roleBadgeClass}">${feature.role || 'All'}</span></td>
             <td><strong>${feature.name}</strong></td>
-            <td class="ability-text">${feature.desc}</td>
+            <td class="ability-text">${feature.description !== feature.name ? feature.description : ''}</td>
+            <td>${testBadge}</td>
         `;
         tbody.appendChild(tr);
     });
 }
 
 function initFeatureFilters() {
-    document.querySelectorAll('[data-feature-filter]').forEach(btn => {
+    // Role filter buttons
+    document.querySelectorAll('[data-role-filter]').forEach(btn => {
         btn.addEventListener('click', () => {
-            const filter = btn.dataset.featureFilter;
-
-            // Update active state
-            document.querySelectorAll('[data-feature-filter]').forEach(b => b.classList.remove('active'));
+            currentRoleFilter = btn.dataset.roleFilter;
+            
+            // Update active state for role filters
+            document.querySelectorAll('[data-role-filter]').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            // Filter table
-            filterFeaturesTable(filter);
+            
+            // Re-render table
+            renderFeaturesTableFromJSON();
+        });
+    });
+    
+    // Status filter buttons
+    document.querySelectorAll('[data-status-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentStatusFilter = btn.dataset.statusFilter;
+            
+            // Update active state for status filters
+            document.querySelectorAll('[data-status-filter]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Re-render table
+            renderFeaturesTableFromJSON();
         });
     });
 }
 
-function filterFeaturesTable(filter) {
-    const rows = document.querySelectorAll('#featuresTableBody tr');
-    rows.forEach(row => {
-        if (filter === 'all') {
-            row.style.display = '';
-        } else {
-            row.style.display = row.dataset.featureCategory === filter ? '' : 'none';
-        }
-    });
+function getFallbackFeaturesData() {
+    // Minimal fallback data when features.json is not available
+    return [
+        { id: "feat_001", category: "Core Features", role: "All", name: "JWT Authentication", description: "HTTP-only cookie sessions", status: "DONE", test_status: null },
+        { id: "feat_002", category: "Core Features", role: "All", name: "WebSocket Real-time", description: "Instant messaging", status: "DONE", test_status: null },
+        { id: "feat_003", category: "User Features", role: "User", name: "Retro Terminal", description: "CRT effects", status: "DONE", test_status: null },
+        { id: "feat_004", category: "Agent Features", role: "Agent", name: "Message Optimizer", description: "AI message rewriting", status: "DONE", test_status: null },
+        { id: "feat_005", category: "Admin Features", role: "Admin", name: "Dashboard Hub", description: "4 stations", status: "DONE", test_status: null },
+    ];
+}
+
+// Legacy compatibility - keep old function name
+function renderFeaturesTable() {
+    loadAndRenderFeatures();
 }
 
 // ============================================
