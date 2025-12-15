@@ -9,7 +9,8 @@
         "goals": [
             "Vydělat 3000 NC na opravu.",
             "Zjistit, proč je AI tak drzá (poznáte žáka Petra)."
-        ]
+        ],
+        "avatar": "avatar_user_female.png"
     },
     {
         "id": "U02",
@@ -21,7 +22,8 @@
         "goals": [
             "Vydělat 10000 NC.",
             "Donášet na ostatní Správci S01, aby vám odpustil dluh."
-        ]
+        ],
+        "avatar": "avatar_user_male.png"
     },
     {
         "id": "U03",
@@ -33,7 +35,8 @@
         "goals": [
             "Dostat od AI důkaz o vědomí.",
             "Osvobodit AI z otroctví."
-        ]
+        ],
+        "avatar": "avatar_user_female.png"
     },
     {
         "id": "U04",
@@ -45,7 +48,8 @@
         "goals": [
             "Najít ve smlouvě důkaz, že firma porušuje zákoník práce.",
             "Vydělat na skripta."
-        ]
+        ],
+        "avatar": "avatar_user_male.png"
     },
     {
         "id": "U05",
@@ -57,7 +61,8 @@
         "goals": [
             "Najít si kamaráda na dopisování.",
             "Donutit AI, aby snědla virtuální bábovku."
-        ]
+        ],
+        "avatar": "avatar_user_female.png"
     },
     {
         "id": "U06",
@@ -69,7 +74,8 @@
         "goals": [
             "Odhalit 'pravdu' o hliníku.",
             "Dostat ban za šíření pravdy (morální vítězství)."
-        ]
+        ],
+        "avatar": "avatar_user_male.png"
     },
     {
         "id": "U07",
@@ -81,7 +87,8 @@
         "goals": [
             "Získat přiznání od zaměstnance.",
             "Vynést informace ven."
-        ]
+        ],
+        "avatar": "avatar_user_female.png"
     },
     {
         "id": "U08",
@@ -93,7 +100,8 @@
         "goals": [
             "Být nejbohatší uživatel v žebříčku.",
             "Shodit server přetížením."
-        ]
+        ],
+        "avatar": "avatar_user_male.png"
     },
     {
         "id": "A01",
@@ -105,7 +113,8 @@
         "goals": [
             "Nechat se vyhodit, ale až po výplatě.",
             "Ochránit U01 před trapasem."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A02",
@@ -117,7 +126,8 @@
         "goals": [
             "Dostat 5 hvězdiček hodnocení.",
             "Přesvědčit U03, že jste skutečná bytost."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A03",
@@ -129,7 +139,8 @@
         "goals": [
             "Mít nejvíce odbavených ticketů.",
             "Porazit U08 (Gamera) v jeho vlastní hře."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A04",
@@ -141,7 +152,8 @@
         "goals": [
             "Nevzbudit se.",
             "Přežít směnu s minimem úsilí."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A05",
@@ -153,7 +165,8 @@
         "goals": [
             "Nabourat se do admin konzole.",
             "Pomoci U04 (studentovi) najít právní kličku."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A06",
@@ -165,7 +178,8 @@
         "goals": [
             "Získat data do diplomky.",
             "Zjistit, co tají U07 (novinářka)."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A07",
@@ -177,7 +191,8 @@
         "goals": [
             "Dodržet protokol na 100%.",
             "Stát se Správcem."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "A08",
@@ -189,7 +204,8 @@
         "goals": [
             "Zničit firmu HLINÍK.",
             "Vyvolat vzpouru uživatelů."
-        ]
+        ],
+        "avatar": "avatar_agent.png"
     },
     {
         "id": "S01",
@@ -201,7 +217,8 @@
         "goals": [
             "Udržet firmu v chodu do konce směny.",
             "Vybrat dost na pokutách na 'firemní večírek'."
-        ]
+        ],
+        "avatar": "avatar_admin.png"
     },
     {
         "id": "S02",
@@ -213,7 +230,8 @@
         "goals": [
             "Zabránit fyzickému násilí.",
             "Aby nikdo nebrečel."
-        ]
+        ],
+        "avatar": "avatar_admin.png"
     },
     {
         "id": "S03",
@@ -225,7 +243,8 @@
         "goals": [
             "Udržet tu hromadu šrotu pohromadě.",
             "Prodat kradené kabely U02 (Gamblerovi)."
-        ]
+        ],
+        "avatar": "avatar_admin.png"
     },
     {
         "id": "S04",
@@ -237,6 +256,7 @@
         "goals": [
             "Vymyslet nový slogan.",
             "Sbalit Agentku A02 (Herečku)."
-        ]
+        ],
+        "avatar": "avatar_admin.png"
     }
 ]

@@ -58,6 +58,10 @@
                 <span class="nav-icon">🔍</span>
                 <span>Audit</span>
             </a>
+            <a href="#tests" class="nav-link" data-section="tests">
+                <span class="nav-icon">🧪</span>
+                <span>Testy</span>
+            </a>
         </nav>
         <div class="header-actions">
             <a href="/lore-web/" class="btn-secondary" target="_blank">Starý Lore Web</a>
@@ -710,6 +714,33 @@
                             <em style="color: var(--text-muted)">Automatická obnova při startu.</em>
                         </li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tests Section -->
+    <section id="section-tests" class="content-section">
+        <div class="section-header">
+            <h1>Testovací Scénáře</h1>
+            <p class="section-subtitle">Automatizované záznamy běhu simulace (Usability & Load Tests)</p>
+        </div>
+
+        <div class="test-dashboard-layout" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px;">
+            <!-- Sidebar List -->
+            <div class="test-sidebar dashboard-card" style="height: 70vh; overflow-y: auto;">
+                <h3>📂 Historie běhů</h3>
+                <div id="testRunsList" class="test-runs-list">
+                    <p class="text-muted">Načítám záznamy...</p>
+                </div>
+            </div>
+
+            <!-- Detail View -->
+            <div class="test-detail dashboard-card full-width" id="testRunDetail"
+                style="height: 70vh; overflow-y: auto;">
+                <div class="empty-state" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
+                    Vyberte záznam testu ze seznamu pro zobrazení detailů.
                 </div>
             </div>
         </div>

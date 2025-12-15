@@ -1199,6 +1199,168 @@ a:hover {
 }
 
 /* ============================================
+   TEST RUNS
+   ============================================ */
+
+.test-runs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.test-run-item {
+    padding: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.test-run-item:hover,
+.test-run-item.active {
+    border-color: var(--accent-gold);
+    background: var(--bg-card-hover);
+}
+
+.test-run-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+}
+
+.test-status {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.test-status.passed {
+    color: var(--accent-green);
+}
+
+.test-status.failed {
+    color: var(--accent-red);
+}
+
+.test-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.log-container {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.log-entry {
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.log-time {
+    color: var(--text-muted);
+    min-width: 80px;
+    flex-shrink: 0;
+}
+
+.log-level {
+    font-weight: bold;
+    min-width: 60px;
+    flex-shrink: 0;
+}
+
+.log-level.INFO {
+    color: var(--accent-blue);
+}
+
+.log-level.ERROR {
+    color: var(--accent-red);
+}
+
+.log-level.WARNING {
+    color: var(--accent-orange);
+}
+
+.log-level.SUCCESS {
+    color: var(--accent-green);
+}
+
+.log-message {
+    word-break: break-word;
+}
+
+.log-img-wrapper {
+    margin-top: 10px;
+    border: 1px solid var(--border-accent);
+    padding: 4px;
+    background: #000;
+    max-width: 600px;
+}
+
+.log-img-wrapper img {
+    max-width: 100%;
+    display: block;
+}
+
+.log-img-caption {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 4px 0;
+}
+
+/* ============================================
+   MANUAL & AVATAR STYLES
+   ============================================ */
+
+.manual-image-container {
+    margin: 20px 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.manual-img {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 2px;
+    border: 1px solid var(--accent-blue);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.img-caption {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-mono);
+}
+
+.role-avatar-wrapper {
+    flex-shrink: 0;
+}
+
+.user-card-header img {
+    transition: transform 0.2s;
+}
+
+.user-card:hover .user-card-header img {
+    transform: scale(1.1);
+}
+
+/* ============================================
    PRINT STYLES
    ============================================ */
 
