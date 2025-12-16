@@ -112,6 +112,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Init Translation Editor
     initLanguagesEditor();
+
+    // Init LLM Prompts section
+    renderLLMPrompts();
 });
 
 async function loadData() {
@@ -165,6 +168,7 @@ const sectionCategories = {
     'hlinik': 'hlinik',
     'system': 'hlinik',
     'tests': 'hlinik',
+    'llm-prompty': 'hlinik',
     'loreweb-doc': 'about',
     'compliance': 'about',
     'exporty': 'about',
@@ -704,8 +708,7 @@ function showBriefing(roleId) {
         ability: role.ability,
         goals_list: goalsList,
         section_appearance: appearanceSection,
-        section_appearance: appearanceSection,
-        // section_work_image moved to relations panel
+        section_work_image: workImageSection,
         relations_section: relationsSection
     };
 
@@ -1623,6 +1626,112 @@ function getFallbackFeaturesData() {
     ];
 }
 
+// ============================================
+// LLM PROMPTS SECTION
+// ============================================
+
+async function renderLLMPrompts() {
+    const container = document.getElementById('llmPromptsContainer');
+    if (!container) return;
+
+    try {
+        const response = await fetch('data/llm_prompts.json');
+        if (!response.ok) throw new Error('Failed to load');
+
+        const data = await response.json();
+        const prompts = data.prompts || [];
+
+        container.innerHTML = `
+            <div class="llm-prompts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+                ${prompts.map(p => `
+                    <div class="dashboard-card" style="border-left: 4px solid ${getPromptColor(p.id)};">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <span style="font-size: 1.5rem;">${p.icon || '🤖'}</span>
+                            <div>
+                                <h3 style="margin: 0;">${p.name}</h3>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">${p.name_cs}</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">${p.description}</p>
+                        
+                        <div class="version-info" style="margin-bottom: 1rem;">
+                            <div class="version-item">
+                                <span class="label">Provider:</span>
+                                <span class="value">${formatProvider(p.provider)}</span>
+                            </div>
+                            <div class="version-item">
+                                <span class="label">Model:</span>
+                                <span class="value"><code>${p.model}</code></span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <strong style="color: var(--text-muted); font-size: 0.8rem;">SYSTEM PROMPT</strong>
+                                <button class="btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" onclick="copyPrompt('${p.id}')">📋 Kopírovat</button>
+                            </div>
+                            <pre id="prompt-${p.id}" style="white-space: pre-wrap; word-break: break-word; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); margin: 0; line-height: 1.6;">${escapeHtml(p.system_prompt)}</pre>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="dashboard-card" style="margin-top: 1.5rem; background: var(--bg-secondary);">
+                <h3>📝 Poznámky</h3>
+                <ul class="feature-list">
+                    <li>Prompty jsou uloženy v <code>IRIS_LARP/app/logic/gamestate.py</code> jako konstanty.</li>
+                    <li>ROOT uživatel může prompty upravit přes dashboard v sekci <strong>CONFIG → AI CONFIGURATION</strong>.</li>
+                    <li>Při <strong>Factory Reset</strong> se prompty vrátí na tyto výchozí hodnoty.</li>
+                    <li>Všechny prompty jsou v češtině a reflektují firemní kulturu HLINÍK a syn s.r.o.</li>
+                </ul>
+            </div>
+        `;
+    } catch (e) {
+        console.warn('Failed to load LLM prompts:', e);
+        container.innerHTML = `
+            <div class="dashboard-card" style="text-align: center; padding: 2rem;">
+                <p style="color: var(--text-muted);">⚠️ Nepodařilo se načíst LLM prompty. Otevřete stránku přes HTTP server.</p>
+            </div>
+        `;
+    }
+}
+
+function getPromptColor(id) {
+    const colors = {
+        'task': '#4a9eff',
+        'hyper': '#e91e63',
+        'optimizer': '#d4af37',
+        'censor': '#9c27b0'
+    };
+    return colors[id] || '#666';
+}
+
+function formatProvider(provider) {
+    const providers = {
+        'openai': 'OpenAI',
+        'openrouter': 'OpenRouter',
+        'gemini': 'Google Gemini'
+    };
+    return providers[provider] || provider;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function copyPrompt(id) {
+    const el = document.getElementById(`prompt-${id}`);
+    if (el) {
+        navigator.clipboard.writeText(el.textContent).then(() => {
+            alert('✅ Prompt zkopírován do schránky');
+        }).catch(() => {
+            alert('❌ Nepodařilo se zkopírovat');
+        });
+    }
+}
+
 // Legacy compatibility - keep old function name
 function renderFeaturesTable() {
     loadAndRenderFeatures();
@@ -1796,6 +1905,24 @@ function selectPlayer(playerId) {
             workImageEl.onerror = () => { workImageSection.style.display = 'none'; };
         } else {
             workImageSection.style.display = 'none';
+        }
+    }
+
+    // Story Nodes
+    const storyNodesEl = document.getElementById('playerStoryNodes');
+    if (storyNodesEl) {
+        const storyNodes = getStoryNodesForRole(playerId);
+        if (storyNodes.length > 0) {
+            storyNodesEl.innerHTML = storyNodes.map(node => `
+                <div class="story-node-item" style="border-left: 3px solid var(--accent-purple); padding-left: 12px; margin-bottom: 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="color: var(--accent-purple);">${node.time}m - ${node.phase}</strong>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-top: 4px;">${node.label}</div>
+                </div>
+            `).join('');
+        } else {
+            storyNodesEl.innerHTML = '<span class="text-muted">Žádné specifické příběhové uzly.</span>';
         }
     }
 }

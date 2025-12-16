@@ -106,6 +106,9 @@
             <a href="#tests" class="submenu-link" data-section="tests">
                 <span class="submenu-icon">🧪</span> Testy
             </a>
+            <a href="#llm-prompty" class="submenu-link" data-section="llm-prompty">
+                <span class="submenu-icon">🤖</span> LLM Prompty
+            </a>
         </div>
         <!-- Správa submenu -->
         <div class="submenu-group" data-category="sprava" style="display: none;">
@@ -1152,91 +1155,125 @@
                 </div>
             </div>
         </section>
-    </main>
 
-    <!-- Lore-Web Documentation Section -->
-    <section id="section-loreweb-doc" class="content-section">
-        <div class="section-header">
-            <h1>Dokumentace Lore-Web</h1>
-            <p class="section-subtitle">Pravidla, struktura a údržba tohoto wiki systému</p>
-        </div>
+        <!-- LLM Prompty Section -->
+        <section id="section-llm-prompty" class="content-section">
+            <div class="section-header">
+                <h1>LLM Prompty</h1>
+                <p class="section-subtitle">Výchozí systémové prompty pro AI modely v systému HLINIK</p>
+            </div>
 
-        <div class="dashboard-grid">
-            <!-- Úvod -->
-            <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
-                <h3>📖 O tomto systému</h3>
-                <p style="line-height: 1.8; color: var(--text-primary);">
-                    <strong>Lore-Web</strong> je statická dokumentační wiki pro projekt IRIS LARP.
-                    Celý systém je navržen jako <strong>single-page aplikace</strong> s minimálním počtem souborů
-                    pro snadnou údržbu, přenos a verzování.
-                </p>
-                <div
-                    style="background: rgba(233, 30, 99, 0.1); padding: 1rem; border-left: 3px solid var(--accent-red); margin-top: 1rem;">
-                    <strong>⚠️ Klíčové pravidlo:</strong> Celý web musí zůstat co nejmenší – minimální počet souborů,
-                    minimální velikost dat, minimální počet tokenů. Vždy preferujte inline data před externími soubory.
+            <div class="dashboard-grid">
+                <!-- Úvod -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
+                    <h3>🤖 O LLM promptyech</h3>
+                    <p style="line-height: 1.8; color: var(--text-primary);">
+                        Systém IRIS používá <strong>4 různé LLM profily</strong>, každý s vlastním systémovým promptem.
+                        Tyto prompty definují chování a "osobnost" AI v různých kontextech.
+                        Všechny prompty jsou v češtině a reflektují korporátní kulturu společnosti HLINÍK a syn s.r.o.
+                    </p>
+                    <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                        <strong>Zdroj:</strong> <code>IRIS_LARP/app/logic/gamestate.py</code> |
+                        <strong>Konfigurace:</strong> ROOT Dashboard → CONFIG → AI CONFIGURATION
+                    </p>
+                </div>
+
+                <!-- Prompt Cards Container -->
+                <div id="llmPromptsContainer" class="full-width">
+                    <!-- Dynamically populated from llm_prompts.json -->
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        Načítání promptů...
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Struktura souborů -->
-            <div class="dashboard-card full-width">
-                <h3>📁 Struktura souborů</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Soubor</th>
-                            <th>Účel</th>
-                            <th>Velikost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>index.html</code></td>
-                            <td>Hlavní stránka – obsahuje VŠECHNY sekce a obsah</td>
-                            <td>~70 KB</td>
-                        </tr>
-                        <tr>
-                            <td><code>style.css</code></td>
-                            <td>Všechny styly – CSS proměnné, komponenty, responzivita</td>
-                            <td>~35 KB</td>
-                        </tr>
-                        <tr>
-                            <td><code>app.js</code></td>
-                            <td>Veškerá logika – navigace, renderování, exporty</td>
-                            <td>~55 KB</td>
-                        </tr>
-                        <tr>
-                            <td><code>data/roles.json</code></td>
-                            <td>Definice 20 postav (id, jméno, archetyp, schopnosti, cíle)</td>
-                            <td>~18 KB</td>
-                        </tr>
-                        <tr>
-                            <td><code>data/relations.json</code></td>
-                            <td>Vztahy mezi postavami (source, target, type, popisy)</td>
-                            <td>~4 KB</td>
-                        </tr>
-                        <tr>
-                            <td><code>data/config.json</code></td>
-                            <td>Základní konfigurace (verze, fáze)</td>
-                            <td>~200 B</td>
-                        </tr>
-                        <tr>
-                            <td><code>data/manuals.json</code></td>
-                            <td>Obsah manuálů pro User/Agent/Admin</td>
-                            <td>~14 KB</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
-                    <strong>Celkem:</strong> 3 hlavní soubory + 4 datové soubory. Žádné frameworky, žádné závislosti.
-                </p>
+        <!-- Lore-Web Documentation Section -->
+        <section id="section-loreweb-doc" class="content-section">
+            <div class="section-header">
+                <h1>Dokumentace Lore-Web</h1>
+                <p class="section-subtitle">Pravidla, struktura a údržba tohoto wiki systému</p>
             </div>
 
-            <!-- Datové struktury -->
-            <div class="dashboard-card">
-                <h3>🗂️ roles.json</h3>
-                <div class="code-block"
-                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
-                    <pre style="margin:0;">{
+            <div class="dashboard-grid">
+                <!-- Úvod -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
+                    <h3>📖 O tomto systému</h3>
+                    <p style="line-height: 1.8; color: var(--text-primary);">
+                        <strong>Lore-Web</strong> je statická dokumentační wiki pro projekt IRIS LARP.
+                        Celý systém je navržen jako <strong>single-page aplikace</strong> s minimálním počtem souborů
+                        pro snadnou údržbu, přenos a verzování.
+                    </p>
+                    <div
+                        style="background: rgba(233, 30, 99, 0.1); padding: 1rem; border-left: 3px solid var(--accent-red); margin-top: 1rem;">
+                        <strong>⚠️ Klíčové pravidlo:</strong> Celý web musí zůstat co nejmenší – minimální počet
+                        souborů,
+                        minimální velikost dat, minimální počet tokenů. Vždy preferujte inline data před externími
+                        soubory.
+                    </div>
+                </div>
+
+                <!-- Struktura souborů -->
+                <div class="dashboard-card full-width">
+                    <h3>📁 Struktura souborů</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Soubor</th>
+                                <th>Účel</th>
+                                <th>Velikost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>index.html</code></td>
+                                <td>Hlavní stránka – obsahuje VŠECHNY sekce a obsah</td>
+                                <td>~70 KB</td>
+                            </tr>
+                            <tr>
+                                <td><code>style.css</code></td>
+                                <td>Všechny styly – CSS proměnné, komponenty, responzivita</td>
+                                <td>~35 KB</td>
+                            </tr>
+                            <tr>
+                                <td><code>app.js</code></td>
+                                <td>Veškerá logika – navigace, renderování, exporty</td>
+                                <td>~55 KB</td>
+                            </tr>
+                            <tr>
+                                <td><code>data/roles.json</code></td>
+                                <td>Definice 20 postav (id, jméno, archetyp, schopnosti, cíle)</td>
+                                <td>~18 KB</td>
+                            </tr>
+                            <tr>
+                                <td><code>data/relations.json</code></td>
+                                <td>Vztahy mezi postavami (source, target, type, popisy)</td>
+                                <td>~4 KB</td>
+                            </tr>
+                            <tr>
+                                <td><code>data/config.json</code></td>
+                                <td>Základní konfigurace (verze, fáze)</td>
+                                <td>~200 B</td>
+                            </tr>
+                            <tr>
+                                <td><code>data/manuals.json</code></td>
+                                <td>Obsah manuálů pro User/Agent/Admin</td>
+                                <td>~14 KB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                        <strong>Celkem:</strong> 3 hlavní soubory + 4 datové soubory. Žádné frameworky, žádné
+                        závislosti.
+                    </p>
+                </div>
+
+                <!-- Datové struktury -->
+                <div class="dashboard-card">
+                    <h3>🗂️ roles.json</h3>
+                    <div class="code-block"
+                        style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
+                        <pre style="margin:0;">{
   "id": "U01",          // Kód postavy
   "type": "user",       // user|agent|admin
   "name": "Jana Nová",  // Herní jméno
@@ -1246,1030 +1283,1049 @@
   "goals": ["...", "..."], // Cíle postavy
   "avatar": "avatar.png"  // Soubor v assets/
 }</pre>
+                    </div>
                 </div>
-            </div>
 
-            <div class="dashboard-card">
-                <h3>🔗 relations.json</h3>
-                <div class="code-block"
-                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
-                    <pre style="margin:0;">{
+                <div class="dashboard-card">
+                    <h3>🔗 relations.json</h3>
+                    <div class="code-block"
+                        style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
+                        <pre style="margin:0;">{
   "source": "U01",      // ID zdroje
   "target": "A01",      // ID cíle
   "type": "past",       // Typ vztahu
   "desc_source": "...", // Pohled zdroje
   "desc_target": "..."  // Pohled cíle
 }</pre>
-                </div>
-                <p style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
-                    Platné typy: <code>past</code>, <code>trade</code>, <code>blackmail</code>,
-                    <code>romance</code>, <code>plot</code>, <code>rival</code>, <code>alliance</code>,
-                    <code>affection</code>, <code>conflict</code>, <code>care</code>, <code>suspicion</code>
-                </p>
-            </div>
-
-            <!-- Navigace a sekce -->
-            <div class="dashboard-card full-width">
-                <h3>🧭 Navigační systém</h3>
-                <p style="margin-bottom: 1rem;">Web používá <strong>dvouúrovňovou navigaci</strong>:</p>
-                <ul class="feature-list">
-                    <li><strong>Horní panel:</strong> Kategorie (Dashboard, O Iris 4.1, Lore, HLINÍK)</li>
-                    <li><strong>Podmenu:</strong> Sekce dané kategorie (vždy viditelné)</li>
-                    <li><strong>Sekce:</strong> Každá sekce má ID <code>section-{název}</code></li>
-                </ul>
-                <p style="margin-top: 1rem;">
-                    Mapování sekcí na kategorie je definováno v <code>app.js</code> v objektu
-                    <code>sectionCategories</code>.
-                </p>
-            </div>
-
-            <!-- Pravidla pro úpravy -->
-            <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-green);">
-                <h3>✅ Pravidla pro úpravy</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div>
-                        <h4 style="color: var(--accent-green);">✅ Doporučeno</h4>
-                        <ul class="feature-list">
-                            <li>Přidávat obsah přímo do <code>index.html</code></li>
-                            <li>Používat existující CSS třídy</li>
-                            <li>Udržovat konzistentní strukturu sekcí</li>
-                            <li>Aktualizovat <code>sectionCategories</code> při nových sekcích</li>
-                            <li>Testovat navigaci po změnách</li>
-                        </ul>
                     </div>
-                    <div>
-                        <h4 style="color: var(--accent-red);">❌ Vyhnout se</h4>
-                        <ul class="feature-list">
-                            <li>Vytvářet nové HTML soubory</li>
-                            <li>Přidávat externí knihovny</li>
-                            <li>Vytvářet velké obrázky (max 50KB)</li>
-                            <li>Duplikovat CSS pravidla</li>
-                            <li>Používat inline styly (pokud to není nutné)</li>
-                        </ul>
+                    <p style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                        Platné typy: <code>past</code>, <code>trade</code>, <code>blackmail</code>,
+                        <code>romance</code>, <code>plot</code>, <code>rival</code>, <code>alliance</code>,
+                        <code>affection</code>, <code>conflict</code>, <code>care</code>, <code>suspicion</code>
+                    </p>
+                </div>
+
+                <!-- Navigace a sekce -->
+                <div class="dashboard-card full-width">
+                    <h3>🧭 Navigační systém</h3>
+                    <p style="margin-bottom: 1rem;">Web používá <strong>dvouúrovňovou navigaci</strong>:</p>
+                    <ul class="feature-list">
+                        <li><strong>Horní panel:</strong> Kategorie (Dashboard, O Iris 4.1, Lore, HLINÍK)</li>
+                        <li><strong>Podmenu:</strong> Sekce dané kategorie (vždy viditelné)</li>
+                        <li><strong>Sekce:</strong> Každá sekce má ID <code>section-{název}</code></li>
+                    </ul>
+                    <p style="margin-top: 1rem;">
+                        Mapování sekcí na kategorie je definováno v <code>app.js</code> v objektu
+                        <code>sectionCategories</code>.
+                    </p>
+                </div>
+
+                <!-- Pravidla pro úpravy -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-green);">
+                    <h3>✅ Pravidla pro úpravy</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <h4 style="color: var(--accent-green);">✅ Doporučeno</h4>
+                            <ul class="feature-list">
+                                <li>Přidávat obsah přímo do <code>index.html</code></li>
+                                <li>Používat existující CSS třídy</li>
+                                <li>Udržovat konzistentní strukturu sekcí</li>
+                                <li>Aktualizovat <code>sectionCategories</code> při nových sekcích</li>
+                                <li>Testovat navigaci po změnách</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--accent-red);">❌ Vyhnout se</h4>
+                            <ul class="feature-list">
+                                <li>Vytvářet nové HTML soubory</li>
+                                <li>Přidávat externí knihovny</li>
+                                <li>Vytvářet velké obrázky (max 50KB)</li>
+                                <li>Duplikovat CSS pravidla</li>
+                                <li>Používat inline styly (pokud to není nutné)</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Jak přidat novou sekci -->
-            <div class="dashboard-card full-width">
-                <h3>🆕 Přidání nové sekce</h3>
-                <ol style="color: var(--text-primary); line-height: 2;">
-                    <li>Přidat link do podmenu v <code>index.html</code> (uvnitř příslušného
-                        <code>.submenu-group</code>)
-                    </li>
-                    <li>Vytvořit <code>&lt;section id="section-{název}"&gt;</code> v <code>index.html</code></li>
-                    <li>Přidat mapování do <code>sectionCategories</code> v <code>app.js</code></li>
-                    <li>Použít existující CSS třídy (<code>.dashboard-grid</code>, <code>.dashboard-card</code>, atd.)
-                    </li>
-                    <li>Otestovat navigaci a hash URL</li>
-                </ol>
-            </div>
+                <!-- Jak přidat novou sekci -->
+                <div class="dashboard-card full-width">
+                    <h3>🆕 Přidání nové sekce</h3>
+                    <ol style="color: var(--text-primary); line-height: 2;">
+                        <li>Přidat link do podmenu v <code>index.html</code> (uvnitř příslušného
+                            <code>.submenu-group</code>)
+                        </li>
+                        <li>Vytvořit <code>&lt;section id="section-{název}"&gt;</code> v <code>index.html</code></li>
+                        <li>Přidat mapování do <code>sectionCategories</code> v <code>app.js</code></li>
+                        <li>Použít existující CSS třídy (<code>.dashboard-grid</code>, <code>.dashboard-card</code>,
+                            atd.)
+                        </li>
+                        <li>Otestovat navigaci a hash URL</li>
+                    </ol>
+                </div>
 
-            <!-- CSS proměnné -->
-            <div class="dashboard-card">
-                <h3>🎨 Hlavní CSS proměnné</h3>
-                <div class="code-block"
-                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.75rem;">
-                    <pre style="margin:0;">--bg-primary: #1a1a2e
+                <!-- CSS proměnné -->
+                <div class="dashboard-card">
+                    <h3>🎨 Hlavní CSS proměnné</h3>
+                    <div class="code-block"
+                        style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.75rem;">
+                        <pre style="margin:0;">--bg-primary: #1a1a2e
 --accent-gold: #d4af37
 --accent-red: #e91e63
 --accent-green: #4caf50
 --color-user: #4a9eff
 --color-agent: #e91e63
 --color-admin: #d4af37</pre>
-                </div>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>📦 Hlavní CSS třídy</h3>
-                <ul class="feature-list" style="font-size: 0.85rem;">
-                    <li><code>.dashboard-grid</code> – grid layout pro karty</li>
-                    <li><code>.dashboard-card</code> – základní karta</li>
-                    <li><code>.full-width</code> – karta přes celou šířku</li>
-                    <li><code>.data-table</code> – stylovaná tabulka</li>
-                    <li><code>.feature-list</code> – odrážkový seznam</li>
-                    <li><code>.version-info</code> – key-value páry</li>
-                    <li><code>.btn-primary</code>, <code>.btn-secondary</code> – tlačítka</li>
-                </ul>
-            </div>
-
-            <!-- Kontakt -->
-            <div class="dashboard-card full-width" style="background: var(--bg-secondary);">
-                <h3>📧 Údržba a převzetí</h3>
-                <p style="color: var(--text-primary);">
-                    Tento systém je navržen pro jednoduchou údržbu. Pokud ho převzímáte:
-                </p>
-                <ol style="color: var(--text-secondary); line-height: 1.8;">
-                    <li>Prostudujte strukturu souborů výše</li>
-                    <li>Otevřete <code>index.html</code> a pochopte strukturu sekcí</li>
-                    <li>Prostudujte <code>app.js</code> – zejména <code>sectionCategories</code> a navigační funkce</li>
-                    <li>Testujte změny lokálně (stačí otevřít <code>index.html</code> v prohlížeči)</li>
-                    <li><strong>Nezapomeňte:</strong> Minimální soubory, minimální data, žádné závislosti!</li>
-                </ol>
-            </div>
-        </div>
-    </section>
-
-    <!-- Compliance Section -->
-    <section id="section-compliance" class="content-section">
-        <div class="section-header">
-            <h1>Analýza shody (Audit)</h1>
-            <p class="section-subtitle">Historie auditů systému IRIS</p>
-        </div>
-
-        <!-- Audit Selector -->
-        <!-- Audit Selector -->
-        <div class="filter-bar" style="margin-bottom: 1.5rem;">
-            <span style="color: var(--text-muted); margin-right: 1rem;">Vyberte audit:</span>
-            <select id="auditSelector" class="audit-select" onchange="switchAudit(this.value)">
-                <option value="audit-phase-35" selected>📋 15.12.2025 - Phase 35 - Komplexní Analýza (Nejnovější)
-                </option>
-                <option value="audit-2025-12-15">📋 15.12.2025 - Phase 34</option>
-            </select>
-        </div>
-
-        <!-- Audit Content - Phase 35 (Latest) -->
-        <div id="audit-phase-35" class="audit-content active">
-            <div class="dashboard-grid">
-                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start">
-                        <div>
-                            <h3>📊 Komplexní Analýza - Phase 35</h3>
-                            <p class="lead" style="color: var(--text-primary);">Status: <strong
-                                    style="color: var(--accent-orange)">PODMÍNĚNĚ PROVOZUSCHOPNÁ</strong>.
-                                Lore obsah je 100% kompletní. Manuální testy odhalily kritický WebSocket bug. LLM
-                                simulace fungují bezchybně.</p>
-                            <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025 |
-                                <strong>Analytik:</strong> Claude AI
-                            </p>
-                        </div>
-                        <button class="btn-primary" onclick="showManual('audit_35')">📄 Otevřít kompletní
-                            report</button>
                     </div>
                 </div>
 
-                <!-- Executive Summary Cards -->
-                <div class="dashboard-card" style="border-color: var(--accent-blue)">
-                    <h3>📁 Repository Metriky</h3>
-                    <ul class="quick-links">
-                        <li><strong>Celý repozitář:</strong> 73 MB</li>
-                        <li><strong>HLINIK aplikace:</strong> 3.0 MB (17,302 řádků kódu)</li>
-                        <li><strong>Lore-web wiki:</strong> 24 MB (9,981 řádků)</li>
-                        <li><strong>Testy:</strong> 19 souborů (5,029 řádků)</li>
+                <div class="dashboard-card">
+                    <h3>📦 Hlavní CSS třídy</h3>
+                    <ul class="feature-list" style="font-size: 0.85rem;">
+                        <li><code>.dashboard-grid</code> – grid layout pro karty</li>
+                        <li><code>.dashboard-card</code> – základní karta</li>
+                        <li><code>.full-width</code> – karta přes celou šířku</li>
+                        <li><code>.data-table</code> – stylovaná tabulka</li>
+                        <li><code>.feature-list</code> – odrážkový seznam</li>
+                        <li><code>.version-info</code> – key-value páry</li>
+                        <li><code>.btn-primary</code>, <code>.btn-secondary</code> – tlačítka</li>
                     </ul>
                 </div>
 
-                <div class="dashboard-card" style="border-color: var(--accent-green)">
-                    <h3>🎭 Lore Obsah</h3>
-                    <ul class="quick-links">
-                        <li><strong>Role celkem:</strong> 20/20 ✅</li>
-                        <li><strong>Uživatelé:</strong> 8</li>
-                        <li><strong>Agenti:</strong> 8</li>
-                        <li><strong>Správci:</strong> 4</li>
-                        <li><strong>Vztahy:</strong> 14 (100% propojení)</li>
-                        <li><strong>Průměr cílů/role:</strong> 3.0</li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card" style="border-color: var(--accent-red)">
-                    <h3>✅ Vyřešené Problémy (Hotfix)</h3>
-                    <div
-                        style="background:rgba(76, 175, 80, 0.1); padding:10px; border-radius:6px; margin-top:10px; border-left: 3px solid var(--accent-green);">
-                        <strong style="color: var(--accent-green)">RESOLVED: WebSocket Connection Loop</strong>
-                        <p style="font-size: 0.9em; margin-top: 8px;">
-                            Implementován <strong>Heartbeat (Ping/Pong)</strong> protokol a ochrana proti cyklickému
-                            reconnectu při chybě autentizace (Code 1008).
-                            Real-time komunikace je nyní stabilní.
-                        </p>
-                        <p style="font-size: 0.85em; opacity: 0.8; margin-top: 5px;">Status: <strong
-                                style="color:var(--accent-green)">FIXED</strong> | Patch: 4.2.1</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card" style="border-color: var(--accent-gold)">
-                    <h3>🧪 Testovací Statistiky</h3>
-                    <ul class="quick-links">
-                        <li><strong>Manuální testy:</strong> 10/18 passed (55.6%)</li>
-                        <li><strong>LLM simulace:</strong> 3/3 success (100%)</li>
-                        <li><strong>LLM zpráv:</strong> 114</li>
-                        <li><strong>Kritické bugy:</strong> 1</li>
-                        <li><strong>Varování:</strong> 3</li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card" style="border-color: var(--accent-green)">
-                    <h3>✅ Feature Compliance</h3>
-                    <ul class="quick-links">
-                        <li><strong style="color: var(--accent-green)">Implementováno:</strong> 185/194 (95.4%)</li>
-                        <li><strong style="color: var(--accent-orange)">Částečně:</strong> 5 (2.6%)</li>
-                        <li><strong style="color: var(--accent-red)">Chybí:</strong> 4 (2.1%)</li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card" style="border-color: var(--accent-purple)">
-                    <h3>📋 Kvalita Obsahu Postav</h3>
-                    <ul class="quick-links">
-                        <li><strong>Průměr popisu:</strong> 338 znaků</li>
-                        <li><strong>Min/Max:</strong> 288-384 znaků</li>
-                        <li><strong>Appearance data:</strong> 100%</li>
-                        <li><strong>Celkem cílů:</strong> 60</li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card full-width" style="border-color: var(--accent-orange)">
-                    <h3>📋 Doporučené Další Testy</h3>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Priorita</th>
-                                <th>Test</th>
-                                <th>Popis</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong style="color: var(--accent-green)">RESOLVED</strong></td>
-                                <td>WebSocket Stability</td>
-                                <td><strike>Debug connection loop</strike> -> <strong>Ping/Pong + Auth Guard</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
-                                <td>E2E Chat Flow</td>
-                                <td>User → Agent → User kompletní cyklus</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
-                                <td>Task Lifecycle</td>
-                                <td>Request → Approval → Submit → Payment</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: var(--accent-gold)">MEDIUM</strong></td>
-                                <td>Multi-User Stress</td>
-                                <td>8 Users + 8 Agents simultánně</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="dashboard-card full-width">
-                    <h3>🧩 Funkční Analýza (Gap Analysis)</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
-                        <div>
-                            <strong>✅ Filtr Pravdy (HyperVis):</strong><br>
-                            <em style="color: var(--text-muted)">Přepínání vizuálních filtrů (Blackbox/Forensic).</em>
-                        </div>
-                        <div>
-                            <strong>✅ Řízení spotřeby:</strong><br>
-                            <em style="color: var(--text-muted)">Režimy (Low Power / Overclock) ovlivňující "Tlak
-                                páry".</em>
-                        </div>
-                        <div>
-                            <strong>✅ Admin Treasury (Ekonomika):</strong><br>
-                            <em style="color: var(--text-muted)">Implementováno:</em> Daně a Power Packy (Backend
-                            Logic).
-                        </div>
-                        <div>
-                            <strong>✅ Agent Timer (Latency):</strong><br>
-                            <em style="color: var(--text-muted)">Implementováno:</em> Servery monitorují odezvu a
-                            vynucují Timeout.
-                        </div>
-                        <div>
-                            <strong>✅ Custom Labels:</strong><br>
-                            <em style="color: var(--text-muted)">Implementováno:</em> Admin Edit Mode a WebSocket
-                            injection (User).
-                        </div>
-                        <div>
-                            <strong>✅ Glitch Protocol:</strong><br>
-                            <em style="color: var(--text-muted)">Implementováno:</em> Vizuální efekty (CSS) spouštěné
-                            Overload stavem.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-card full-width">
-                    <h3>💡 Doporučení k Nasazení</h3>
-                    <ol style="margin: 10px 0 0 20px; line-height: 1.8">
-                        <li><strong>OK:</strong> Opravit WebSocket connection loop <span
-                                style="color:var(--accent-green)">(Fixed v4.2.1)</span></li>
-                        <li><strong>Před nasazením:</strong> Implementovat exponenciální backoff při reconnect</li>
-                        <li><strong>Před nasazením:</strong> Fallback pro chybějící data (cache)</li>
-                        <li><strong>OK:</strong> Viditelný indikátor stavu WS připojení <span
-                                style="color:var(--accent-green)">(Implemented)</span></li>
+                <!-- Kontakt -->
+                <div class="dashboard-card full-width" style="background: var(--bg-secondary);">
+                    <h3>📧 Údržba a převzetí</h3>
+                    <p style="color: var(--text-primary);">
+                        Tento systém je navržen pro jednoduchou údržbu. Pokud ho převzímáte:
+                    </p>
+                    <ol style="color: var(--text-secondary); line-height: 1.8;">
+                        <li>Prostudujte strukturu souborů výše</li>
+                        <li>Otevřete <code>index.html</code> a pochopte strukturu sekcí</li>
+                        <li>Prostudujte <code>app.js</code> – zejména <code>sectionCategories</code> a navigační funkce
+                        </li>
+                        <li>Testujte změny lokálně (stačí otevřít <code>index.html</code> v prohlížeči)</li>
+                        <li><strong>Nezapomeňte:</strong> Minimální soubory, minimální data, žádné závislosti!</li>
                     </ol>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Audit Content - Phase 34 -->
-        <div id="audit-2025-12-15" class="audit-content">
-            <div class="dashboard-grid">
-                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start">
-                        <div>
-                            <h3>⚠️ Celkový stav shody - Phase 34 (Final)</h3>
-                            <p class="lead" style="color: var(--text-primary);">Aplikace je funkční (Beta). Manuální
-                                testy a lore
-                                integrace jsou <strong>100% compliant</strong>. Automatizovaný stress-test odhalil
-                                problémy s
-                                autentizací při vysoké zátěži.</p>
-                            <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025</p>
+        <!-- Compliance Section -->
+        <section id="section-compliance" class="content-section">
+            <div class="section-header">
+                <h1>Analýza shody (Audit)</h1>
+                <p class="section-subtitle">Historie auditů systému IRIS</p>
+            </div>
+
+            <!-- Audit Selector -->
+            <!-- Audit Selector -->
+            <div class="filter-bar" style="margin-bottom: 1.5rem;">
+                <span style="color: var(--text-muted); margin-right: 1rem;">Vyberte audit:</span>
+                <select id="auditSelector" class="audit-select" onchange="switchAudit(this.value)">
+                    <option value="audit-phase-35" selected>📋 15.12.2025 - Phase 35 - Komplexní Analýza (Nejnovější)
+                    </option>
+                    <option value="audit-2025-12-15">📋 15.12.2025 - Phase 34</option>
+                </select>
+            </div>
+
+            <!-- Audit Content - Phase 35 (Latest) -->
+            <div id="audit-phase-35" class="audit-content active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                            <div>
+                                <h3>📊 Komplexní Analýza - Phase 35</h3>
+                                <p class="lead" style="color: var(--text-primary);">Status: <strong
+                                        style="color: var(--accent-orange)">PODMÍNĚNĚ PROVOZUSCHOPNÁ</strong>.
+                                    Lore obsah je 100% kompletní. Manuální testy odhalily kritický WebSocket bug. LLM
+                                    simulace fungují bezchybně.</p>
+                                <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025 |
+                                    <strong>Analytik:</strong> Claude AI
+                                </p>
+                            </div>
+                            <button class="btn-primary" onclick="showManual('audit_35')">📄 Otevřít kompletní
+                                report</button>
                         </div>
-                        <button class="btn-primary" onclick="showManual('audit_34')">📄 Otevřít kompletní
-                            report</button>
+                    </div>
+
+                    <!-- Executive Summary Cards -->
+                    <div class="dashboard-card" style="border-color: var(--accent-blue)">
+                        <h3>📁 Repository Metriky</h3>
+                        <ul class="quick-links">
+                            <li><strong>Celý repozitář:</strong> 73 MB</li>
+                            <li><strong>HLINIK aplikace:</strong> 3.0 MB (17,302 řádků kódu)</li>
+                            <li><strong>Lore-web wiki:</strong> 24 MB (9,981 řádků)</li>
+                            <li><strong>Testy:</strong> 19 souborů (5,029 řádků)</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card" style="border-color: var(--accent-green)">
+                        <h3>🎭 Lore Obsah</h3>
+                        <ul class="quick-links">
+                            <li><strong>Role celkem:</strong> 20/20 ✅</li>
+                            <li><strong>Uživatelé:</strong> 8</li>
+                            <li><strong>Agenti:</strong> 8</li>
+                            <li><strong>Správci:</strong> 4</li>
+                            <li><strong>Vztahy:</strong> 14 (100% propojení)</li>
+                            <li><strong>Průměr cílů/role:</strong> 3.0</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card" style="border-color: var(--accent-red)">
+                        <h3>✅ Vyřešené Problémy (Hotfix)</h3>
+                        <div
+                            style="background:rgba(76, 175, 80, 0.1); padding:10px; border-radius:6px; margin-top:10px; border-left: 3px solid var(--accent-green);">
+                            <strong style="color: var(--accent-green)">RESOLVED: WebSocket Connection Loop</strong>
+                            <p style="font-size: 0.9em; margin-top: 8px;">
+                                Implementován <strong>Heartbeat (Ping/Pong)</strong> protokol a ochrana proti cyklickému
+                                reconnectu při chybě autentizace (Code 1008).
+                                Real-time komunikace je nyní stabilní.
+                            </p>
+                            <p style="font-size: 0.85em; opacity: 0.8; margin-top: 5px;">Status: <strong
+                                    style="color:var(--accent-green)">FIXED</strong> | Patch: 4.2.1</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" style="border-color: var(--accent-gold)">
+                        <h3>🧪 Testovací Statistiky</h3>
+                        <ul class="quick-links">
+                            <li><strong>Manuální testy:</strong> 10/18 passed (55.6%)</li>
+                            <li><strong>LLM simulace:</strong> 3/3 success (100%)</li>
+                            <li><strong>LLM zpráv:</strong> 114</li>
+                            <li><strong>Kritické bugy:</strong> 1</li>
+                            <li><strong>Varování:</strong> 3</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card" style="border-color: var(--accent-green)">
+                        <h3>✅ Feature Compliance</h3>
+                        <ul class="quick-links">
+                            <li><strong style="color: var(--accent-green)">Implementováno:</strong> 185/194 (95.4%)</li>
+                            <li><strong style="color: var(--accent-orange)">Částečně:</strong> 5 (2.6%)</li>
+                            <li><strong style="color: var(--accent-red)">Chybí:</strong> 4 (2.1%)</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card" style="border-color: var(--accent-purple)">
+                        <h3>📋 Kvalita Obsahu Postav</h3>
+                        <ul class="quick-links">
+                            <li><strong>Průměr popisu:</strong> 338 znaků</li>
+                            <li><strong>Min/Max:</strong> 288-384 znaků</li>
+                            <li><strong>Appearance data:</strong> 100%</li>
+                            <li><strong>Celkem cílů:</strong> 60</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card full-width" style="border-color: var(--accent-orange)">
+                        <h3>📋 Doporučené Další Testy</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Priorita</th>
+                                    <th>Test</th>
+                                    <th>Popis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong style="color: var(--accent-green)">RESOLVED</strong></td>
+                                    <td>WebSocket Stability</td>
+                                    <td><strike>Debug connection loop</strike> -> <strong>Ping/Pong + Auth
+                                            Guard</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
+                                    <td>E2E Chat Flow</td>
+                                    <td>User → Agent → User kompletní cyklus</td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="color: var(--accent-orange)">HIGH</strong></td>
+                                    <td>Task Lifecycle</td>
+                                    <td>Request → Approval → Submit → Payment</td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="color: var(--accent-gold)">MEDIUM</strong></td>
+                                    <td>Multi-User Stress</td>
+                                    <td>8 Users + 8 Agents simultánně</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="dashboard-card full-width">
+                        <h3>🧩 Funkční Analýza (Gap Analysis)</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                            <div>
+                                <strong>✅ Filtr Pravdy (HyperVis):</strong><br>
+                                <em style="color: var(--text-muted)">Přepínání vizuálních filtrů
+                                    (Blackbox/Forensic).</em>
+                            </div>
+                            <div>
+                                <strong>✅ Řízení spotřeby:</strong><br>
+                                <em style="color: var(--text-muted)">Režimy (Low Power / Overclock) ovlivňující "Tlak
+                                    páry".</em>
+                            </div>
+                            <div>
+                                <strong>✅ Admin Treasury (Ekonomika):</strong><br>
+                                <em style="color: var(--text-muted)">Implementováno:</em> Daně a Power Packy (Backend
+                                Logic).
+                            </div>
+                            <div>
+                                <strong>✅ Agent Timer (Latency):</strong><br>
+                                <em style="color: var(--text-muted)">Implementováno:</em> Servery monitorují odezvu a
+                                vynucují Timeout.
+                            </div>
+                            <div>
+                                <strong>✅ Custom Labels:</strong><br>
+                                <em style="color: var(--text-muted)">Implementováno:</em> Admin Edit Mode a WebSocket
+                                injection (User).
+                            </div>
+                            <div>
+                                <strong>✅ Glitch Protocol:</strong><br>
+                                <em style="color: var(--text-muted)">Implementováno:</em> Vizuální efekty (CSS)
+                                spouštěné
+                                Overload stavem.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card full-width">
+                        <h3>💡 Doporučení k Nasazení</h3>
+                        <ol style="margin: 10px 0 0 20px; line-height: 1.8">
+                            <li><strong>OK:</strong> Opravit WebSocket connection loop <span
+                                    style="color:var(--accent-green)">(Fixed v4.2.1)</span></li>
+                            <li><strong>Před nasazením:</strong> Implementovat exponenciální backoff při reconnect</li>
+                            <li><strong>Před nasazením:</strong> Fallback pro chybějící data (cache)</li>
+                            <li><strong>OK:</strong> Viditelný indikátor stavu WS připojení <span
+                                    style="color:var(--accent-green)">(Implemented)</span></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Content - Phase 34 -->
+            <div id="audit-2025-12-15" class="audit-content">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                            <div>
+                                <h3>⚠️ Celkový stav shody - Phase 34 (Final)</h3>
+                                <p class="lead" style="color: var(--text-primary);">Aplikace je funkční (Beta). Manuální
+                                    testy a lore
+                                    integrace jsou <strong>100% compliant</strong>. Automatizovaný stress-test odhalil
+                                    problémy s
+                                    autentizací při vysoké zátěži.</p>
+                                <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. prosince 2025</p>
+                            </div>
+                            <button class="btn-primary" onclick="showManual('audit_34')">📄 Otevřít kompletní
+                                report</button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" style="border-color: var(--accent-red)">
+                        <h3>🔥 Kritické Nálezy</h3>
+                        <ul class="quick-links">
+                            <li>
+                                <strong style="color: var(--accent-red)">Load Test (WS):</strong>
+                                <span>Simulace 20 klientů selhala (HTTP 403).</span>
+                            </li>
+                            <li>
+                                <strong style="color: var(--accent-orange)">Naming:</strong>
+                                <span>Nekonzistence 'S01' vs 'Admin 1'.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>✅ Ověřená Funkčnost</h3>
+                        <ul class="quick-links">
+                            <li><strong>Wiki & Lore:</strong> Dokumentace odpovídá Phase 34.</li>
+                            <li><strong>Panic Mode:</strong> Implementován a funkční.</li>
+                            <li><strong>Ekonomika:</strong> Daně, pokuty, bonusy fungují.</li>
+                            <li><strong>Authentication:</strong> Login flow funkční.</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>⚠️ Názvosloví Stanic (Mapping)</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Dokumentace</th>
+                                    <th>Aplikace</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Monitoring</td>
+                                    <td><strong style="color: var(--accent-green)">UMYVADLO</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Kontrola</td>
+                                    <td><strong style="color: var(--accent-gold)">ROZKOŠ</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Ekonomika</td>
+                                    <td><strong style="color: var(--accent-blue)">BAHNO</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Úkoly</td>
+                                    <td><strong style="color: var(--accent-purple)">MRKEV</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="dashboard-card full-width">
+                        <h3>🧩 Implementované funkce navíc</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                            <div>
+                                <strong>Filtr Pravdy (HyperVis):</strong><br>
+                                <em style="color: var(--text-muted)">Přepínání vizuálních filtrů
+                                    (Blackbox/Forensic).</em>
+                            </div>
+                            <div>
+                                <strong>Řízení spotřeby:</strong><br>
+                                <em style="color: var(--text-muted)">Režimy (Low Power / Overclock) ovlivňující "Tlak
+                                    páry".</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Content - Phase 33 -->
+            <div id="audit-2025-12-01" class="audit-content">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-blue);">
+                        <h3>✅ Stav shody - Phase 33</h3>
+                        <p class="lead" style="color: var(--text-primary);">Implementace E2E testů pomocí Playwright.
+                            Automatizované testování všech hlavních uživatelských cest.</p>
+                        <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 1. prosince 2025</p>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>🧪 Nové testy</h3>
+                        <ul class="quick-links">
+                            <li>
+                                <strong>Test Suite A:</strong>
+                                <em style="color: var(--text-muted)">8 bloků testovacích scénářů (login → task →
+                                    purgatory).</em>
+                            </li>
+                            <li>
+                                <strong>Server Fixture:</strong>
+                                <em style="color: var(--text-muted)">Automatický start uvicorn s vyčištěnou DB.</em>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>📊 Ověřené parametry</h3>
+                        <div class="version-info">
+                            <div class="version-item">
+                                <span class="label">Testy:</span>
+                                <span class="value" style="color: var(--accent-green)">✅ Procházejí</span>
+                            </div>
+                            <div class="version-item">
+                                <span class="label">Pokrytí:</span>
+                                <span class="value">8 bloků</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Content - Phase 31 -->
+            <div id="audit-2025-11-15" class="audit-content">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
+                        <h3>✅ Stav shody - Phase 31</h3>
+                        <p class="lead" style="color: var(--text-primary);">Zavedení state persistence a bezpečnostních
+                            vylepšení.
+                            Automatické ukládání stavu hry při vypnutí serveru.</p>
+                        <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. listopadu 2025</p>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>🔒 Bezpečnostní změny</h3>
+                        <ul class="quick-links">
+                            <li>
+                                <strong>SECRET_KEY validace:</strong>
+                                <em style="color: var(--text-muted)">Varování ve vývoji, chyba v produkci.</em>
+                            </li>
+                            <li>
+                                <strong>State Export/Import:</strong>
+                                <em style="color: var(--text-muted)">Serializace kritického stavu hry.</em>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>💾 Persistence</h3>
+                        <ul class="quick-links">
+                            <li>
+                                <strong>Auto-save:</strong>
+                                <em style="color: var(--text-muted)">Stav ukládán do data/gamestate_dump.json.</em>
+                            </li>
+                            <li>
+                                <strong>Auto-restore:</strong>
+                                <em style="color: var(--text-muted)">Automatická obnova při startu.</em>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tests Section -->
+        <section id="section-tests" class="content-section">
+            <div class="section-header">
+                <h1>Testovací Scénáře</h1>
+                <p class="section-subtitle">Automatizované záznamy běhu simulace (Usability & Load Tests)</p>
+            </div>
+
+            <div class="test-dashboard-layout" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px;">
+                <!-- Sidebar List -->
+                <div class="test-sidebar dashboard-card" style="height: 70vh; overflow-y: auto;">
+                    <h3>📂 Historie běhů</h3>
+                    <div id="testRunsList" class="test-runs-list">
+                        <p class="text-muted">Načítám záznamy...</p>
                     </div>
                 </div>
 
-                <div class="dashboard-card" style="border-color: var(--accent-red)">
-                    <h3>🔥 Kritické Nálezy</h3>
-                    <ul class="quick-links">
-                        <li>
-                            <strong style="color: var(--accent-red)">Load Test (WS):</strong>
-                            <span>Simulace 20 klientů selhala (HTTP 403).</span>
-                        </li>
-                        <li>
-                            <strong style="color: var(--accent-orange)">Naming:</strong>
-                            <span>Nekonzistence 'S01' vs 'Admin 1'.</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>✅ Ověřená Funkčnost</h3>
-                    <ul class="quick-links">
-                        <li><strong>Wiki & Lore:</strong> Dokumentace odpovídá Phase 34.</li>
-                        <li><strong>Panic Mode:</strong> Implementován a funkční.</li>
-                        <li><strong>Ekonomika:</strong> Daně, pokuty, bonusy fungují.</li>
-                        <li><strong>Authentication:</strong> Login flow funkční.</li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>⚠️ Názvosloví Stanic (Mapping)</h3>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Dokumentace</th>
-                                <th>Aplikace</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Monitoring</td>
-                                <td><strong style="color: var(--accent-green)">UMYVADLO</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Kontrola</td>
-                                <td><strong style="color: var(--accent-gold)">ROZKOŠ</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Ekonomika</td>
-                                <td><strong style="color: var(--accent-blue)">BAHNO</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Úkoly</td>
-                                <td><strong style="color: var(--accent-purple)">MRKEV</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="dashboard-card full-width">
-                    <h3>🧩 Implementované funkce navíc</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
-                        <div>
-                            <strong>Filtr Pravdy (HyperVis):</strong><br>
-                            <em style="color: var(--text-muted)">Přepínání vizuálních filtrů (Blackbox/Forensic).</em>
-                        </div>
-                        <div>
-                            <strong>Řízení spotřeby:</strong><br>
-                            <em style="color: var(--text-muted)">Režimy (Low Power / Overclock) ovlivňující "Tlak
-                                páry".</em>
-                        </div>
+                <!-- Detail View -->
+                <div class="test-detail dashboard-card" id="testRunDetail" style="height: 70vh; overflow-y: auto;">
+                    <div class="empty-state" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
+                        Vyberte záznam testu ze seznamu pro zobrazení detailů.
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Audit Content - Phase 33 -->
-        <div id="audit-2025-12-01" class="audit-content">
-            <div class="dashboard-grid">
-                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-blue);">
-                    <h3>✅ Stav shody - Phase 33</h3>
-                    <p class="lead" style="color: var(--text-primary);">Implementace E2E testů pomocí Playwright.
-                        Automatizované testování všech hlavních uživatelských cest.</p>
-                    <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 1. prosince 2025</p>
+        <!-- Hráči Section -->
+        <section id="section-hraci" class="content-section">
+            <div class="section-header">
+                <h1>Přehled hráčů</h1>
+                <p class="section-subtitle">Karty všech 20 postav s briefingy a exporty</p>
+            </div>
+
+            <div class="players-layout">
+                <!-- Left Panel: Player List -->
+                <div class="players-list-panel">
+                    <div class="players-group" data-role="user">
+                        <h4 class="group-header group-user">👥 Uživatelé (8)</h4>
+                        <div id="playerListUsers" class="player-list"></div>
+                    </div>
+                    <div class="players-group" data-role="agent">
+                        <h4 class="group-header group-agent">🤖 Agenti (8)</h4>
+                        <div id="playerListAgents" class="player-list"></div>
+                    </div>
+                    <div class="players-group" data-role="admin">
+                        <h4 class="group-header group-admin">👔 Správci (4)</h4>
+                        <div id="playerListAdmins" class="player-list"></div>
+                    </div>
                 </div>
 
-                <div class="dashboard-card">
-                    <h3>🧪 Nové testy</h3>
-                    <ul class="quick-links">
-                        <li>
-                            <strong>Test Suite A:</strong>
-                            <em style="color: var(--text-muted)">8 bloků testovacích scénářů (login → task →
-                                purgatory).</em>
-                        </li>
-                        <li>
-                            <strong>Server Fixture:</strong>
-                            <em style="color: var(--text-muted)">Automatický start uvicorn s vyčištěnou DB.</em>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>📊 Ověřené parametry</h3>
-                    <div class="version-info">
-                        <div class="version-item">
-                            <span class="label">Testy:</span>
-                            <span class="value" style="color: var(--accent-green)">✅ Procházejí</span>
+                <!-- Right Panel: Player Card -->
+                <div class="player-card-panel" id="playerCardPanel">
+                    <div class="empty-state" id="playerCardEmpty">
+                        <span class="empty-icon">👈</span>
+                        <p>Vyberte hráče ze seznamu pro zobrazení karty.</p>
+                    </div>
+                    <div class="player-card" id="playerCard" style="display: none;">
+                        <div class="player-card-header">
+                            <img id="playerAvatar" src="" alt="Avatar" class="player-avatar-large"
+                                style="cursor: zoom-in;" onclick="openImageModal(this.src, this.alt)">
+                            <div class="player-header-info">
+                                <span class="player-code" id="playerCode"></span>
+                                <h2 id="playerName">Jméno postavy</h2>
+                                <span class="player-archetype" id="playerArchetype">Archetyp</span>
+                            </div>
                         </div>
-                        <div class="version-item">
-                            <span class="label">Pokrytí:</span>
-                            <span class="value">8 bloků</span>
+                        <div class="player-card-body">
+                            <div class="info-section">
+                                <h4>📝 Popis</h4>
+                                <p id="playerDescription">Popis postavy...</p>
+                            </div>
+                            <div class="info-section">
+                                <h4>⚡ Schopnost</h4>
+                                <p id="playerAbility">Schopnost...</p>
+                            </div>
+                            <div class="info-section" id="playerAppearanceSection" style="display: none;">
+                                <h4>🎭 Vzhled postavy</h4>
+                                <div id="playerAppearance" class="appearance-info"></div>
+                            </div>
+
+                        </div>
+                        <div class="player-card-footer">
+                            <button class="btn-primary" onclick="showBriefingForPlayer(currentPlayerId)">
+                                📋 Zobrazit briefing
+                            </button>
+                            <button class="btn-secondary" onclick="exportPlayerPDF(currentPlayerId)">
+                                📄 Export PDF
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Audit Content - Phase 31 -->
-        <div id="audit-2025-11-15" class="audit-content">
-            <div class="dashboard-grid">
-                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-orange);">
-                    <h3>✅ Stav shody - Phase 31</h3>
-                    <p class="lead" style="color: var(--text-primary);">Zavedení state persistence a bezpečnostních
-                        vylepšení.
-                        Automatické ukládání stavu hry při vypnutí serveru.</p>
-                    <p style="margin-top: 1rem;"><strong>Datum auditu:</strong> 15. listopadu 2025</p>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>🔒 Bezpečnostní změny</h3>
-                    <ul class="quick-links">
-                        <li>
-                            <strong>SECRET_KEY validace:</strong>
-                            <em style="color: var(--text-muted)">Varování ve vývoji, chyba v produkci.</em>
-                        </li>
-                        <li>
-                            <strong>State Export/Import:</strong>
-                            <em style="color: var(--text-muted)">Serializace kritického stavu hry.</em>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>💾 Persistence</h3>
-                    <ul class="quick-links">
-                        <li>
-                            <strong>Auto-save:</strong>
-                            <em style="color: var(--text-muted)">Stav ukládán do data/gamestate_dump.json.</em>
-                        </li>
-                        <li>
-                            <strong>Auto-restore:</strong>
-                            <em style="color: var(--text-muted)">Automatická obnova při startu.</em>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Tests Section -->
-    <section id="section-tests" class="content-section">
-        <div class="section-header">
-            <h1>Testovací Scénáře</h1>
-            <p class="section-subtitle">Automatizované záznamy běhu simulace (Usability & Load Tests)</p>
-        </div>
-
-        <div class="test-dashboard-layout" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px;">
-            <!-- Sidebar List -->
-            <div class="test-sidebar dashboard-card" style="height: 70vh; overflow-y: auto;">
-                <h3>📂 Historie běhů</h3>
-                <div id="testRunsList" class="test-runs-list">
-                    <p class="text-muted">Načítám záznamy...</p>
-                </div>
-            </div>
-
-            <!-- Detail View -->
-            <div class="test-detail dashboard-card" id="testRunDetail" style="height: 70vh; overflow-y: auto;">
-                <div class="empty-state" style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
-                    Vyberte záznam testu ze seznamu pro zobrazení detailů.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hráči Section -->
-    <section id="section-hraci" class="content-section">
-        <div class="section-header">
-            <h1>Přehled hráčů</h1>
-            <p class="section-subtitle">Karty všech 20 postav s briefingy a exporty</p>
-        </div>
-
-        <div class="players-layout">
-            <!-- Left Panel: Player List -->
-            <div class="players-list-panel">
-                <div class="players-group" data-role="user">
-                    <h4 class="group-header group-user">👥 Uživatelé (8)</h4>
-                    <div id="playerListUsers" class="player-list"></div>
-                </div>
-                <div class="players-group" data-role="agent">
-                    <h4 class="group-header group-agent">🤖 Agenti (8)</h4>
-                    <div id="playerListAgents" class="player-list"></div>
-                </div>
-                <div class="players-group" data-role="admin">
-                    <h4 class="group-header group-admin">👔 Správci (4)</h4>
-                    <div id="playerListAdmins" class="player-list"></div>
-                </div>
-            </div>
-
-            <!-- Right Panel: Player Card -->
-            <div class="player-card-panel" id="playerCardPanel">
-                <div class="empty-state" id="playerCardEmpty">
-                    <span class="empty-icon">👈</span>
-                    <p>Vyberte hráče ze seznamu pro zobrazení karty.</p>
-                </div>
-                <div class="player-card" id="playerCard" style="display: none;">
-                    <div class="player-card-header">
-                        <img id="playerAvatar" src="" alt="Avatar" class="player-avatar-large">
-                        <div class="player-header-info">
-                            <span class="player-code" id="playerCode"></span>
-                            <h2 id="playerName">Jméno postavy</h2>
-                            <span class="player-archetype" id="playerArchetype">Archetyp</span>
-                        </div>
+                <!-- Third Panel: Role v příběhu (Relations) -->
+                <div class="player-relations-panel" id="playerRelationsPanel">
+                    <div class="empty-state" id="playerRelationsEmpty">
+                        <p>Informace o roli v příběhu<br>se zobrazí zde.</p>
                     </div>
-                    <div class="player-card-body">
-                        <div class="info-section">
-                            <h4>📝 Popis</h4>
-                            <p id="playerDescription">Popis postavy...</p>
-                        </div>
-                        <div class="info-section">
-                            <h4>⚡ Schopnost</h4>
-                            <p id="playerAbility">Schopnost...</p>
-                        </div>
-                        <div class="info-section" id="playerAppearanceSection" style="display: none;">
-                            <h4>🎭 Vzhled postavy</h4>
-                            <div id="playerAppearance" class="appearance-info"></div>
-                        </div>
+                    <div class="relations-content" id="playerRelationsContent" style="display: none;">
+                        <h3 class="panel-title">Role v příběhu</h3>
+
+                        <!-- Work Image - at top of this panel -->
                         <div class="info-section" id="playerWorkImageSection" style="display: none;">
                             <h4>📸 Typická situace v práci</h4>
                             <div style="text-align: center;">
                                 <img id="playerWorkImage" src="" alt="Typická pracovní situace"
-                                    style="max-width: 100%; max-height: 300px; border-radius: 8px; border: 2px solid var(--border-color); cursor: zoom-in; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"
-                                    onclick="window.open(this.src, '_blank')" title="Klikni pro zvětšení">
+                                    style="max-width: 100%; max-height: 250px; border-radius: 8px; border: 2px solid var(--border-color); cursor: zoom-in; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"
+                                    onclick="openImageModal(this.src, this.alt)" title="Klikni pro zvětšení">
                             </div>
                         </div>
-                    </div>
-                    <div class="player-card-footer">
-                        <button class="btn-primary" onclick="showBriefingForPlayer(currentPlayerId)">
-                            📋 Zobrazit briefing
-                        </button>
-                        <button class="btn-secondary" onclick="exportPlayerPDF(currentPlayerId)">
-                            📄 Export PDF
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Third Panel: Role v příběhu (Relations) -->
-            <div class="player-relations-panel" id="playerRelationsPanel">
-                <div class="empty-state" id="playerRelationsEmpty">
-                    <p>Informace o roli v příběhu<br>se zobrazí zde.</p>
-                </div>
-                <div class="relations-content" id="playerRelationsContent" style="display: none;">
-                    <h3 class="panel-title">Role v příběhu</h3>
+                        <div class="info-section">
+                            <h4>🎯 Cíle</h4>
+                            <ul id="playerGoalsNew" class="goals-list"></ul>
+                        </div>
 
-                    <div class="info-section">
-                        <h4>🎯 Cíle</h4>
-                        <ul id="playerGoalsNew" class="goals-list"></ul>
-                    </div>
+                        <div class="info-section">
+                            <h4>🔗 Vztahy</h4>
+                            <div id="playerRelationsNew" class="relations-list-vertical"></div>
+                        </div>
 
-                    <div class="info-section">
-                        <h4>🔗 Vztahy</h4>
-                        <div id="playerRelationsNew" class="relations-list-vertical"></div>
+                        <div class="info-section">
+                            <h4>📍 Příběhové uzly</h4>
+                            <div id="playerStoryNodes" class="story-nodes-list"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Prompty Section -->
+        <section id="section-prompty" class="content-section">
+            <div class="section-header">
+                <h1>Šablony promptů pro generování</h1>
+                <p class="section-subtitle">Univerzální prompty pro AI generování avatarů a situačních obrázků hráčů</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Úvod -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
+                    <h3>🎨 O generování obrázků</h3>
+                    <p style="line-height: 1.8; color: var(--text-primary);">
+                        Každý hráč v systému IRIS má v datech uložené vlastnosti vzhledu (<code>appearance</code>),
+                        které
+                        slouží jako základ pro generování unikátních avatarů pomocí AI (DALL-E, Midjourney, Stable
+                        Diffusion
+                        apod.).
+                        Níže jsou šablony promptů s proměnnými, které se automaticky nahradí daty konkrétního hráče.
+                    </p>
+                </div>
+
+                <!-- Proměnné -->
+                <div class="dashboard-card full-width">
+                    <h3>📋 Dostupné proměnné</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Proměnná</th>
+                                <th>Popis</th>
+                                <th>Příklad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>{{role.id}}</code></td>
+                                <td>ID hráče</td>
+                                <td>U01</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.name}}</code></td>
+                                <td>Jméno postavy</td>
+                                <td>Jana Nováková</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.archetype}}</code></td>
+                                <td>Archetyp/role</td>
+                                <td>Zadlužená učitelka</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.description}}</code></td>
+                                <td>Podrobný popis postavy</td>
+                                <td>Středoškolská učitelka češtiny...</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.appearance.gender}}</code></td>
+                                <td>Pohlaví</td>
+                                <td>žena</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.appearance.age_range}}</code></td>
+                                <td>Věková kategorie</td>
+                                <td>45-55</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.appearance.hair_color}}</code></td>
+                                <td>Barva a styl vlasů</td>
+                                <td>šedivějící hnědé vlasy sepnuté do drdolu</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.appearance.face_description}}</code></td>
+                                <td>Popis obličeje</td>
+                                <td>unavená, ale laskavá tvář učitelky, brýle...</td>
+                            </tr>
+                            <tr>
+                                <td><code>{{role.appearance.distinctive_features}}</code></td>
+                                <td>Výrazné rysy</td>
+                                <td>vždy upravený účes, perleťové náušnice</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Avatar Prompt -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-user);">
+                    <h3>📸 Prompt: Avatar (fotka do občanky)</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">
+                        Generuje formální portrétní fotografii ve stylu průkazové fotky. Výstup se ukládá jako
+                        <code>avatar_{role.id}.png</code>.
+                    </p>
+                    <div class="code-block"
+                        style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
+                        Vygeneruj realistickou portrétní fotografii pro doklad totožnosti.
+
+                        OSOBA:
+                        - Pohlaví: {{role.appearance.gender}}
+                        - Věk: {{role.appearance.age_range}} let
+                        - Vlasy: {{role.appearance.hair_color}}
+                        - Obličej: {{role.appearance.face_description}}
+                        - Výrazné rysy: {{role.appearance.distinctive_features}}
+
+                        STYL FOTOGRAFIE:
+                        - Formální průkazová fotografie (pas, občanka)
+                        - Neutrální světle šedé nebo bílé pozadí
+                        - Osoba se dívá přímo do objektivu
+                        - Neutrální nebo jemný úsměv
+                        - Měkké, rovnoměrné osvětlení bez stínů
+                        - Profesionální studijní kvalita
+                        - Ořez: od ramen nahoru (portrait bust)
+
+                        TECHNICKÉ POŽADAVKY:
+                        - Poměr stran: 3:4 (výška > šířka)
+                        - Vysoké rozlišení, ostrý obraz
+                        - Realistický fotografický styl (ne ilustrace)</div>
+                </div>
+
+                <!-- Work Situation Prompt -->
+                <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-agent);">
+                    <h3>💼 Prompt: Typická pracovní situace</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">
+                        Generuje obrázek hráče v typické situaci u terminálu IRIS. Používá se avatar jako reference pro
+                        zachování konzistentní tváře.
+                        Výstup se ukládá jako <code>work_{role.id}.png</code>.
+                    </p>
+                    <div class="code-block"
+                        style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
+                        Vygeneruj realistickou fotografii osoby v pracovní situaci.
+                        MUSÍ to být IDENTICKÁ OSOBA jako na přiloženém referenčním avataru.
+
+                        REFERENČNÍ AVATAR: [vložit avatar_{role.id}.png]
+
+                        VZHLED OSOBY (MUSÍ PŘESNĚ ODPOVÍDAT AVATARU):
+                        - Pohlaví: {{role.appearance.gender}}
+                        - Věk: {{role.appearance.age_range}} let
+                        - Vlasy: {{role.appearance.hair_color}}
+                        - Obličej: {{role.appearance.face_description}}
+                        - Výrazné rysy: {{role.appearance.distinctive_features}}
+
+                        KONTEXT POSTAVY:
+                        - Role: {{role.archetype}}
+                        - Charakter: {{role.description}}
+
+                        SCÉNA:
+                        Osoba sedí u počítačového terminálu v moderní, mírně dystopické
+                        kanceláři společnosti HLINÍK. Interaguje se systémem IRIS.
+                        - Atmosféra: industriální, korporátní, lehce tísnivá
+                        - Osvětlení: neonové modré a oranžové akcenty, tlumené stropní světlo
+                        - Prostředí: otevřená kancelář, terminály, kabely, výstražné cedule
+
+                        KOMPOZICE:
+                        - Osoba v popředí (3/4 záběr, viditelná tvář a tělo po pás)
+                        - Terminál a pracovní deska v záběru
+                        - Pozadí: další termínály, ostatní zaměstnanci rozmazaně
+
+                        STYL:
+                        - Cinematic quality, filmová estetika
+                        - Cyberpunk office aesthetic
+                        - Realistická fotografie (ne ilustrace)
+                        - Moody lighting, kontrast světla a stínu</div>
+                </div>
+
+                <!-- Použití -->
+                <div class="dashboard-card full-width">
+                    <h3>🔧 Postup generování</h3>
+                    <ol style="color: var(--text-primary); line-height: 2;">
+                        <li>Načti data hráče z <code>roles.json</code> podle jeho ID</li>
+                        <li>Nahraď všechny proměnné <code>{{...}}</code> skutečnými hodnotami</li>
+                        <li>Vygeneruj avatar pomocí prvního promptu</li>
+                        <li>Ulož výsledek jako <code>avatar_{role.id}.png</code></li>
+                        <li>Použij vygenerovaný avatar jako referenci pro druhý prompt</li>
+                        <li>Vygeneruj pracovní situaci pomocí druhého promptu</li>
+                        <li>Ulož výsledek jako <code>work_{role.id}.png</code></li>
+                    </ol>
+                </div>
+
+                <!-- Příklad -->
+                <div class="dashboard-card full-width" style="background: var(--bg-secondary);">
+                    <h3>📝 Příklad: Jana Nováková</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">Ukázka vyplněného avatar promptu:</p>
+                    <div class="code-block"
+                        style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem; white-space: pre-wrap; line-height: 1.5;">
+                        Vygeneruj realistickou portrétní fotografii pro doklad totožnosti.
+
+                        OSOBA:
+                        - Pohlaví: žena
+                        - Věk: 45-55 let
+                        - Vlasy: šedivějící hnědé vlasy sepnuté do drdolu
+                        - Obličej: unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí
+                        a
+                        úst
+                        - Výrazné rysy: vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled
+
+                        STYL FOTOGRAFIE:
+                        - Formální průkazová fotografie (pas, občanka)
+                        ...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Issues Section (Kanban Board) -->
+        <section id="section-issues" class="content-section">
+            <div class="section-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>Správa úkolů</h1>
+
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-primary" onclick="showIssueModal()">+ Nový úkol</button>
+                        <button class="btn-secondary" onclick="exportIssuesJSON()">📥 Export JSON</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kanban-board" id="kanbanBoard">
+                <!-- Dynamically populated -->
+                <div class="kanban-column" data-phase="waiting">
+                    <div class="kanban-column-header">
+                        <span class="phase-icon">⏳</span>
+                        <span class="phase-label">Čekání</span>
+                        <span class="phase-count" id="count-waiting">0</span>
+                    </div>
+                    <div class="kanban-cards" id="cards-waiting"></div>
+                </div>
+                <div class="kanban-column" data-phase="implementation">
+                    <div class="kanban-column-header">
+                        <span class="phase-icon">🔧</span>
+                        <span class="phase-label">Implementace</span>
+                        <span class="phase-count" id="count-implementation">0</span>
+                    </div>
+                    <div class="kanban-cards" id="cards-implementation"></div>
+                </div>
+                <div class="kanban-column" data-phase="testing">
+                    <div class="kanban-column-header">
+                        <span class="phase-icon">🧪</span>
+                        <span class="phase-label">Automatický test</span>
+                        <span class="phase-count" id="count-testing">0</span>
+                    </div>
+                    <div class="kanban-cards" id="cards-testing"></div>
+                </div>
+                <div class="kanban-column" data-phase="user_confirm">
+                    <div class="kanban-column-header">
+                        <span class="phase-icon">✅</span>
+                        <span class="phase-label">Uživatelské potvrzení</span>
+                        <span class="phase-count" id="count-user_confirm">0</span>
+                    </div>
+                    <div class="kanban-cards" id="cards-user_confirm"></div>
+                </div>
+                <div class="kanban-column" data-phase="done">
+                    <div class="kanban-column-header">
+                        <span class="phase-icon">✓</span>
+                        <span class="phase-label">Hotovo</span>
+                        <span class="phase-count" id="count-done">0</span>
+                    </div>
+                    <div class="kanban-cards" id="cards-done"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Scenarios Section -->
+        <section id="section-test-scenarios" class="content-section">
+            <div class="section-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>Testovací scénáře</h1>
+                        <p class="section-subtitle">Zadání testů a protokoly jejich průběhu (Markdown)</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-primary" onclick="showTestScenarioModal()">+ Nový test</button>
+                        <button class="btn-secondary" onclick="exportTestsJSON()">📥 Export JSON</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-scenarios-layout">
+                <!-- Left Panel: Test List -->
+                <div class="test-list-panel dashboard-card">
+                    <div style="margin-bottom: 1rem;">
+                        <select id="testCategoryFilter" class="audit-select" style="width: 100%;"
+                            onchange="filterTestScenarios()">
+                            <option value="all">Všechny kategorie</option>
+                            <option value="IRIS">🎭 IRIS (LARP)</option>
+                            <option value="HLINIK">🏭 HLINIK (Aplikace)</option>
+                            <option value="Ostatní">📁 Ostatní</option>
+                        </select>
+                    </div>
+                    <div id="testScenariosList" class="test-scenarios-list">
+                        <p class="text-muted">Načítám testy...</p>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Test Detail -->
+                <div class="test-detail-panel dashboard-card" id="testScenarioDetail">
+                    <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                        <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
+                        Vyberte test ze seznamu pro zobrazení detailů a protokolů.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Definitions Section -->
+        <section id="section-definitions" class="content-section">
+            <div class="section-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>Systém definic</h1>
+                        <p class="section-subtitle">Pravidla hry a technické předpoklady s uživatelským schválením</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-primary" onclick="showDefinitionModal()">+ Nová definice</button>
+                        <button class="btn-secondary" onclick="exportDefinitionsJSON()">📥 Export JSON</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-bar" style="margin-bottom: 1rem;">
+                <span style="color: var(--text-muted); margin-right: 0.5rem;">Kategorie:</span>
+                <button class="filter-btn active" data-def-category="all"
+                    onclick="filterDefinitions('all')">Vše</button>
+                <button class="filter-btn" data-def-category="IRIS" onclick="filterDefinitions('IRIS')">🎭 IRIS</button>
+                <button class="filter-btn" data-def-category="HLINIK" onclick="filterDefinitions('HLINIK')">🏭
+                    HLINIK</button>
+                <button class="filter-btn" data-def-category="Ostatní" onclick="filterDefinitions('Ostatní')">📁
+                    Ostatní</button>
+            </div>
+            <div class="filter-bar" style="margin-bottom: 1.5rem;">
+                <span style="color: var(--text-muted); margin-right: 0.5rem;">Stav:</span>
+                <button class="filter-btn active" data-def-status="all"
+                    onclick="filterDefinitionsByStatus('all')">Vše</button>
+                <button class="filter-btn" data-def-status="approved" onclick="filterDefinitionsByStatus('approved')">✅
+                    Schválené</button>
+                <button class="filter-btn" data-def-status="pending" onclick="filterDefinitionsByStatus('pending')">⏳
+                    Neschválené</button>
+            </div>
+
+            <div id="definitionsList" class="definitions-list">
+                <p class="text-muted">Načítám definice...</p>
+            </div>
+        </section>
+
+        <!-- Issue Modal -->
+        <div class="modal-overlay" id="issueModal" style="display: none;">
+            <div class="modal-container" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2 id="issueModalTitle">Nový úkol</h2>
+                    <button class="btn-close" onclick="closeIssueModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="issueEditId">
+                    <div class="form-group">
+                        <label>ID (automaticky generováno)</label>
+                        <input type="text" id="issueId" class="audit-input" readonly placeholder="ISS-XXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Název úkolu *</label>
+                        <input type="text" id="issueTitle" class="audit-input" placeholder="Zadejte název úkolu">
+                    </div>
+                    <div class="form-group">
+                        <label>Popis</label>
+                        <textarea id="issueDescription" class="audit-input" rows="4"
+                            placeholder="Detailní popis úkolu..."></textarea>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Kategorie</label>
+                            <select id="issueCategory" class="audit-select">
+                                <option value="HLINIK">🏭 HLINIK</option>
+                                <option value="IRIS">🎭 IRIS</option>
+                                <option value="Ostatní">📁 Ostatní</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priorita</label>
+                            <select id="issuePriority" class="audit-select">
+                                <option value="low">🔵 Nízká</option>
+                                <option value="normal" selected>⚪ Normální</option>
+                                <option value="high">🔴 Vysoká</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeIssueModal()">Zrušit</button>
+                    <button class="btn-primary" onclick="saveIssue()">Uložit</button>
+                </div>
+            </div>
         </div>
-    </section>
 
-    <!-- Prompty Section -->
-    <section id="section-prompty" class="content-section">
-        <div class="section-header">
-            <h1>Šablony promptů pro generování</h1>
-            <p class="section-subtitle">Univerzální prompty pro AI generování avatarů a situačních obrázků hráčů</p>
-        </div>
-
-        <div class="dashboard-grid">
-            <!-- Úvod -->
-            <div class="dashboard-card full-width" style="border-left: 4px solid var(--accent-gold);">
-                <h3>🎨 O generování obrázků</h3>
-                <p style="line-height: 1.8; color: var(--text-primary);">
-                    Každý hráč v systému IRIS má v datech uložené vlastnosti vzhledu (<code>appearance</code>), které
-                    slouží jako základ pro generování unikátních avatarů pomocí AI (DALL-E, Midjourney, Stable Diffusion
-                    apod.).
-                    Níže jsou šablony promptů s proměnnými, které se automaticky nahradí daty konkrétního hráče.
-                </p>
-            </div>
-
-            <!-- Proměnné -->
-            <div class="dashboard-card full-width">
-                <h3>📋 Dostupné proměnné</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Proměnná</th>
-                            <th>Popis</th>
-                            <th>Příklad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>{{role.id}}</code></td>
-                            <td>ID hráče</td>
-                            <td>U01</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.name}}</code></td>
-                            <td>Jméno postavy</td>
-                            <td>Jana Nováková</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.archetype}}</code></td>
-                            <td>Archetyp/role</td>
-                            <td>Zadlužená učitelka</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.description}}</code></td>
-                            <td>Podrobný popis postavy</td>
-                            <td>Středoškolská učitelka češtiny...</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.appearance.gender}}</code></td>
-                            <td>Pohlaví</td>
-                            <td>žena</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.appearance.age_range}}</code></td>
-                            <td>Věková kategorie</td>
-                            <td>45-55</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.appearance.hair_color}}</code></td>
-                            <td>Barva a styl vlasů</td>
-                            <td>šedivějící hnědé vlasy sepnuté do drdolu</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.appearance.face_description}}</code></td>
-                            <td>Popis obličeje</td>
-                            <td>unavená, ale laskavá tvář učitelky, brýle...</td>
-                        </tr>
-                        <tr>
-                            <td><code>{{role.appearance.distinctive_features}}</code></td>
-                            <td>Výrazné rysy</td>
-                            <td>vždy upravený účes, perleťové náušnice</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Avatar Prompt -->
-            <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-user);">
-                <h3>📸 Prompt: Avatar (fotka do občanky)</h3>
-                <p style="margin-bottom: 1rem; color: var(--text-muted);">
-                    Generuje formální portrétní fotografii ve stylu průkazové fotky. Výstup se ukládá jako
-                    <code>avatar_{role.id}.png</code>.
-                </p>
-                <div class="code-block"
-                    style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
-                    Vygeneruj realistickou portrétní fotografii pro doklad totožnosti.
-
-                    OSOBA:
-                    - Pohlaví: {{role.appearance.gender}}
-                    - Věk: {{role.appearance.age_range}} let
-                    - Vlasy: {{role.appearance.hair_color}}
-                    - Obličej: {{role.appearance.face_description}}
-                    - Výrazné rysy: {{role.appearance.distinctive_features}}
-
-                    STYL FOTOGRAFIE:
-                    - Formální průkazová fotografie (pas, občanka)
-                    - Neutrální světle šedé nebo bílé pozadí
-                    - Osoba se dívá přímo do objektivu
-                    - Neutrální nebo jemný úsměv
-                    - Měkké, rovnoměrné osvětlení bez stínů
-                    - Profesionální studijní kvalita
-                    - Ořez: od ramen nahoru (portrait bust)
-
-                    TECHNICKÉ POŽADAVKY:
-                    - Poměr stran: 3:4 (výška > šířka)
-                    - Vysoké rozlišení, ostrý obraz
-                    - Realistický fotografický styl (ne ilustrace)</div>
-            </div>
-
-            <!-- Work Situation Prompt -->
-            <div class="dashboard-card full-width" style="border-left: 4px solid var(--color-agent);">
-                <h3>💼 Prompt: Typická pracovní situace</h3>
-                <p style="margin-bottom: 1rem; color: var(--text-muted);">
-                    Generuje obrázek hráče v typické situaci u terminálu IRIS. Používá se avatar jako reference pro
-                    zachování konzistentní tváře.
-                    Výstup se ukládá jako <code>work_{role.id}.png</code>.
-                </p>
-                <div class="code-block"
-                    style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
-                    Vygeneruj realistickou fotografii osoby v pracovní situaci.
-                    MUSÍ to být IDENTICKÁ OSOBA jako na přiloženém referenčním avataru.
-
-                    REFERENČNÍ AVATAR: [vložit avatar_{role.id}.png]
-
-                    VZHLED OSOBY (MUSÍ PŘESNĚ ODPOVÍDAT AVATARU):
-                    - Pohlaví: {{role.appearance.gender}}
-                    - Věk: {{role.appearance.age_range}} let
-                    - Vlasy: {{role.appearance.hair_color}}
-                    - Obličej: {{role.appearance.face_description}}
-                    - Výrazné rysy: {{role.appearance.distinctive_features}}
-
-                    KONTEXT POSTAVY:
-                    - Role: {{role.archetype}}
-                    - Charakter: {{role.description}}
-
-                    SCÉNA:
-                    Osoba sedí u počítačového terminálu v moderní, mírně dystopické
-                    kanceláři společnosti HLINÍK. Interaguje se systémem IRIS.
-                    - Atmosféra: industriální, korporátní, lehce tísnivá
-                    - Osvětlení: neonové modré a oranžové akcenty, tlumené stropní světlo
-                    - Prostředí: otevřená kancelář, terminály, kabely, výstražné cedule
-
-                    KOMPOZICE:
-                    - Osoba v popředí (3/4 záběr, viditelná tvář a tělo po pás)
-                    - Terminál a pracovní deska v záběru
-                    - Pozadí: další termínály, ostatní zaměstnanci rozmazaně
-
-                    STYL:
-                    - Cinematic quality, filmová estetika
-                    - Cyberpunk office aesthetic
-                    - Realistická fotografie (ne ilustrace)
-                    - Moody lighting, kontrast světla a stínu</div>
-            </div>
-
-            <!-- Použití -->
-            <div class="dashboard-card full-width">
-                <h3>🔧 Postup generování</h3>
-                <ol style="color: var(--text-primary); line-height: 2;">
-                    <li>Načti data hráče z <code>roles.json</code> podle jeho ID</li>
-                    <li>Nahraď všechny proměnné <code>{{...}}</code> skutečnými hodnotami</li>
-                    <li>Vygeneruj avatar pomocí prvního promptu</li>
-                    <li>Ulož výsledek jako <code>avatar_{role.id}.png</code></li>
-                    <li>Použij vygenerovaný avatar jako referenci pro druhý prompt</li>
-                    <li>Vygeneruj pracovní situaci pomocí druhého promptu</li>
-                    <li>Ulož výsledek jako <code>work_{role.id}.png</code></li>
-                </ol>
-            </div>
-
-            <!-- Příklad -->
-            <div class="dashboard-card full-width" style="background: var(--bg-secondary);">
-                <h3>📝 Příklad: Jana Nováková</h3>
-                <p style="margin-bottom: 1rem; color: var(--text-muted);">Ukázka vyplněného avatar promptu:</p>
-                <div class="code-block"
-                    style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem; white-space: pre-wrap; line-height: 1.5;">
-                    Vygeneruj realistickou portrétní fotografii pro doklad totožnosti.
-
-                    OSOBA:
-                    - Pohlaví: žena
-                    - Věk: 45-55 let
-                    - Vlasy: šedivějící hnědé vlasy sepnuté do drdolu
-                    - Obličej: unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí a
-                    úst
-                    - Výrazné rysy: vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled
-
-                    STYL FOTOGRAFIE:
-                    - Formální průkazová fotografie (pas, občanka)
-                    ...</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Issues Section (Kanban Board) -->
-    <section id="section-issues" class="content-section">
-        <div class="section-header">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1>Správa úkolů</h1>
-
+        <!-- Test Scenario Modal -->
+        <div class="modal-overlay" id="testScenarioModal" style="display: none;">
+            <div class="modal-container" style="max-width: 800px;">
+                <div class="modal-header">
+                    <h2 id="testScenarioModalTitle">Nový test</h2>
+                    <button class="btn-close" onclick="closeTestScenarioModal()">✕</button>
                 </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-primary" onclick="showIssueModal()">+ Nový úkol</button>
-                    <button class="btn-secondary" onclick="exportIssuesJSON()">📥 Export JSON</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="kanban-board" id="kanbanBoard">
-            <!-- Dynamically populated -->
-            <div class="kanban-column" data-phase="waiting">
-                <div class="kanban-column-header">
-                    <span class="phase-icon">⏳</span>
-                    <span class="phase-label">Čekání</span>
-                    <span class="phase-count" id="count-waiting">0</span>
-                </div>
-                <div class="kanban-cards" id="cards-waiting"></div>
-            </div>
-            <div class="kanban-column" data-phase="implementation">
-                <div class="kanban-column-header">
-                    <span class="phase-icon">🔧</span>
-                    <span class="phase-label">Implementace</span>
-                    <span class="phase-count" id="count-implementation">0</span>
-                </div>
-                <div class="kanban-cards" id="cards-implementation"></div>
-            </div>
-            <div class="kanban-column" data-phase="testing">
-                <div class="kanban-column-header">
-                    <span class="phase-icon">🧪</span>
-                    <span class="phase-label">Automatický test</span>
-                    <span class="phase-count" id="count-testing">0</span>
-                </div>
-                <div class="kanban-cards" id="cards-testing"></div>
-            </div>
-            <div class="kanban-column" data-phase="user_confirm">
-                <div class="kanban-column-header">
-                    <span class="phase-icon">✅</span>
-                    <span class="phase-label">Uživatelské potvrzení</span>
-                    <span class="phase-count" id="count-user_confirm">0</span>
-                </div>
-                <div class="kanban-cards" id="cards-user_confirm"></div>
-            </div>
-            <div class="kanban-column" data-phase="done">
-                <div class="kanban-column-header">
-                    <span class="phase-icon">✓</span>
-                    <span class="phase-label">Hotovo</span>
-                    <span class="phase-count" id="count-done">0</span>
-                </div>
-                <div class="kanban-cards" id="cards-done"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Test Scenarios Section -->
-    <section id="section-test-scenarios" class="content-section">
-        <div class="section-header">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1>Testovací scénáře</h1>
-                    <p class="section-subtitle">Zadání testů a protokoly jejich průběhu (Markdown)</p>
-                </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-primary" onclick="showTestScenarioModal()">+ Nový test</button>
-                    <button class="btn-secondary" onclick="exportTestsJSON()">📥 Export JSON</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="test-scenarios-layout">
-            <!-- Left Panel: Test List -->
-            <div class="test-list-panel dashboard-card">
-                <div style="margin-bottom: 1rem;">
-                    <select id="testCategoryFilter" class="audit-select" style="width: 100%;"
-                        onchange="filterTestScenarios()">
-                        <option value="all">Všechny kategorie</option>
-                        <option value="IRIS">🎭 IRIS (LARP)</option>
-                        <option value="HLINIK">🏭 HLINIK (Aplikace)</option>
-                        <option value="Ostatní">📁 Ostatní</option>
-                    </select>
-                </div>
-                <div id="testScenariosList" class="test-scenarios-list">
-                    <p class="text-muted">Načítám testy...</p>
-                </div>
-            </div>
-
-            <!-- Right Panel: Test Detail -->
-            <div class="test-detail-panel dashboard-card" id="testScenarioDetail">
-                <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
-                    Vyberte test ze seznamu pro zobrazení detailů a protokolů.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Definitions Section -->
-    <section id="section-definitions" class="content-section">
-        <div class="section-header">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1>Systém definic</h1>
-                    <p class="section-subtitle">Pravidla hry a technické předpoklady s uživatelským schválením</p>
-                </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-primary" onclick="showDefinitionModal()">+ Nová definice</button>
-                    <button class="btn-secondary" onclick="exportDefinitionsJSON()">📥 Export JSON</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filters -->
-        <div class="filter-bar" style="margin-bottom: 1rem;">
-            <span style="color: var(--text-muted); margin-right: 0.5rem;">Kategorie:</span>
-            <button class="filter-btn active" data-def-category="all" onclick="filterDefinitions('all')">Vše</button>
-            <button class="filter-btn" data-def-category="IRIS" onclick="filterDefinitions('IRIS')">🎭 IRIS</button>
-            <button class="filter-btn" data-def-category="HLINIK" onclick="filterDefinitions('HLINIK')">🏭
-                HLINIK</button>
-            <button class="filter-btn" data-def-category="Ostatní" onclick="filterDefinitions('Ostatní')">📁
-                Ostatní</button>
-        </div>
-        <div class="filter-bar" style="margin-bottom: 1.5rem;">
-            <span style="color: var(--text-muted); margin-right: 0.5rem;">Stav:</span>
-            <button class="filter-btn active" data-def-status="all"
-                onclick="filterDefinitionsByStatus('all')">Vše</button>
-            <button class="filter-btn" data-def-status="approved" onclick="filterDefinitionsByStatus('approved')">✅
-                Schválené</button>
-            <button class="filter-btn" data-def-status="pending" onclick="filterDefinitionsByStatus('pending')">⏳
-                Neschválené</button>
-        </div>
-
-        <div id="definitionsList" class="definitions-list">
-            <p class="text-muted">Načítám definice...</p>
-        </div>
-    </section>
-
-    <!-- Issue Modal -->
-    <div class="modal-overlay" id="issueModal" style="display: none;">
-        <div class="modal-container" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 id="issueModalTitle">Nový úkol</h2>
-                <button class="btn-close" onclick="closeIssueModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="issueEditId">
-                <div class="form-group">
-                    <label>ID (automaticky generováno)</label>
-                    <input type="text" id="issueId" class="audit-input" readonly placeholder="ISS-XXX">
-                </div>
-                <div class="form-group">
-                    <label>Název úkolu *</label>
-                    <input type="text" id="issueTitle" class="audit-input" placeholder="Zadejte název úkolu">
-                </div>
-                <div class="form-group">
-                    <label>Popis</label>
-                    <textarea id="issueDescription" class="audit-input" rows="4"
-                        placeholder="Detailní popis úkolu..."></textarea>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="modal-body">
+                    <input type="hidden" id="testEditId">
+                    <div class="form-group">
+                        <label>ID (automaticky generováno)</label>
+                        <input type="text" id="testId" class="audit-input" readonly placeholder="TEST-XXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Název testu *</label>
+                        <input type="text" id="testTitle" class="audit-input" placeholder="Zadejte název testu">
+                    </div>
                     <div class="form-group">
                         <label>Kategorie</label>
-                        <select id="issueCategory" class="audit-select">
+                        <select id="testCategory" class="audit-select">
                             <option value="HLINIK">🏭 HLINIK</option>
                             <option value="IRIS">🎭 IRIS</option>
                             <option value="Ostatní">📁 Ostatní</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Priorita</label>
-                        <select id="issuePriority" class="audit-select">
-                            <option value="low">🔵 Nízká</option>
-                            <option value="normal" selected>⚪ Normální</option>
-                            <option value="high">🔴 Vysoká</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeIssueModal()">Zrušit</button>
-                <button class="btn-primary" onclick="saveIssue()">Uložit</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Test Scenario Modal -->
-    <div class="modal-overlay" id="testScenarioModal" style="display: none;">
-        <div class="modal-container" style="max-width: 800px;">
-            <div class="modal-header">
-                <h2 id="testScenarioModalTitle">Nový test</h2>
-                <button class="btn-close" onclick="closeTestScenarioModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="testEditId">
-                <div class="form-group">
-                    <label>ID (automaticky generováno)</label>
-                    <input type="text" id="testId" class="audit-input" readonly placeholder="TEST-XXX">
-                </div>
-                <div class="form-group">
-                    <label>Název testu *</label>
-                    <input type="text" id="testTitle" class="audit-input" placeholder="Zadejte název testu">
-                </div>
-                <div class="form-group">
-                    <label>Kategorie</label>
-                    <select id="testCategory" class="audit-select">
-                        <option value="HLINIK">🏭 HLINIK</option>
-                        <option value="IRIS">🎭 IRIS</option>
-                        <option value="Ostatní">📁 Ostatní</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Zadání testu (Markdown) *</label>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                        Napište zadání pro uživatele nebo agenta. Použijte markdown formátování.
-                    </p>
-                    <textarea id="testDescriptionMd" class="audit-input" rows="12" placeholder="# Název testu
+                        <label>Zadání testu (Markdown) *</label>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                            Napište zadání pro uživatele nebo agenta. Použijte markdown formátování.
+                        </p>
+                        <textarea id="testDescriptionMd" class="audit-input" rows="12" placeholder="# Název testu
 
 ## Cíl testu
 Popište, co se má otestovat...
@@ -2281,168 +2337,169 @@ Popište, co se má otestovat...
 
 ## Očekávaný výsledek
 ..."></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeTestScenarioModal()">Zrušit</button>
-                <button class="btn-primary" onclick="saveTestScenario()">Uložit</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Definition Modal -->
-    <div class="modal-overlay" id="definitionModal" style="display: none;">
-        <div class="modal-container" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 id="definitionModalTitle">Nová definice</h2>
-                <button class="btn-close" onclick="closeDefinitionModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="defEditId">
-                <div class="form-group">
-                    <label>ID (automaticky generováno)</label>
-                    <input type="text" id="defId" class="audit-input" readonly placeholder="DEF-XXX">
-                </div>
-                <div class="form-group">
-                    <label>Název definice *</label>
-                    <input type="text" id="defTitle" class="audit-input"
-                        placeholder="Stručný název pravidla/předpokladu">
-                </div>
-                <div class="form-group">
-                    <label>Popis *</label>
-                    <textarea id="defDescription" class="audit-input" rows="4"
-                        placeholder="Detailní popis definice..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Kategorie</label>
-                    <select id="defCategory" class="audit-select">
-                        <option value="IRIS">🎭 IRIS (LARP)</option>
-                        <option value="HLINIK">🏭 HLINIK (Aplikace)</option>
-                        <option value="Ostatní">📁 Ostatní</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer" style="display: flex; justify-content: space-between; gap: 1rem;">
-                <button class="btn-secondary" onclick="closeDefinitionModal()">Zrušit</button>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-secondary" onclick="saveDefinition(true)">Uložit a další</button>
-                    <button class="btn-primary" onclick="saveDefinition(false)">Uložit</button>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeTestScenarioModal()">Zrušit</button>
+                    <button class="btn-primary" onclick="saveTestScenario()">Uložit</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Protocol Viewer Modal -->
-    <div class="modal-overlay" id="protocolModal" style="display: none;">
-        <div class="modal-container" style="max-width: 900px; max-height: 90vh;">
-            <div class="modal-header">
-                <h2 id="protocolModalTitle">Protokol testu</h2>
-                <button class="btn-close" onclick="closeProtocolModal()">✕</button>
-            </div>
-            <div class="modal-body" id="protocolContent" style="overflow-y: auto; max-height: 70vh;">
-                <!-- Markdown content rendered here -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeProtocolModal()">Zavřít</button>
+        <!-- Definition Modal -->
+        <div class="modal-overlay" id="definitionModal" style="display: none;">
+            <div class="modal-container" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2 id="definitionModalTitle">Nová definice</h2>
+                    <button class="btn-close" onclick="closeDefinitionModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="defEditId">
+                    <div class="form-group">
+                        <label>ID (automaticky generováno)</label>
+                        <input type="text" id="defId" class="audit-input" readonly placeholder="DEF-XXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Název definice *</label>
+                        <input type="text" id="defTitle" class="audit-input"
+                            placeholder="Stručný název pravidla/předpokladu">
+                    </div>
+                    <div class="form-group">
+                        <label>Popis *</label>
+                        <textarea id="defDescription" class="audit-input" rows="4"
+                            placeholder="Detailní popis definice..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategorie</label>
+                        <select id="defCategory" class="audit-select">
+                            <option value="IRIS">🎭 IRIS (LARP)</option>
+                            <option value="HLINIK">🏭 HLINIK (Aplikace)</option>
+                            <option value="Ostatní">📁 Ostatní</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; justify-content: space-between; gap: 1rem;">
+                    <button class="btn-secondary" onclick="closeDefinitionModal()">Zrušit</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-secondary" onclick="saveDefinition(true)">Uložit a další</button>
+                        <button class="btn-primary" onclick="saveDefinition(false)">Uložit</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Event Modal (existing) -->
-    <div class="modal-overlay" id="eventModal" style="display: none;">
-        <div class="modal-container" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 id="eventModalTitle">Detail události</h2>
-                <button class="btn-close" onclick="closeEventModal()">✕</button>
-            </div>
-            <div class="modal-body" id="eventModalContent">
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="closeEventModal()">Zavřít</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Image Zoom Modal -->
-    <div class="modal-overlay" id="imageModal" style="display: none; background: rgba(0,0,0,0.9); z-index: 2000;">
-        <span class="close" onclick="closeImageModal()"
-            style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
-        <img class="modal-content" id="img01" style="margin: auto; display: block; max-width: 90%; max-height: 90vh;">
-        <div id="caption"
-            style="margin: auto; display: block; width: 80%; max-width: 700px; text-align: center; color: #ccc; padding: 10px 0; height: 150px;">
-        </div>
-    </div>
-
-    <!-- Exporty Section -->
-    <section id="section-exporty" class="content-section">
-
-        <div class="section-header">
-            <h1>Exporty</h1>
-            <p class="section-subtitle">Hromadné stahování dokumentace a briefingů</p>
-        </div>
-
-        <div class="export-grid">
-            <div class="export-card">
-                <div class="export-icon">📋</div>
-                <h3>Všechny briefingy</h3>
-                <p>Stáhne HTML s briefingem pro každou z 20 postav (pro tisk jako PDF).</p>
-                <button class="btn-primary" onclick="exportAllBriefings()" id="btnExportBriefings">
-                    📥 Stáhnout briefingy
-                </button>
-                <div class="export-status" id="briefingsExportStatus"></div>
-            </div>
-
-            <div class="export-card">
-                <div class="export-icon">🌐</div>
-                <h3>Lore Web (bez testů)</h3>
-                <p>Stáhne data lore webu <strong>bez</strong> adresáře test_runs (méně souborů).</p>
-                <button class="btn-primary" onclick="exportLoreWebNoTests()" id="btnExportNoTests">
-                    📥 Stáhnout bez testů (ZIP)
-                </button>
-                <div class="export-status" id="noTestsExportStatus"></div>
-            </div>
-
-            <div class="export-card">
-                <div class="export-icon">🧪</div>
-                <h3>Pouze test runs</h3>
-                <p>Stáhne <strong>pouze</strong> adresář test_runs s run logy.</p>
-                <button class="btn-primary" onclick="exportOnlyTestRuns()" id="btnExportOnlyTests">
-                    📥 Stáhnout test runs (ZIP)
-                </button>
-                <div class="export-status" id="onlyTestsExportStatus"></div>
-            </div>
-
-            <div class="export-card">
-                <div class="export-icon">📊</div>
-                <h3>Data JSON</h3>
-                <p>Stáhne surová data (roles.json, relations.json).</p>
-                <button class="btn-secondary" onclick="exportDataJSON()">
-                    📥 Stáhnout JSON
-                </button>
+        <!-- Protocol Viewer Modal -->
+        <div class="modal-overlay" id="protocolModal" style="display: none;">
+            <div class="modal-container" style="max-width: 900px; max-height: 90vh;">
+                <div class="modal-header">
+                    <h2 id="protocolModalTitle">Protokol testu</h2>
+                    <button class="btn-close" onclick="closeProtocolModal()">✕</button>
+                </div>
+                <div class="modal-body" id="protocolContent" style="overflow-y: auto; max-height: 70vh;">
+                    <!-- Markdown content rendered here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeProtocolModal()">Zavřít</button>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Briefing Modal -->
-    <div class="modal-overlay" id="briefingModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2 id="briefingTitle">Briefing</h2>
-                <button class="btn-close" onclick="closeBriefing()">✕</button>
-            </div>
-            <div class="modal-body" id="briefingContent">
-                <!-- Dynamicky naplněno -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="exportBriefingPDF()">📄 Export PDF</button>
-                <button class="btn-secondary" onclick="printBriefing()">🖨️ Tisk</button>
-                <button class="btn-primary" onclick="closeBriefing()">Zavřít</button>
+        <!-- Event Modal (existing) -->
+        <div class="modal-overlay" id="eventModal" style="display: none;">
+            <div class="modal-container" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2 id="eventModalTitle">Detail události</h2>
+                    <button class="btn-close" onclick="closeEventModal()">✕</button>
+                </div>
+                <div class="modal-body" id="eventModalContent">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="closeEventModal()">Zavřít</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script src="js/graph.js?v=20251215_fix10"></script>
-    <script src="app.js?v=20251215_fix10"></script>
+        <!-- Image Zoom Modal -->
+        <div class="modal-overlay" id="imageModal" style="display: none; background: rgba(0,0,0,0.9); z-index: 2000;">
+            <span class="close" onclick="closeImageModal()"
+                style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+            <img class="modal-content" id="img01"
+                style="margin: auto; display: block; max-width: 90%; max-height: 90vh;">
+            <div id="caption"
+                style="margin: auto; display: block; width: 80%; max-width: 700px; text-align: center; color: #ccc; padding: 10px 0; height: 150px;">
+            </div>
+        </div>
+
+        <!-- Exporty Section -->
+        <section id="section-exporty" class="content-section">
+
+            <div class="section-header">
+                <h1>Exporty</h1>
+                <p class="section-subtitle">Hromadné stahování dokumentace a briefingů</p>
+            </div>
+
+            <div class="export-grid">
+                <div class="export-card">
+                    <div class="export-icon">📋</div>
+                    <h3>Všechny briefingy</h3>
+                    <p>Stáhne HTML s briefingem pro každou z 20 postav (pro tisk jako PDF).</p>
+                    <button class="btn-primary" onclick="exportAllBriefings()" id="btnExportBriefings">
+                        📥 Stáhnout briefingy
+                    </button>
+                    <div class="export-status" id="briefingsExportStatus"></div>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">🌐</div>
+                    <h3>Lore Web (bez testů)</h3>
+                    <p>Stáhne data lore webu <strong>bez</strong> adresáře test_runs (méně souborů).</p>
+                    <button class="btn-primary" onclick="exportLoreWebNoTests()" id="btnExportNoTests">
+                        📥 Stáhnout bez testů (ZIP)
+                    </button>
+                    <div class="export-status" id="noTestsExportStatus"></div>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">🧪</div>
+                    <h3>Pouze test runs</h3>
+                    <p>Stáhne <strong>pouze</strong> adresář test_runs s run logy.</p>
+                    <button class="btn-primary" onclick="exportOnlyTestRuns()" id="btnExportOnlyTests">
+                        📥 Stáhnout test runs (ZIP)
+                    </button>
+                    <div class="export-status" id="onlyTestsExportStatus"></div>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">📊</div>
+                    <h3>Data JSON</h3>
+                    <p>Stáhne surová data (roles.json, relations.json).</p>
+                    <button class="btn-secondary" onclick="exportDataJSON()">
+                        📥 Stáhnout JSON
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Briefing Modal -->
+        <div class="modal-overlay" id="briefingModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 id="briefingTitle">Briefing</h2>
+                    <button class="btn-close" onclick="closeBriefing()">✕</button>
+                </div>
+                <div class="modal-body" id="briefingContent">
+                    <!-- Dynamicky naplněno -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="exportBriefingPDF()">📄 Export PDF</button>
+                    <button class="btn-secondary" onclick="printBriefing()">🖨️ Tisk</button>
+                    <button class="btn-primary" onclick="closeBriefing()">Zavřít</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/graph.js?v=20251215_fix10"></script>
+        <script src="app.js?v=20251215_fix10"></script>
 </body>
 
 </html>
