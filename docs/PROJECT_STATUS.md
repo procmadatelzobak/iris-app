@@ -2,7 +2,7 @@
 
 **Language Policy:** Documentation (EN), UI (Czech/English Hybrid as per LARP Spec).
 
-## Current Phase: Phase 37 - Visualization & Stabilization [IN_PROGRESS]
+## Current Phase: Phase 38 [IN_PROGRESS]
 
 | Phase | Description | Status |
 | :--- | :--- | :--- |
