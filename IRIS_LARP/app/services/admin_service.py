@@ -159,3 +159,246 @@ class AdminService:
                 "type": "gamestate_update",
                 "panic_global": enabled
             }))
+
+    # --- REST API SUPPORT METHODS ---
+
+    async def update_llm_config(self, config_type: str, payload: dict):
+        from ..logic.llm_core import LLMConfig, LLMProvider
+        
+        if config_type == "task":
+            gamestate.llm_config_task = LLMConfig(**payload)
+        elif config_type == "hyper":
+            gamestate.llm_config_hyper = LLMConfig(**payload)
+        elif config_type == "optimizer":
+            provider = payload.get("provider")
+            model_name = payload.get("model_name")
+            system_prompt = payload.get("system_prompt")
+            prompt = payload.get("prompt")
+            
+            gamestate.llm_config_optimizer = LLMConfig(
+                provider=provider,
+                model_name=model_name,
+                system_prompt=system_prompt
+            )
+            gamestate.optimizer_prompt = prompt
+        elif config_type == "censor":
+            gamestate.llm_config_censor = LLMConfig(**payload)
+        else:
+            raise ValueError("Invalid config type")
+            
+    async def set_panic_mode_for_session(self, session_id: int, target: str, enabled: bool):
+        if target not in ["user", "agent"]:
+             raise ValueError("Target must be 'user' or 'agent'")
+        gamestate.set_panic_mode(session_id, target, enabled)
+        return gamestate.get_panic_state(session_id)
+
+    async def fine_user(self, db: SessionLocal, user_id: int, amount: int, reason: str):
+        user = db.query(User).filter(User.id == user_id).first()
+        if user:
+            user.credits -= amount
+            if user.credits < 0 and not user.is_locked:
+                user.is_locked = True
+                await routing_logic.broadcast_to_session(user.id, json.dumps({"type": "lock_update", "locked": True}))
+            db.commit()
+            await routing_logic.broadcast_to_session(user.id, json.dumps({
+                "type": "economy_update",
+                "credits": user.credits,
+                "msg": f"FINED: {reason}",
+                "is_locked": user.is_locked
+            }))
+
+    async def bonus_user(self, db: SessionLocal, user_id: int, amount: int, reason: str):
+        user = db.query(User).filter(User.id == user_id).first()
+        if user:
+            user.credits += amount
+            if user.credits < 0 and not user.is_locked:
+                user.is_locked = True
+                await routing_logic.broadcast_to_session(user.id, json.dumps({"type": "lock_update", "locked": True}))
+            elif user.credits >= 0 and user.is_locked:
+                user.is_locked = False
+                await routing_logic.broadcast_to_session(user.id, json.dumps({"type": "lock_update", "locked": False}))
+            
+            db.commit()
+            await routing_logic.broadcast_to_session(user.id, json.dumps({
+                "type": "economy_update",
+                "credits": user.credits,
+                "msg": f"BONUS: {reason}",
+                "is_locked": user.is_locked
+            }))
+
+    async def toggle_lock(self, db: SessionLocal, user_id: int):
+        user = db.query(User).filter(User.id == user_id).first()
+        if user:
+            user.is_locked = not user.is_locked
+            db.commit()
+            await routing_logic.broadcast_to_session(user.id, json.dumps({
+                "type": "lock_update", 
+                "locked": user.is_locked
+            }))
+            return "LOCKED" if user.is_locked else "UNLOCKED"
+        return "USER_NOT_FOUND"
+
+    async def set_user_status(self, db: SessionLocal, user_id: int, status: str):
+        if status not in ["low", "mid", "high", "party"]:
+            raise ValueError("Invalid status")
+        
+        user = db.query(User).filter(User.id == user_id).first()
+        if user:
+            user.status_level = status
+            db.commit()
+            await routing_logic.broadcast_to_session(user.id, json.dumps({
+                "type": "theme_update",
+                "theme": status
+            }))
+            return status
+
+    async def global_bonus(self, db: SessionLocal, amount: int, reason: str):
+        from ..database import UserRole
+        users = db.query(User).filter(User.role == UserRole.USER).all()
+        
+        for user in users:
+            user.credits += amount
+            await routing_logic.broadcast_to_session(user.id, json.dumps({
+                "type": "economy_update",
+                "credits": user.credits,
+                "msg": f"GLOBAL STIMULUS: {reason}"
+            }))
+        db.commit()
+        return len(users)
+
+    async def reset_economy(self, db: SessionLocal):
+        from ..database import UserRole
+        users = db.query(User).filter(User.role == UserRole.USER).all()
+        for user in users:
+            user.credits = 100
+            user.is_locked = False
+            await routing_logic.broadcast_to_session(user.id, json.dumps({
+                "type": "user_status",
+                "credits": 100,
+                "is_locked": False
+            }))
+        db.commit()
+        return len(users)
+
+    async def approve_task(self, db: SessionLocal, task_id: int, reward: int = None, prompt_content: str = None):
+        from ..database import Task, TaskStatus, StatusLevel
+        task = db.query(Task).filter(Task.id == task_id).first()
+        if not task:
+            raise ValueError("Task not found")
+            
+        user = task.user
+        
+        # Reward Logic
+        if reward is None or reward <= 0:
+            level = user.status_level if user and user.status_level else StatusLevel.LOW
+            reward = gamestate.get_default_task_reward(level)
+            
+        # Description Logic
+        if not prompt_content or prompt_content.strip() == "" or prompt_content == "Waiting for assignment...":
+            from ..logic.llm_core import llm_service
+            user_profile = {
+                "username": user.username if user else "unknown",
+                "status_level": user.status_level.value if user and user.status_level else "low",
+                "credits": user.credits if user else 0
+            }
+            try:
+                prompt_content = await llm_service.generate_task_description(user_profile)
+            except Exception:
+                prompt_content = "Proveďte analýzu aktuálního stavu systému a navrhněte zlepšení."
+
+        task.status = TaskStatus.ACTIVE
+        task.reward_offered = reward
+        task.prompt_desc = prompt_content
+        db.commit()
+        
+        # Log
+        db_log = SessionLocal()
+        db_log.add(SystemLog(event_type="TASK", message=f"Task #{task.id} approved for {user.username}, reward: {reward}"))
+        db_log.commit()
+        db_log.close()
+        
+        # Notify
+        await routing_logic.broadcast_to_session(
+            task.user_id,
+            json.dumps({
+                "type": "task_update",
+                "id": task.id,
+                "task_id": task.id,
+                "status": "active",
+                "reward": task.reward_offered,
+                "prompt": task.prompt_desc, 
+                "description": task.prompt_desc
+            })
+        )
+        return {"status": "approved", "task_id": task.id, "reward": reward}
+
+    async def grade_task(self, db: SessionLocal, task_id: int, modifier: float):
+        from ..logic.economy import process_task_payment
+        result = process_task_payment(task_id, int(modifier * 100), db)
+        
+        if "error" in result:
+             raise ValueError(result["error"])
+
+        # Log
+        from ..database import Task, ChatLog
+        task = db.query(Task).filter(Task.id == task_id).first() 
+        user = task.user if task else None
+        
+        db.add(SystemLog(
+            event_type="ECONOMY",
+            message=f"Task #{task_id} graded at {int(modifier*100)}%. Net: {result.get('net_reward')}"
+        ))
+        
+        if user:
+            task_name = task.prompt_desc[:50] if task and task.prompt_desc else "Úkol"
+            db.add(ChatLog(
+                session_id=user.id,
+                sender_id=user.id,
+                content=f"📋 Úkol '{task_name}...' vyhodnocen. Odměna: {result.get('net_reward', 0)} kreditů."
+            ))
+        db.commit()
+        
+        # Notify
+        await routing_logic.broadcast_to_session(result.get("user_id", task_id), json.dumps({
+            "type": "task_update",
+            "task_id": task_id,
+            "status": "paid",
+            "payout": result.get("actual_reward"),
+            "net_reward": result.get("net_reward"),
+            "rating": int(modifier * 100)
+        }))
+        
+        await routing_logic.broadcast_to_session(result.get("user_id", task_id), json.dumps({
+            "type": "economy_update",
+            "credits": result.get("net_reward", 0),
+            "msg": f"Odměna za úkol: +{result.get('net_reward', 0)} CR"
+        }))
+        
+        await routing_logic.broadcast_to_admins(json.dumps({"type": "admin_refresh_tasks"}))
+        return result
+
+    async def update_constants(self, db: SessionLocal, admin_username: str, data: dict):
+        gamestate.update_reward_config(data) # Partial update
+        # Manual update for rest
+        if "power_cap" in data: gamestate.power_capacity = data["power_cap"]
+        if "temp_threshold" in data: gamestate.TEMP_THRESHOLD = data["temp_threshold"]
+        if "temp_reset_val" in data: gamestate.TEMP_RESET_VALUE = data["temp_reset_val"]
+        if "temp_min" in data: gamestate.TEMP_MIN = data["temp_min"]
+        
+        if "cost_base" in data: gamestate.COST_BASE = data["cost_base"]
+        if "cost_user" in data: gamestate.COST_PER_USER = data["cost_user"]
+        if "cost_autopilot" in data: gamestate.COST_PER_AUTOPILOT = data["cost_autopilot"]
+        if "cost_low_latency" in data: gamestate.COST_LOW_LATENCY = data["cost_low_latency"]
+        if "cost_optimizer" in data: gamestate.COST_OPTIMIZER_ACTIVE = data["cost_optimizer"]
+        
+        db.add(SystemLog(event_type="ROOT", message=f"Constants Updated by {admin_username}", data=json.dumps(data)))
+        db.commit()
+        
+        await routing_logic.broadcast_global(json.dumps({
+            "type": "gamestate_update",
+            "power_cap": gamestate.power_capacity,
+            "temp_threshold": gamestate.TEMP_THRESHOLD
+        }))
+        return {"status": "updated"}
+
+admin_service = AdminService()

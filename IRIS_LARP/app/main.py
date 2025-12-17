@@ -30,14 +30,15 @@ async def game_loop():
             timeout_window = gamestate.agent_response_window
             
             # Copy keys to avoid modification during iteration
-            pending_sessions = list(routing_logic.pending_responses.keys())
+            # Uses GAMESTATE directly
+            pending_sessions = list(gamestate.pending_responses.keys())
             for session_id in pending_sessions:
-                start_time = routing_logic.pending_responses.get(session_id)
+                start_time = gamestate.pending_responses.get(session_id)
                 if start_time and (current_time - start_time) >= timeout_window:
                     # Timeout occurred - send error to user and block agent
                     await routing_logic.send_timeout_error_to_user(session_id)
                     await routing_logic.send_timeout_to_agent(session_id)
-                    routing_logic.mark_session_timeout(session_id)
+                    gamestate.mark_session_timeout(session_id)
             
             # 1. Tick Chernobyl
             new_val = gamestate.process_tick()
@@ -58,14 +59,13 @@ async def game_loop():
             # Process Panic Mode (moved from gamestate)
             if "panic_trigger" in overload_events:
                 should_panic = overload_events["panic_trigger"]
-                # Safe to call routing here
-                total_sessions = getattr(settings, "TOTAL_SESSIONS", 8) # Fallback to 8 if generic
-                # Or just settings.TOTAL_SESSIONS as imported
+                
                 total_sessions = settings.TOTAL_SESSIONS
                 
                 for i in range(1, total_sessions + 1):
-                    routing_logic.set_panic_mode(i, "user", should_panic)
-                    routing_logic.set_panic_mode(i, "agent", should_panic)
+                    # Uses GAMESTATE setter
+                    gamestate.set_panic_mode(i, "user", should_panic)
+                    gamestate.set_panic_mode(i, "agent", should_panic)
                 
                 # Send special panic update
                 await routing_logic.broadcast_global(json.dumps({

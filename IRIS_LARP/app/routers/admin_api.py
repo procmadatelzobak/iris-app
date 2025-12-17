@@ -1,14 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
-
 from typing import Dict, Optional
 import json
+import time
 
 from pydantic import BaseModel
 
 from ..dependencies import get_current_admin, get_current_root
 from ..logic.llm_core import llm_service, LLMConfig, LLMProvider
 from ..logic.gamestate import gamestate
+from ..logic.routing import routing_logic
+from ..services.admin_service import admin_service
 from ..config import BASE_DIR
+from ..database import SessionLocal, SystemConfig, User, Task, TaskStatus, ChatLog, UserRole, SystemLog, StatusLevel
 
 # Persistent storage path for admin-defined session labels
 LABELS_PATH = BASE_DIR / "data" / "admin_labels.json"
@@ -35,30 +38,15 @@ class OptimizerConfigPayload(BaseModel):
     provider: LLMProvider
     model_name: str
     system_prompt: str
-    prompt: str
+    prompt: Optional[str] = None
 
 @router.post("/llm/config/{config_type}")
 async def set_llm_config(config_type: str, payload: dict = Body(...), admin=Depends(get_current_admin)):
-    if config_type == "task":
-        gamestate.llm_config_task = LLMConfig(**payload)
-    elif config_type == "hyper":
-        gamestate.llm_config_hyper = LLMConfig(**payload)
-    elif config_type == "optimizer":
-        parsed = OptimizerConfigPayload(**payload)
-        gamestate.llm_config_optimizer = LLMConfig(
-            provider=parsed.provider,
-            model_name=parsed.model_name,
-            system_prompt=parsed.system_prompt
-        )
-        gamestate.optimizer_prompt = parsed.prompt
-    elif config_type == "censor":
-        gamestate.llm_config_censor = LLMConfig(**payload)
-    else:
-        raise HTTPException(status_code=400, detail="Invalid config type")
-    return {"status": "ok", "config_type": config_type}
-
-# API Key Management
-from ..database import SessionLocal, SystemConfig
+    try:
+        await admin_service.update_llm_config(config_type, payload)
+        return {"status": "ok", "config_type": config_type}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 class KeyUpdate(BaseModel):
     provider: LLMProvider
@@ -89,10 +77,6 @@ async def set_key(update: KeyUpdate, admin=Depends(get_current_root)):
         detail="API Key management via API is disabled for security. Please update the .env file directly and restart the server."
     )
 
-# --- ECONOMY & TASKS ---
-from ..database import User, Task, TaskStatus, ChatLog, UserRole, SystemLog, StatusLevel
-from ..logic.routing import routing_logic
-
 class PanicToggle(BaseModel):
     session_id: int
     target: str  # "user" or "agent"
@@ -100,14 +84,15 @@ class PanicToggle(BaseModel):
 
 @router.get("/panic/state/{session_id}")
 async def get_panic_state(session_id: int, admin=Depends(get_current_admin)):
-    return routing_logic.get_panic_state(session_id)
+    return gamestate.get_panic_state(session_id)
 
 @router.post("/panic/toggle")
 async def set_panic(toggle: PanicToggle, admin=Depends(get_current_admin)):
-    if toggle.target not in ["user", "agent"]:
-        raise HTTPException(status_code=400, detail="target must be 'user' or 'agent'")
-    routing_logic.set_panic_mode(toggle.session_id, toggle.target, toggle.enabled)
-    return {"status": "ok", "state": routing_logic.get_panic_state(toggle.session_id)}
+    try:
+        state = await admin_service.set_panic_mode_for_session(toggle.session_id, toggle.target, toggle.enabled)
+        return {"status": "ok", "state": state}
+    except ValueError as e:
+         raise HTTPException(status_code=400, detail=str(e))
 
 class EconomyAction(BaseModel):
     user_id: int
@@ -133,54 +118,31 @@ async def get_users(admin=Depends(get_current_admin)):
 @router.post("/economy/fine")
 async def fine_user(action: EconomyAction, admin=Depends(get_current_admin)):
     db = SessionLocal()
-    user = db.query(User).filter(User.id == action.user_id).first()
-    if user:
-        user.credits -= action.amount
-        # Auto-lock if negative
-        if user.credits < 0 and not user.is_locked:
-            user.is_locked = True
-            await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": true}}')
-            
-        db.commit()
-        # notify user
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "FINED: {action.reason}", "is_locked": {str(user.is_locked).lower()}}}')
-    db.close()
+    try:
+        await admin_service.fine_user(db, action.user_id, action.amount, action.reason)
+    finally:
+        db.close()
     return {"status": "ok"}
 
 @router.post("/economy/bonus")
 async def bonus_user(action: EconomyAction, admin=Depends(get_current_admin)):
     db = SessionLocal()
-    user = db.query(User).filter(User.id == action.user_id).first()
-    if user:
-        user.credits += action.amount
-        
-        # Auto-lock if negative
-        if user.credits < 0 and not user.is_locked:
-            user.is_locked = True
-            await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": true}}')
-        
-        # Auto-unlock if positive
-        elif user.credits >= 0 and user.is_locked:
-            user.is_locked = False
-            await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": false}}')
-            
-        db.commit()
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "BONUS: {action.reason}", "is_locked": {str(user.is_locked).lower()}}}')
-    db.close()
+    try:
+        await admin_service.bonus_user(db, action.user_id, action.amount, action.reason)
+    finally:
+        db.close()
     return {"status": "ok"}
 
 @router.post("/economy/toggle_lock")
 async def toggle_lock(action: EconomyAction, admin=Depends(get_current_admin)):
     db = SessionLocal()
-    user = db.query(User).filter(User.id == action.user_id).first()
-    if user:
-        user.is_locked = not user.is_locked
-        db.commit()
-        state = "LOCKED" if user.is_locked else "UNLOCKED"
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "lock_update", "locked": {str(user.is_locked).lower()}}}')
-    db.close()
-    db.close()
-    return {"status": "ok", "state": state}
+    try:
+        state = await admin_service.toggle_lock(db, action.user_id)
+        if state == "USER_NOT_FOUND":
+            raise HTTPException(status_code=404, detail="User not found")
+        return {"status": "ok", "state": state}
+    finally:
+        db.close()
 
 class StatusUpdate(BaseModel):
     user_id: int
@@ -189,47 +151,31 @@ class StatusUpdate(BaseModel):
 @router.post("/economy/set_status")
 async def set_user_status(action: StatusUpdate, admin=Depends(get_current_admin)):
     db = SessionLocal()
-    user = db.query(User).filter(User.id == action.user_id).first()
-    if user:
-        # Validate status enum? Python Enum helps but string is passed.
-        # Accept low, mid, high, party
-        valid = ["low", "mid", "high", "party"]
-        if action.status not in valid:
-             db.close()
-             raise HTTPException(status_code=400, detail="Invalid status")
-             
-        user.status_level = action.status
-        db.commit()
-        
-        # Broadcast theme update to User
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "theme_update", "theme": "{action.status}"}}')
-        
-    db.close()
-    return {"status": "ok", "new_level": action.status}
+    try:
+        await admin_service.set_user_status(db, action.user_id, action.status)
+        return {"status": "ok", "new_level": action.status}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        db.close()
 
 @router.post("/economy/global_bonus")
 async def global_bonus(action: EconomyAction, admin=Depends(get_current_admin)):
-    # user_id ignored
     db = SessionLocal()
-    users = db.query(User).filter(User.role == UserRole.USER).all()
-    for user in users:
-        user.credits += action.amount
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "economy_update", "credits": {user.credits}, "msg": "GLOBAL STIMULUS: {action.reason}"}}')
-    db.commit()
-    db.close()
-    return {"status": "ok", "count": len(users)}
+    try:
+        count = await admin_service.global_bonus(db, action.amount, action.reason)
+        return {"status": "ok", "count": count}
+    finally:
+        db.close()
 
 @router.post("/economy/reset")
 async def reset_economy(admin=Depends(get_current_admin)):
     db = SessionLocal()
-    users = db.query(User).filter(User.role == UserRole.USER).all()
-    for user in users:
-        user.credits = 100 # Default
-        user.is_locked = False
-        await routing_logic.broadcast_to_session(user.id, f'{{"type": "user_status", "credits": 100, "is_locked": false}}')
-    db.commit()
-    db.close()
-    return {"status": "reset", "count": len(users)}
+    try:
+        count = await admin_service.reset_economy(db)
+        return {"status": "reset", "count": count}
+    finally:
+        db.close()
 
 # Tasks
 class TaskAction(BaseModel):
@@ -260,61 +206,13 @@ async def get_tasks(admin=Depends(get_current_admin)):
 @router.post("/tasks/approve")
 async def approve_task(action: TaskAction, admin=Depends(get_current_admin)):
     db = SessionLocal()
-    task = db.query(Task).filter(Task.id == action.task_id).first()
-    if not task:
+    try:
+        result = await admin_service.approve_task(db, action.task_id, action.reward, action.prompt_content)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
         db.close()
-        raise HTTPException(status_code=404, detail="Task not found")
-    
-    user = task.user
-    
-    # Calculate reward based on user status level
-    reward_value = action.reward if action.reward is not None else None
-    if reward_value is None or reward_value <= 0:
-        level = user.status_level if user and user.status_level else StatusLevel.LOW
-        reward_value = gamestate.get_default_task_reward(level)
-    
-    # Generate task description via LLM if not provided
-    prompt_content = action.prompt_content
-    if not prompt_content or prompt_content.strip() == "" or prompt_content == "Waiting for assignment...":
-        from ..logic.llm_core import llm_service
-        user_profile = {
-            "username": user.username if user else "unknown",
-            "status_level": user.status_level.value if user and user.status_level else "low",
-            "credits": user.credits if user else 0
-        }
-        try:
-            prompt_content = await llm_service.generate_task_description(user_profile)
-        except Exception as e:
-            print(f"LLM task generation failed: {e}")
-            prompt_content = "Proveďte analýzu aktuálního stavu systému a navrhněte zlepšení."
-    
-    task.status = TaskStatus.ACTIVE
-    task.reward_offered = reward_value
-    task.prompt_desc = prompt_content
-    
-    db.commit()
-    
-    # Log
-    db_log = SessionLocal()
-    db_log.add(SystemLog(event_type="TASK", message=f"Task #{task.id} approved for {user.username if user else 'unknown'}, reward: {reward_value}"))
-    db_log.commit()
-    db_log.close()
-    
-    # Notify User
-    await routing_logic.broadcast_to_session(
-        task.user_id,
-        json.dumps({
-            "type": "task_update",
-            "id": task.id,
-            "task_id": task.id,
-            "status": "active",
-            "reward": task.reward_offered,
-            "prompt": task.prompt_desc,
-            "description": task.prompt_desc
-        })
-    )
-    db.close()
-    return {"status": "approved", "task_id": task.id, "reward": reward_value}
 
 class GradeAction(BaseModel):
     task_id: int
@@ -322,65 +220,26 @@ class GradeAction(BaseModel):
 
 @router.post("/tasks/grade")
 async def grade_task(action: GradeAction, admin=Depends(get_current_admin)):
-    """Grade a submitted task with rating modifier (0.0, 0.5, 1.0, 2.0)"""
     allowed_modifiers = {0.0, 0.5, 1.0, 2.0}
     modifier = action.rating_modifier if action.rating_modifier in allowed_modifiers else 1.0
     
-    # Convert modifier to percentage for existing economy logic
-    rating_percent = int(modifier * 100)
-    
-    from ..logic.economy import process_task_payment
-    result = process_task_payment(action.task_id, rating_percent)
-    
-    if "error" in result:
-        raise HTTPException(status_code=400, detail=result["error"])
-    
-    # Get task for logging
     db = SessionLocal()
-    task = db.query(Task).filter(Task.id == action.task_id).first()
-    user = task.user if task else None
-    
-    # Log to SystemLog
-    db.add(SystemLog(
-        event_type="ECONOMY", 
-        message=f"Task #{action.task_id} graded at {rating_percent}%. User {user.username if user else 'unknown'} received {result.get('net_reward', 0)} credits. Tax: {result.get('tax_collected', 0)}"
-    ))
-    
-    # Create ChatLog entry for user
-    if user:
-        from ..database import ChatLog
-        task_name = task.prompt_desc[:50] if task and task.prompt_desc else "Úkol"
-        db.add(ChatLog(
-            session_id=user.id,
-            sender_id=user.id,
-            content=f"📋 Úkol '{task_name}...' vyhodnocen. Odměna: {result.get('net_reward', 0)} kreditů ({rating_percent}%)."
-        ))
-    
-    db.commit()
-    db.close()
-    
-    # Broadcast to user
-    await routing_logic.broadcast_to_session(result.get("user_id", action.task_id), json.dumps({
-        "type": "task_update",
-        "task_id": action.task_id,
-        "status": "paid",
-        "payout": result.get("actual_reward"),
-        "net_reward": result.get("net_reward"),
-        "rating": rating_percent
-    }))
-    
-    # Also send economy update
-    await routing_logic.broadcast_to_session(result.get("user_id", action.task_id), json.dumps({
-        "type": "economy_update",
-        "credits": result.get("net_reward", 0),
-        "msg": f"Odměna za úkol: +{result.get('net_reward', 0)} CR"
-    }))
-    
-    await routing_logic.broadcast_to_admins(json.dumps({"type": "admin_refresh_tasks"}))
-    return result
+    try:
+        result = await admin_service.grade_task(db, action.task_id, modifier)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        db.close()
 
 @router.post("/tasks/pay")
 async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
+    # Keep legacy direct call for now? Or implement in service.
+    # Logic in service is 'grade_task' but that assumes modifier.
+    # 'pay_task' uses rating. Let's redirect to economy helper directly or make a service method.
+    # To keep this file clean, let's just use the direct helper import as it is strictly logic, not state.
+    # But wait, we want to refrain from splitting logic.
+    # 'pay_task' is legacy/manual override.
     from ..logic.economy import process_task_payment
     allowed = {0, 50, 100, 200}
     rating = action.rating if action.rating in allowed else 100
@@ -399,7 +258,6 @@ async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
     await routing_logic.broadcast_to_admins(json.dumps({"type": "admin_refresh_tasks"}))
     return result
 
-# v1.5 AI Optimizer
 @router.post("/optimizer/toggle")
 async def toggle_optimizer(active: bool = Body(..., embed=True), admin=Depends(get_current_admin)):
     gamestate.optimizer_active = active
@@ -412,8 +270,6 @@ async def set_optimizer_prompt(prompt: str = Body(..., embed=True), admin=Depend
 
 @router.get("/controls/state")
 async def get_control_state(admin=Depends(get_current_admin)):
-    """Get current state of all admin controls"""
-    import time
     return {
         "optimizer_active": gamestate.optimizer_active,
         "agent_response_window": gamestate.agent_response_window,
@@ -428,19 +284,10 @@ async def get_control_state(admin=Depends(get_current_admin)):
         "is_overloaded": gamestate.is_overloaded
     }
 
-# v1.8 Visualization Data
 @router.get("/lore/data")
 async def get_lore_data(admin=Depends(get_current_admin)):
-    """Serve lore data for graph visualization"""
     try:
-        # Navigate to doc/iris/lore-web/data from BASE_DIR (assumed to be IRIS_LARP root or similar)
-        # BASE_DIR is usually IRIS_LARP.
-        # roles.json is in ../doc/iris/lore-web/data/roles.json from IRIS_LARP
-        
-        # Determine path safely
-        # BASE_DIR is defined in config.py, usually absolute path to IRIS_LARP
         lore_data_dir = BASE_DIR.parent / "doc" / "iris" / "lore-web" / "data"
-        
         roles_path = lore_data_dir / "roles.json"
         relations_path = lore_data_dir / "relations.json"
         
@@ -462,16 +309,11 @@ async def get_lore_data(admin=Depends(get_current_admin)):
         print(f"Error loading lore data: {e}")
         return {"roles": [], "relations": [], "error": str(e)}
 
-# v1.4 Endpoints
-
 class TimerAction(BaseModel):
     seconds: int
 
 @router.post("/timer")
 async def set_timer(action: TimerAction, admin=Depends(get_current_admin)):
-    import json
-    from ..logic.routing import routing_logic
-
     gamestate.agent_response_window = action.seconds
 
     await routing_logic.broadcast_global(json.dumps({
@@ -488,8 +330,6 @@ async def buy_power(admin=Depends(get_current_admin)):
         gamestate.treasury_balance -= cost
         gamestate.power_capacity += 50
         
-        # v1.7 Power Timer (30 mins)
-        import time
         gamestate.power_boost_end_time = time.time() + (30 * 60)
         
         return {
@@ -529,21 +369,17 @@ async def set_treasury(amount: int = Body(..., embed=True), admin=Depends(get_cu
     gamestate.treasury_balance = amount
     return {"status": "ok", "treasury": gamestate.treasury_balance}
 
-# v1.6 Root Controls
 class SystemConstants(BaseModel):
     tax_rate: float
     power_cap: float
     temp_threshold: float = 350.0
     temp_reset_val: float = 80.0
     temp_min: float = 20.0
-
-    # Costs
     cost_base: float = 10.0
     cost_user: float = 5.0
     cost_autopilot: float = 10.0
     cost_low_latency: float = 30.0
     cost_optimizer: float = 15.0
-
     # Task Rewards
     task_reward_default: int = 100
     task_reward_low: int = 75
@@ -553,49 +389,15 @@ class SystemConstants(BaseModel):
 
 @router.post("/root/update_constants")
 async def update_constants(data: SystemConstants, admin=Depends(get_current_admin)):
-    """Update game constants logic (admin/root)"""
-    gamestate.tax_rate = data.tax_rate
-    gamestate.power_capacity = data.power_cap
-    gamestate.TEMP_THRESHOLD = data.temp_threshold
-    gamestate.TEMP_RESET_VALUE = data.temp_reset_val
-    gamestate.TEMP_MIN = data.temp_min
-    
-    # Update Costs
-    gamestate.COST_BASE = data.cost_base
-    gamestate.COST_PER_USER = data.cost_user
-    gamestate.COST_PER_AUTOPILOT = data.cost_autopilot
-    gamestate.COST_LOW_LATENCY = data.cost_low_latency
-    gamestate.COST_OPTIMIZER_ACTIVE = data.cost_optimizer
-
-    # Task Rewards
-    gamestate.task_reward_default = data.task_reward_default
-    gamestate.task_reward_low = data.task_reward_low
-    gamestate.task_reward_mid = data.task_reward_mid
-    gamestate.task_reward_high = data.task_reward_high
-    gamestate.task_reward_party = data.task_reward_party
-
-    # Log Action
-    from ..database import SessionLocal, SystemLog
-    import json
     db = SessionLocal()
-    db.add(SystemLog(event_type="ROOT", message=f"Constants Updated by {admin.username}", data=json.dumps(data.dict())))
-    db.commit()
-    db.close()
-    
-    # Broadcast update so Admin Dashboards reflect changes
-    from ..logic.routing import routing_logic
-    import json
-    await routing_logic.broadcast_global(json.dumps({
-        "type": "gamestate_update",
-        "power_cap": gamestate.power_capacity,
-        "temp_threshold": gamestate.TEMP_THRESHOLD
-    }))
-    
-    return {"status": "updated", "values": data.dict()}
+    try:
+        await admin_service.update_constants(db, admin.username, data.dict())
+        return {"status": "updated", "values": data.dict()}
+    finally:
+        db.close()
 
 @router.get("/root/state")
 async def get_root_state(admin=Depends(get_current_root)):
-    """ROOT ONLY: Get full system state for initialization"""
     return {
         "tax_rate": gamestate.tax_rate,
         "power_cap": gamestate.power_capacity,
@@ -623,7 +425,6 @@ async def get_root_state(admin=Depends(get_current_root)):
 
 @router.get("/system_logs")
 async def get_system_logs(admin=Depends(get_current_admin)):
-    from ..database import SessionLocal, SystemLog
     db = SessionLocal()
     logs = db.query(SystemLog).order_by(SystemLog.timestamp.desc()).limit(100).all()
     db.close()
@@ -631,7 +432,6 @@ async def get_system_logs(admin=Depends(get_current_admin)):
 
 @router.post("/system_logs/reset")
 async def reset_system_logs(admin=Depends(get_current_admin)):
-    from ..database import SessionLocal, SystemLog
     db = SessionLocal()
     db.query(SystemLog).delete()
     db.commit()
@@ -640,7 +440,6 @@ async def reset_system_logs(admin=Depends(get_current_admin)):
 
 @router.post("/root/reset")
 async def reset_system(admin=Depends(get_current_admin)):
-    """Full System Wipe"""
     db = SessionLocal()
     try:
         # 1. Truncate Logs
@@ -672,14 +471,12 @@ async def reset_system(admin=Depends(get_current_admin)):
     finally:
         db.close()
 
-# --- AI CONFIGURATION (ROOT) ---
 class AIConfigUpdate(BaseModel):
     optimizer_prompt: str
     autopilot_model: str
 
 @router.get("/root/ai_config")
 async def get_ai_config(admin=Depends(get_current_root)):
-    """ROOT ONLY: Get AI configuration"""
     return {
         "status": "ok",
         "optimizer_prompt": gamestate.optimizer_prompt,
@@ -690,14 +487,9 @@ async def get_ai_config(admin=Depends(get_current_root)):
 
 @router.post("/root/ai_config")
 async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_root)):
-    """ROOT ONLY: Update AI configuration"""
-    # Update gamestate
     gamestate.optimizer_prompt = config.optimizer_prompt
     gamestate.llm_config_hyper.model_name = config.autopilot_model
     
-    # Log action
-    from ..database import SessionLocal, SystemLog
-    import json
     db = SessionLocal()
     db.add(SystemLog(
         event_type="ROOT", 
@@ -711,23 +503,17 @@ async def update_ai_config(config: AIConfigUpdate, admin=Depends(get_current_roo
 
 @router.post("/root/restart")
 async def restart_server(admin=Depends(get_current_root)):
-    """ROOT ONLY: Restart the server process"""
     import subprocess
     import sys
     import os
     
-    # Log action
-    from ..database import SessionLocal, SystemLog
     db = SessionLocal()
     db.add(SystemLog(event_type="ROOT", message=f"Server RESTART initiated by {admin.username}"))
     db.commit()
     db.close()
     
-    # Broadcast shutdown warning
     await routing_logic.broadcast_global('{"type": "server_restart", "message": "Server restarting in 3 seconds..."}')
     
-    # Spawn a detached process to restart the server
-    # This script will: wait 2s, kill current process, start new one
     restart_script = f"""
 import time
 import os
@@ -744,41 +530,31 @@ subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.d
 
 @router.post("/root/factory_reset")
 async def factory_reset(admin=Depends(get_current_root)):
-    """ROOT ONLY: Delete database and restart with fresh data"""
     import subprocess
     import sys
     import os
     
-    # Log action (will be deleted but good for immediate debugging)
-    from ..database import SessionLocal, SystemLog
     db = SessionLocal()
     db.add(SystemLog(event_type="ROOT", message=f"FACTORY RESET initiated by {admin.username}"))
     db.commit()
     db.close()
     
-    # Broadcast shutdown warning
     await routing_logic.broadcast_global('{"type": "factory_reset", "message": "System will be wiped and restarted in 5 seconds..."}')
     
-    # Find database path and labels file path
     data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data')
     db_path = os.path.join(data_dir, 'iris.db')
     labels_path = os.path.join(data_dir, 'admin_labels.json')
     
-    # Spawn a detached process to delete DB and restart
     reset_script = f"""
 import time
 import os
 import signal
 import subprocess
 time.sleep(3)
-# Delete database
 if os.path.exists('{db_path}'):
     os.remove('{db_path}')
-    print('Database deleted.')
-# Delete custom labels file
 if os.path.exists('{labels_path}'):
     os.remove('{labels_path}')
-    print('Custom labels deleted.')
 os.kill({os.getpid()}, signal.SIGTERM)
 time.sleep(1)
 subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.dirname(os.path.dirname(__file__)))}')
