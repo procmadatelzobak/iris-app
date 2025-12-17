@@ -7,6 +7,11 @@ from .admin_service import AdminService
 import json
 
 class Dispatcher:
+    """
+    Central router for WebSocket messages.
+    - Inspects User Role (User/Agent/Admin).
+    - Routes to appropriate Service (Chat, Task, Admin).
+    """
     def __init__(self):
         self.chat_service = ChatService()
         self.task_service = TaskService()

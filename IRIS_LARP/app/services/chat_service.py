@@ -17,6 +17,14 @@ def get_latest_user_message(db_session, session_id: int):
         return None
 
 class ChatService:
+    """
+    Handles chat logic for Users and Agents.
+    - Routes messages between users and agents.
+    - Manages session history.
+    - Integates with LLM Service for AI responses (Optimizer, Autopilot, Censor).
+    - Checks Purgatory logic (debt blocking).
+    - Handles report system logic.
+    """
     def _get_logical_id(self, username: str, role: str) -> int:
         import re
         match = re.search(r'\d+', username)

@@ -5,6 +5,7 @@ import enum
 import asyncio
 import json
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 MIN_SESSION_ID = 1
@@ -381,7 +382,6 @@ class GameState:
             del self.panic_modes[session_id]
 
     def start_pending_response(self, session_id: int):
-        import time
         self.pending_responses[session_id] = time.time()
         
     def clear_pending_response(self, session_id: int):
@@ -389,7 +389,6 @@ class GameState:
             del self.pending_responses[session_id]
             
     def mark_session_timeout(self, session_id: int):
-        import time
         self.timed_out_sessions[session_id] = time.time()
         self.clear_pending_response(session_id)
         

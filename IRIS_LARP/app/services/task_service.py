@@ -5,6 +5,12 @@ from ..logic.gamestate import gamestate
 from fastapi import WebSocket
 
 class TaskService:
+    """
+    Handles lifecycle of User Tasks.
+    - Requests new tasks (generates via default reward).
+    - Submits task solutions.
+    - Notifies Admins of task updates.
+    """
     async def handle_task_request(self, db: SessionLocal, user: User, websocket: WebSocket):
         # Log
         db_log = SessionLocal()
