@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Příručka pro Správce (Adminy)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body { 
+            background: var(--bg-primary, #0a0a0f);
+            color: var(--text-primary, #e0e0e0);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 { color: var(--accent-primary, #00d4ff); }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; text-align: left; }
+        th { background: rgba(255,255,255,0.05); }
+        code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 3px; }
+        .manual-img { max-width: 100%; height: auto; border-radius: 8px; }
+        .img-caption { font-size: 0.9rem; opacity: 0.7; text-align: center; }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" style="color: var(--accent-primary, #00d4ff);">← Zpět na Wiki</a>
+    
+                <h1>IRIS Systém - Příručka pro Správce</h1>
+                <p><strong>Dokumentace:</strong> IRIS 4.2 | HLINIK Phase 37 | Komplexní příručka</p>
+                
+                <div class="manual-image-container">
+                    <img src="assets/images/infographic_economy.png" alt="Economy Dashboard" class="manual-img">
+                    <p class="img-caption">Schéma: Ekonomické ukazatele systému a monitoring transakcí.</p>
+                </div>
+                
+                <h2>1. Úvod a role správce</h2>
+                <p>Jako <strong>Správce (Admin)</strong> ovládáte herní mechaniky, schvalujete úkoly a dohlížíte na průběh hry. Máte přístup k dashboardu se 4 hlavními stanicemi.</p>
+                
+                <h3>Rozdíl mezi Admin a Root</h3>
+                <table>
+                    <tr><th>Role</th><th>Oprávnění</th></tr>
+                    <tr><td><strong>Admin</strong></td><td>Monitoring, ekonomika uživatelů, schvalování úkolů, nastavení časovače</td></tr>
+                    <tr><td><strong>Root</strong></td><td>Vše z Admin + globální konfigurace, AI nastavení, System/Factory Reset</td></tr>
+                </table>
+                
+                <h3>Přihlašovací údaje</h3>
+                <table>
+                    <tr><th>Uživatel</th><th>Heslo</th></tr>
+                    <tr><td>admin1 - admin4</td><td>Nastaveno organizátory</td></tr>
+                    <tr><td>root</td><td>Sdělí hlavní organizátor</td></tr>
+                </table>
+                
+                <hr>
+                
+                <h2>2. Dashboard - Hub View</h2>
+                <p>Po přihlášení uvidíte <strong>Hub View</strong> se 4 stanicemi:</p>
+                <table>
+                    <tr><th>Stanice</th><th>Barva</th><th>Funkce</th></tr>
+                    <tr><td><strong>MONITORING</strong></td><td>🟢 Zelená</td><td>Sledování všech relací, logy, síťový graf</td></tr>
+                    <tr><td><strong>OVLÁDÁNÍ</strong></td><td>🟡 Žlutá</td><td>Shift, časovač odpovědi, teplota, režimy</td></tr>
+                    <tr><td><strong>EKONOMIKA</strong></td><td>🔵 Modrá</td><td>Správa kreditů, pokuty, bonusy</td></tr>
+                    <tr><td><strong>ÚKOLY</strong></td><td>🟣 Fialová</td><td>Schvalování, hodnocení, vyplácení úkolů</td></tr>
+                </table>
+                <p><em>Tip: Kliknutím na stanici se otevře její detailní view. Tlačítko [X] vás vrátí do Hub View.</em></p>
+                
+                <hr>
+                
+                <h2>3. Stanice MONITORING (DOHLED)</h2>
+                <p>Stanice pro sledování komunikace mezi uživateli a agenty.</p>
+                
+                <h3>3.1 VŠEVIDOUCÍ (All View)</h3>
+                <ul>
+                    <li><strong>Levá polovina:</strong> Mřížka 4x2 zobrazující všech 8 relací</li>
+                    <li><strong>Pravá polovina:</strong> Síťový graf s vizualizací párování user-agent</li>
+                    <li>Karta relace zobrazuje: ID relace, posledních N zpráv chatu</li>
+                </ul>
+                
+                <h3>3.2 ŠUM (Chats Only)</h3>
+                <p>Pouze chat karty bez grafu - pro rychlý přehled aktivní komunikace.</p>
+                
+                <h3>3.3 HISTORIE OMYLŮ (System Logs)</h3>
+                <ul>
+                    <li>Kompletní systémový log všech událostí</li>
+                    <li>Tlačítko <code>VYMAZAT HISTORII</code> - smaže všechny logy</li>
+                </ul>
+                
+                <h3>3.4 PAVUČINA (Network Graph)</h3>
+                <ul>
+                    <li>Fullscreen interaktivní graf relací</li>
+                    <li>Vizualizace user-agent párování podle shift offsetu</li>
+                    <li>Zelené uzly = uživatelé, růžové = agenti</li>
+                </ul>
+                
+                <hr>
+                
+                <h2>4. Stanice OVLÁDÁNÍ (KONTROLA)</h2>
+                
+                <h3>4.1 Posun relace (Shift)</h3>
+                <table>
+                    <tr><th>Prvek</th><th>Popis</th></tr>
+                    <tr><td>Velké číslo (0-7)</td><td>Aktuální hodnota global shift offsetu</td></tr>
+                    <tr><td>[>> DALŠÍ FÁZE >>]</td><td>Zvýší shift o 1 (cyklicky 0→1→...→7→0)</td></tr>
+                </table>
+                <p><strong>Efekt:</strong> Změna shiftu okamžitě přeřadí všechny user-agent páry. Agent1 při shift=0 komunikuje s User1, při shift=1 s User2, atd.</p>
+                
+                <h3>4.2 Čas na odpověď agenta</h3>
+                <ul>
+                    <li><strong>Slider:</strong> 15 - 300 sekund</li>
+                    <li><strong>[ULOŽIT LIMIT]:</strong> Aplikuje nový limit okamžitě</li>
+                    <li>Agent vidí odpočet - při vypršení se zablokuje vstup</li>
+                </ul>
+                
+                <h3>4.3 Zátěž serveru (Power Management)</h3>
+                <ul>
+                    <li>Progress bar: aktuální / maximální kapacita v MW</li>
+                    <li><strong>[NAVÝŠIT KAPACITU]:</strong> +50MW za 1000 CR z Treasury</li>
+                    <li>Zatížení roste s počtem aktivních terminálů a autopilotů</li>
+                </ul>
+                
+                <h3>4.4 Teplota systému (Chernobyl)</h3>
+                <table>
+                    <tr><th>Rozsah</th><th>Stav</th><th>Efekt</th></tr>
+                    <tr><td>0-100%</td><td>🟢 Normální</td><td>Standardní provoz</td></tr>
+                    <tr><td>100-250%</td><td>🟡 Varování</td><td>Mírné vizuální glitche</td></tr>
+                    <tr><td>250-350%</td><td>🟠 Riziko</td><td>Intenzivní glitche</td></tr>
+                    <tr><td>350%+</td><td>🔴 Kritické</td><td>Automaticky PANIC MODE!</td></tr>
+                </table>
+                <p><strong>Režimy výkonu:</strong></p>
+                <ul>
+                    <li><strong>NORMÁL:</strong> Standardní chlazení</li>
+                    <li><strong>ÚSPORA:</strong> Snížený výkon, pomalejší zahřívání</li>
+                    <li><strong>PŘETÍŽENÍ:</strong> Zrychlený režim, rychlejší zahřívání</li>
+                </ul>
+                
+                <h3>4.5 Filtr pravdy (Visibility Modes)</h3>
+                <table>
+                    <tr><th>Režim</th><th>Efekt na agenta</th></tr>
+                    <tr><td><strong>ŽÁDNÝ (Normal)</strong></td><td>Agent vidí celou historii chatu</td></tr>
+                    <tr><td><strong>ČERNÁ SKŘÍŇKA (Blackbox)</strong></td><td>Agent nevidí historii - musí odpovídat naslepo</td></tr>
+                    <tr><td><strong>FOREZKA (Forensic)</strong></td><td>Rozšířené informace pro agenta</td></tr>
+                </table>
+                
+                <hr>
+                
+                <h2>5. Stanice EKONOMIKA (FINANCE)</h2>
+                
+                <h3>5.1 Národní banka bahna</h3>
+                <ul>
+                    <li>Zobrazuje aktuální stav <strong>Treasury</strong> (centrální pokladny)</li>
+                    <li>Daňová sazba se automaticky strhává z odměn za úkoly</li>
+                </ul>
+                
+                <h3>5.2 Tabulka uživatelů</h3>
+                <table>
+                    <tr><th>Sloupec</th><th>Popis</th></tr>
+                    <tr><td>ID</td><td>Interní ID uživatele</td></tr>
+                    <tr><td>UŽIVATEL</td><td>Přihlašovací jméno</td></tr>
+                    <tr><td>KREDITY</td><td>Aktuální zůstatek</td></tr>
+                    <tr><td>STATUS</td><td>LOW / MID / HIGH / PARTY</td></tr>
+                    <tr><td>ZÁMEK</td><td>🔓 / 🔒 (locked = Purgatory)</td></tr>
+                    <tr><td>AKCE</td><td>Tlačítka pro ekonomické operace</td></tr>
+                </table>
+                
+                <h3>5.3 Ekonomické operace</h3>
+                <table>
+                    <tr><th>Akce</th><th>Efekt</th></tr>
+                    <tr><td><strong>[+] Bonus</strong></td><td>Přidá kredity uživateli</td></tr>
+                    <tr><td><strong>[-] Pokuta</strong></td><td>Odebere kredity (může jít do mínusu)</td></tr>
+                    <tr><td><strong>[🔒] Lock/Unlock</strong></td><td>Zablokuje/odblokuje terminál (Purgatory)</td></tr>
+                </table>
+                <p><strong>Purgatory Mode:</strong> Automaticky aktivován při kreditech &lt; 0. Uživatel nemůže chatovat, ale může plnit úkoly.</p>
+                
+                <hr>
+                
+                <h2>6. Stanice ÚKOLY (AGENDA)</h2>
+                
+                <h3>6.1 Požadavky na úkol (Pending)</h3>
+                <ul>
+                    <li>Nové požadavky od uživatelů čekající na schválení</li>
+                    <li><strong>[SCHVÁLIT]:</strong> Otevře dialog pro nastavení textu a odměny</li>
+                    <li>Můžete upravit text úkolu před schválením</li>
+                </ul>
+                
+                <h3>6.2 Rozpracované (Active)</h3>
+                <ul>
+                    <li>Aktivní úkoly přidělené uživatelům</li>
+                    <li>Uživatel na nich pracuje, čeká se na odevzdání</li>
+                </ul>
+                
+                <h3>6.3 Odevzdáno ke zhodnocení (Submitted)</h3>
+                <p>Kliknutím otevřete <strong>Grading Modal</strong>:</p>
+                <table>
+                    <tr><th>Hodnocení</th><th>Výplata</th></tr>
+                    <tr><td>⛔ ZAMÍTNOUT</td><td>0% odměny</td></tr>
+                    <tr><td>⚠️ ČÁSTEČNÉ</td><td>50% odměny</td></tr>
+                    <tr><td>✅ SCHVÁLIT</td><td>100% odměny</td></tr>
+                    <tr><td>🌟 BONUS</td><td>200% odměny</td></tr>
+                </table>
+                
+                <h3>6.4 Uzavřeno/Zaplaceno (Paid)</h3>
+                <p>Archiv dokončených a zaplacených úkolů.</p>
+                
+                <hr>
+                
+                <h2>7. ROOT Dashboard (pouze pro root)</h2>
+                <p>Root má přístup k rozšířenému dashboardu se 7 záložkami:</p>
+                
+                <h3>7.1 DASHBOARD</h3>
+                <ul>
+                    <li><strong>System Status:</strong> Shift Offset, Online Users, Chernobyl %</li>
+                    <li><strong>Physics Constants:</strong> Tax Rate, Power Cap</li>
+                    <li><strong>Executive Protocols:</strong> Force Shift, Global Broadcast, System Reset, Restart Server, Factory Reset, Panic Mode</li>
+                    <li><strong>System Log Stream:</strong> Real-time log událostí</li>
+                </ul>
+                
+                <h3>7.2 CONFIG</h3>
+                <ul>
+                    <li><strong>Developer Mode:</strong> Quick Login Buttons pro testování</li>
+                    <li><strong>Nastavení jazyka:</strong> CZ, EN, Crazy Czech, CZ+IRIS terminologie</li>
+                    <li><strong>AI Configuration:</strong> Task LLM, Optimizer, Hyper/Autopilot</li>
+                    <li><strong>API Keys:</strong> OpenAI, OpenRouter, Gemini</li>
+                </ul>
+                
+                <h3>7.3 GLOBAL ECO</h3>
+                <ul>
+                    <li><strong>Stimulus/Taxation:</strong> Globální injekce/stržení kreditů všem</li>
+                    <li><strong>Task Reward Rules:</strong> Nastavení odměn podle statusu (Default, Low, Mid, High, Party)</li>
+                </ul>
+                
+                <h3>7.4 CHRONOS</h3>
+                <ul>
+                    <li><strong>Jump to Shift:</strong> Přímé nastavení shift hodnoty</li>
+                    <li><strong>Chernobyl Override:</strong> Manuální nastavení teploty</li>
+                </ul>
+                
+                <h3>7.5 PANOPTICON</h3>
+                <p>8x8 grid monitoring všech relací v jednom přehledu.</p>
+                
+                <h3>7.6 SIMULATION</h3>
+                <ul>
+                    <li>LLM Hour Simulation - automatický test 20 uživatelů</li>
+                    <li>Statistiky, progress, live log</li>
+                </ul>
+                
+                <h3>7.7 LORE</h3>
+                <p>Embedded Organizer Wiki s dokumentací projektu.</p>
+                
+                <hr>
+                
+                <h2>8. Panic Mode (Executive Protocol 66)</h2>
+                <p><strong>Nouzový protokol</strong> pro kritické situace:</p>
+                <ul>
+                    <li><strong>Aktivace:</strong> Tlačítko ⚠️ PANIC MODE na ROOT Dashboard, nebo automaticky při teplotě 350%+</li>
+                    <li><strong>Efekt:</strong> Všechny odchozí zprávy agentů jsou nahrazeny LLM cenzurou</li>
+                    <li><strong>Deaktivace:</strong> Kliknutím na tlačítko znovu</li>
+                </ul>
+                <p><em>Použijte při: sabotáži, kolapsu systému, prozrazení tajemství o IRIS</em></p>
+                
+                <hr>
+                
+                <h2>9. AI Konfigurace</h2>
+                <p>V záložce CONFIG (pouze ROOT) můžete nastavit 3 různé LLM profily:</p>
+                
+                <table>
+                    <tr><th>Profil</th><th>Použití</th></tr>
+                    <tr><td><strong>Task Evaluator</strong></td><td>LLM hodnotí splnění úkolů</td></tr>
+                    <tr><td><strong>Soft/Optimizer</strong></td><td>Přepisuje zprávy agentů (mírnější tón)</td></tr>
+                    <tr><td><strong>Hyper/Autopilot</strong></td><td>Generuje automatické odpovědi za agenta</td></tr>
+                </table>
+                <p>Pro každý profil můžete nastavit: Poskytovatele (OpenAI/OpenRouter/Gemini), Model, System Prompt.</p>
+                
+                <hr>
+                
+                <h2>10. Speciální režimy agentů</h2>
+                
+                <h3>HYPER-MÓD (Autopilot)</h3>
+                <ul>
+                    <li>Agent aktivuje na svém terminálu</li>
+                    <li>LLM automaticky odpovídá za agenta</li>
+                    <li>Zvyšuje teplotu systému (+10°C/30s)</li>
+                    <li>Zamkne obrazovku agenta (HYPER LOCK SCREEN)</li>
+                </ul>
+                
+                <h3>Message Optimizer</h3>
+                <ul>
+                    <li>LLM přepisuje zprávy agentů podle nastaveného promptu</li>
+                    <li>Optimizované zprávy mají imunitu vůči nahlášení</li>
+                </ul>
+                
+                <hr>
+                
+                <h2>11. Úprava popisků (Editable Labels)</h2>
+                <p>Na Admin dashboardu je tlačítko <strong>[UPRAVIT POPISKY]</strong>:</p>
+                <ul>
+                    <li>Po aktivaci můžete kliknout na libovolný text a přejmenovat ho</li>
+                    <li>Vlastní názvy zůstávají i po změně globálního jazyka</li>
+                    <li><strong>[RESETOVAT VŠECHNY VLASTNÍ TEXTY]</strong> - vrátí výchozí hodnoty</li>
+                </ul>
+                <p><em>Použijte pro vlastní 'nesmyslné' české názvy v LARP stylu.</em></p>
+                
+                <hr>
+                
+                <h2>12. Krizové protokoly</h2>
+                
+                <table>
+                    <tr><th>Protokol</th><th>Efekt</th><th>Kdy použít</th></tr>
+                    <tr><td><strong>Panic Mode</strong></td><td>Cenzura zpráv</td><td>Prozrazení, sabotáž</td></tr>
+                    <tr><td><strong>System Reset</strong></td><td>Reset herního stavu, zachová účty</td><td>Nová hra</td></tr>
+                    <tr><td><strong>Restart Server</strong></td><td>Restart Python serveru</td><td>Technické problémy</td></tr>
+                    <tr><td><strong>Factory Reset</strong></td><td>Smaže DB a restartuje</td><td>Kompletní reset</td></tr>
+                </table>
+                
+                <p style='margin-top:20px; padding:10px; background:rgba(255,0,0,0.1); border-left:3px solid #f00;'>
+                    <strong>⚠️ VAROVÁNÍ:</strong> Factory Reset smaže VŠECHNA data včetně uživatelů, chatů a úkolů!
+                </p>
+                
+                <hr>
+                <p><em>IRIS 4.2 | HLINIK Phase 37 | Central Command</em></p>
+            
+</body>
+</html>

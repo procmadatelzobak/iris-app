@@ -1,0 +1,30 @@
+{
+    "user": {
+        "title": "Příručka pro Uživatele (Subjekty)",
+        "file": "user.html"
+    },
+    "agent": {
+        "title": "Příručka pro Agenty (Operátory)",
+        "file": "agent.html"
+    },
+    "admin": {
+        "title": "Příručka pro Správce (Adminy)",
+        "file": "admin.html"
+    },
+    "admin_crazy": {
+        "title": "Příručka pro Správce (Crazy Mode)",
+        "file": "admin_crazy.html"
+    },
+    "root": {
+        "title": "Příručka pro ROOT (Gamemaster)",
+        "file": "root.html"
+    },
+    "audit_34": {
+        "title": "Auditorská Zpráva: Phase 34 (15.12.2025)",
+        "file": "audit_34.html"
+    },
+    "audit_35": {
+        "title": "Auditorská Zpráva: Phase 35 - Komplexní Analýza (15.12.2025)",
+        "file": "audit_35.html"
+    }
+}

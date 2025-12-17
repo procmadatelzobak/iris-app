@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-12-15T17:40:24.929221",
+  "scenario_name": "HLINIK Workflow Automation",
+  "status": "failed",
+  "steps": [],
+  "stats": {},
+  "error": "Login failed for user1: {\"detail\":\"Incorrect username or password\"}",
+  "duration": 0.5484769344329834
+}

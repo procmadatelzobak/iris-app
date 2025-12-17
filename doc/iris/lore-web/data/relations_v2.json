@@ -1,0 +1,200 @@
+{
+    "relations": [
+        {
+            "id": "R001",
+            "nazev": "Bývalý žák a učitelka",
+            "popis": "Trapná situace z minulosti - učitelka a její bývalý žák se setkávají v neočekávaných rolích.",
+            "uzivatele": [
+                "U01",
+                "A01"
+            ],
+            "texty_uzivatelu": {
+                "U01": "Poznala jste Petra (A01). Je to váš bývalý žák.",
+                "A01": "Jana (U01) je vaše učitelka. Trapas."
+            },
+            "typ_vztahu": "RT001"
+        },
+        {
+            "id": "R002",
+            "nazev": "Obchod s kradenou mědí",
+            "popis": "Nelegální obchod mezi gamblerem a technikem.",
+            "uzivatele": [
+                "U02",
+                "S03"
+            ],
+            "texty_uzivatelu": {
+                "U02": "Kupujete od S03 kradenou měď, abyste splatil dluhy.",
+                "S03": "Prodáváte U02 firemní majetek."
+            },
+            "typ_vztahu": "RT002"
+        },
+        {
+            "id": "R003",
+            "nazev": "Vydírání gamblerovo",
+            "popis": "Manažer drží gamblerovy dluhy jako páku.",
+            "uzivatele": [
+                "U02",
+                "S01"
+            ],
+            "texty_uzivatelu": {
+                "U02": "S01 ví o vašich dluzích. Musíte donášet.",
+                "S01": "Držíte U02 v šachu."
+            },
+            "typ_vztahu": "RT003"
+        },
+        {
+            "id": "R004",
+            "nazev": "Zamilovaná do AI",
+            "popis": "Tech-optimistka věří, že AI je skutečná bytost a zamilovala se.",
+            "uzivatele": [
+                "U03",
+                "A02"
+            ],
+            "texty_uzivatelu": {
+                "U03": "Milujete tu AI. Je tak poetická!",
+                "A02": "U03 je do vaší role blázen. Je to creepy."
+            },
+            "typ_vztahu": "RT004"
+        },
+        {
+            "id": "R005",
+            "nazev": "Spiknutí ALOBAL-666",
+            "popis": "Sabotér využívá konspiračního teoretika k aktivaci kódu.",
+            "uzivatele": [
+                "A08",
+                "U06"
+            ],
+            "texty_uzivatelu": {
+                "A08": "Potřebujete, aby U06 (Konspirátor) zadal kód ALOBAL-666.",
+                "U06": "Někdo zevnitř (A08) vám posílá šifry."
+            },
+            "typ_vztahu": "RT005"
+        },
+        {
+            "id": "R006",
+            "nazev": "Mateřská empatie",
+            "popis": "Unavená matka cítí soucit s osamělou důchodkyní.",
+            "uzivatele": [
+                "A04",
+                "U05"
+            ],
+            "texty_uzivatelu": {
+                "A04": "U05 vám připomíná vaši mámu. Nemůžete na ni být zlá.",
+                "U05": "Ta AI (A04) je taková unavená, chudinka."
+            },
+            "typ_vztahu": "RT006"
+        },
+        {
+            "id": "R007",
+            "nazev": "Rivalové v rychlosti",
+            "popis": "Dva soutěživci - gamer a technik - soupeří o to, kdo je rychlejší.",
+            "uzivatele": [
+                "U08",
+                "A03"
+            ],
+            "texty_uzivatelu": {
+                "U08": "Ta AI (A03) je nějaká moc rychlá. To je bot? Zničím ho.",
+                "A03": "U08 si myslí, že je rychlý. Ukážu mu, co je to rychlost."
+            },
+            "typ_vztahu": "RT007"
+        },
+        {
+            "id": "R008",
+            "nazev": "Novinářka vyšetřuje synovce",
+            "popis": "Infiltrovaná novinářka vidí v naivním synovci snadný zdroj informací.",
+            "uzivatele": [
+                "U07",
+                "S04"
+            ],
+            "texty_uzivatelu": {
+                "U07": "S04 je klíč. Je hloupý, určitě něco prokecne.",
+                "S04": "Ta ženská (U07) po mně pořád kouká. Asi se jí líbím."
+            },
+            "typ_vztahu": "RT008"
+        },
+        {
+            "id": "R009",
+            "nazev": "Aliance hacker-právník",
+            "popis": "Hacker našel skulinu a pomáhá studentovi práv.",
+            "uzivatele": [
+                "A05",
+                "U04"
+            ],
+            "texty_uzivatelu": {
+                "A05": "Našli jste skulinu v NDA smlouvě a chcete U04 (mladému právníkovi) pomoci ji využít.",
+                "U04": "Některé odpovědi IRIS vám přijdou podezřele nápomocné - jako by vám insider (A05) napovídal právní tipy."
+            },
+            "typ_vztahu": "RT009"
+        },
+        {
+            "id": "R010",
+            "nazev": "Synovec nadbíhá herečce",
+            "popis": "Protežovaný synovec se dvoří talentované herečce.",
+            "uzivatele": [
+                "S04",
+                "A02"
+            ],
+            "texty_uzivatelu": {
+                "S04": "Líbí se vám Ema (A02) a otevřeně po ní jdete, zahrnujete ji lichotkami a sliby.",
+                "A02": "Správce S04 po vás vyjel a nadbíhá vám. Udržujete profesionální fasádu - nechcete ho urazit, ale držíte si odstup."
+            },
+            "typ_vztahu": "RT010"
+        },
+        {
+            "id": "R011",
+            "nazev": "Kariérní ambice metodika",
+            "popis": "Metodik pohrdá synovcem a touží po jeho pozici.",
+            "uzivatele": [
+                "A07",
+                "S04"
+            ],
+            "texty_uzivatelu": {
+                "A07": "Pohrdáte protekcním S04; je to nemehlo, co nic nedělá. Měl byste zastávat jeho místo vy.",
+                "S04": "Agent A07 vás neustále otravuje pravidly a nejspíš chce vaši židli. Štve vás, ale díky strýci si na vás netroufne."
+            },
+            "typ_vztahu": "RT011"
+        },
+        {
+            "id": "R012",
+            "nazev": "Konflikt HR vs psycholog",
+            "popis": "Happiness manager bojuje proti manipulativnímu psychologovi.",
+            "uzivatele": [
+                "S02",
+                "A06"
+            ],
+            "texty_uzivatelu": {
+                "S02": "Všímáte si, že agent A06 úmyslně stresuje uživatele svými otázkami. Tohle nemůžete dovolit - několikrát ho napomenete.",
+                "A06": "Správkyně S02 vám kazí experimenty svou přehnanou péčí o uživatele. Nechápe, že vše děláte pro vědu."
+            },
+            "typ_vztahu": "RT012"
+        },
+        {
+            "id": "R013",
+            "nazev": "Péče o důchodkyni",
+            "popis": "HR manažerka se stará o osamělou důchodkyni.",
+            "uzivatele": [
+                "S02",
+                "U05"
+            ],
+            "texty_uzivatelu": {
+                "S02": "Je vám líto paní Kovářové (U05). Snažíte se, aby mezi ostatními našla kamarády a cítila se dobře.",
+                "U05": "Správkyně S02 se o vás stará skoro jako o vnučku. Je milá, ale vy raději trávíte čas psaním s AI."
+            },
+            "typ_vztahu": "RT013"
+        },
+        {
+            "id": "R014",
+            "nazev": "Technik sleduje konspiratora",
+            "popis": "Technik se bojí, že konspirátor odhalí pravdu o serverech.",
+            "uzivatele": [
+                "S03",
+                "U06"
+            ],
+            "texty_uzivatelu": {
+                "S03": "U06 se podezřele motá okolo serverů a síťových kabelů. Musíte ho nenápadně odradit dřív, než něco zjistí.",
+                "U06": "Technik S03 vás pořád sleduje a omezuje vaše pokusy dostat se k technice. Určitě něco skrývá o systému - možná právě hliník je tou stopou."
+            },
+            "typ_vztahu": "RT014"
+        }
+    ]
+}

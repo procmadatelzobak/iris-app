@@ -1,0 +1,22 @@
+{
+    "id": "S04",
+    "type": "admin",
+    "name": "Synovec ředitele",
+    "archetype": "Protežovaný idiot",
+    "description": "Namyšlený mladík a synovec ředitele společnosti, který dostal teplé místečko Správce při testu IRIS po známosti. Práci druhých spíš pozorujete z povzdálí a chlubíte se svou velkou vizí, ale reálně pro hladký průběh mnoho neděláte. Díky příbuzenským konexím si dovolujete ignorovat pokyny zkušenějších kolegů a občas zneplatníte jejich rozhodnutí jen proto, abyste ukázal svoji moc.",
+    "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce.",
+    "goals": [
+        "Vymyslet nový slogan.",
+        "Sbalit Agentku A02 (Herečku).",
+        "Prosadit během testu alespoň jeden svůj nápad navzdory nesouhlasu ostatních Správců."
+    ],
+    "avatar": "avatar_S04.png",
+    "work_image": "work_S04.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "22-28",
+        "hair_color": "gelované tmavé vlasy, stylově rozcuchané",
+        "face_description": "namyšlená, sebejistá tvář, arogantní úsměv, nafoukaný výraz",
+        "distinctive_features": "drahé značkové oblečení, Apple hodinky, neustálé selfies"
+    }
+}

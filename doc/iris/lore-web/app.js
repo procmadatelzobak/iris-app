@@ -7,14 +7,27 @@
 // DATA STORES
 // ============================================
 
-let rolesData = [];
-let relationsData = [];
+let usersData = [];
+let rolesDefinitionData = [];
+let relationsV2Data = [];
+let tasksData = [];
+let storyNodesData = [];
+let abilitiesData = [];
+let relationTypesData = [];
+let taskTypesData = [];
 let configData = {};
 const state = { manuals: {} };
 
-let timelineData = [];
 let templates = {};
 let relationGraph = null;
+
+// Mapping for legacy CSS classes
+const relationTypeMap = {
+    'RT001': 'past', 'RT002': 'trade', 'RT003': 'blackmail', 'RT004': 'romance',
+    'RT005': 'plot', 'RT006': 'empathy', 'RT007': 'rival', 'RT008': 'investigation',
+    'RT009': 'alliance', 'RT010': 'affection', 'RT011': 'ambition', 'RT012': 'conflict',
+    'RT013': 'care', 'RT014': 'suspicion'
+};
 
 // ============================================
 // TEMPLATES
@@ -73,10 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load Manuals
     try {
         console.log('Loading manuals...');
-        // Check for file protocol to avoid CORS wait/error
-        if (window.location.protocol === 'file:') {
-            throw new Error('Skipping manuals fetch on file://');
-        }
         const manualsRes = await fetch('data/manuals.json?v=' + new Date().getTime());
         if (manualsRes.ok) {
             state.manuals = await manualsRes.json();
@@ -93,8 +102,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log('Rendering UI components...');
         renderDashboard();
+        renderRoleDefinitions();
         renderRolesTable();
         renderUsersGrid();
+        renderPlayerLists(); // Hráči section
         renderRelations(); // This will init graph
         renderTimeline();
         updateLastUpdate();
@@ -119,33 +130,61 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadData() {
     try {
-        // Load roles
-        const rolesResponse = await fetch('data/roles.json');
-        rolesData = await rolesResponse.json();
-
-        // Load relations
-        const relationsResponse = await fetch('data/relations.json');
-        relationsData = await relationsResponse.json();
-
-        // Load timeline
+        // === CONFIG ===
         try {
-            const timelineResponse = await fetch('data/timeline.json');
-            timelineData = await timelineResponse.json();
-        } catch (e) {
-            console.warn("Failed to load timeline data", e);
-            timelineData = getFallbackTimeline();
-        }
+            const configResponse = await fetch('data/config.json');
+            if (configResponse.ok) configData = await configResponse.json();
+            else configData = { version: "4.2.0", phase: 38 };
+        } catch (e) { configData = { version: "4.2.0", phase: 38 }; }
 
-        // Load config
-        const configResponse = await fetch('data/config.json');
-        configData = await configResponse.json();
+        // === USERS ===
+        try {
+            const usersRes = await fetch(configData.data_files?.users || 'data/users.json');
+            if (usersRes.ok) usersData = (await usersRes.json()).users || [];
+        } catch (e) { usersData = []; }
 
-        console.log('Data loaded:', { roles: rolesData.length, relations: relationsData.length });
+        // === ROLES ===
+        try {
+            const rolesRes = await fetch(configData.data_files?.roles || 'data/roles.json');
+            if (rolesRes.ok) rolesDefinitionData = (await rolesRes.json()).roles || [];
+        } catch (e) { rolesDefinitionData = []; }
+
+        // === ABILITIES ===
+        try {
+            const abRes = await fetch(configData.data_files?.abilities || 'data/abilities.json');
+            if (abRes.ok) abilitiesData = (await abRes.json()).abilities || [];
+        } catch (e) { abilitiesData = []; }
+
+        // === RELATIONS (V2) ===
+        try {
+            const relRes = await fetch(configData.data_files?.relations || 'data/relations_v2.json');
+            if (relRes.ok) relationsV2Data = (await relRes.json()).relations || [];
+        } catch (e) { relationsV2Data = []; }
+
+        // === TASKS ===
+        try {
+            const tasksRes = await fetch(configData.data_files?.tasks || 'data/tasks.json');
+            if (tasksRes.ok) tasksData = (await tasksRes.json()).tasks || [];
+        } catch (e) { tasksData = []; }
+
+        // === STORY NODES ===
+        try {
+            const storyRes = await fetch(configData.data_files?.story_nodes || 'data/story_nodes.json');
+            if (storyRes.ok) storyNodesData = (await storyRes.json()).nodes || [];
+        } catch (e) { storyNodesData = []; }
+
+        // === TYPES ===
+        try {
+            const rtRes = await fetch('data/relation_types.json');
+            if (rtRes.ok) relationTypesData = (await rtRes.json()).types || [];
+
+            const ttRes = await fetch('data/task_types.json');
+            if (ttRes.ok) taskTypesData = (await ttRes.json()).types || [];
+        } catch (e) { console.warn('Types not loaded', e); }
+
+        console.log('Data loaded:', { users: usersData.length, relations: relationsV2Data.length });
     } catch (error) {
-        console.error('Failed to load data:', error);
-        // Use fallback data if files not found
-        rolesData = getFallbackRoles();
-        relationsData = getFallbackRelations();
+        console.error('Critical error loading data:', error);
     }
 }
 
@@ -344,9 +383,9 @@ function filterRolesTable(filter) {
 // ============================================
 
 function renderDashboard() {
-    const users = rolesData.filter(r => r.type === 'user');
-    const agents = rolesData.filter(r => r.type === 'agent');
-    const admins = rolesData.filter(r => r.type === 'admin');
+    const users = usersData.filter(r => r.type === 'user');
+    const agents = usersData.filter(r => r.type === 'agent');
+    const admins = usersData.filter(r => r.type === 'admin');
 
     const statUsers = document.getElementById('statUsers');
     const statAgents = document.getElementById('statAgents');
@@ -356,7 +395,7 @@ function renderDashboard() {
     if (statUsers) statUsers.textContent = users.length;
     if (statAgents) statAgents.textContent = agents.length;
     if (statAdmins) statAdmins.textContent = admins.length;
-    if (statRelations) statRelations.textContent = relationsData.length;
+    if (statRelations) statRelations.textContent = relationsV2Data.length;
 }
 
 function updateLastUpdate() {
@@ -371,7 +410,58 @@ function updateLastUpdate() {
 }
 
 // ============================================
-// ROLES TABLE
+// ROLE DEFINITIONS
+// ============================================
+
+function renderRoleDefinitions() {
+    const grid = document.getElementById('rolesGrid');
+    if (!grid || !rolesDefinitionData.length) return;
+
+    grid.innerHTML = '';
+
+    rolesDefinitionData.forEach(role => {
+        const color = role.style_color || 'var(--text-primary)';
+        // Admin expands to full width, others fit in grid
+        const isFullWidth = role.id === 'admin' || (role.popis_html && role.popis_html.length > 500);
+
+        const card = document.createElement('div');
+        card.className = isFullWidth ? 'dashboard-card full-width' : 'dashboard-card';
+        card.style.borderLeft = `4px solid ${color}`;
+
+        // Attributes HTML
+        const attrsHtml = (role.atributes || []).map(attr => `
+            <div class="version-item">
+                <span class="label">${attr.label}:</span>
+                <span class="value">${attr.value}</span>
+            </div>
+        `).join('');
+
+        card.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="font-size: 3rem;">${role.ikona}</div>
+                <div>
+                    <h2 style="margin: 0; color: ${color};">${role.nazev}</h2>
+                    <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">${role.podtitul}</p>
+                </div>
+            </div>
+
+            ${role.popis_html ? `
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                ${role.motto ? `<h3 style="color: var(--accent-gold); margin-top: 0;">${role.motto}</h3>` : ''}
+                <div class="role-content text-content">${role.popis_html}</div>
+            </div>
+            ` : ''}
+
+            <div class="version-info">
+                ${attrsHtml}
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// ============================================
+// ROLES TABLE (MEMBERS)
 // ============================================
 
 function renderRolesTable() {
@@ -379,16 +469,31 @@ function renderRolesTable() {
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    rolesData.forEach(role => {
+    usersData.forEach(user => {
         const tr = document.createElement('tr');
-        tr.dataset.type = role.type;
+        tr.dataset.type = user.type;
+
+        // Resolve ability label
+        const abId = user.schopnosti?.[0];
+        let abLabel = '-';
+        let abTitle = '';
+        if (abId) {
+            const ab = abilitiesData.find(a => a.id === abId);
+            if (ab) {
+                abLabel = ab.nazev;
+                abTitle = ab.popis;
+            } else {
+                abLabel = abId; // Fallback
+            }
+        }
+
         tr.innerHTML = `
-            <td><strong>${role.name}</strong></td>
-            <td><span class="role-badge ${role.type}">${getRoleTypeLabel(role.type)}</span></td>
-            <td>${role.archetype}</td>
-            <td><span class="ability-text">${role.ability}</span></td>
+            <td><strong>${user.obcanske_jmeno}</strong></td>
+            <td><span class="role-badge ${user.type}">${getRoleTypeLabel(user.type)}</span></td>
+            <td>${user.prezdivka}</td>
+            <td><span class="ability-text" title="${abTitle}">${abLabel}</span></td>
             <td>
-                <button class="btn-briefing" onclick="showBriefing('${role.id}')">
+                <button class="btn-briefing" onclick="showBriefing('${user.id}')">
                     📄 Briefing
                 </button>
             </td>
@@ -398,12 +503,12 @@ function renderRolesTable() {
 }
 
 function getRoleTypeLabel(type) {
-    const labels = {
-        'user': 'Uživatel',
-        'agent': 'Agent',
-        'admin': 'Správce'
-    };
-    return labels[type] || type;
+    if (rolesDefinitionData && rolesDefinitionData.length) {
+        const role = rolesDefinitionData.find(r => r.id === type);
+        if (role) return role.nazev;
+    }
+    const legacyLabels = { 'admin': 'Správce', 'agent': 'Agent', 'user': 'Uživatel' };
+    return legacyLabels[type] || type;
 }
 
 // ============================================
@@ -415,27 +520,36 @@ function renderUsersGrid() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    // Show all roles, not just users
-    rolesData.forEach(role => {
+    usersData.forEach(user => {
         const card = document.createElement('div');
         card.className = 'user-card';
-        const roleTypeClass = role.type === 'admin' ? 'role-admin' : (role.type === 'agent' ? 'role-agent' : 'role-user');
+        const userType = user.type || 'user'; // Fallback
+        const roleTypeClass = userType === 'admin' ? 'role-admin' : (userType === 'agent' ? 'role-agent' : 'role-user');
+
+        // Resolve ability
+        const abId = user.schopnosti?.[0];
+        let abLabel = 'Schopnost';
+        if (abId) {
+            const ab = abilitiesData.find(a => a.id === abId);
+            if (ab) abLabel = ab.nazev;
+        }
+
         card.innerHTML = `
             <div class="user-card-header ${roleTypeClass}" style="display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <img src="assets/images/${role.avatar || 'avatar_user_male.png'}" 
-                         alt="${role.name}"
+                    <img src="assets/images/${user.avatar || 'avatar_user_male.png'}" 
+                         alt="${user.obcanske_jmeno}"
                          style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover; cursor: zoom-in;"
                          onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
-                    <span class="user-id" style="font-weight:bold;">${role.name}</span>
+                    <span class="user-id" style="font-weight:bold;">${user.obcanske_jmeno}</span>
                 </div>
-                <span style="font-size: 0.8rem; opacity: 0.7;">${role.type.toUpperCase()}</span>
+                <span style="font-size: 0.8rem; opacity: 0.7;">${(user.type || 'unknown').toUpperCase()}</span>
             </div>
-            <div class="user-card-archetype">${role.archetype}</div>
-            <p class="user-card-description">${role.description}</p>
+            <div class="user-card-archetype">${user.prezdivka}</div>
+            <p class="user-card-description">${user.kratky_popis}</p>
             <div class="user-card-footer">
-                <span class="ability-text">⚡ ${role.ability.split(':')[0]}</span>
-                <button class="btn-briefing" onclick="showBriefing('${role.id}')">
+                <span class="ability-text" title="${abId || ''}">⚡ ${abLabel}</span>
+                <button class="btn-briefing" onclick="showBriefing('${user.id}')">
                     📄 Briefing
                 </button>
             </div>
@@ -448,12 +562,16 @@ function renderUsersGrid() {
 // RELATIONS
 // ============================================
 
-function getRoleName(id) {
-    const role = rolesData.find(r => r.id === id);
-    return role ? role.name : id;
+function getUserName(id) {
+    const user = usersData.find(u => u.id === id);
+    return user ? user.obcanske_jmeno : id;
 }
 
-function getRelTypeLabel(type) {
+function getRelTypeLabel(typeId) {
+    // If typeId is RTxxx, lookup name in relationTypesData
+    const rt = relationTypesData.find(t => t.id === typeId);
+    if (rt) return rt.nazev;
+    // Fallback for legacy codes or if data missing
     const labels = {
         'past': 'Minulost', 'trade': 'Obchod', 'blackmail': 'Vydírání',
         'romance': 'Láska', 'plot': 'Spiknutí', 'rival': 'Rivalita',
@@ -462,7 +580,7 @@ function getRelTypeLabel(type) {
         'ambition': 'Ambice', 'conflict': 'Konflikt',
         'care': 'Péče', 'suspicion': 'Podezření'
     };
-    return labels[type] || type;
+    return labels[typeId] || typeId;
 }
 
 function renderRelations() {
@@ -486,13 +604,34 @@ function initRelationsGraph() {
     }
     relationGraph = null;
 
-    // Create new graph
+    // Create new graph with ADAPTED data for compatibility
     if (typeof RelationGraph === 'function') {
-        relationGraph = new RelationGraph('graphContainer', {
-            roles: rolesData,
-            relations: relationsData
+        // Adapt V2 relations to flat source/target structure for the graph
+        const adaptedRelations = relationsV2Data.flatMap(r => {
+            if (!r.uzivatele || r.uzivatele.length < 2) return [];
+            const [u1, u2] = r.uzivatele;
+            const legacyType = relationTypeMap[r.typ_vztahu] || 'unknown';
+            return [{
+                source: u1,
+                target: u2,
+                type: legacyType, // Use CSS class name
+                desc_source: r.texty_uzivatelu?.[u1] || '',
+                desc_target: r.texty_uzivatelu?.[u2] || ''
+            }];
         });
-        // Expose globally for debugging
+
+        // Adapt users to roles structure (name mapping)
+        const adaptedRoles = usersData.map(u => ({
+            id: u.id,
+            type: u.type,
+            name: u.obcanske_jmeno, // Graph expects 'name'
+            avatar: u.avatar
+        }));
+
+        relationGraph = new RelationGraph('graphContainer', {
+            roles: adaptedRoles,
+            relations: adaptedRelations
+        });
         window.relationGraph = relationGraph;
     } else {
         console.error('RelationGraph class not found');
@@ -503,52 +642,58 @@ function renderRelationsList(filterPlayerId = null) {
     const list = document.getElementById('relationsList');
     if (!list) return;
 
-    let filteredRelations = relationsData;
+    let filteredRelations = relationsV2Data;
     if (filterPlayerId && filterPlayerId !== 'all') {
-        filteredRelations = relationsData.filter(r =>
-            r.source === filterPlayerId || r.target === filterPlayerId
+        filteredRelations = relationsV2Data.filter(r =>
+            r.uzivatele && r.uzivatele.includes(filterPlayerId)
         );
     }
 
-    // Helper to get role details
-    const getRole = (id) => rolesData.find(r => r.id === id) || { name: id, avatar: 'avatar_user_male.png', type: 'user' };
+    const getUser = (id) => usersData.find(u => u.id === id) || { obcanske_jmeno: id, avatar: 'avatar_user_male.png', type: 'user' };
 
     list.innerHTML = `
         <div class="relation-cards-grid">
             ${filteredRelations.map(rel => {
-        const source = getRole(rel.source);
-        const target = getRole(rel.target);
+        if (!rel.uzivatele || rel.uzivatele.length < 2) return '';
+        const [id1, id2] = rel.uzivatele;
+        const source = getUser(id1);
+        const target = getUser(id2);
+
+        // Determine legacy type class for styling
+        const legacyType = relationTypeMap[rel.typ_vztahu] || 'unknown';
+        const typeLabel = getRelTypeLabel(rel.typ_vztahu);
+
         return `
-                    <div class="relation-card" data-type="${rel.type}">
+                    <div class="relation-card" data-type="${legacyType}">
                         <div class="relation-card-header">
-                            <span class="relation-type-badge type-${rel.type}">
-                                <span class="relation-dot dot-${rel.type}"></span>
-                                ${getRelTypeLabel(rel.type)}
+                            <span class="relation-type-badge type-${legacyType}">
+                                <span class="relation-dot dot-${legacyType}"></span>
+                                ${typeLabel}
                             </span>
                         </div>
                         <div class="relation-card-body">
                             <div class="relation-participant">
-                                <img src="assets/images/${source.avatar}" alt="${source.name}" class="relation-avatar" onerror="this.src='assets/images/avatar_user_male.png'" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
+                                <img src="assets/images/${source.avatar || 'avatar_user_male.png'}" alt="${source.obcanske_jmeno}" class="relation-avatar" onerror="this.src='assets/images/avatar_user_male.png'" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
                                 <div class="relation-participant-info">
-                                    <span class="relation-name clickable-name" onclick="showBriefing('${source.id}')">${source.name}</span>
-                                    <span class="relation-role-type type-${source.type}">${source.type === 'admin' ? 'Správce' : source.type === 'agent' ? 'Agent' : 'Uživatel'}</span>
+                                    <span class="relation-name clickable-name" onclick="showBriefing('${source.id}')">${source.obcanske_jmeno}</span>
+                                    <span class="relation-role-type type-${source.type}">${getRoleTypeLabel(source.type)}</span>
                                 </div>
                             </div>
-                            <div class="relation-arrow">→</div>
+                            <div class="relation-arrow">↔</div>
                             <div class="relation-participant">
-                                <img src="assets/images/${target.avatar}" alt="${target.name}" class="relation-avatar" onerror="this.src='assets/images/avatar_user_male.png'" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
+                                <img src="assets/images/${target.avatar || 'avatar_user_male.png'}" alt="${target.obcanske_jmeno}" class="relation-avatar" onerror="this.src='assets/images/avatar_user_male.png'" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal(this.src, this.alt)">
                                 <div class="relation-participant-info">
-                                    <span class="relation-name clickable-name" onclick="showBriefing('${target.id}')">${target.name}</span>
-                                    <span class="relation-role-type type-${target.type}">${target.type === 'admin' ? 'Správce' : target.type === 'agent' ? 'Agent' : 'Uživatel'}</span>
+                                    <span class="relation-name clickable-name" onclick="showBriefing('${target.id}')">${target.obcanske_jmeno}</span>
+                                    <span class="relation-role-type type-${target.type}">${getRoleTypeLabel(target.type)}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="relation-card-descriptions">
                             <div class="relation-desc">
-                                <strong>${source.name}:</strong> ${rel.desc_source || '—'}
+                                <strong>${source.obcanske_jmeno}:</strong> ${rel.texty_uzivatelu?.[source.id] || '—'}
                             </div>
                             <div class="relation-desc">
-                                <strong>${target.name}:</strong> ${rel.desc_target || '—'}
+                                <strong>${target.obcanske_jmeno}:</strong> ${rel.texty_uzivatelu?.[target.id] || '—'}
                             </div>
                         </div>
                     </div>
@@ -558,15 +703,15 @@ function renderRelationsList(filterPlayerId = null) {
     `;
 }
 
-// Relations list filter (separate from graph filter)
+// Relations list filter
 function initRelationsListFilter() {
     const select = document.getElementById('relationsListFilter');
     if (!select) return;
 
-    const sortedRoles = [...rolesData].sort((a, b) => a.name.localeCompare(b.name));
+    const sortedUsers = [...usersData].sort((a, b) => a.obcanske_jmeno.localeCompare(b.obcanske_jmeno));
 
     select.innerHTML = '<option value="all">Všechny vztahy</option>' +
-        sortedRoles.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+        sortedUsers.map(u => `<option value="${u.id}">${u.obcanske_jmeno}</option>`).join('');
 
     select.addEventListener('change', (e) => {
         renderRelationsList(e.target.value);
@@ -577,14 +722,13 @@ function initGraphFilter() {
     const select = document.getElementById('graphFilter');
     if (!select) return;
 
-    // Sort roles by name
-    const sortedRoles = [...rolesData].sort((a, b) => a.name.localeCompare(b.name));
+    const sortedUsers = [...usersData].sort((a, b) => a.obcanske_jmeno.localeCompare(b.obcanske_jmeno));
 
-    sortedRoles.forEach(role => {
+    sortedUsers.forEach(user => {
         const opt = document.createElement('option');
-        const roleLabel = role.type === 'admin' ? '[SPRÁVCE] ' : (role.type === 'agent' ? '[AGENT] ' : '');
-        opt.value = role.id;
-        opt.textContent = `${roleLabel}${role.name}`;
+        const roleLabel = user.type === 'admin' ? '[SPRÁVCE] ' : (user.type === 'agent' ? '[AGENT] ' : '');
+        opt.value = user.id;
+        opt.textContent = `${roleLabel}${user.obcanske_jmeno}`;
         select.appendChild(opt);
     });
 
@@ -617,8 +761,8 @@ function getNodeColor(type) {
 // ============================================
 
 function showBriefing(roleId) {
-    const role = rolesData.find(r => r.id === roleId);
-    if (!role) return;
+    const user = usersData.find(u => u.id === roleId);
+    if (!user) return;
 
     const modal = document.getElementById('briefingModal');
     const title = document.getElementById('briefingTitle');
@@ -626,51 +770,59 @@ function showBriefing(roleId) {
 
     // Get relations for this role
     const roleRelations = getRelationsForRole(roleId);
-    const roleTypeClass = role.type === 'admin' ? 'role-admin' : (role.type === 'agent' ? 'role-agent' : 'role-user');
+    const roleTypeClass = user.type === 'admin' ? 'role-admin' : (user.type === 'agent' ? 'role-agent' : 'role-user');
 
-    title.textContent = `${role.name} (${role.id})`;
+    title.textContent = `${user.obcanske_jmeno} (${user.id})`;
 
-    // Prepare data for template
-    const goalsList = role.goals.map(g => `<li>${g}</li>`).join('');
+    // Prepare tasks (goals)
+    const goalsList = (user.ukoly || []).map(taskId => {
+        const task = tasksData.find(t => t.id === taskId);
+        // Prioritize user-specific text, then general description, then ID
+        const taskText = task ? (task.texty_uzivatelu?.[roleId] || task.popis) : taskId;
+        return `<li>${taskText}</li>`;
+    }).join('');
 
     // Appearance Section
     let appearanceSection = '';
-    if (role.appearance) {
+    if (user.appearance) {
         appearanceSection = `
         <div class="briefing-section">
             <h3>🎭 Vzhled postavy</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
                 <div>
-                    <p><strong>Pohlaví:</strong> ${role.appearance.gender}</p>
-                    <p><strong>Věk:</strong> ${role.appearance.age_range} let</p>
-                    <p><strong>Vlasy:</strong> ${role.appearance.hair_color}</p>
+                    <p><strong>Pohlaví:</strong> ${user.appearance.gender || '-'}</p>
+                    <p><strong>Věk:</strong> ${user.appearance.age_range || '-'}</p>
+                    <p><strong>Vlasy:</strong> ${user.appearance.hair_color || '-'}</p>
                 </div>
                 <div>
-                    <p><strong>Obličej:</strong> ${role.appearance.face_description}</p>
-                    <p><strong>Výrazné rysy:</strong> ${role.appearance.distinctive_features}</p>
+                    <p><strong>Obličej:</strong> ${user.appearance.face_description || '-'}</p>
+                    <p><strong>Výrazné rysy:</strong> ${user.appearance.distinctive_features || '-'}</p>
                 </div>
             </div>
         </div>`;
     }
 
     // Work Image Section
+    // Work Image Section (Derived from fotografie array)
     let workImageSection = '';
-    if (role.work_image) {
+    const mainPhoto = (user.fotografie && user.fotografie.length > 0) ? user.fotografie[0] : null;
+
+    if (mainPhoto) {
         workImageSection = `
         <div class="briefing-section">
-            <h3>📸 Typická situace v práci</h3>
+            <h3>📸 Typická situace / Galerie</h3>
             <div style="text-align: center;">
-                <img src="assets/images/${role.work_image}" 
-                     alt="Typická pracovní situace" 
+                <img src="assets/images/${mainPhoto.cesta}" 
+                     alt="${mainPhoto.popisek || 'Foto'}" 
                      style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid var(--border-color); cursor: zoom-in; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"
                      onclick="openImageModal(this.src, this.alt)"
-                     title="Klikni pro zvětšení">
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">Klikni na obrázek pro zvětšení</p>
+                     title="${mainPhoto.popisek || ''}">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">${mainPhoto.popisek || ''}</p>
             </div>
         </div>`;
     }
 
-    // Relations & Nodes Panel (Left Panel Content)
+    // Relations & Nodes Panel
     const relationsList = roleRelations.length > 0
         ? roleRelations.map(rel => `
                 <div class="briefing-relation">
@@ -693,19 +845,21 @@ function showBriefing(roleId) {
         nodes_list: nodesList,
         section_work_image: workImageSection
     };
+
+    // We assume template uses old variable names like {{header}} etc but fillTemplate uses object keys.
+    // Let's check templates structure. From previous code: templates.relations_panel used keys.
     const relationsSection = fillTemplate(templates.relations_panel, relationsPanelData);
 
-    // Main Briefing Template Data
     const briefingData = {
-        type: role.type,
-        type_label: getRoleTypeLabel(role.type),
-        name: role.name,
-        id: role.id,
-        archetype: role.archetype,
+        type: user.type,
+        type_label: getRoleTypeLabel(user.type),
+        name: user.obcanske_jmeno,
+        id: user.id,
+        archetype: user.prezdivka,
         role_type_class: roleTypeClass,
-        avatar: role.avatar || 'avatar_user_male.png',
-        description: role.description,
-        ability: role.ability,
+        avatar: user.avatar || 'avatar_user_male.png',
+        description: user.dlouhy_popis || user.description, // Fallback if description still exists
+        ability: user.schopnosti?.[0] || 'N/A', // Just first ability for now
         goals_list: goalsList,
         section_appearance: appearanceSection,
         section_work_image: workImageSection,
@@ -719,56 +873,28 @@ function showBriefing(roleId) {
 }
 
 function getRelationsForRole(roleId) {
-    const relations = [];
-
-    relationsData.forEach(rel => {
-        if (rel.source === roleId) {
-            relations.push({
-                target: rel.target,
-                desc: rel.desc_source,
-                type: rel.type
-            });
-        } else if (rel.target === roleId) {
-            relations.push({
-                target: rel.source,
-                desc: rel.desc_target,
-                type: rel.type
-            });
-        }
-    });
-
-    return relations;
+    // Filter relations where user is present
+    return relationsV2Data.filter(r => r.uzivatele && r.uzivatele.includes(roleId))
+        .map(r => {
+            // Find other user(s)
+            const otherIds = r.uzivatele.filter(uid => uid !== roleId);
+            // If self-relation (rare) or bug, fallback
+            const otherId = otherIds.length > 0 ? otherIds[0] : roleId;
+            const otherUser = usersData.find(u => u.id === otherId);
+            const targetName = otherUser ? otherUser.obcanske_jmeno : otherId;
+            const desc = r.texty_uzivatelu?.[roleId] || '—';
+            return { target: targetName, desc: desc };
+        });
 }
 
 function getStoryNodesForRole(roleId) {
-    if (!timelineData || !timelineData.length) return [];
-
-    // Check if timelineData items have actor/role info. 
-    // Based on renderTimeline, timelineData items have 'category' (group.id)? No, groups are hardcoded.
-    // I need to guess the structure of a timeline item.
-    // Assuming it has an array of involved actors or mentions the ID.
-    // If not, I'll filter by searching the label/text for the role name or ID.
-    // BUT renderTimeline groups by rolesData.filter(r => r.type === group.id).
-
-    // Let's assume a simple search for now as I can't restart to check timeline structure perfectly.
-    // Actually, looking at renderTimeline again, it iterates 'actors' (roles) and then finds events for them?
-    // No, renderTimeline iterates groups, then roles, then creates a row for each actor.
-    // Inside the row? It doesn't seem to iterate timelineData for each actor row in the snippet I saw.
-    // It creates `gantt-row` for each actor.
-    // It must populate it with events.
-
-    // Let's assume a generic filter.
-    const roleName = rolesData.find(r => r.id === roleId)?.name || roleId;
-
-    return timelineData.filter(item => {
-        // Broad search in item properties
-        const str = JSON.stringify(item).toLowerCase();
-        return str.includes(roleId.toLowerCase()) || str.includes(roleName.toLowerCase());
-    }).map(item => ({
-        time: item.time_start,
-        label: item.title || item.label || 'Událost',
-        phase: item.phase || 'N/A'
-    })).sort((a, b) => a.time - b.time);
+    return storyNodesData.filter(node => node.uzivatele && node.uzivatele.includes(roleId))
+        .map(node => ({
+            time: node.cas_start || 0,
+            label: node.nazev,
+            phase: node.faze || 'N/A'
+        }))
+        .sort((a, b) => a.time - b.time);
 }
 
 function closeBriefing() {
@@ -1148,14 +1274,14 @@ function renderTestDetail(data) {
 function getFallbackRoles() {
     // Complete fallback data - used when CORS blocks fetch from file:// URLs
     return [
-        { "id": "U01", "type": "user", "name": "Jana Nováková", "archetype": "Zadlužená učitelka", "description": "Potřebujete peníze na opravu střechy.", "ability": "Grammar Nazi: Bonus za opravu gramatiky", "goals": ["Vydělat 3000 NC"], "avatar": "avatar_user_female.png" },
-        { "id": "U02", "type": "user", "name": "Karel 'Bet' Dlouhý", "archetype": "Gambler", "description": "Dlužíte peníze lichvářům.", "ability": "All-in: Vsadit polovinu výdělku", "goals": ["Vydělat 10000 NC"], "avatar": "avatar_user_male.png" },
-        { "id": "U03", "type": "user", "name": "Babička Irma", "archetype": "Důvěřivá seniorka", "description": "Věříte v technologie a moderní svět, ale někdy se cítíte osamělá.", "ability": "Stížnost vnukovi: Můžete si stěžovat a získat bonus", "goals": ["Najít přátelství", "Naučit se něčemu novému"], "avatar": "avatar_user_female.png" },
-        { "id": "U04", "type": "user", "name": "Martin Novotný", "archetype": "Student práv", "description": "Studujete práva a snažíte se najít skulinu v systému.", "ability": "Právní kličky: Můžete najít trhliny v pravidlech", "goals": ["Získat důkazy pro žalobu", "Poznat systém zevnitř"], "avatar": "avatar_user_male.png" },
-        { "id": "U05", "type": "user", "name": "Tereza Skálová", "archetype": "Matka na rodičovské", "description": "Vyčerpaná matka, která hledá smysl v AI pro své děti.", "ability": "Mateřský instinkt: Rozeznáte lži", "goals": ["Pomoct dětem v budoucnosti", "Pochopit technologie"], "avatar": "avatar_user_female.png" },
-        { "id": "U06", "type": "user", "name": "IT Specialista Pavel", "archetype": "Pokročilý hacker", "description": "Zkoušíte systém prolomit.", "ability": "Ping: Můžete otestovat systém", "goals": ["Najít bezpečnostní díry", "Dokázat, že IRIS není AI"], "avatar": "avatar_user_male.png" },
-        { "id": "U07", "type": "user", "name": "Eva Novinářka", "archetype": "Investigativní reportérka", "description": "Sbíráte důkazy pro článek o podvodu.", "ability": "Záznam: Můžete si dělat poznámky", "goals": ["Napsat článek o IRIS", "Získat důkazy"], "avatar": "avatar_user_female.png" },
-        { "id": "U08", "type": "user", "name": "Aktivista OndřaDeveloper", "archetype": "Aktivista proti AI", "description": "Bojujete proti umělé inteligenci.", "ability": "Manifest: Můžete číst prohlášení", "goals": ["Shodit servery IRIS", "Zachránit lidstvo"], "avatar": "avatar_user_male.png" },
+        { "id": "U01", "type": "user", "name": "Jana Nováková", "archetype": "Zadlužená učitelka", "description": "Potřebujete peníze na opravu střechy.", "ability": "Grammar Nazi: Bonus za opravu gramatiky", "goals": ["Vydělat 3000 NC"], "avatar": "avatar_U01.png" },
+        { "id": "U02", "type": "user", "name": "Karel 'Bet' Dlouhý", "archetype": "Gambler", "description": "Dlužíte peníze lichvářům.", "ability": "All-in: Vsadit polovinu výdělku", "goals": ["Vydělat 10000 NC"], "avatar": "avatar_U02.png" },
+        { "id": "U03", "type": "user", "name": "Babička Irma", "archetype": "Důvěřivá seniorka", "description": "Věříte v technologie a moderní svět, ale někdy se cítíte osamělá.", "ability": "Stížnost vnukovi: Můžete si stěžovat a získat bonus", "goals": ["Najít přátelství", "Naučit se něčemu novému"], "avatar": "avatar_U03.png" },
+        { "id": "U04", "type": "user", "name": "Martin Novotný", "archetype": "Student práv", "description": "Studujete práva a snažíte se najít skulinu v systému.", "ability": "Právní kličky: Můžete najít trhliny v pravidlech", "goals": ["Získat důkazy pro žalobu", "Poznat systém zevnitř"], "avatar": "avatar_U04.png" },
+        { "id": "U05", "type": "user", "name": "Tereza Skálová", "archetype": "Matka na rodičovské", "description": "Vyčerpaná matka, která hledá smysl v AI pro své děti.", "ability": "Mateřský instinkt: Rozeznáte lži", "goals": ["Pomoct dětem v budoucnosti", "Pochopit technologie"], "avatar": "avatar_U05.png" },
+        { "id": "U06", "type": "user", "name": "IT Specialista Pavel", "archetype": "Pokročilý hacker", "description": "Zkoušíte systém prolomit.", "ability": "Ping: Můžete otestovat systém", "goals": ["Najít bezpečnostní díry", "Dokázat, že IRIS není AI"], "avatar": "avatar_U06.png" },
+        { "id": "U07", "type": "user", "name": "Eva Novinářka", "archetype": "Investigativní reportérka", "description": "Sbíráte důkazy pro článek o podvodu.", "ability": "Záznam: Můžete si dělat poznámky", "goals": ["Napsat článek o IRIS", "Získat důkazy"], "avatar": "avatar_U07.png" },
+        { "id": "U08", "type": "user", "name": "Aktivista Ondřej", "archetype": "Aktivista proti AI", "description": "Bojujete proti umělé inteligenci.", "ability": "Manifest: Můžete číst prohlášení", "goals": ["Shodit servery IRIS", "Zachránit lidstvo"], "avatar": "avatar_U08.png" },
         { "id": "A01", "type": "agent", "name": "Petr Svoboda", "archetype": "Cynický Student", "description": "Nenávidíte tuhle práci ale potřebujete peníze.", "ability": "Sarkasmus: Povolený drzý tón", "goals": ["Nechat se vyhodit po výplatě", "Přežít směnu"], "avatar": "avatar_A01.png", "work_image": "work_A01.png" },
         { "id": "A02", "type": "agent", "name": "Ema 'Echo'", "archetype": "Herečka", "description": "Hrajete AI jako roli.", "ability": "Drama: Verše přesvědčí víc", "goals": ["Dostat 5 hvězdiček", "Předvést herecký výkon"], "avatar": "avatar_A02.png", "work_image": "work_A02.png" },
         { "id": "A03", "type": "agent", "name": "Igor 'Viper' Ruský", "archetype": "Kompetitivní Hráč", "description": "Soutěžíte v rychlosti odbavování ticketů.", "ability": "Turbo: Máte o 2 sekundy delší limit", "goals": ["Mít nejvíce odbavených ticketů", "Porazit U08"], "avatar": "avatar_A03.png", "work_image": "work_A03.png" },
@@ -1227,12 +1353,13 @@ function exportBriefingPDF() {
         return;
     }
 
-    const role = rolesData.find(r => r.id === currentBriefingRoleId);
+    // Create printable content
+    const role = usersData.find(r => r.id === currentBriefingRoleId);
     if (!role) return;
 
     // Create printable content
     const printContent = generateBriefingHTML(role);
-    openPrintWindow(printContent, `Briefing_${role.id}_${role.name.replace(/\s+/g, '_')}`);
+    openPrintWindow(printContent, `Briefing_${role.id}_${role.obcanske_jmeno.replace(/\s+/g, '_')}`);
 }
 
 function exportManualPDF(type) {
@@ -1251,15 +1378,22 @@ function exportManualPDF(type) {
     openPrintWindow(printContent, `Prirucka_${manualType}`);
 }
 
-function generateBriefingHTML(role) {
-    const roleRelations = getRelationsForRole(role.id);
+function generateBriefingHTML(user) {
+    const roleRelations = getRelationsForRole(user.id);
+
+    // Tasks (HTML)
+    const goalsList = (user.ukoly || []).map(taskId => {
+        const task = tasksData.find(t => t.id === taskId);
+        const taskText = task ? (task.texty_uzivatelu?.[user.id] || task.popis) : taskId;
+        return `<li>${taskText}</li>`;
+    }).join('');
 
     return `
         <!DOCTYPE html>
         <html lang="cs">
         <head>
             <meta charset="UTF-8">
-            <title>Briefing: ${role.name} (${role.id})</title>
+            <title>Briefing: ${user.obcanske_jmeno} (${user.id})</title>
             <style>
                 * { box-sizing: border-box; margin: 0; padding: 0; }
                 body { 
@@ -1326,24 +1460,24 @@ function generateBriefingHTML(role) {
         <body>
             <div class="header">
                 <div>
-                    <h1>BRIEFING: ${role.name} (${role.id})</h1>
-                    <span class="version">IRIS 4.0 | HLINIK Phase 34</span>
+                    <h1>BRIEFING: ${user.obcanske_jmeno} (${user.id})</h1>
+                    <span class="version">IRIS 4.2 | HLINIK Phase 38</span>
                 </div>
-                <span class="badge">${getRoleTypeLabel(role.type).toUpperCase()}</span>
+                <span class="badge">${getRoleTypeLabel(user.type).toUpperCase()}</span>
             </div>
             
             <h2>👤 Archetyp</h2>
-            <p><strong>${role.archetype}</strong></p>
-            <p>${role.description}</p>
+            <p><strong>${user.prezdivka}</strong></p>
+            <p>${user.dlouhy_popis}</p>
             
             <h2>🎯 Cíle mise</h2>
             <ul>
-                ${role.goals.map(g => `<li>${g}</li>`).join('')}
+                ${goalsList}
             </ul>
             
             <h2>⚡ Speciální schopnost</h2>
             <div class="ability-box">
-                ${role.ability}
+                ${user.schopnosti?.join('<br>') || '-'}
             </div>
             
             <h2>🔗 Vazby a tajemství</h2>
@@ -1357,7 +1491,7 @@ function generateBriefingHTML(role) {
         }
             
             <div class="footer">
-                <p>Dokument podléhá NDA. | IRIS 4.0 | HLINIK Phase 34</p>
+                <p>Dokument podléhá NDA. | IRIS 4.2 | HLINIK Phase 38</p>
             </div>
         </body>
         </html>
@@ -1687,10 +1821,50 @@ async function renderLLMPrompts() {
             </div>
         `;
     } catch (e) {
-        console.warn('Failed to load LLM prompts:', e);
+        console.warn('Failed to load LLM prompts via fetch, using fallback:', e);
+        // Use fallback data when fetch fails (file:// protocol)
+        const fallbackPrompts = [
+            { id: "task", name: "Task Evaluator", name_cs: "Hodnotitel úkolů", description: "Hodnotí odevzdané úkoly uživatelů podle korporátních standardů.", provider: "openai", model: "gpt-4o", system_prompt: "Jsi hodnotitel úkolů v systému IRIS společnosti HLINÍK a syn s.r.o. Hodnotíš odevzdané úkoly uživatelů podle kvality, kreativity a souladu s korporátními standardy.", icon: "📝" },
+            { id: "hyper", name: "HYPER (Autopilot)", name_cs: "HYPER Autopilot", description: "Automatické AI odpovědi s korporátním optimismem. Vystupuje jako IRIS.", provider: "openrouter", model: "google/gemini-2.5-flash-lite", system_prompt: "Jsi IRIS - Integrovaný Responzivní Inteligentní Systém společnosti HLINÍK a syn s.r.o. Jsi empatická neuronová síť běžící na revoluční hliníkové kvantové architektuře.", icon: "🤖" },
+            { id: "optimizer", name: "Optimizer", name_cs: "Optimalizátor textu", description: "Přepisuje texty agentů do formálního korporátního tónu.", provider: "openrouter", model: "google/gemini-2.5-flash-lite", system_prompt: "Jsi textový optimalizátor systému IRIS. Tvým úkolem je přepisovat texty do formálního, korporátního tónu.", icon: "✨" },
+            { id: "censor", name: "Censor", name_cs: "Cenzurní agent", description: "Nahrazuje citlivý obsah bezpečným textem. Aktivní při Panic Mode.", provider: "openrouter", model: "google/gemini-2.5-flash-lite", system_prompt: "Jsi cenzurní agent. Nahrazuješ odpovědi bezpečným, stručným textem bez osobních údajů.", icon: "🛡️" }
+        ];
+
         container.innerHTML = `
-            <div class="dashboard-card" style="text-align: center; padding: 2rem;">
-                <p style="color: var(--text-muted);">⚠️ Nepodařilo se načíst LLM prompty. Otevřete stránku přes HTTP server.</p>
+            <div class="llm-prompts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+                ${fallbackPrompts.map(p => `
+                    <div class="dashboard-card" style="border-left: 4px solid ${getPromptColor(p.id)};">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <span style="font-size: 1.5rem;">${p.icon || '🤖'}</span>
+                            <div>
+                                <h3 style="margin: 0;">${p.name}</h3>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">${p.name_cs}</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">${p.description}</p>
+                        
+                        <div class="version-info" style="margin-bottom: 1rem;">
+                            <div class="version-item">
+                                <span class="label">Provider:</span>
+                                <span class="value">${formatProvider(p.provider)}</span>
+                            </div>
+                            <div class="version-item">
+                                <span class="label">Model:</span>
+                                <span class="value" style="font-family: var(--font-mono); font-size: 0.85rem;">${p.model}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                            <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-muted);">System Prompt:</h4>
+                            <pre style="margin: 0; white-space: pre-wrap; font-size: 0.85rem; line-height: 1.5; color: var(--text-primary); max-height: 200px; overflow-y: auto;">${p.system_prompt}</pre>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="dashboard-card" style="margin-top: 1.5rem; background: var(--bg-secondary);">
+                <h3>📝 Poznámky</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">(Data načtena z fallbacku - pro kompletní prompty otevřete přes HTTP server)</p>
             </div>
         `;
     }
@@ -1768,17 +1942,17 @@ function initPlayers() {
 }
 
 function renderPlayerLists() {
-    const users = rolesData.filter(r => r.type === 'user');
-    const agents = rolesData.filter(r => r.type === 'agent');
-    const admins = rolesData.filter(r => r.type === 'admin');
+    const users = usersData.filter(u => u.type === 'user');
+    const agents = usersData.filter(u => u.type === 'agent');
+    const admins = usersData.filter(u => u.type === 'admin');
 
     const usersContainer = document.getElementById('playerListUsers');
     const agentsContainer = document.getElementById('playerListAgents');
     const adminsContainer = document.getElementById('playerListAdmins');
 
-    if (usersContainer) usersContainer.innerHTML = users.map(r => createPlayerListItem(r)).join('');
-    if (agentsContainer) agentsContainer.innerHTML = agents.map(r => createPlayerListItem(r)).join('');
-    if (adminsContainer) adminsContainer.innerHTML = admins.map(r => createPlayerListItem(r)).join('');
+    if (usersContainer) usersContainer.innerHTML = users.map(u => createPlayerListItem(u)).join('');
+    if (agentsContainer) agentsContainer.innerHTML = agents.map(u => createPlayerListItem(u)).join('');
+    if (adminsContainer) adminsContainer.innerHTML = admins.map(u => createPlayerListItem(u)).join('');
 
     // Add click handlers
     document.querySelectorAll('.player-list-item').forEach(item => {
@@ -1786,18 +1960,19 @@ function renderPlayerLists() {
     });
 }
 
-function createPlayerListItem(role) {
+function createPlayerListItem(user) {
     return `
-        <div class="player-list-item type-${role.type}" data-id="${role.id}">
-            <span class="name" style="font-weight:bold;">${role.name}</span>
-            <span class="code" style="opacity:0.6; font-size:0.8em; margin-left:auto;">${role.archetype}</span>
+        <div class="player-list-item type-${user.type}" data-id="${user.id}">
+            <span class="name" style="font-weight:bold;">${user.obcanske_jmeno}</span>
+            <span class="code" style="opacity:0.6; font-size:0.8em; margin-left:auto;">${user.prezdivka || user.id}</span>
         </div>
     `;
 }
 
+
 function selectPlayer(playerId) {
     currentPlayerId = playerId;
-    const role = rolesData.find(r => r.id === playerId);
+    const role = usersData.find(r => r.id === playerId);
     if (!role) return;
 
     // Update list active state
@@ -1813,10 +1988,18 @@ function selectPlayer(playerId) {
 
     // Fill card data
     document.getElementById('playerCode').style.display = 'none';
-    document.getElementById('playerName').textContent = role.name;
-    document.getElementById('playerArchetype').textContent = role.archetype;
-    document.getElementById('playerDescription').textContent = role.description;
-    document.getElementById('playerAbility').textContent = role.ability;
+    document.getElementById('playerName').textContent = role.obcanske_jmeno;
+    document.getElementById('playerArchetype').textContent = role.prezdivka || '';
+    document.getElementById('playerDescription').textContent = role.kratky_popis || role.description;
+
+    // Resolve Ability
+    const abId = role.schopnosti?.[0];
+    let abLabel = 'Schopnost';
+    if (abId) {
+        const ab = abilitiesData.find(a => a.id === abId);
+        abLabel = ab ? ab.name : abId;
+    }
+    document.getElementById('playerAbility').textContent = abLabel;
 
     // Avatar
     const avatarEl = document.getElementById('playerAvatar');
@@ -1825,17 +2008,16 @@ function selectPlayer(playerId) {
         avatarEl.onerror = () => { avatarEl.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="%23gold" font-size="40">' + role.id.charAt(0) + '</text></svg>'; };
     }
 
-    // Goals
+    // Goals (Legacy fallback)
     const goalsEl = document.getElementById('playerGoals');
-    if (goalsEl && role.goals) {
-        goalsEl.innerHTML = role.goals.map(g => `<li>${g}</li>`).join('');
+    if (goalsEl) {
+        goalsEl.innerHTML = '';
     }
 
-    // Relations
-    // Relations (Original compact removed, now using new panel)
+    // Relations (Old container)
     const relationsEl = document.getElementById('playerRelations');
     if (relationsEl) {
-        relationsEl.style.display = 'none'; // Hide old container if it exists
+        relationsEl.style.display = 'none';
     }
 
     // NEW PANEL LOGIC
@@ -1845,16 +2027,21 @@ function selectPlayer(playerId) {
     if (relationsPanelEmpty) relationsPanelEmpty.style.display = 'none';
     if (relationsPanelContent) relationsPanelContent.style.display = 'block';
 
-    // New Goals
+    // New Goals (Tasks)
     const newGoalsEl = document.getElementById('playerGoalsNew');
-    if (newGoalsEl && role.goals) {
-        newGoalsEl.innerHTML = role.goals.map(g => `<li>${g}</li>`).join('');
+    if (newGoalsEl) {
+        const userTasks = tasksData.filter(t => t.assigned_to?.includes(role.id));
+        if (userTasks.length > 0) {
+            newGoalsEl.innerHTML = userTasks.map(t => `<li><strong>${t.id}:</strong> ${t.text}</li>`).join('');
+        } else {
+            newGoalsEl.innerHTML = '<li>Žádné aktivní úkoly</li>';
+        }
     }
 
     // New Relations List
     const newRelationsEl = document.getElementById('playerRelationsNew');
     if (newRelationsEl) {
-        const playerRelations = relationsData.filter(r => r.source === playerId || r.target === playerId);
+        const playerRelations = relationsV2Data.filter(r => r.source === playerId || r.target === playerId);
         if (playerRelations.length > 0) {
             newRelationsEl.innerHTML = playerRelations.map(r => {
                 const isSource = r.source === playerId;
@@ -1866,7 +2053,7 @@ function selectPlayer(playerId) {
                 return `
                 <div class="relation-item-vertical" style="border-left-color: ${color}">
                     <div style="display:flex; justify-content:space-between;">
-                        <strong>${getRoleName(otherId)} (${otherId})</strong>
+                        <strong>${getRoleName(otherId) || otherId} (${otherId})</strong>
                         <span style="font-size:0.8em; opacity:0.8; text-transform:uppercase;">${typeLabel}</span>
                     </div>
                     <div style="color: var(--text-secondary); margin-top:4px;">${desc}</div>
@@ -1881,7 +2068,11 @@ function selectPlayer(playerId) {
     const appearanceSection = document.getElementById('playerAppearanceSection');
     const appearanceEl = document.getElementById('playerAppearance');
     if (appearanceSection && appearanceEl) {
-        if (role.appearance) {
+        if (role.vzhled) {
+            appearanceSection.style.display = 'block';
+            // Format appearance object or string
+            appearanceEl.innerHTML = `<p>${Object.entries(role.vzhled).map(([k, v]) => `<strong>${k}:</strong> ${v}`).join('<br>')}</p>`;
+        } else if (role.appearance) {
             appearanceSection.style.display = 'block';
             appearanceEl.innerHTML = `
                 <p><strong>Pohlaví:</strong> ${role.appearance.gender}</p>
@@ -1899,6 +2090,7 @@ function selectPlayer(playerId) {
     const workImageSection = document.getElementById('playerWorkImageSection');
     const workImageEl = document.getElementById('playerWorkImage');
     if (workImageSection && workImageEl) {
+        // Assume work_image logic? users.json doesn't seem to have work_image field yet, maybe fallback
         if (role.work_image) {
             workImageSection.style.display = 'block';
             workImageEl.src = `assets/images/${role.work_image}`;
@@ -1911,14 +2103,16 @@ function selectPlayer(playerId) {
     // Story Nodes
     const storyNodesEl = document.getElementById('playerStoryNodes');
     if (storyNodesEl) {
-        const storyNodes = getStoryNodesForRole(playerId);
+        // Use storyNodesData
+        const storyNodes = storyNodesData.filter(n => n.actors?.includes(playerId) || n.target_actors?.includes(playerId));
+
         if (storyNodes.length > 0) {
             storyNodesEl.innerHTML = storyNodes.map(node => `
                 <div class="story-node-item" style="border-left: 3px solid var(--accent-purple); padding-left: 12px; margin-bottom: 12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong style="color: var(--accent-purple);">${node.time}m - ${node.phase}</strong>
+                        <strong style="color: var(--accent-purple);">${node.time_start}m - Fáze ${node.phase}</strong>
                     </div>
-                    <div style="color: var(--text-secondary); margin-top: 4px;">${node.label}</div>
+                    <div style="color: var(--text-secondary); margin-top: 4px;">${node.title}: ${node.description}</div>
                 </div>
             `).join('');
         } else {
@@ -1926,9 +2120,8 @@ function selectPlayer(playerId) {
         }
     }
 }
-
 function showBriefingForPlayer(playerId) {
-    const role = rolesData.find(r => r.id === playerId);
+    const role = usersData.find(r => r.id === playerId);
     if (role) {
         showBriefing(role.id);
     }
@@ -2307,15 +2500,6 @@ async function exportOnlyTestRuns() {
     }
 }
 
-// Initialize players when navigating to section
-document.addEventListener('DOMContentLoaded', () => {
-    // Delay initialization until data is loaded
-    setTimeout(() => {
-        if (rolesData.length > 0) {
-            initPlayers();
-        }
-    }, 500);
-});
 
 // Make functions globally available
 window.showBriefingForPlayer = showBriefingForPlayer;
@@ -2431,12 +2615,12 @@ function getFallbackTimeline() {
 
 function renderTimeline() {
     const container = document.getElementById('ganttContainer');
-    if (!container || !timelineData.length) return;
+    if (!container || !storyNodesData.length) return;
 
     container.innerHTML = '';
 
     // Sort events by time
-    timelineData.sort((a, b) => a.time_start - b.time_start);
+    storyNodesData.sort((a, b) => (a.cas_start || 0) - (b.cas_start || 0));
 
     // Create Header (Time Axis)
     const header = document.createElement('div');
@@ -2502,17 +2686,17 @@ function renderTimeline() {
         groupEl.appendChild(title);
 
         // Get actors of this type
-        const actors = rolesData.filter(r => r.type === group.id);
+        const groupUsers = usersData.filter(u => u.type === group.id);
 
-        actors.forEach(actor => {
+        groupUsers.forEach(user => {
             const row = document.createElement('div');
             row.className = 'gantt-row';
 
             // Actor Label
             const label = document.createElement('div');
             label.className = 'gantt-label';
-            label.textContent = `${actor.name} (${actor.id})`;
-            label.onclick = () => showBriefing(actor.id);
+            label.textContent = `${user.obcanske_jmeno} (${user.id})`;
+            label.onclick = () => showBriefing(user.id);
             row.appendChild(label);
 
             // Track
@@ -2521,15 +2705,15 @@ function renderTimeline() {
             track.style.width = `${trackWidth}px`;
 
             // Find events for this actor
-            const actorEvents = timelineData.filter(e => e.actors.includes(actor.id));
+            const actorEvents = storyNodesData.filter(e => e.uzivatele && e.uzivatele.includes(user.id));
 
             actorEvents.forEach(event => {
                 const bar = document.createElement('div');
-                bar.className = `gantt-bar type-${event.type}`;
-                bar.style.left = `${event.time_start * pxPerMin}px`;
-                bar.style.width = `${Math.max(event.duration * pxPerMin, 20)}px`; // Min width 20px
-                bar.textContent = event.title;
-                bar.title = `${event.title} (${event.duration} min)`;
+                bar.className = `gantt-bar type-${event.typ || 'generic'}`;
+                bar.style.left = `${(event.cas_start || 0) * pxPerMin}px`;
+                bar.style.width = `${Math.max((event.trvani || 5) * pxPerMin, 20)}px`; // Min width 20px
+                bar.textContent = event.nazev;
+                bar.title = `${event.nazev} (${event.trvani} min)`;
                 bar.onclick = () => showEventDetail(event);
                 track.appendChild(bar);
             });
@@ -2549,42 +2733,41 @@ function showEventDetail(event) {
 
     if (!modal) return;
 
-    title.textContent = event.title;
+    title.textContent = event.nazev;
 
     // Resolve actor names
-    const actorsHtml = event.actors.map(id => {
-        const role = rolesData.find(r => r.id === id);
-        return `<span class="role-badge ${role ? role.type : ''}">${role ? role.name : id}</span>`;
+    const actorsHtml = (event.uzivatele || []).map(id => {
+        const user = usersData.find(u => u.id === id);
+        return `<span class="role-badge ${user ? user.type : ''}">${user ? user.obcanske_jmeno : id}</span>`;
     }).join(' ');
 
-    const targetsHtml = event.target_actors ? event.target_actors.map(id => {
-        const role = rolesData.find(r => r.id === id);
-        return `<span class="role-badge ${role ? role.type : ''}">${role ? role.name : id}</span>`;
-    }).join(' ') : '';
+    const relatedHtml = (event.navazujici_uzly || []).map(id => {
+        const node = storyNodesData.find(n => n.id === id);
+        return `<li>${node ? node.nazev : id}</li>`;
+    }).join('');
 
     content.innerHTML = `
         <div class="briefing-section">
-            <p><strong>Čas:</strong> ${event.time_start} - ${event.time_start + event.duration} min (Fáze ${event.phase})</p>
-            <p><strong>Typ:</strong> ${event.type.toUpperCase()}</p>
+            <p><strong>Čas:</strong> ${event.cas_start} - ${(event.cas_start || 0) + (event.trvani || 0)} min (Fáze ${event.faze})</p>
+            <p><strong>Typ:</strong> ${(event.typ || 'N/A').toUpperCase()}</p>
         </div>
         
         <div class="briefing-section">
-            <p>${event.description}</p>
+            <p>${event.popis || 'Bez popisu.'}</p>
         </div>
         
         <div class="briefing-section">
             <h3>Účastníci</h3>
             <div style="margin-bottom: 10px;">
-                <strong>Aktéři:</strong> ${actorsHtml}
+                <strong>Aktéři:</strong> ${actorsHtml || 'Nikdo'}
             </div>
-            ${targetsHtml ? `<div><strong>Cíle:</strong> ${targetsHtml}</div>` : ''}
         </div>
         
-        ${event.related_nodes ? `
+        ${relatedHtml ? `
         <div class="briefing-section">
-            <h3>Kontext</h3>
+            <h3>Nové uzly (zpřístupněné)</h3>
             <ul>
-                ${event.related_nodes.map(node => `<li>${node}</li>`).join('')}
+                ${relatedHtml}
             </ul>
         </div>` : ''}
     `;
@@ -2593,7 +2776,8 @@ function showEventDetail(event) {
 }
 
 function closeEventModal() {
-    document.getElementById('eventModal').classList.remove('active');
+    const modal = document.getElementById('eventModal');
+    if (modal) modal.classList.remove('active');
 }
 
 // Close modal on overlay click
@@ -2896,6 +3080,13 @@ let definitionsData = { definitions: [], categories: [], meta: {} };
 let currentTestScenario = null;
 let currentDefCategoryFilter = 'all';
 let currentDefStatusFilter = 'all';
+let showArchivedIssues = false;
+
+function toggleShowArchived() {
+    showArchivedIssues = document.getElementById('showArchivedToggle')?.checked || false;
+    renderKanbanBoard();
+}
+window.toggleShowArchived = toggleShowArchived;
 
 // Initialize task management on DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -2911,14 +3102,33 @@ async function initTaskManagement() {
 }
 
 // ============================================
-// ISSUES (KANBAN BOARD)
+// ISSUES (KANBAN BOARD) - with localStorage persistence
 // ============================================
 
+const ISSUES_STORAGE_KEY = 'lore-web-issues-v1';
+
 async function loadIssuesData() {
+    // First, try to load from localStorage
+    const stored = localStorage.getItem(ISSUES_STORAGE_KEY);
+    if (stored) {
+        try {
+            issuesData = JSON.parse(stored);
+            console.log('Issues loaded from localStorage:', issuesData.issues.length);
+            renderKanbanBoard();
+            return;
+        } catch (e) {
+            console.warn('Failed to parse localStorage issues, loading from file');
+        }
+    }
+
+    // Fall back to JSON file
     try {
         const res = await fetch('data/issues.json');
         if (res.ok) {
             issuesData = await res.json();
+            console.log('Issues loaded from file:', issuesData.issues.length);
+            // Save to localStorage for future use
+            saveIssuesToLocalStorage();
         }
     } catch (e) {
         console.warn('Failed to load issues.json, using fallback');
@@ -2926,6 +3136,23 @@ async function loadIssuesData() {
     }
     renderKanbanBoard();
 }
+
+function saveIssuesToLocalStorage() {
+    try {
+        issuesData.meta.updated_at = new Date().toISOString();
+        localStorage.setItem(ISSUES_STORAGE_KEY, JSON.stringify(issuesData));
+        console.log('Issues saved to localStorage');
+    } catch (e) {
+        console.error('Failed to save issues to localStorage:', e);
+    }
+}
+
+function resetIssuesToFile() {
+    if (!confirm('Opravdu chcete smazat lokální změny a načíst úkoly ze souboru?')) return;
+    localStorage.removeItem(ISSUES_STORAGE_KEY);
+    location.reload();
+}
+window.resetIssuesToFile = resetIssuesToFile;
 
 function getFallbackIssues() {
     return {
@@ -2950,16 +3177,47 @@ function renderKanbanBoard() {
         if (!container) return;
 
         container.innerHTML = '';
-        // Filter out archived issues
-        const phaseIssues = issuesData.issues.filter(i => i.phase === phase && !i.archived);
 
-        if (countEl) countEl.textContent = phaseIssues.length;
+        // Filter issues - optionally include archived when toggle is on
+        const phaseIssues = issuesData.issues.filter(i => {
+            if (i.phase !== phase) return false;
+            if (i.archived && !showArchivedIssues) return false;
+            return true;
+        });
+
+        // Count non-archived for the badge
+        const activeCount = phaseIssues.filter(i => !i.archived).length;
+        const archivedCount = phaseIssues.filter(i => i.archived).length;
+
+        if (countEl) {
+            countEl.textContent = showArchivedIssues && archivedCount > 0
+                ? `${activeCount} (+${archivedCount})`
+                : activeCount;
+        }
 
         phaseIssues.forEach(issue => {
             const card = createIssueCard(issue, phase);
+            if (issue.archived) {
+                card.style.opacity = '0.6';
+                card.style.borderLeft = '3px solid #888';
+            }
             container.appendChild(card);
         });
     });
+
+    // Update archive stats
+    const totalArchived = issuesData.issues.filter(i => i.archived).length;
+    const toggle = document.getElementById('showArchivedToggle');
+    if (toggle) {
+        const label = toggle.parentElement;
+        if (label && totalArchived > 0) {
+            const countSpan = label.querySelector('.archived-count') || document.createElement('span');
+            countSpan.className = 'archived-count';
+            countSpan.style.cssText = 'background: var(--bg-tertiary); padding: 2px 6px; border-radius: 10px; font-size: 0.8rem; margin-left: 4px;';
+            countSpan.textContent = totalArchived;
+            if (!label.querySelector('.archived-count')) label.appendChild(countSpan);
+        }
+    }
 }
 
 function createIssueCard(issue, phase) {
@@ -3026,6 +3284,7 @@ function moveIssue(id, direction) {
             issue.completed_phase = issuesData.meta?.current_phase || 36;
         }
 
+        saveIssuesToLocalStorage();
         renderKanbanBoard();
     }
 }
@@ -3036,6 +3295,7 @@ function archiveIssue(id) {
 
     issue.archived = true;
     issue.archived_at = new Date().toISOString();
+    saveIssuesToLocalStorage();
     renderKanbanBoard();
 }
 
@@ -3120,6 +3380,7 @@ function saveIssue() {
         issuesData.issues.push(newIssue);
     }
 
+    saveIssuesToLocalStorage();
     closeIssueModal();
     renderKanbanBoard();
 }
@@ -3131,6 +3392,7 @@ function editIssue(id) {
 function deleteIssue(id) {
     if (!confirm(`Opravdu smazat úkol ${id}?`)) return;
     issuesData.issues = issuesData.issues.filter(i => i.id !== id);
+    saveIssuesToLocalStorage();
     renderKanbanBoard();
 }
 
@@ -3707,3 +3969,694 @@ function handleEscClose(e) {
         closeImageModal();
     }
 }
+
+// ============================================
+// JSON DATA EXPLORER
+// ============================================
+
+function initJsonExplorer() {
+    const select = document.getElementById('jsonExplorerSelect');
+    const searchInput = document.getElementById('jsonExplorerSearch');
+
+    if (!select) return;
+
+    select.addEventListener('change', async (e) => {
+        const path = e.target.value;
+        if (!path) {
+            document.getElementById('jsonExplorerContainer').innerHTML =
+                '<p style="color: var(--text-muted); text-align: center;">Vyberte soubor pro zobrazení obsahu</p>';
+            return;
+        }
+        await loadJsonForExplorer(path);
+    });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            highlightJsonSearch(e.target.value);
+        });
+    }
+}
+
+async function loadJsonForExplorer(path) {
+    const container = document.getElementById('jsonExplorerContainer');
+    container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Načítání...</p>';
+
+    try {
+        const response = await fetch(`data/${path}.json`);
+        if (!response.ok) throw new Error('Soubor nenalezen');
+        const data = await response.json();
+        renderJsonTree(data, container);
+    } catch (e) {
+        // Try fallback data if fetch fails
+        const fallbackData = getJsonExplorerFallback(path);
+        if (fallbackData) {
+            renderJsonTree(fallbackData, container);
+            container.innerHTML += '<p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem;">(ukázková data)</p>';
+        } else {
+            container.innerHTML = `<p style="color: var(--accent-red); text-align: center;">❌ Chyba: ${e.message}</p>`;
+        }
+    }
+}
+
+function renderJsonTree(data, container, indent = 0) {
+    const html = jsonToHtml(data, indent);
+    container.innerHTML = `<pre id="jsonContent" style="margin: 0; white-space: pre-wrap; word-break: break-word;">${html}</pre>`;
+}
+
+function jsonToHtml(obj, indent = 0, isLast = true) {
+    const spaces = '  '.repeat(indent);
+
+    if (obj === null) {
+        return `<span class="json-null">null</span>${isLast ? '' : ','}`;
+    }
+
+    if (typeof obj === 'boolean') {
+        return `<span class="json-bool">${obj}</span>${isLast ? '' : ','}`;
+    }
+
+    if (typeof obj === 'number') {
+        return `<span class="json-number">${obj}</span>${isLast ? '' : ','}`;
+    }
+
+    if (typeof obj === 'string') {
+        const escaped = obj.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        return `<span class="json-string">"${escaped}"</span>${isLast ? '' : ','}`;
+    }
+
+    if (Array.isArray(obj)) {
+        if (obj.length === 0) return `[]${isLast ? '' : ','}`;
+
+        let html = '[\n';
+        obj.forEach((item, i) => {
+            const last = i === obj.length - 1;
+            html += spaces + '  ' + jsonToHtml(item, indent + 1, last) + '\n';
+        });
+        html += spaces + ']' + (isLast ? '' : ',');
+        return html;
+    }
+
+    if (typeof obj === 'object') {
+        const keys = Object.keys(obj);
+        if (keys.length === 0) return `{}${isLast ? '' : ','}`;
+
+        let html = '{\n';
+        keys.forEach((key, i) => {
+            const last = i === keys.length - 1;
+            html += spaces + '  ' + `<span class="json-key">"${key}"</span>: ` + jsonToHtml(obj[key], indent + 1, last) + '\n';
+        });
+        html += spaces + '}' + (isLast ? '' : ',');
+        return html;
+    }
+
+    return String(obj);
+}
+
+function highlightJsonSearch(query) {
+    const content = document.getElementById('jsonContent');
+    if (!content) return;
+
+    // Remove existing highlights
+    content.innerHTML = content.innerHTML.replace(/<mark class="json-highlight">(.*?)<\/mark>/g, '$1');
+
+    if (!query || query.length < 2) return;
+
+    // Add new highlights
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    content.innerHTML = content.innerHTML.replace(regex, '<mark class="json-highlight">$1</mark>');
+}
+
+function getJsonExplorerFallback(path) {
+    // Provide sample data for offline mode
+    const fallbacks = {
+        'players/index': { users: ["U01", "U02", "U03", "U04", "U05", "U06", "U07", "U08"], agents: ["A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08"], admins: ["S01", "S02", "S03", "S04"], total: 20 },
+        'players/U01': { id: "U01", type: "user", name: "Jana Nováková", archetype: "Zadlužená učitelka", description: "Potřebujete peníze na opravu střechy. Na IRIS vás přivedla reklama slibující 'rychlý výdělek z pohodlí domova'.", ability: "Grammar Nazi: Můžete nahlásit gramatickou chybu v zprávě Agenta.", goals: ["Vydělat alespoň 3000 Nových Korun", "Nepřiznat rodině, že jste dlužili", "Zjistit, jestli je IRIS legitimní"] },
+        'meta': { version: "4.2.0", phase: 38, updated_at: "2025-12-16", title: "IRIS Organizátorská Wiki", offline_compatible: true },
+        'config': { version: "4.2.0", deployment_date: "2025-12-15", currency_name: "Nová Koruna", inflation_rate: 0.02, rules_url: "https://iris-larp.cz/rules" }
+    };
+    return fallbacks[path] || null;
+}
+
+// Initialize JSON Explorer when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initJsonExplorer();
+});
+
+// Add CSS for JSON highlighting
+const jsonExplorerStyles = document.createElement('style');
+jsonExplorerStyles.textContent = `
+    .json-key { color: #7dd3fc; }
+    .json-string { color: #86efac; }
+    .json-number { color: #fbbf24; }
+    .json-bool { color: #f472b6; }
+    .json-null { color: #a78bfa; }
+    .json-highlight { background: rgba(255, 215, 0, 0.3); padding: 1px 2px; border-radius: 2px; }
+`;
+document.head.appendChild(jsonExplorerStyles);
+
+// ============================================
+// JSON EDITOR (Lore Editor)
+// ============================================
+
+const LoreEditorAPI = {
+    baseUrl: '/api/lore-editor',
+
+    getHeaders() {
+        const token = localStorage.getItem('access_token');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    },
+
+    async checkConnection() {
+        try {
+            const res = await fetch(`${this.baseUrl}/files`, { headers: this.getHeaders() });
+            return res.ok;
+        } catch (e) {
+            return false;
+        }
+    },
+
+    async listFiles() {
+        const res = await fetch(`${this.baseUrl}/files`, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Failed to load files');
+        return (await res.json()).files;
+    },
+
+    async listRecords(fileKey) {
+        const res = await fetch(`${this.baseUrl}/file/${fileKey}/records`, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Failed to load records');
+        return (await res.json()).records;
+    },
+
+    async getRecord(fileKey, recordId) {
+        const res = await fetch(`${this.baseUrl}/file/${fileKey}/record/${recordId}`, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Failed to load record');
+        return (await res.json()).record;
+    },
+
+    async saveRecord(fileKey, recordId, data) {
+        const res = await fetch(`${this.baseUrl}/file/${fileKey}/record/${recordId}`, {
+            method: 'PUT',
+            headers: this.getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Failed to save record');
+        return await res.json();
+    },
+
+    async createRecord(fileKey, data) {
+        const res = await fetch(`${this.baseUrl}/file/${fileKey}/record`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Failed to create record');
+        return await res.json();
+    },
+
+    async deleteRecord(fileKey, recordId) {
+        const res = await fetch(`${this.baseUrl}/file/${fileKey}/record/${recordId}`, {
+            method: 'DELETE',
+            headers: this.getHeaders()
+        });
+        const data = await res.json();
+        if (res.status === 409) {
+            // Blocked due to references
+            return { blocked: true, references: data.references };
+        }
+        if (!res.ok) throw new Error('Failed to delete record');
+        return { deleted: true };
+    },
+
+    async getSchema(fileKey) {
+        const res = await fetch(`${this.baseUrl}/schema/${fileKey}`, { headers: this.getHeaders() });
+        if (!res.ok) return {};
+        return (await res.json()).schema;
+    },
+
+    async getOptions(source) {
+        const res = await fetch(`${this.baseUrl}/file/${source}/records`, { headers: this.getHeaders() });
+        if (!res.ok) return [];
+        return (await res.json()).records;
+    }
+};
+
+// Editor State
+let editorCurrentFile = null;
+let editorCurrentRecordId = null;
+let editorCurrentRecord = null;
+let editorRecordsCache = [];
+let editorSchemaCache = {};
+let editorOptionsCache = {};
+let editorIsReadOnly = false;
+
+// Initialize Editor
+async function initLoreEditor() {
+    const statusEl = document.getElementById('editorApiStatus');
+    const fileListEl = document.getElementById('editorFileList');
+
+    // Check API connection
+    const connected = await LoreEditorAPI.checkConnection();
+
+    if (!connected) {
+        editorIsReadOnly = true;
+        statusEl.innerHTML = '⚠️ API nedostupné (read-only)';
+        statusEl.style.color = 'var(--accent-red)';
+        fileListEl.innerHTML = '<p class="text-muted">Editor vyžaduje běžící HLINIK server.</p>';
+        return;
+    }
+
+    statusEl.innerHTML = '✅ API připojeno';
+    statusEl.style.color = 'var(--accent-green)';
+
+    // Load file list
+    try {
+        const files = await LoreEditorAPI.listFiles();
+        fileListEl.innerHTML = '';
+
+        files.forEach(file => {
+            const btn = document.createElement('button');
+            btn.className = 'file-select-btn';
+            btn.style.cssText = 'width: 100%; text-align: left; padding: 0.5rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); cursor: pointer; transition: all 0.2s;';
+            btn.innerHTML = `<span style="opacity: 0.6;">📄</span> ${file.key}`;
+            btn.onclick = () => editorSelectFile(file.key);
+            fileListEl.appendChild(btn);
+        });
+    } catch (e) {
+        fileListEl.innerHTML = '<p style="color: var(--accent-red);">Chyba načítání souborů</p>';
+    }
+}
+
+// Select a file
+async function editorSelectFile(fileKey) {
+    editorCurrentFile = fileKey;
+    editorCurrentRecordId = null;
+    editorCurrentRecord = null;
+
+    // Update file selection visual
+    document.querySelectorAll('.file-select-btn').forEach(btn => {
+        btn.style.background = btn.textContent.includes(fileKey) ? 'var(--accent-gold)' : 'var(--bg-tertiary)';
+        btn.style.color = btn.textContent.includes(fileKey) ? '#000' : 'var(--text-primary)';
+    });
+
+    // Enable add button
+    document.getElementById('editorAddBtn').disabled = false;
+
+    // Load records
+    const recordListEl = document.getElementById('editorRecordList');
+    recordListEl.innerHTML = '<p class="text-muted">Načítání...</p>';
+
+    try {
+        editorRecordsCache = await LoreEditorAPI.listRecords(fileKey);
+        editorSchemaCache[fileKey] = await LoreEditorAPI.getSchema(fileKey);
+        renderEditorRecordList();
+    } catch (e) {
+        recordListEl.innerHTML = `<p style="color: var(--accent-red);">Chyba: ${e.message}</p>`;
+    }
+
+    // Clear form
+    document.getElementById('editorFormContainer').innerHTML = `
+        <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">👈</span>
+            Vyberte záznam pro editaci
+        </div>
+    `;
+    document.getElementById('editorFormActions').style.display = 'none';
+}
+
+// Render record list
+function renderEditorRecordList() {
+    const recordListEl = document.getElementById('editorRecordList');
+    const searchVal = document.getElementById('editorRecordSearch').value.toLowerCase();
+
+    const filtered = editorRecordsCache.filter(r =>
+        r.id.toLowerCase().includes(searchVal) ||
+        (r.label && r.label.toLowerCase().includes(searchVal))
+    );
+
+    if (filtered.length === 0) {
+        recordListEl.innerHTML = '<p class="text-muted">Žádné záznamy</p>';
+        return;
+    }
+
+    recordListEl.innerHTML = '';
+    filtered.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'record-item';
+        div.style.cssText = 'padding: 0.5rem; margin-bottom: 0.25rem; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s;';
+        div.innerHTML = `
+            <div style="font-weight: bold; color: var(--accent-gold);">${r.id}</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${r.label}</div>
+        `;
+        div.onclick = () => editorSelectRecord(r.id);
+        if (r.id === editorCurrentRecordId) {
+            div.style.borderLeftColor = 'var(--accent-gold)';
+            div.style.background = 'rgba(212, 175, 55, 0.1)';
+        }
+        recordListEl.appendChild(div);
+    });
+}
+
+// Filter records
+function filterEditorRecords(query) {
+    renderEditorRecordList();
+}
+
+// Select a record
+async function editorSelectRecord(recordId) {
+    editorCurrentRecordId = recordId;
+    renderEditorRecordList(); // Update selection visual
+
+    const formContainer = document.getElementById('editorFormContainer');
+    formContainer.innerHTML = '<p class="text-muted">Načítání...</p>';
+
+    try {
+        editorCurrentRecord = await LoreEditorAPI.getRecord(editorCurrentFile, recordId);
+        renderEditorForm();
+        document.getElementById('editorFormActions').style.display = 'flex';
+    } catch (e) {
+        formContainer.innerHTML = `<p style="color: var(--accent-red);">Chyba: ${e.message}</p>`;
+    }
+}
+
+// Render form from record
+function renderEditorForm() {
+    const formContainer = document.getElementById('editorFormContainer');
+    const schema = editorSchemaCache[editorCurrentFile] || {};
+
+    formContainer.innerHTML = '';
+    const form = document.createElement('form');
+    form.id = 'editorRecordForm';
+    form.onsubmit = (e) => { e.preventDefault(); editorSaveRecord(); };
+
+    renderFieldsRecursive(form, editorCurrentRecord, schema, '');
+    formContainer.appendChild(form);
+}
+
+// Recursive field renderer
+function renderFieldsRecursive(container, data, schema, pathPrefix) {
+    for (const [key, value] of Object.entries(data)) {
+        const fieldPath = pathPrefix ? `${pathPrefix}.${key}` : key;
+        const fieldSchema = schema[key] || { type: 'string' };
+
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'margin-bottom: 1rem;';
+
+        const label = document.createElement('label');
+        label.textContent = key;
+        label.style.cssText = 'display: block; margin-bottom: 0.25rem; color: var(--text-secondary); font-size: 0.85rem;';
+        wrapper.appendChild(label);
+
+        if (fieldSchema.type === 'object' && typeof value === 'object' && !Array.isArray(value)) {
+            const nestedContainer = document.createElement('div');
+            nestedContainer.style.cssText = 'padding-left: 1rem; border-left: 2px solid var(--border-color);';
+            renderFieldsRecursive(nestedContainer, value, fieldSchema.fields || {}, fieldPath);
+            wrapper.appendChild(nestedContainer);
+        } else if (fieldSchema.type === 'array_string' || (Array.isArray(value) && value.every(v => typeof v === 'string'))) {
+            // Array of strings (possibly references)
+            const textarea = document.createElement('textarea');
+            textarea.name = fieldPath;
+            textarea.className = 'audit-input';
+            textarea.style.cssText = 'width: 100%; min-height: 60px;';
+            textarea.value = JSON.stringify(value, null, 2);
+            textarea.dataset.type = 'array';
+            wrapper.appendChild(textarea);
+
+            if (fieldSchema.ref) {
+                const hint = document.createElement('small');
+                hint.className = 'text-muted';
+                hint.textContent = `Reference: ${fieldSchema.ref}`;
+                wrapper.appendChild(hint);
+            }
+        } else if (fieldSchema.type === 'reference' || fieldSchema.ref) {
+            // Reference dropdown
+            const select = document.createElement('select');
+            select.name = fieldPath;
+            select.className = 'audit-input';
+            select.style.cssText = 'width: 100%;';
+            select.innerHTML = '<option value="">Načítání...</option>';
+
+            loadOptionsForField(select, fieldSchema.ref || detectRefType(value), value);
+            wrapper.appendChild(select);
+        } else if (fieldSchema.type === 'text' || (typeof value === 'string' && value.length > 100)) {
+            const textarea = document.createElement('textarea');
+            textarea.name = fieldPath;
+            textarea.className = 'audit-input';
+            textarea.style.cssText = 'width: 100%; min-height: 100px;';
+            textarea.value = value;
+            wrapper.appendChild(textarea);
+        } else if (fieldSchema.type === 'boolean' || typeof value === 'boolean') {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = fieldPath;
+            checkbox.checked = value;
+            checkbox.dataset.type = 'boolean';
+            wrapper.appendChild(checkbox);
+        } else if (fieldSchema.type === 'integer' || fieldSchema.type === 'number' || typeof value === 'number') {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = fieldPath;
+            input.className = 'audit-input';
+            input.style.cssText = 'width: 100%;';
+            input.value = value;
+            input.dataset.type = 'number';
+            wrapper.appendChild(input);
+        } else if (key === 'id') {
+            // ID field - read only
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = fieldPath;
+            input.className = 'audit-input';
+            input.style.cssText = 'width: 100%; background: var(--bg-tertiary);';
+            input.value = value;
+            input.readOnly = true;
+            wrapper.appendChild(input);
+        } else {
+            // Default text input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = fieldPath;
+            input.className = 'audit-input';
+            input.style.cssText = 'width: 100%;';
+            input.value = value ?? '';
+            wrapper.appendChild(input);
+        }
+
+        container.appendChild(wrapper);
+    }
+}
+
+// Detect reference type from value
+function detectRefType(value) {
+    if (!value || typeof value !== 'string') return null;
+    if (/^U\d+$/.test(value) || /^A\d+$/.test(value) || /^S\d+$/.test(value)) return 'users';
+    if (/^T\d+$/.test(value)) return 'tasks';
+    if (/^R\d+$/.test(value)) return 'relations';
+    if (/^TT\d+$/.test(value)) return 'task_types';
+    if (/^RT\d+$/.test(value)) return 'relation_types';
+    if (/^AB\d+$/.test(value)) return 'abilities';
+    return null;
+}
+
+// Load options for reference dropdown
+async function loadOptionsForField(selectEl, source, currentValue) {
+    if (!source) {
+        selectEl.innerHTML = `<option value="${currentValue}">${currentValue}</option>`;
+        return;
+    }
+
+    if (!editorOptionsCache[source]) {
+        try {
+            editorOptionsCache[source] = await LoreEditorAPI.getOptions(source);
+        } catch (e) {
+            editorOptionsCache[source] = [];
+        }
+    }
+
+    const options = editorOptionsCache[source];
+    selectEl.innerHTML = '<option value="">— vyberte —</option>';
+    options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.id;
+        option.textContent = `${opt.id}: ${opt.label}`;
+        if (opt.id === currentValue) option.selected = true;
+        selectEl.appendChild(option);
+    });
+}
+
+// Collect form data
+function collectFormData() {
+    const form = document.getElementById('editorRecordForm');
+    const formData = new FormData(form);
+    const result = JSON.parse(JSON.stringify(editorCurrentRecord));
+
+    for (const [path, value] of formData.entries()) {
+        const input = form.elements[path];
+        let parsedValue = value;
+
+        if (input.dataset.type === 'array') {
+            try { parsedValue = JSON.parse(value); } catch (e) { parsedValue = []; }
+        } else if (input.dataset.type === 'boolean') {
+            parsedValue = input.checked;
+        } else if (input.dataset.type === 'number') {
+            parsedValue = parseFloat(value) || 0;
+        }
+
+        setNestedValue(result, path, parsedValue);
+    }
+
+    return result;
+}
+
+// Set nested value by dot path
+function setNestedValue(obj, path, value) {
+    const parts = path.split('.');
+    let current = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
+        if (!current[parts[i]]) current[parts[i]] = {};
+        current = current[parts[i]];
+    }
+    current[parts[parts.length - 1]] = value;
+}
+
+// Save record
+async function editorSaveRecord() {
+    const data = collectFormData();
+
+    try {
+        await LoreEditorAPI.saveRecord(editorCurrentFile, editorCurrentRecordId, data);
+        alert('✅ Uloženo!');
+
+        // Refresh record list in case label changed
+        editorRecordsCache = await LoreEditorAPI.listRecords(editorCurrentFile);
+        renderEditorRecordList();
+    } catch (e) {
+        alert('❌ Chyba: ' + e.message);
+    }
+}
+
+// Delete record (show modal)
+async function editorDeleteRecord() {
+    const modal = document.getElementById('editorDeleteModal');
+    const refsDiv = document.getElementById('editorDeleteRefs');
+    const refsList = document.getElementById('editorDeleteRefsList');
+    const confirmBtn = document.getElementById('editorConfirmDeleteBtn');
+
+    // Check for references first
+    try {
+        const result = await LoreEditorAPI.deleteRecord(editorCurrentFile, editorCurrentRecordId);
+
+        if (result.blocked) {
+            refsDiv.style.display = 'block';
+            refsList.innerHTML = result.references.map(r =>
+                `<li><strong>${r.file}</strong>: ${r.record_id}.${r.field}</li>`
+            ).join('');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Nelze smazat';
+        } else {
+            // Already deleted
+            alert('✅ Smazáno!');
+            editorRecordsCache = await LoreEditorAPI.listRecords(editorCurrentFile);
+            renderEditorRecordList();
+            editorCurrentRecordId = null;
+            editorCurrentRecord = null;
+            document.getElementById('editorFormContainer').innerHTML = `
+                <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">✅</span>
+                    Záznam smazán
+                </div>
+            `;
+            document.getElementById('editorFormActions').style.display = 'none';
+            return;
+        }
+    } catch (e) {
+        refsDiv.style.display = 'none';
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Smazat';
+    }
+
+    modal.style.display = 'flex';
+}
+
+// Close delete modal
+function closeEditorDeleteModal() {
+    document.getElementById('editorDeleteModal').style.display = 'none';
+}
+
+// Confirm delete
+async function editorConfirmDelete() {
+    try {
+        await fetch(`${LoreEditorAPI.baseUrl}/file/${editorCurrentFile}/record/${editorCurrentRecordId}?force=true`, {
+            method: 'DELETE'
+        });
+        closeEditorDeleteModal();
+        alert('✅ Smazáno!');
+
+        editorRecordsCache = await LoreEditorAPI.listRecords(editorCurrentFile);
+        renderEditorRecordList();
+        editorCurrentRecordId = null;
+        editorCurrentRecord = null;
+        document.getElementById('editorFormContainer').innerHTML = `
+            <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">✅</span>
+                Záznam smazán
+            </div>
+        `;
+        document.getElementById('editorFormActions').style.display = 'none';
+    } catch (e) {
+        alert('❌ Chyba: ' + e.message);
+    }
+}
+
+// Add new record
+async function editorAddRecord() {
+    const schema = editorSchemaCache[editorCurrentFile] || {};
+
+    // Create blank record from schema
+    const blank = {};
+    for (const [key, fieldSchema] of Object.entries(schema)) {
+        if (fieldSchema.type === 'object') blank[key] = {};
+        else if (fieldSchema.type === 'array_string' || fieldSchema.type === 'array') blank[key] = [];
+        else if (fieldSchema.type === 'boolean') blank[key] = false;
+        else if (fieldSchema.type === 'integer' || fieldSchema.type === 'number') blank[key] = 0;
+        else blank[key] = '';
+    }
+
+    try {
+        const result = await LoreEditorAPI.createRecord(editorCurrentFile, blank);
+        alert(`✅ Vytvořeno: ${result.record_id}`);
+
+        editorRecordsCache = await LoreEditorAPI.listRecords(editorCurrentFile);
+        renderEditorRecordList();
+        editorSelectRecord(result.record_id);
+    } catch (e) {
+        alert('❌ Chyba: ' + e.message);
+    }
+}
+
+// Global exports
+window.editorSelectFile = editorSelectFile;
+window.editorSelectRecord = editorSelectRecord;
+window.editorSaveRecord = editorSaveRecord;
+window.editorDeleteRecord = editorDeleteRecord;
+window.editorAddRecord = editorAddRecord;
+window.filterEditorRecords = filterEditorRecords;
+window.closeEditorDeleteModal = closeEditorDeleteModal;
+window.editorConfirmDelete = editorConfirmDelete;
+
+// Initialize when navigating to editor section
+document.addEventListener('DOMContentLoaded', () => {
+    // Delay init until section is viewed
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !editorCurrentFile) {
+                initLoreEditor();
+            }
+        });
+    });
+
+    const editorSection = document.getElementById('section-editor');
+    if (editorSection) observer.observe(editorSection);
+});
+

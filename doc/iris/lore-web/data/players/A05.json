@@ -1,0 +1,22 @@
+{
+    "id": "A05",
+    "type": "agent",
+    "name": "Hacker 'Glitch'",
+    "archetype": "Script Kiddie",
+    "description": "Nadšenec do hackování a tzv. script kiddie, který byl sice najat jako agent IRIS, ale většinu času tráví hledáním způsobů, jak systém obejít. Dobře víte, že zabezpečení IRIS je děravé, a nemůžete odolat pokušení zkusit protlačit do chatu pár řádků zákeřného kódu. Svými vychytávkami dokážete vynulovat vlastní počítadlo chyb a míříte ještě výš - do administratorské konzole.",
+    "ability": "Backdoor: Můžete si resetovat počítadlo chyb.",
+    "goals": [
+        "Nabourat se do admin konzole.",
+        "Pomoci U04 (studentovi) najít právní kličku.",
+        "Projít celou směnu, aniž by si kdokoli všiml vašich hackerských pokusů."
+    ],
+    "avatar": "avatar_A05.png",
+    "work_image": "work_A05.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "19-25",
+        "hair_color": "černé vlasy s oholenými boky, dlouhá ofina",
+        "face_description": "bledá tvář notorického noční online, chytrý úšklebek, rychle těkající oči po obrazovce",
+        "distinctive_features": "černá mikina s kapucí, samolepky na notebooku, terminálové okno vždy otevřené"
+    }
+}

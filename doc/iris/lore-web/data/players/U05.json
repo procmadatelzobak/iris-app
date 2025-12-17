@@ -1,0 +1,22 @@
+{
+    "id": "U05",
+    "type": "user",
+    "name": "Marie Kovářová",
+    "archetype": "Osamělá důchodkyně",
+    "description": "Osamělá důchodkyně, která se do testování IRIS přihlásila spíš z nudy a potřeby si s někým popovídat. Jste přesvědčená, že si na druhém konci píšete s opravdovými lidmi - ráda agentům vyprávíte o svých vnoučatech a životě. K systému přistupujete laskavě a mateřsky - dokonce nosíte IRIS virtuální bábovku.",
+    "ability": "Babička: Agenti mají zakázáno být na vás hrubí (dostali by velkou pokutu).",
+    "goals": [
+        "Najít si kamaráda na dopisování.",
+        "Donutit AI, aby snědla virtuální bábovku.",
+        "Přimět alespoň jednoho člena personálu, aby vám pověděl něco osobního."
+    ],
+    "avatar": "avatar_U05.png",
+    "work_image": "work_U05.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "65-75",
+        "hair_color": "bílé ondulované vlasy",
+        "face_description": "laskavá babičkovská tvář, hluboké vrásky od úsměvu, teplé hnědé oči",
+        "distinctive_features": "pletený svetr, brož s kočičkou, řetízek s fotkou vnoučat"
+    }
+}

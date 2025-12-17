@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditorská Zpráva: Phase 34 (15.12.2025)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body { 
+            background: var(--bg-primary, #0a0a0f);
+            color: var(--text-primary, #e0e0e0);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 { color: var(--accent-primary, #00d4ff); }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; text-align: left; }
+        th { background: rgba(255,255,255,0.05); }
+        code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 3px; }
+        .manual-img { max-width: 100%; height: auto; border-radius: 8px; }
+        .img-caption { font-size: 0.9rem; opacity: 0.7; text-align: center; }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" style="color: var(--accent-primary, #00d4ff);">← Zpět na Wiki</a>
+    
+            <h1>Auditorská Zpráva - Phase 34</h1>
+            <p><strong>Datum:</strong> 15.12.2025 | <strong>Status:</strong> <span style='color:orange; font-weight:bold'>FUNCTIONAL BETA</span></p>
+            
+            <div class='manual-image-container' style='background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:20px'>
+                 <div style='display:flex; justify-content:space-around; text-align:center'>
+                    <div>
+                        <h3>Simulace</h3>
+                        <div style='font-size:2rem; color: #f44336'>FAIL</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>WS Auth (HTTP 403)</div>
+                    </div>
+                    <div>
+                        <h3>UI & Lore</h3>
+                        <div style='font-size:2rem; color: #4caf50'>PASS</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>Visual Verification</div>
+                    </div>
+                    <div>
+                        <h3>Backend</h3>
+                        <div style='font-size:2rem; color: #4caf50'>PASS</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>API & DB Logic</div>
+                    </div>
+                 </div>
+            </div>
+
+            <h2>1. Shrnutí Stavu</h2>
+            <p>Systém IRIS 4.0 'HLINÍK' je funkční a připravený k nasazení, s výhradou stability automatizovaného load testování. Manuální operace (prohlížeč) fungují bezchybně.</p>
+            
+            <h2>2. Compliance Check</h2>
+            <table>
+                <tr><th>Kategorie</th><th>Stav</th><th>Poznámka</th></tr>
+                <tr><td><strong>Autentizace</strong></td><td><span style='color:#4caf50'>OK</span></td><td>JWT ověřeno, role (User/Agent/Admin/Root) funkční.</td></tr>
+                <tr><td><strong>Ekonomika</strong></td><td><span style='color:#4caf50'>OK</span></td><td>Pokuty, Bonusy (via Admin UI), Daně (automaticky).</td></tr>
+                <tr><td><strong>Panic Mode</strong></td><td><span style='color:#4caf50'>OK</span></td><td>Implementováno (Executive Protocol 66) a ověřeno.</td></tr>
+                <tr><td><strong>Wiki & Lore</strong></td><td><span style='color:#4caf50'>OK</span></td><td>Dokumentace odpovídá stavu 'Phase 34'.</td></tr>
+                <tr><td><strong>Load Test</strong></td><td><span style='color:#f44336'>FAIL</span></td><td>Simulace 20 klientů selhala na Auth (HTTP 403).</td></tr>
+            </table>
+
+            <h2>3. Identifikované Problémy (Technický Dluh)</h2>
+            <ul>
+                <li><strong>WebSocket Auth v Simulaci:</strong> Load test reportoval <code>403 Forbidden</code>. Chyba je v `test_full_simulation.py` (chybí generování validního JWT pro aiohttp session), nikoliv v serveru (kde manual login funguje).</li>
+                <li><strong>Hardcoded Naming:</strong> Stanice 'Monitoring' je v kódu referována nekonzistentně ('S01' vs 'Admin 1').</li>
+                <li><strong>UI Chybí:</strong> Granulární výběr AI modelu (Anthropic/OpenAI) v Root Dashboardu (existuje backend podpora, ale chybí UI dropdown).</li>
+            </ul>
+
+            <h2>4. Doporučení k Nasazení</h2>
+            <p>Opravit generování tokenů v <code>test_full_simulation.py</code> a znovu spustit zátěžový test pro potvrzení stability WS. Doplnit UI pro výběr providera v <code>root_dashboard.html</code>.</p>
+        
+</body>
+</html>

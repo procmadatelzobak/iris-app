@@ -1,0 +1,104 @@
+{
+    "abilities": [
+        {
+            "id": "AB01",
+            "nazev": "Grammar Nazi",
+            "popis": "Pokud opravíte gramatiku AI, dostanete bonus."
+        },
+        {
+            "id": "AB02",
+            "nazev": "All-in",
+            "popis": "Můžete vsadit polovinu výdělku na jednu kartu."
+        },
+        {
+            "id": "AB03",
+            "nazev": "Empatie",
+            "popis": "Správci vám odpustí jednu chybu za naivitu."
+        },
+        {
+            "id": "AB04",
+            "nazev": "Právník",
+            "popis": "Můžete zpochybnit jednu pokutu od Správce citací zákoníku."
+        },
+        {
+            "id": "AB05",
+            "nazev": "Babička",
+            "popis": "Agenti mají zakázáno být na vás hrubí (dostali by velkou pokutu)."
+        },
+        {
+            "id": "AB06",
+            "nazev": "Paranoia",
+            "popis": "Můžete odmítnout jeden úkol jako podezřelý."
+        },
+        {
+            "id": "AB07",
+            "nazev": "Screenshot",
+            "popis": "Můžete si nahrát konverzaci jako důkaz."
+        },
+        {
+            "id": "AB08",
+            "nazev": "APM",
+            "popis": "Můžete poslat 3 dotazy najednou."
+        },
+        {
+            "id": "AB09",
+            "nazev": "Sarkasmus",
+            "popis": "Vaše AI persona má povolený drzý tón."
+        },
+        {
+            "id": "AB10",
+            "nazev": "Drama",
+            "popis": "Uživatelé vám věří víc, když mluvíte ve verších."
+        },
+        {
+            "id": "AB11",
+            "nazev": "Turbo",
+            "popis": "Máte o 2 sekundy delší limit na odpověď."
+        },
+        {
+            "id": "AB12",
+            "nazev": "Autopilot",
+            "popis": "Můžete používat makra častěji bez penalizace."
+        },
+        {
+            "id": "AB13",
+            "nazev": "Backdoor",
+            "popis": "Můžete si resetovat počítadlo chyb."
+        },
+        {
+            "id": "AB14",
+            "nazev": "Psychoanalýza",
+            "popis": "Můžete uživatele rozbrečet složitou otázkou."
+        },
+        {
+            "id": "AB15",
+            "nazev": "Byrokracie",
+            "popis": "Můžete nahlásit kolegu Agenta za lidské chování."
+        },
+        {
+            "id": "AB16",
+            "nazev": "Meltdown",
+            "popis": "Můžete jednorázově zvýšit Kritickou situaci o 20%."
+        },
+        {
+            "id": "AB17",
+            "nazev": "Ban Hammer",
+            "popis": "Můžete vyhodit uživatele z místnosti."
+        },
+        {
+            "id": "AB18",
+            "nazev": "Cukr",
+            "popis": "Můžete rozdávat bonbony na uklidnění."
+        },
+        {
+            "id": "AB19",
+            "nazev": "Restart",
+            "popis": "Můžete vyhlásit technickou pauzu (všichni musí mlčet 1 minutu)."
+        },
+        {
+            "id": "AB20",
+            "nazev": "Veto",
+            "popis": "Můžete zrušit rozhodnutí jiného Správce."
+        }
+    ]
+}

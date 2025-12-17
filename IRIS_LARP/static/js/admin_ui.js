@@ -761,7 +761,7 @@ window.setStatus = async function (userId, status) {
     } catch (e) { console.error(e); }
 };
 
-// --- TASKS ---
+// --- TASKS (LCARS VOYAGER STYLE) ---
 window.refreshTasks = async function () {
     if (window.currentView !== 'tasks') return;
     try {
@@ -785,65 +785,74 @@ window.refreshTasks = async function () {
 
         tasks.forEach(t => {
             const el = document.createElement('div');
-            el.className = "bg-gray-900 border border-gray-700 p-3 text-sm space-y-2";
 
-            const rewardInfo = t.reward !== undefined && t.reward !== null ? `<span class="text-yellow-400 text-xs">Odměna: ${t.reward} CR</span>` : '';
-            const promptInfo = t.prompt ? `<div class="text-gray-300 italic">„${t.prompt}“</div>` : '<div class="text-gray-600 italic">(bez popisu)</div>';
+            const rewardInfo = t.reward !== undefined && t.reward !== null
+                ? `<span class="lcars-reward">${t.reward} CR</span>`
+                : '';
+            const promptInfo = t.prompt
+                ? `<div class="lcars-task-prompt">„${t.prompt}"</div>`
+                : '<div class="lcars-task-prompt" style="opacity: 0.5;">(bez popisu)</div>';
 
             if (t.status === 'pending_approval') {
+                el.className = "lcars-task-card lcars-task-pending";
                 el.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-blue-400 font-bold">ŽÁDOST #${t.id} (Uživatel ${t.user_id})</div>
-                            ${promptInfo}
-                        </div>
+                    <div class="lcars-task-id">ŽÁDOST #${t.id} • UŽIVATEL ${t.user_id}</div>
+                    ${promptInfo}
+                    <div class="lcars-task-meta">
                         ${rewardInfo}
                     </div>
-                    <div class="mt-2 grid grid-cols-2 gap-2">
+                    <div style="margin-top: 0.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
                         <div>
-                            <label class="text-xs text-gray-500">Odměna</label>
-                            <input type="number" value="${t.reward || ''}" placeholder="${t.reward || 0}" class="w-full bg-black text-white p-1" id="rew-${t.id}">
+                            <label style="font-size: 0.65rem; color: var(--lcars-paleblue); display: block; margin-bottom: 0.25rem;">ODMĚNA</label>
+                            <input type="number" value="${t.reward || ''}" placeholder="${t.reward || 0}" class="lcars-input" id="rew-${t.id}">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-500">Zadání pro uživatele</label>
-                            <textarea rows="2" class="w-full bg-black text-white p-1" id="prompt-${t.id}">${t.prompt || ''}</textarea>
+                            <label style="font-size: 0.65rem; color: var(--lcars-paleblue); display: block; margin-bottom: 0.25rem;">ZADÁNÍ</label>
+                            <textarea rows="2" class="lcars-textarea" id="prompt-${t.id}">${t.prompt || ''}</textarea>
                         </div>
                     </div>
-                    <div class="mt-2 flex gap-2 justify-end">
-                        <button class="btn-action text-green-500" onclick="approveTask(${t.id})">SCHVÁLIT</button>
+                    <div style="margin-top: 0.75rem; display: flex; justify-content: flex-end;">
+                        <button class="lcars-btn lcars-btn-approve" onclick="approveTask(${t.id})">SCHVÁLIT</button>
                     </div>
                 `;
                 if (pendingDiv) pendingDiv.appendChild(el);
             } else if (t.status === 'active') {
+                el.className = "lcars-task-card lcars-task-active";
                 el.innerHTML = `
-                    <div class="text-yellow-400 font-bold">AKTIVNÍ #${t.id} (Uživatel ${t.user_id})</div>
+                    <div class="lcars-task-id">AKTIVNÍ #${t.id} • UŽIVATEL ${t.user_id}</div>
                     ${promptInfo}
-                    ${rewardInfo}
-                    <div class="text-xs text-gray-500">Čeká na odevzdání uživatele.</div>
+                    <div class="lcars-task-meta">
+                        ${rewardInfo}
+                        <span style="font-size: 0.65rem; color: var(--lcars-paleblue);">ČEKÁ NA ODEVZDÁNÍ</span>
+                    </div>
                 `;
                 if (activeDiv) activeDiv.appendChild(el);
             } else if (t.status === 'submitted') {
-                el.className = "bg-gray-900 border border-green-700 p-3 text-sm space-y-2 cursor-pointer hover:bg-gray-800 transition";
+                el.className = "lcars-task-card lcars-task-submitted";
                 el.onclick = () => openGradingModal(t);
 
                 el.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-green-400 font-bold">ODEVZDÁNO #${t.id} (Uživatel ${t.user_id})</div>
-                            ${rewardInfo}
-                        </div>
-                        <span class="text-xs text-green-500 animate-pulse">🔍 KLIKNI PRO HODNOCENÍ</span>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="lcars-task-id">ODEVZDÁNO #${t.id} • UŽIVATEL ${t.user_id}</div>
+                        <span class="lcars-click-hint">🔍 HODNOTIT</span>
                     </div>
                     ${promptInfo}
-                    <div class="text-white border-l-2 border-gray-500 pl-2 my-1 whitespace-pre-wrap line-clamp-3">${(t.submission || '(prázdné)').substring(0, 100)}${t.submission && t.submission.length > 100 ? '...' : ''}</div>
+                    <div class="lcars-task-submission">${(t.submission || '(prázdné)').substring(0, 150)}${t.submission && t.submission.length > 150 ? '...' : ''}</div>
+                    <div class="lcars-task-meta">
+                        ${rewardInfo}
+                    </div>
                 `;
                 if (submitDiv) submitDiv.appendChild(el);
             } else if (t.status === 'paid') {
+                el.className = "lcars-task-card lcars-task-paid";
                 el.innerHTML = `
-                    <div class="text-gray-300 font-bold">HOTOVO #${t.id} (Uživatel ${t.user_id})</div>
+                    <div class="lcars-task-id">HOTOVO #${t.id} • UŽIVATEL ${t.user_id}</div>
                     ${promptInfo}
-                    ${t.submission ? `<div class="text-white border-l-2 border-gray-700 pl-2">${t.submission}</div>` : ''}
-                    <div class="text-xs text-gray-400">Hodnocení: ${t.rating || 0}% | Nabídka: ${t.reward || 0} CR</div>
+                    ${t.submission ? `<div class="lcars-task-submission">${t.submission}</div>` : ''}
+                    <div class="lcars-task-meta">
+                        <span style="font-size: 0.7rem; color: var(--lcars-skyblue);">HODNOCENÍ: ${t.rating || 0}%</span>
+                        ${rewardInfo}
+                    </div>
                 `;
                 if (paidDiv) paidDiv.appendChild(el);
             }
@@ -1106,7 +1115,26 @@ function handleMessage(data) {
     }
 
     if (data.type === 'init') {
-        renderMonitor(data.active_sessions);
+        // Parse Initial State
+        if (data.shift !== undefined) {
+            currentShift = data.shift;
+            document.querySelectorAll('#monitorShift, #controlShift').forEach(el => el.innerText = data.shift);
+        }
+
+        if (data.online) {
+            onlineUsernames.clear();
+            // userX IDs
+            if (data.online.users) {
+                data.online.users.forEach(id => onlineUsernames.add(`user${id}`));
+            }
+            // agentX IDs
+            if (data.online.agents) {
+                data.online.agents.forEach(id => onlineUsernames.add(`agent${id}`));
+            }
+        }
+
+        updateUI();
+        // renderMonitor(data.active_sessions); // Deprecated
     } else if (data.type === 'gamestate_update') {
         if (data.chernobyl_mode !== undefined) {
             updateModeUI(data.chernobyl_mode);

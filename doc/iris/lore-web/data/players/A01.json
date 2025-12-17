@@ -1,0 +1,22 @@
+{
+    "id": "A01",
+    "type": "agent",
+    "name": "Petr Svoboda",
+    "archetype": "Cynický Student",
+    "description": "Kysele naladěný vysokoškolák, který vzal práci agenta IRIS jen z finanční nutnosti a ve skutečnosti ji nesnáší. Systém IRIS vám připadá jako fraška a s uživateli jednáte odměřeně až sarkasticky. Situaci navíc komplikuje fakt, že jednou z testerek je vaše bývalá učitelka Jana (U01) - jakmile jste ji poznal, nejradši byste hanbou utekl.",
+    "ability": "Sarkasmus: Vaše AI persona má povolený drzý tón.",
+    "goals": [
+        "Nechat se vyhodit, ale až po výplatě.",
+        "Ochránit U01 před trapasem.",
+        "Připravit si tak ostrou sarkastickou odpověď, že za ni dostanete okamžitý vyhazov - ideálně těsně po výplatě."
+    ],
+    "avatar": "avatar_A01.png",
+    "work_image": "work_A01.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "20-25",
+        "hair_color": "neupravené hnědé vlasy",
+        "face_description": "znuděný, otráveně vypadající mladík, ironicky pozvednuté obočí, cynický úsměšek",
+        "distinctive_features": "pomačkané tričko s vtipným nápisem, sluchátka na krku, gelové oči od nedostatku spánku"
+    }
+}

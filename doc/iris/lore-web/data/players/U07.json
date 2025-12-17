@@ -1,0 +1,21 @@
+{
+    "id": "U07",
+    "type": "user",
+    "name": "Petra 'Scoop' Černá",
+    "archetype": "Investigativní novinářka",
+    "description": "Zkušená investigativní novinářka, která se infiltrovala do testování pod falešnou identitou, aby odhalila pravdu o projektu HLINÍK. Před ostatními se vydáváte za obyčejnou uchazečku o práci, ale potají si vedete pečlivé poznámky a shromažďujete důkazy o každém podezřelém detailu. Tušíte, že údajná AI možná není tím, za co se vydává.",
+    "ability": "Screenshot: Můžete si nahrát konverzaci jako důkaz.",
+    "goals": [
+        "Získat přiznání od zaměstnance.",
+        "Vynést informace ven.",
+        "Udržet svou pravou identitu novinářky v tajnosti po celou dobu testu."
+    ],
+    "avatar": "avatar_U07.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "30-40",
+        "hair_color": "praktický tmavý bob",
+        "face_description": "ostražitá, inteligentní tvář, pronikavé zelené oči, napůl skrytý úsměv",
+        "distinctive_features": "nenápadné oblečení, diktafon ukrytý v kapse, reporter blok v tašce"
+    }
+}

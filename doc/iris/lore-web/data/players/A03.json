@@ -1,0 +1,22 @@
+{
+    "id": "A03",
+    "type": "agent",
+    "name": "Igor 'Viper' Ruský",
+    "archetype": "Kompetitivní Hráč",
+    "description": "Soutěživý technik, který roli agenta IRIS bere jako závod v rychlosti odbavování dotazů. Každou uživatelskou otázku chcete zodpovědět dřív, než se k ní dostanou kolegové - pomalí agenti jako A04 vám lezou na nervy. Stopujete si reakční časy, vylepšujete makra a nic vás nepotěší víc, než mít na konci směny nejvíc vyřízených ticketů.",
+    "ability": "Turbo: Máte o 2 sekundy delší limit na odpověď.",
+    "goals": [
+        "Mít nejvíce odbavených ticketů.",
+        "Porazit U08 (Gamera) v jeho vlastní hře.",
+        "Předvést se před nadřízenými jako nejlepší agent směny - rekordní rychlost, žádné chyby."
+    ],
+    "avatar": "avatar_A03.png",
+    "work_image": "work_A03.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "28-35",
+        "hair_color": "krátce střižené světlé vlasy, vojenský střih",
+        "face_description": "soustředěná, soutěživá tvář, ostré rysy, přísný pohled",
+        "distinctive_features": "sportovní hodinky se stopkami, ergonomická klávesnice, energy drinky na stole"
+    }
+}

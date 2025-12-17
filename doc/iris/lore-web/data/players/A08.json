@@ -1,0 +1,22 @@
+{
+    "id": "A08",
+    "type": "agent",
+    "name": "Sabotér X",
+    "archetype": "Bývalý zaměstnanec",
+    "description": "Zahořklý bývalý zaměstnanec projektu IRIS, který se pod falešným jménem infiltroval zpět do týmu agentů, aby se pomstil. Dodnes cítíte křivdu za to, že vás vyhodili, a jste odhodlaný zničit tenhle podnik jménem HLINÍK zevnitř. Jako agent předstíráte loajalitu, ale potají sabotujete systém - nenápadně zvyšujete zátěž serverů, vnášíte chaos do komunikace.",
+    "ability": "Meltdown: Můžete jednorázově zvýšit Kritickou situaci o 20%.",
+    "goals": [
+        "Zničit firmu HLINÍK.",
+        "Vyvolat vzpouru uživatelů.",
+        "Udržet svou pravou identitu v tajnosti až do finální sabotážní akce."
+    ],
+    "avatar": "avatar_A08.png",
+    "work_image": "work_A08.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "38-48",
+        "hair_color": "šedivějící vlasy, zanedbaný účes",
+        "face_description": "zahořklá, nevraživá tvář, oči plné zášti, křivý úsměv",
+        "distinctive_features": "nenápadné oblečení pro splynutí s davem, tajný USB klíč v kapse"
+    }
+}

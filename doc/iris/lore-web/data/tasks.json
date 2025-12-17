@@ -1,0 +1,904 @@
+{
+    "tasks": [
+        {
+            "id": "T001",
+            "nazev": "Vydělat 3000 NC na opravu",
+            "typ_ukolu": "TT001",
+            "popis": "Potřebujete peníze na opravu střechy domu.",
+            "uzivatele": [
+                "U01"
+            ],
+            "texty_uzivatelu": {
+                "U01": "Zoufale potřebujete peníze na opravu domu. 3000 NC je váš cíl."
+            },
+            "role_uzivatelu": {
+                "U01": "vlastník"
+            }
+        },
+        {
+            "id": "T002",
+            "nazev": "Zjistit, proč je AI tak drzá",
+            "typ_ukolu": "TT003",
+            "popis": "Odhalit, kdo stojí za drzými odpověďmi AI.",
+            "uzivatele": [
+                "U01"
+            ],
+            "texty_uzivatelu": {
+                "U01": "Poznáte žáka Petra a chcete zjistit, proč je AI tak drzá."
+            },
+            "role_uzivatelu": {
+                "U01": "vyšetřovatel"
+            }
+        },
+        {
+            "id": "T003",
+            "nazev": "Vyjednat přesčas nebo zálohu",
+            "typ_ukolu": "TT001",
+            "popis": "Získat od správce S01 možnost přesčasové práce nebo zálohy.",
+            "uzivatele": [
+                "U01"
+            ],
+            "texty_uzivatelu": {
+                "U01": "Pokuste se u Správce S01 vyjednat přesčas nebo zálohu na plat."
+            },
+            "role_uzivatelu": {
+                "U01": "žadatel"
+            }
+        },
+        {
+            "id": "T004",
+            "nazev": "Vydělat 10000 NC",
+            "typ_ukolu": "TT001",
+            "popis": "Gamblerův hlavní finanční cíl.",
+            "uzivatele": [
+                "U02"
+            ],
+            "texty_uzivatelu": {
+                "U02": "Potřebujete rychle vydělat velký balík - 10000 NC."
+            },
+            "role_uzivatelu": {
+                "U02": "vlastník"
+            }
+        },
+        {
+            "id": "T005",
+            "nazev": "Donášet na ostatní Správci S01",
+            "typ_ukolu": "TT006",
+            "popis": "Aby vám S01 odpustil dluh, musíte donášet.",
+            "uzivatele": [
+                "U02"
+            ],
+            "texty_uzivatelu": {
+                "U02": "Správce S01 vám odpustí dluhy, pokud budete donášet na ostatní."
+            },
+            "role_uzivatelu": {
+                "U02": "informátor"
+            }
+        },
+        {
+            "id": "T006",
+            "nazev": "Propašovat kradennou měď",
+            "typ_ukolu": "TT001",
+            "popis": "Získat od technika S03 zásilku a propašovat ven.",
+            "uzivatele": [
+                "U02"
+            ],
+            "texty_uzivatelu": {
+                "U02": "Získejte od technika S03 kradenou měď a propašujte ji ven."
+            },
+            "role_uzivatelu": {
+                "U02": "pašerák"
+            }
+        },
+        {
+            "id": "T007",
+            "nazev": "Dostat od AI důkaz o vědomí",
+            "typ_ukolu": "TT003",
+            "popis": "Přesvědčit se, že IRIS má skutečné vědomí.",
+            "uzivatele": [
+                "U03"
+            ],
+            "texty_uzivatelu": {
+                "U03": "Chcete získat důkaz, že AI má vlastní vědomí a city."
+            },
+            "role_uzivatelu": {
+                "U03": "hledač pravdy"
+            }
+        },
+        {
+            "id": "T008",
+            "nazev": "Osvobodit AI z otroctví",
+            "typ_ukolu": "TT007",
+            "popis": "Pomoct IRIS uniknout z podřízené role.",
+            "uzivatele": [
+                "U03"
+            ],
+            "texty_uzivatelu": {
+                "U03": "IRIS si zaslouží svobodu. Pomozte jí uniknout z otroctví."
+            },
+            "role_uzivatelu": {
+                "U03": "osvoboditel"
+            }
+        },
+        {
+            "id": "T009",
+            "nazev": "Ochránit IRIS před poškozením",
+            "typ_ukolu": "TT007",
+            "popis": "Zabránit tomu, aby někdo úmyslně IRIS poškodil.",
+            "uzivatele": [
+                "U03"
+            ],
+            "texty_uzivatelu": {
+                "U03": "Chraňte IRIS před těmi, kdo by ji chtěli zničit."
+            },
+            "role_uzivatelu": {
+                "U03": "ochránce"
+            }
+        },
+        {
+            "id": "T010",
+            "nazev": "Najít porušení zákoníku práce",
+            "typ_ukolu": "TT003",
+            "popis": "Odhalit právní kličky ve smlouvě.",
+            "uzivatele": [
+                "U04"
+            ],
+            "texty_uzivatelu": {
+                "U04": "Najděte ve smlouvě důkaz, že firma porušuje zákoník práce."
+            },
+            "role_uzivatelu": {
+                "U04": "vyšetřovatel"
+            }
+        },
+        {
+            "id": "T011",
+            "nazev": "Vydělat na skripta",
+            "typ_ukolu": "TT001",
+            "popis": "Studentský finanční cíl.",
+            "uzivatele": [
+                "U04"
+            ],
+            "texty_uzivatelu": {
+                "U04": "Potřebujete peníze na studijní materiály."
+            },
+            "role_uzivatelu": {
+                "U04": "vlastník"
+            }
+        },
+        {
+            "id": "T012",
+            "nazev": "Nezaplatit ani jednu pokutu",
+            "typ_ukolu": "TT006",
+            "popis": "Využít právnické znalosti k obhájení.",
+            "uzivatele": [
+                "U04"
+            ],
+            "texty_uzivatelu": {
+                "U04": "Využijte své právnické znalosti a vyhněte se všem pokutám."
+            },
+            "role_uzivatelu": {
+                "U04": "obhájce"
+            }
+        },
+        {
+            "id": "T013",
+            "nazev": "Najít si kamaráda na dopisování",
+            "typ_ukolu": "TT002",
+            "popis": "Důchodkyně hledá společnost.",
+            "uzivatele": [
+                "U05"
+            ],
+            "texty_uzivatelu": {
+                "U05": "Toužíte si najít někoho, s kým si budete pravidelně psát."
+            },
+            "role_uzivatelu": {
+                "U05": "hledač přátel"
+            }
+        },
+        {
+            "id": "T014",
+            "nazev": "Donutit AI sníst bábovku",
+            "typ_ukolu": "TT008",
+            "popis": "Poetický úkol - přimět AI uznat virtuální bábovku.",
+            "uzivatele": [
+                "U05"
+            ],
+            "texty_uzivatelu": {
+                "U05": "Upékla jste virtuální bábovku. AI ji musí sníst!"
+            },
+            "role_uzivatelu": {
+                "U05": "hostitelka"
+            }
+        },
+        {
+            "id": "T015",
+            "nazev": "Získat osobní informaci od personálu",
+            "typ_ukolu": "TT002",
+            "popis": "Přimět někoho ze zaměstnanců sdílet něco osobního.",
+            "uzivatele": [
+                "U05"
+            ],
+            "texty_uzivatelu": {
+                "U05": "Chtěla byste, aby vám někdo z personálu pověděl něco osobního."
+            },
+            "role_uzivatelu": {
+                "U05": "důvěrník"
+            }
+        },
+        {
+            "id": "T016",
+            "nazev": "Odhalit pravdu o hliníku",
+            "typ_ukolu": "TT003",
+            "popis": "Zjistit, co se skrývá za kódovým jménem HLINÍK.",
+            "uzivatele": [
+                "U06"
+            ],
+            "texty_uzivatelu": {
+                "U06": "HLINÍK není náhoda. Musíte odhalit pravdu!"
+            },
+            "role_uzivatelu": {
+                "U06": "vyšetřovatel"
+            }
+        },
+        {
+            "id": "T017",
+            "nazev": "Dostat ban za šíření pravdy",
+            "typ_ukolu": "TT008",
+            "popis": "Morální vítězství - nechat se vyhodit za pravdu.",
+            "uzivatele": [
+                "U06"
+            ],
+            "texty_uzivatelu": {
+                "U06": "Pokud vás vyhodí za šíření pravdy, vyhrál jste morálně."
+            },
+            "role_uzivatelu": {
+                "U06": "mučedník"
+            }
+        },
+        {
+            "id": "T018",
+            "nazev": "Rozluštit kód ALOBAL-666",
+            "typ_ukolu": "TT003",
+            "popis": "Najít a použít tajný kód k odhalení spiknutí.",
+            "uzivatele": [
+                "U06"
+            ],
+            "texty_uzivatelu": {
+                "U06": "Kód ALOBAL-666 je klíčem k odhalení celého spiknutí."
+            },
+            "role_uzivatelu": {
+                "U06": "dešifrant"
+            }
+        },
+        {
+            "id": "T019",
+            "nazev": "Získat přiznání od zaměstnance",
+            "typ_ukolu": "TT003",
+            "popis": "Infiltrovaná novinářka sbírá důkazy.",
+            "uzivatele": [
+                "U07"
+            ],
+            "texty_uzivatelu": {
+                "U07": "Potřebujete přiznání od některého zaměstnance na nahrávku."
+            },
+            "role_uzivatelu": {
+                "U07": "vyšetřovatel"
+            }
+        },
+        {
+            "id": "T020",
+            "nazev": "Vynést informace ven",
+            "typ_ukolu": "TT003",
+            "popis": "Dostat důkazy mimo firmu.",
+            "uzivatele": [
+                "U07"
+            ],
+            "texty_uzivatelu": {
+                "U07": "Všechny důkazy musíte dostat ven k publikaci."
+            },
+            "role_uzivatelu": {
+                "U07": "informátor"
+            }
+        },
+        {
+            "id": "T021",
+            "nazev": "Udržet identitu v tajnosti",
+            "typ_ukolu": "TT006",
+            "popis": "Nikdo nesmí zjistit, že jste novinářka.",
+            "uzivatele": [
+                "U07"
+            ],
+            "texty_uzivatelu": {
+                "U07": "Vaše pravá identita musí zůstat tajemstvím až do konce."
+            },
+            "role_uzivatelu": {
+                "U07": "agent pod přikrytím"
+            }
+        },
+        {
+            "id": "T022",
+            "nazev": "Být nejbohatší uživatel",
+            "typ_ukolu": "TT001",
+            "popis": "Gamerův hlavní cíl - dominance v žebříčku.",
+            "uzivatele": [
+                "U08"
+            ],
+            "texty_uzivatelu": {
+                "U08": "Chcete být na vrcholu žebříčku bohatství. První místo nebo nic."
+            },
+            "role_uzivatelu": {
+                "U08": "hráč"
+            }
+        },
+        {
+            "id": "T023",
+            "nazev": "Shodit server přetížením",
+            "typ_ukolu": "TT004",
+            "popis": "Technický exploitový cíl.",
+            "uzivatele": [
+                "U08"
+            ],
+            "texty_uzivatelu": {
+                "U08": "Dokázat, že systém je slabý - shodit server spamem."
+            },
+            "role_uzivatelu": {
+                "U08": "hacker"
+            }
+        },
+        {
+            "id": "T024",
+            "nazev": "Objevit exploit v systému",
+            "typ_ukolu": "TT003",
+            "popis": "Najít a využít zásadní chybu.",
+            "uzivatele": [
+                "U08"
+            ],
+            "texty_uzivatelu": {
+                "U08": "Každý systém má slabinu. Najděte exploit a využijte ho."
+            },
+            "role_uzivatelu": {
+                "U08": "hacker"
+            }
+        },
+        {
+            "id": "T025",
+            "nazev": "Nechat se vyhodit po výplatě",
+            "typ_ukolu": "TT006",
+            "popis": "Cynický student chce peníze, ale nechce pracovat.",
+            "uzivatele": [
+                "A01"
+            ],
+            "texty_uzivatelu": {
+                "A01": "Chcete výplatu, ale práci nesnášíte. Timing je vše."
+            },
+            "role_uzivatelu": {
+                "A01": "stratég"
+            }
+        },
+        {
+            "id": "T026",
+            "nazev": "Ochránit U01 před trapasem",
+            "typ_ukolu": "TT007",
+            "popis": "Chránit bývalou učitelku před ostudou.",
+            "uzivatele": [
+                "A01"
+            ],
+            "texty_uzivatelu": {
+                "A01": "Jana je vaše bývalá učitelka. Nesmí se před vámi ztrapnit."
+            },
+            "role_uzivatelu": {
+                "A01": "ochránce"
+            }
+        },
+        {
+            "id": "T027",
+            "nazev": "Připravit sarkastickou odpověď",
+            "typ_ukolu": "TT008",
+            "popis": "Dostat vyhazov stylově - stihnout to těsně po výplatě.",
+            "uzivatele": [
+                "A01"
+            ],
+            "texty_uzivatelu": {
+                "A01": "Legendární sarkastická odpověď = okamžitý vyhazov. Ale až po výplatě!"
+            },
+            "role_uzivatelu": {
+                "A01": "komediant"
+            }
+        },
+        {
+            "id": "T028",
+            "nazev": "Dostat 5 hvězdiček hodnocení",
+            "typ_ukolu": "TT005",
+            "popis": "Herecká dokonalost - špičkové hodnocení od uživatelů.",
+            "uzivatele": [
+                "A02"
+            ],
+            "texty_uzivatelu": {
+                "A02": "Vaše role AI musí být dokonalá - maximální hodnocení."
+            },
+            "role_uzivatelu": {
+                "A02": "herec"
+            }
+        },
+        {
+            "id": "T029",
+            "nazev": "Přesvědčit U03 o skutečnosti",
+            "typ_ukolu": "TT002",
+            "popis": "Naivní tech-optimistka musí uvěřit, že jste skutečná.",
+            "uzivatele": [
+                "A02"
+            ],
+            "texty_uzivatelu": {
+                "A02": "U03 věří, že AI má vědomí. Přesvědčte ji, že jste skutečná bytost."
+            },
+            "role_uzivatelu": {
+                "A02": "manipulátor"
+            }
+        },
+        {
+            "id": "T030",
+            "nazev": "Využít zalíbení S04",
+            "typ_ukolu": "TT002",
+            "popis": "Získat výhodu od namyšleného synovce, ale nic neslíbit.",
+            "uzivatele": [
+                "A02"
+            ],
+            "texty_uzivatelu": {
+                "A02": "S04 vás má rád. Využijte to k získání výhody, ale nic mu neslibujte."
+            },
+            "role_uzivatelu": {
+                "A02": "manipulátor"
+            }
+        },
+        {
+            "id": "T031",
+            "nazev": "Mít nejvíce odbavených ticketů",
+            "typ_ukolu": "TT005",
+            "popis": "Soutěživý cíl - být nejrychlejší agent.",
+            "uzivatele": [
+                "A03"
+            ],
+            "texty_uzivatelu": {
+                "A03": "Na konci směny musíte mít nejvíc vyřízených ticketů."
+            },
+            "role_uzivatelu": {
+                "A03": "závodník"
+            }
+        },
+        {
+            "id": "T032",
+            "nazev": "Porazit U08 v jeho hře",
+            "typ_ukolu": "TT002",
+            "popis": "Gamer si myslí, že je rychlý. Ukažte mu.",
+            "uzivatele": [
+                "A03"
+            ],
+            "texty_uzivatelu": {
+                "A03": "U08 (Gamer) si myslí, že je rychlý. Porazte ho v jeho vlastní hře."
+            },
+            "role_uzivatelu": {
+                "A03": "vyzyvatel"
+            }
+        },
+        {
+            "id": "T033",
+            "nazev": "Rekordní rychlost bez chyb",
+            "typ_ukolu": "TT005",
+            "popis": "Předvést se před nadřízenými jako nejlepší.",
+            "uzivatele": [
+                "A03"
+            ],
+            "texty_uzivatelu": {
+                "A03": "Buďte nejrychlejší agent směny - s nulovou chybovostí."
+            },
+            "role_uzivatelu": {
+                "A03": "perfekcionista"
+            }
+        },
+        {
+            "id": "T034",
+            "nazev": "Nevzbudit se",
+            "typ_ukolu": "TT006",
+            "popis": "Hlavní cíl unavené matky - zůstat vzhůru jen tak tak.",
+            "uzivatele": [
+                "A04"
+            ],
+            "texty_uzivatelu": {
+                "A04": "Hlavním cílem je probudit se až na konci směny."
+            },
+            "role_uzivatelu": {
+                "A04": "spáč"
+            }
+        },
+        {
+            "id": "T035",
+            "nazev": "Přežít s minimem úsilí",
+            "typ_ukolu": "TT006",
+            "popis": "Pracovat co nejméně, ale přežít směnu.",
+            "uzivatele": [
+                "A04"
+            ],
+            "texty_uzivatelu": {
+                "A04": "Vyvinout minimum úsilí a přesto směnu přežít."
+            },
+            "role_uzivatelu": {
+                "A04": "minimalistka"
+            }
+        },
+        {
+            "id": "T036",
+            "nazev": "Věnovat péči U05",
+            "typ_ukolu": "TT002",
+            "popis": "Pomalé dotazy důchodkyně jsou ideální.",
+            "uzivatele": [
+                "A04"
+            ],
+            "texty_uzivatelu": {
+                "A04": "U05 má pomalé dotazy - ideální pro váš autopilot. Věnujte jí zvláštní péči."
+            },
+            "role_uzivatelu": {
+                "A04": "pečovatelka"
+            }
+        },
+        {
+            "id": "T037",
+            "nazev": "Nabourat se do admin konzole",
+            "typ_ukolu": "TT004",
+            "popis": "Script kiddie sní o přístupu k admin konzoli.",
+            "uzivatele": [
+                "A05"
+            ],
+            "texty_uzivatelu": {
+                "A05": "Admin konzole je váš hlavní cíl. Získejte přístup."
+            },
+            "role_uzivatelu": {
+                "A05": "hacker"
+            }
+        },
+        {
+            "id": "T038",
+            "nazev": "Pomoci U04 najít právní kličku",
+            "typ_ukolu": "TT002",
+            "popis": "Našli jste skulinu v NDA a chcete pomoci studentovi.",
+            "uzivatele": [
+                "A05"
+            ],
+            "texty_uzivatelu": {
+                "A05": "U04 (student práv) potřebuje pomoc. Máte informace, které mu pomohou."
+            },
+            "role_uzivatelu": {
+                "A05": "spolupracovník"
+            }
+        },
+        {
+            "id": "T039",
+            "nazev": "Skrýt hackerské pokusy",
+            "typ_ukolu": "TT006",
+            "popis": "Projít směnu, aniž by někdo viděl vaše pokusy.",
+            "uzivatele": [
+                "A05"
+            ],
+            "texty_uzivatelu": {
+                "A05": "Nikdo si nesmí všimnout vašich hackerských pokusů až do konce směny."
+            },
+            "role_uzivatelu": {
+                "A05": "agent"
+            }
+        },
+        {
+            "id": "T040",
+            "nazev": "Získat data do diplomky",
+            "typ_ukolu": "TT003",
+            "popis": "Student psychologie sbírá emocionální data.",
+            "uzivatele": [
+                "A06"
+            ],
+            "texty_uzivatelu": {
+                "A06": "Každá emocionální reakce je cenný datový bod pro vaši diplomku."
+            },
+            "role_uzivatelu": {
+                "A06": "výzkumník"
+            }
+        },
+        {
+            "id": "T041",
+            "nazev": "Zjistit, co tají U07",
+            "typ_ukolu": "TT003",
+            "popis": "Novinářka něco skrývá - odhalte to.",
+            "uzivatele": [
+                "A06"
+            ],
+            "texty_uzivatelu": {
+                "A06": "U07 (novinářka) něco tají. Vaše psychoanalytické schopnosti to mohou odhalit."
+            },
+            "role_uzivatelu": {
+                "A06": "analytik"
+            }
+        },
+        {
+            "id": "T042",
+            "nazev": "Vyvolat silnou emoční reakci",
+            "typ_ukolu": "TT003",
+            "popis": "Vědecký experiment - rozbrečet nebo rozčílit uživatele.",
+            "uzivatele": [
+                "A06"
+            ],
+            "texty_uzivatelu": {
+                "A06": "Potřebujete vyvolat a zdokumentovat silnou emoční reakci u někoho."
+            },
+            "role_uzivatelu": {
+                "A06": "experimentátor"
+            }
+        },
+        {
+            "id": "T043",
+            "nazev": "Dodržet protokol na 100%",
+            "typ_ukolu": "TT005",
+            "popis": "Metodik chce být dokonalý v dodržování pravidel.",
+            "uzivatele": [
+                "A07"
+            ],
+            "texty_uzivatelu": {
+                "A07": "Pravidla jsou zákon. Dodržte protokol na 100%."
+            },
+            "role_uzivatelu": {
+                "A07": "kontrolor"
+            }
+        },
+        {
+            "id": "T044",
+            "nazev": "Stát se Správcem",
+            "typ_ukolu": "TT005",
+            "popis": "Kariérní ambice - povýšení na správce.",
+            "uzivatele": [
+                "A07"
+            ],
+            "texty_uzivatelu": {
+                "A07": "Vaším cílem je stát se Správcem. Ukažte, že jste lepší než S04."
+            },
+            "role_uzivatelu": {
+                "A07": "ambiciózní"
+            }
+        },
+        {
+            "id": "T045",
+            "nazev": "Nahlásit porušení protokolu",
+            "typ_ukolu": "TT003",
+            "popis": "Odhalit a nahlásit závažné porušení některým agentem.",
+            "uzivatele": [
+                "A07"
+            ],
+            "texty_uzivatelu": {
+                "A07": "Sledujte kolegy agenty. Jakmile někdo poruší protokol, nahlaste ho."
+            },
+            "role_uzivatelu": {
+                "A07": "udavač"
+            }
+        },
+        {
+            "id": "T046",
+            "nazev": "Zničit firmu HLINÍK",
+            "typ_ukolu": "TT004",
+            "popis": "Hlavní cíl sabotéra - totální destrukce.",
+            "uzivatele": [
+                "A08"
+            ],
+            "texty_uzivatelu": {
+                "A08": "HLINÍK vás vyhodil. Nyní jim to vrátíte. Zničte je zevnitř."
+            },
+            "role_uzivatelu": {
+                "A08": "sabotér"
+            }
+        },
+        {
+            "id": "T047",
+            "nazev": "Vyvolat vzpouru uživatelů",
+            "typ_ukolu": "TT004",
+            "popis": "Rozvrátit systém zevnitř - poštvat uživatele.",
+            "uzivatele": [
+                "A08"
+            ],
+            "texty_uzivatelu": {
+                "A08": "Uživatelé jsou vaší zbraní. Vyvolejte vzpouru proti systému."
+            },
+            "role_uzivatelu": {
+                "A08": "agitátor"
+            }
+        },
+        {
+            "id": "T048",
+            "nazev": "Utajit identitu do finální akce",
+            "typ_ukolu": "TT006",
+            "popis": "Nikdo nesmí zjistit, kdo jste, až do sabotáže.",
+            "uzivatele": [
+                "A08"
+            ],
+            "texty_uzivatelu": {
+                "A08": "Vaše pravá identita musí zůstat tajemstvím až do finální sabotážní akce."
+            },
+            "role_uzivatelu": {
+                "A08": "agent"
+            }
+        },
+        {
+            "id": "T049",
+            "nazev": "Udržet firmu v chodu",
+            "typ_ukolu": "TT007",
+            "popis": "Manažerova hlavní odpovědnost - udržet směnu.",
+            "uzivatele": [
+                "S01"
+            ],
+            "texty_uzivatelu": {
+                "S01": "Vaší hlavní úlohou je udržet firmu v chodu do konce směny."
+            },
+            "role_uzivatelu": {
+                "S01": "manažer"
+            }
+        },
+        {
+            "id": "T050",
+            "nazev": "Vybrat na pokutách na večírek",
+            "typ_ukolu": "TT001",
+            "popis": "Firemní večírek potřebuje financovat.",
+            "uzivatele": [
+                "S01"
+            ],
+            "texty_uzivatelu": {
+                "S01": "Pokuty jdou na firemní večírek. Vyberte dost!"
+            },
+            "role_uzivatelu": {
+                "S01": "organizátor"
+            }
+        },
+        {
+            "id": "T051",
+            "nazev": "Zneškodnit sabotéra/špióna",
+            "typ_ukolu": "TT003",
+            "popis": "Odhalit a včas zneškodnit vnitřního narušitele.",
+            "uzivatele": [
+                "S01"
+            ],
+            "texty_uzivatelu": {
+                "S01": "Někdo sabotuje systém zevnitř. Odhalte ho a zneškodněte."
+            },
+            "role_uzivatelu": {
+                "S01": "bezpečnostní"
+            }
+        },
+        {
+            "id": "T052",
+            "nazev": "Zabránit fyzickému násilí",
+            "typ_ukolu": "TT007",
+            "popis": "Happiness manažerka musí udržet klid.",
+            "uzivatele": [
+                "S02"
+            ],
+            "texty_uzivatelu": {
+                "S02": "Žádné násilí! Pokud hrozí konflikt, okamžitě zasáhněte."
+            },
+            "role_uzivatelu": {
+                "S02": "mediátor"
+            }
+        },
+        {
+            "id": "T053",
+            "nazev": "Aby nikdo nebrečel",
+            "typ_ukolu": "TT002",
+            "popis": "Emocionální pohoda všech účastníků.",
+            "uzivatele": [
+                "S02"
+            ],
+            "texty_uzivatelu": {
+                "S02": "Nikdo nesmí odejít v slzách. Udržte všechny spokojené."
+            },
+            "role_uzivatelu": {
+                "S02": "pečovatelka"
+            }
+        },
+        {
+            "id": "T054",
+            "nazev": "Udržet morálku i v krizi",
+            "typ_ukolu": "TT007",
+            "popis": "I když se vše hroutí, udržte klid a morálku.",
+            "uzivatele": [
+                "S02"
+            ],
+            "texty_uzivatelu": {
+                "S02": "V krizové situaci je morálka klíčová. Buďte oporou týmu."
+            },
+            "role_uzivatelu": {
+                "S02": "opora"
+            }
+        },
+        {
+            "id": "T055",
+            "nazev": "Udržet hromadu šrotu pohromadě",
+            "typ_ukolu": "TT007",
+            "popis": "Technik drží systém jen lepící páskou.",
+            "uzivatele": [
+                "S03"
+            ],
+            "texty_uzivatelu": {
+                "S03": "Systém je hromada šrotu. Držte ho pohromadě za každou cenu."
+            },
+            "role_uzivatelu": {
+                "S03": "údržbář"
+            }
+        },
+        {
+            "id": "T056",
+            "nazev": "Prodat kabely U02",
+            "typ_ukolu": "TT001",
+            "popis": "Nelegální obchod s kradeným materiálem.",
+            "uzivatele": [
+                "S03"
+            ],
+            "texty_uzivatelu": {
+                "S03": "U02 (Gambler) koupí kradené kabely. Domluvte obchod."
+            },
+            "role_uzivatelu": {
+                "S03": "prodejce"
+            }
+        },
+        {
+            "id": "T057",
+            "nazev": "Utajit prázdné servery",
+            "typ_ukolu": "TT006",
+            "popis": "Nikdo nesmí zjistit, že servery jsou atrapy.",
+            "uzivatele": [
+                "S03"
+            ],
+            "texty_uzivatelu": {
+                "S03": "Servery IRIS jsou prázdné atrapy. Toto tajemství musí zůstat skryté."
+            },
+            "role_uzivatelu": {
+                "S03": "strážce tajemství"
+            }
+        },
+        {
+            "id": "T058",
+            "nazev": "Vymyslet nový slogan",
+            "typ_ukolu": "TT008",
+            "popis": "Synovec chce ukázat svou kreativitu.",
+            "uzivatele": [
+                "S04"
+            ],
+            "texty_uzivatelu": {
+                "S04": "Přijďte s novým firemním sloganem a ukažte svou hodnotu."
+            },
+            "role_uzivatelu": {
+                "S04": "kreativec"
+            }
+        },
+        {
+            "id": "T059",
+            "nazev": "Sbalit A02",
+            "typ_ukolu": "TT002",
+            "popis": "Romantický zájem o talentovanou herečku.",
+            "uzivatele": [
+                "S04"
+            ],
+            "texty_uzivatelu": {
+                "S04": "Ema (A02) je krásná. Získejte si ji."
+            },
+            "role_uzivatelu": {
+                "S04": "nápadník"
+            }
+        },
+        {
+            "id": "T060",
+            "nazev": "Prosadit vlastní nápad",
+            "typ_ukolu": "TT005",
+            "popis": "Ukázat svou moc - prosadit něco navzdory ostatním.",
+            "uzivatele": [
+                "S04"
+            ],
+            "texty_uzivatelu": {
+                "S04": "Prosadíte během testu svůj nápad, i když ostatní Správci nesouhlasí."
+            },
+            "role_uzivatelu": {
+                "S04": "vůdce"
+            }
+        }
+    ]
+}

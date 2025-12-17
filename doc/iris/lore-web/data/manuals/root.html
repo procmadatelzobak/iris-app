@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Příručka pro ROOT (Gamemaster)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body { 
+            background: var(--bg-primary, #0a0a0f);
+            color: var(--text-primary, #e0e0e0);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 { color: var(--accent-primary, #00d4ff); }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; text-align: left; }
+        th { background: rgba(255,255,255,0.05); }
+        code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 3px; }
+        .manual-img { max-width: 100%; height: auto; border-radius: 8px; }
+        .img-caption { font-size: 0.9rem; opacity: 0.7; text-align: center; }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" style="color: var(--accent-primary, #00d4ff);">← Zpět na Wiki</a>
+    
+                <h1>IRIS Systém - Příručka pro ROOT</h1>
+                <p><strong>Dokumentace:</strong> IRIS 4.1 aktuální k HLINIK Phase 35</p>
+                
+                <h2>1. Přístup do ROOT konzole</h2>
+                <table>
+                    <tr><th>Pole</th><th>Hodnota</th></tr>
+                    <tr><td>Uživatel</td><td>root</td></tr>
+                    <tr><td>Heslo</td><td>sdělí organizátoři</td></tr>
+                </table>
+                
+                <h2>2. Panopticon - Hlavní přehled</h2>
+                <h3>SYSTEM STATUS</h3>
+                <ul>
+                    <li><strong>SHIFT OFFSET:</strong> Aktuální hodnota posunu (0-7)</li>
+                    <li><strong>ONLINE USERS:</strong> Počet připojených uživatelů</li>
+                    <li><strong>CHERNOBYL:</strong> Úroveň nestability systému</li>
+                </ul>
+                
+                <h3>PHYSICS CONSTANTS</h3>
+                <ul>
+                    <li><strong>TAX RATE:</strong> Procento z odměny za úkol do Treasury</li>
+                    <li><strong>POWER CAP:</strong> Maximální kapacita systému v MW</li>
+                </ul>
+                
+                <h2>3. Executive Protocols</h2>
+                <table>
+                    <tr><th>Tlačítko</th><th>Funkce</th></tr>
+                    <tr><td>FORCE SHIFT</td><td>Zvýší shift o 1</td></tr>
+                    <tr><td>GLOBAL BROADCAST</td><td>Pošle zprávu všem</td></tr>
+                    <tr><td>SYSTEM RESET</td><td>Resetuje kredity, úkoly, logy</td></tr>
+                    <tr><td>RESTART SERVER</td><td>Restartuje Python server</td></tr>
+                    <tr><td>FACTORY RESET</td><td>Smaže DB a restartuje</td></tr>
+                </table>
+                
+                <h2>4. AI Configuration</h2>
+                <ul>
+                    <li><strong>OPTIMIZER PROMPT:</strong> Text pro přepisování zpráv</li>
+                    <li><strong>AUTOPILOT MODEL:</strong> Výběr modelu</li>
+                    <li><strong>API KEYS:</strong> Klíče pro OpenAI, OpenRouter, Gemini</li>
+                </ul>
+                
+                <h2>5. Panic Mode</h2>
+                <p>Emergency censorship - nahrazuje odchozí zprávy LLM odpovědí. Použijte v krizových situacích.</p>
+            
+</body>
+</html>

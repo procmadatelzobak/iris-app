@@ -1,0 +1,22 @@
+{
+    "id": "S01",
+    "type": "admin",
+    "name": "Ing. Miloš Vrána",
+    "archetype": "Manažer staré školy",
+    "description": "Praktický manažer staré školy, který má na starosti celou směnu testu IRIS. Moderním IT technologiím příliš nerozumíte, a když něco nefunguje, řešíte to zásadně křikem a rozdáváním pokut. Jste přesvědčen, že přísná kázeň je klíčem k úspěchu - a taky dobrý způsob, jak vybrat dost peněz na plánovaný firemní večírek.",
+    "ability": "Ban Hammer: Můžete vyhodit uživatele z místnosti.",
+    "goals": [
+        "Udržet firmu v chodu do konce směny.",
+        "Vybrat dost na pokutách na firemní večírek.",
+        "Odhalit a včas zneškodnit jakéhokoli vnitřního narušitele - sabotéra nebo špióna."
+    ],
+    "avatar": "avatar_S01.png",
+    "work_image": "work_S01.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "50-60",
+        "hair_color": "prořídlé šedivé vlasy, přehrnuté přes pleš",
+        "face_description": "přísná manažerská tvář, naštvané vrásky na čele, mohutný knír",
+        "distinctive_features": "kostým s kravatou, zápisník na pokuty, hlasitý autoritativní hlas"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "id": "A07",
+    "type": "agent",
+    "name": "Robot Robert",
+    "archetype": "Metodik",
+    "description": "Pedantický metodik, který se i v běžném životě chová jako robot a vyžaduje naprosté dodržování pravidel. V roli agenta IRIS jste ve svém živlu - všechny protokoly a směrnice znáte nazpaměť a jakoukoli odchylku od předpisů okamžitě hlásíte nadřízeným. Kolegové agenti z vás nejsou nadšení, protože bedlivě sledujete jejich příliš lidské projevy.",
+    "ability": "Byrokracie: Můžete nahlásit kolegu Agenta za lidské chování.",
+    "goals": [
+        "Dodržet protokol na 100%.",
+        "Stát se Správcem.",
+        "Odhalit a nahlásit alespoň jedno závažné porušení protokolu některým z agentů."
+    ],
+    "avatar": "avatar_A07.png",
+    "work_image": "work_A07.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "35-45",
+        "hair_color": "přísně seříznuté šedivějící vlasy, matematicky přesná pěšinka",
+        "face_description": "strnulá, bezvýrazná tvář, mechanické pohyby očí, nulová mimika",
+        "distinctive_features": "perfektně vyžehlená košile, zasunuté tričko do kalhot, jmenovka na správném místě"
+    }
+}

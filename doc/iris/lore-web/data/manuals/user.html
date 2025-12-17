@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Příručka pro Uživatele (Subjekty)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body { 
+            background: var(--bg-primary, #0a0a0f);
+            color: var(--text-primary, #e0e0e0);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 { color: var(--accent-primary, #00d4ff); }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; text-align: left; }
+        th { background: rgba(255,255,255,0.05); }
+        code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 3px; }
+        .manual-img { max-width: 100%; height: auto; border-radius: 8px; }
+        .img-caption { font-size: 0.9rem; opacity: 0.7; text-align: center; }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" style="color: var(--accent-primary, #00d4ff);">← Zpět na Wiki</a>
+    
+                <h1>IRIS Systém - Příručka pro Uživatele</h1>
+                <p><strong>Dokumentace:</strong> IRIS 4.1 aktuální k HLINIK Phase 35</p>
+                
+                <div class="manual-image-container">
+                    <img src="assets/images/infographic_mechanics.png" alt="Small Universe Diagram" class="manual-img">
+                    <p class="img-caption">Schéma 1: Architektura Small Universe systému a interakce stanic.</p>
+                </div>
+                
+                <h2>1. Úvod</h2>
+                <p>IRIS je komunikační systém pro LARP hru, kde vy jako subjekt (uživatel) komunikujete s agentem prostřednictvím terminálu. Systém simuluje dystopickou korporátní AI infrastrukturu.</p>
+                
+                <h3>Vaše role</h3>
+                <p>Jako <strong>Subjekt (User)</strong> jste běžný hráč, který:</p>
+                <ul>
+                    <li>Komunikuje s přiděleným agentem</li>
+                    <li>Plní úkoly za kredity</li>
+                    <li>Může nahlásit anomálie ve zprávách</li>
+                </ul>
+                
+                <h2>2. Přihlášení do systému</h2>
+                <table>
+                    <tr><th>Pole</th><th>Hodnota</th></tr>
+                    <tr><td>Uživatel</td><td>user1 až user8</td></tr>
+                    <tr><td>Heslo</td><td>sdělí organizátoři</td></tr>
+                </table>
+                
+                <h2>3. Rozhraní terminálu</h2>
+                <h3>Levý panel - Stav subjektu</h3>
+                <ul>
+                    <li><strong>POSUN SVĚTA:</strong> Aktuální časový posun (0-7)</li>
+                    <li><strong>KREDITY:</strong> Vaše virtuální měna</li>
+                </ul>
+                
+                <h2>4. Práce s úkoly</h2>
+                <table>
+                    <tr><th>Stav</th><th>Význam</th></tr>
+                    <tr><td>ČEKÁ NA SCHVÁLENÍ</td><td>Požádali jste o úkol, správce jej musí schválit</td></tr>
+                    <tr><td>AKTIVNÍ</td><td>Úkol je přidělen, můžete na něm pracovat</td></tr>
+                    <tr><td>DOKONČENO</td><td>Úkol jste odevzdali</td></tr>
+                </table>
+                
+                <h2>5. Speciální stavy</h2>
+                <ul>
+                    <li><strong>Purgatory:</strong> Pokud máte záporné kredity, chat je zablokován</li>
+                    <li><strong>Glitch:</strong> Vizuální efekt při přetížení systému</li>
+                </ul>
+            
+</body>
+</html>

@@ -1,7 +1,21 @@
 {
-    "version": "4.1.0",
-    "deployment_date": "2025-12-15",
+    "version": "4.2.0",
+    "phase": 38,
+    "deployment_date": "2025-12-16",
     "currency_name": "Neuro-Credits (NC)",
     "inflation_rate": "Dynamic",
-    "rules_url": "../../00_PRAVIDLA_LARPU.html"
+    "rules_url": "../../00_PRAVIDLA_LARPU.html",
+    "data_files": {
+        "users": "data/users.json",
+        "roles": "data/roles.json",
+        "relations": "data/relations_v2.json",
+        "tasks": "data/tasks.json",
+        "relation_types": "data/relation_types.json",
+        "task_types": "data/task_types.json",
+        "phases": "data/phases.json",
+        "abilities": "data/abilities.json",
+        "story_nodes": "data/story_nodes.json",
+        "legacy_roles": "legacy/roles.json",
+        "legacy_relations": "legacy/relations.json"
+    }
 }

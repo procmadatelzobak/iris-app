@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-12-15T13:22:37.000000",
+  "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+  "status": "success",
+  "duration": 4.699824810028076,
+  "filename": "scenario_complex_1765801357.json",
+  "stats": {
+    "steps_total": 4,
+    "steps_passed": 4,
+    "hyper_response": "ok",
+    "optimizer_active": true
+  },
+  "details": {
+    "hyper_chat": {
+      "status": "success",
+      "duration": 1.461991548538208,
+      "output": "Dobrý den! Ano, jsem zde a slyším vás jasně a zřetelně. Jak vám mohu pomoci dnes optimalizovat váš pracovní den?"
+    },
+    "task_generation": {
+      "status": "success",
+      "duration": 0.8354694843292236,
+      "output": "Analyzujte a navrhněte potenciální zlepšení procesů pro zadávání a správu pracovních úkolů v interním systému IRIS na základě vašich zkušeností jako \"tester_U01\" s mid statusem."
+    },
+    "task_evaluation": {
+      "status": "success",
+      "duration": 1.1045172214508057,
+      "output": 100
+    },
+    "optimizer": {
+      "status": "success",
+      "duration": 1.2978465557098389,
+      "output": "Dobrý den, systém vykazuje závady, navrhuji provedení opravy. Děkuji."
+    }
+  }
+}

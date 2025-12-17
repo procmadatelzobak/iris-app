@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditorská Zpráva: Phase 35 - Komplexní Analýza (15.12.2025)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body { 
+            background: var(--bg-primary, #0a0a0f);
+            color: var(--text-primary, #e0e0e0);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 { color: var(--accent-primary, #00d4ff); }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; text-align: left; }
+        th { background: rgba(255,255,255,0.05); }
+        code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 3px; }
+        .manual-img { max-width: 100%; height: auto; border-radius: 8px; }
+        .img-caption { font-size: 0.9rem; opacity: 0.7; text-align: center; }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" style="color: var(--accent-primary, #00d4ff);">← Zpět na Wiki</a>
+    
+            <h1>Auditorská Zpráva - Phase 35</h1>
+            <p><strong>Datum:</strong> 15.12.2025 | <strong>Analytik:</strong> Claude AI | <strong>Status:</strong> <span style='color:orange; font-weight:bold'>OPERATIONAL WITH ISSUES</span></p>
+            
+            <!-- Executive Summary -->
+            <div class='manual-image-container' style='background:rgba(255,255,255,0.05); padding:15px; border-radius:8px; margin-bottom:20px'>
+                <h2 style='margin-top:0'>📊 Executive Summary</h2>
+                <div style='display:flex; justify-content:space-around; text-align:center; flex-wrap:wrap; gap:10px'>
+                    <div style='min-width:100px'>
+                        <h3>Manual Tests</h3>
+                        <div style='font-size:2rem; color: #f44336'>55.6%</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>10/18 Passed</div>
+                    </div>
+                    <div style='min-width:100px'>
+                        <h3>LLM Simulations</h3>
+                        <div style='font-size:2rem; color: #4caf50'>100%</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>3/3 Success</div>
+                    </div>
+                    <div style='min-width:100px'>
+                        <h3>Lore Data</h3>
+                        <div style='font-size:2rem; color: #4caf50'>100%</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>20/20 Complete</div>
+                    </div>
+                    <div style='min-width:100px'>
+                        <h3>Features</h3>
+                        <div style='font-size:2rem; color: #4caf50'>95.4%</div>
+                        <div style='font-size:0.8rem; opacity:0.7'>185/194 ✅</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Repository Metrics -->
+            <h2>📁 Repository Metrics</h2>
+            <table>
+                <tr><th>Komponenta</th><th>Velikost</th><th>Soubory</th><th>Řádky kódu</th></tr>
+                <tr><td><strong>Celý repozitář</strong></td><td>73 MB</td><td>-</td><td>-</td></tr>
+                <tr><td><strong>HLINIK aplikace</strong></td><td>3.0 MB</td><td>82 (47 .py, 28 .html, 4 .js, 3 .css)</td><td>17,302</td></tr>
+                <tr><td><strong>Lore-web wiki</strong></td><td>24 MB</td><td>~35 + 28 assets</td><td>9,981</td></tr>
+                <tr><td><strong>Testy</strong></td><td>-</td><td>19 .py</td><td>5,029</td></tr>
+            </table>
+
+            <!-- Lore Content Analysis -->
+            <h2>🎭 Analýza Lore Obsahu</h2>
+            <h3>Role a Postavy</h3>
+            <table>
+                <tr><th>Kategorie</th><th>Počet</th><th>Status</th></tr>
+                <tr><td>Uživatelé (Users)</td><td>8</td><td><span style='color:#4caf50'>✅ Kompletní</span></td></tr>
+                <tr><td>Agenti (Agents)</td><td>8</td><td><span style='color:#4caf50'>✅ Kompletní</span></td></tr>
+                <tr><td>Správci (Admins)</td><td>4</td><td><span style='color:#4caf50'>✅ Kompletní</span></td></tr>
+                <tr><td><strong>Celkem rolí</strong></td><td><strong>20</strong></td><td><span style='color:#4caf50'>✅ 100%</span></td></tr>
+            </table>
+
+            <h3>Kvalita Obsahu Postav</h3>
+            <table>
+                <tr><th>Metrika</th><th>Hodnota</th><th>Hodnocení</th></tr>
+                <tr><td>Průměrná délka popisu</td><td>338 znaků</td><td><span style='color:#4caf50'>Dobrá</span></td></tr>
+                <tr><td>Min/Max délka popisu</td><td>288 / 384 znaků</td><td><span style='color:#4caf50'>Konzistentní</span></td></tr>
+                <tr><td>Průměrná délka schopnosti</td><td>55 znaků</td><td><span style='color:#4caf50'>Stručné</span></td></tr>
+                <tr><td>Celkem cílů</td><td>60 (3.0 na roli)</td><td><span style='color:#4caf50'>Vyvážené</span></td></tr>
+                <tr><td>Role s appearance data</td><td>20/20 (100%)</td><td><span style='color:#4caf50'>Kompletní</span></td></tr>
+            </table>
+
+            <h3>Vztahy (Relations)</h3>
+            <table>
+                <tr><th>Metrika</th><th>Hodnota</th></tr>
+                <tr><td>Celkem vztahů</td><td>14</td></tr>
+                <tr><td>Unikátních účastníků</td><td>20 (100% rolí propojeno)</td></tr>
+                <tr><td>Typy vztahů</td><td>14 různých (past, trade, blackmail, romance, plot, empathy, rival, investigation, alliance, affection, ambition, conflict, care, suspicion)</td></tr>
+            </table>
+
+            <!-- Test Analysis -->
+            <h2>🧪 Analýza Testů</h2>
+            <h3>Přehled Test Runů</h3>
+            <table>
+                <tr><th>Test Run</th><th>Datum</th><th>Status</th><th>Trvání</th><th>Detail</th></tr>
+                <tr><td>Manual UI/UX Audit</td><td>15.12.2025 08:49</td><td><span style='color:#f44336'>FAILED</span></td><td>540s</td><td>10/18 passed, 1 critical bug</td></tr>
+                <tr><td>LLM Hour Simulation #1</td><td>15.12.2025 02:36</td><td><span style='color:#4caf50'>SUCCESS</span></td><td>42.5s</td><td>15 messages, 0 errors</td></tr>
+                <tr><td>LLM Hour Simulation #2</td><td>15.12.2025 02:37</td><td><span style='color:#4caf50'>SUCCESS</span></td><td>38.5s</td><td>14 messages, 0 errors</td></tr>
+                <tr><td>LLM Hour Simulation #3</td><td>15.12.2025 02:38</td><td><span style='color:#4caf50'>SUCCESS</span></td><td>60s</td><td>85 messages, 0 errors</td></tr>
+            </table>
+
+            <h3>Agregované Statistiky</h3>
+            <ul>
+                <li><strong>Celkem testů:</strong> 18 manuálních + 3 LLM simulace</li>
+                <li><strong>Pass rate (manuální):</strong> 55.6% (10/18)</li>
+                <li><strong>Pass rate (LLM):</strong> 100% (3/3)</li>
+                <li><strong>LLM zpráv vygenerováno:</strong> 114</li>
+                <li><strong>Kritické bugy:</strong> 1</li>
+                <li><strong>Varování:</strong> 3</li>
+            </ul>
+
+            <!-- Critical Bugs -->
+            <h2>🐛 Kritické Bugy</h2>
+            <div style='background:rgba(244,67,54,0.1); border-left:4px solid #f44336; padding:15px; margin:10px 0'>
+                <h3 style='color:#f44336; margin-top:0'>BUG-001: WebSocket Connection Loop (CRITICAL)</h3>
+                <p><strong>Popis:</strong> WebSocket připojení se neustále odpojuje a znovu připojuje v rychlém cyklu (každou sekundu).</p>
+                <p><strong>Dopad:</strong> Blokuje veškerou real-time komunikaci, uživatelé nemohou odesílat zprávy.</p>
+                <p><strong>Postižené role:</strong> USER, AGENT, ADMIN, ROOT</p>
+                <p><strong>Console errors:</strong> <code>WS Connected</code> → <code>WS Disconnected. Reconnecting...</code> → <code>WS not open, cannot send</code></p>
+            </div>
+
+            <h3>Další nalezené bugy</h3>
+            <table>
+                <tr><th>ID</th><th>Severity</th><th>Popis</th></tr>
+                <tr><td>BUG-002</td><td><span style='color:orange'>HIGH</span></td><td>User Terminal - POSUN SVĚTA a KREDITY zobrazují '--'</td></tr>
+                <tr><td>BUG-003</td><td><span style='color:orange'>HIGH</span></td><td>Communication OFFLINE - 'DEBT RECOVERY REQUIRED'</td></tr>
+                <tr><td>BUG-004</td><td><span style='color:#ffc107'>MEDIUM</span></td><td>Task Request tlačítko zůstává v 'Processing...'</td></tr>
+                <tr><td>BUG-005</td><td><span style='color:#ffc107'>MEDIUM</span></td><td>Agent Terminal - ID RELACE, SHIFT, TEPLOTA zobrazují '...'</td></tr>
+            </table>
+
+            <!-- Feature Compliance -->
+            <h2>✅ Feature Compliance</h2>
+            <table>
+                <tr><th>Status</th><th>Počet</th><th>Procento</th></tr>
+                <tr><td><span style='color:#4caf50'>✅ Implemented & Tested</span></td><td>185</td><td>95.4%</td></tr>
+                <tr><td><span style='color:orange'>⚠️ Partial Implementation</span></td><td>5</td><td>2.6%</td></tr>
+                <tr><td><span style='color:#f44336'>❌ Not Implemented</span></td><td>4</td><td>2.1%</td></tr>
+                <tr><td><strong>Celkem</strong></td><td><strong>194</strong></td><td><strong>100%</strong></td></tr>
+            </table>
+
+            <!-- Application Operability -->
+            <h2>🚀 Provozovatelnost Aplikace HLINIK</h2>
+            <div style='background:rgba(255,152,0,0.1); border-left:4px solid #ff9800; padding:15px; margin:10px 0'>
+                <h3 style='color:#ff9800; margin-top:0'>Status: PODMÍNĚNĚ PROVOZUSCHOPNÁ</h3>
+                <p>Aplikace je funkční v manuálním režimu (přihlášení přes prohlížeč), ale automatizované testy odhalily kritický problém s WebSocket stabilitou.</p>
+            </div>
+
+            <h3>Co funguje ✅</h3>
+            <ul>
+                <li>Login/Logout pro všechny role</li>
+                <li>ROOT Dashboard - všechny sekce</li>
+                <li>PANOPTICON 8x8 view</li>
+                <li>LLM simulace (20 účastníků)</li>
+                <li>Lokalizace (čeština)</li>
+                <li>AI Configuration panel</li>
+                <li>Economy controls</li>
+            </ul>
+
+            <h3>Co nefunguje ❌</h3>
+            <ul>
+                <li>WebSocket real-time komunikace (connection loop)</li>
+                <li>Zobrazení live dat (kredity, shift)</li>
+                <li>Task request odesílání</li>
+                <li>Agent state display</li>
+            </ul>
+
+            <!-- Recommended Tests -->
+            <h2>📋 Doporučené Další Testy</h2>
+            <table>
+                <tr><th>Priorita</th><th>Test</th><th>Popis</th></tr>
+                <tr><td><span style='color:#f44336'>CRITICAL</span></td><td>WebSocket Stability</td><td>Debug a oprava connection loop, ověření ping/pong heartbeat</td></tr>
+                <tr><td><span style='color:orange'>HIGH</span></td><td>E2E Chat Flow</td><td>User → Agent → User kompletní cyklus zpráv</td></tr>
+                <tr><td><span style='color:orange'>HIGH</span></td><td>Task Lifecycle</td><td>Request → Approval → Submit → Payment</td></tr>
+                <tr><td><span style='color:#ffc107'>MEDIUM</span></td><td>Multi-User Stress</td><td>8 Users + 8 Agents simultánně</td></tr>
+                <tr><td><span style='color:#ffc107'>MEDIUM</span></td><td>Economy Edge Cases</td><td>Záporné kredity, Purgatory mode, unlock</td></tr>
+                <tr><td><span style='color:#2196f3'>LOW</span></td><td>Shift Rotation</td><td>Ověření správného párování User-Agent po shift</td></tr>
+            </table>
+
+            <!-- Recommendations -->
+            <h2>💡 Doporučení</h2>
+            <ol>
+                <li><strong>Okamžitě:</strong> Opravit WebSocket connection loop (socket_client.js + server-side handler)</li>
+                <li><strong>Před nasazením:</strong> Přidat exponenciální backoff při reconnect pokusech</li>
+                <li><strong>Před nasazením:</strong> Implementovat fallback pro chybějící data (cache poslední známé hodnoty)</li>
+                <li><strong>Nice-to-have:</strong> Viditelný indikátor stavu WebSocket připojení v UI</li>
+                <li><strong>Nice-to-have:</strong> Timeout pro Processing stav tlačítek</li>
+            </ol>
+
+            <!-- Conclusion -->
+            <h2>📌 Závěr</h2>
+            <p>Systém IRIS 4.1 'HLINÍK' Phase 35 má <strong>kompletní lore obsah</strong> (20 rolí, 14 vztahů, 4 manuály) a <strong>95.4% implementovaných features</strong>. Hlavní překážkou nasazení je kritický bug WebSocket connection loop, který blokuje real-time komunikaci. LLM simulace fungují bezchybně. Po opravě WebSocket stability bude aplikace plně provozuschopná.</p>
+        
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+    "id": "S03",
+    "type": "admin",
+    "name": "Kamil 'Kabel'",
+    "archetype": "Technik údržbář",
+    "description": "Flegmatický údržbář, který drží technické zázemí projektu IRIS pohromadě jen díky improvizacím a lepicí pásce. Jako jediný víte, že všechny servery IRIS jsou ve skutečnosti prázdné atrapy - skutečnou inteligenci systému zajišťují lidé, což před ostatními pečlivě tajíte. Neustále obcházíte místnost s nářadím v ruce a když něco zadrhne, předstíráte technický zásah.",
+    "ability": "Restart: Můžete vyhlásit technickou pauzu (všichni musí mlčet 1 minutu).",
+    "goals": [
+        "Udržet tu hromadu šrotu pohromadě.",
+        "Prodat kradené kabely U02 (Gamblerovi).",
+        "Utajit před všemi fakt, že servery IRIS jsou ve skutečnosti prázdné."
+    ],
+    "avatar": "avatar_S03.png",
+    "work_image": "work_S03.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "40-50",
+        "hair_color": "řídké hnědé vlasy pod čepicí",
+        "face_description": "flegmatická tvář, unaveně přivřené oči, neoholený",
+        "distinctive_features": "montérky s mnoha kapsami, pásek s nářadím, lepicí páska v ruce"
+    }
+}

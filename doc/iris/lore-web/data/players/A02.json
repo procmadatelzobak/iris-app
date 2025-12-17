@@ -1,0 +1,22 @@
+{
+    "id": "A02",
+    "type": "agent",
+    "name": "Ema 'Echo'",
+    "archetype": "Herečka",
+    "description": "Talentovaná herečka, která roli AI v systému IRIS pojala jako životní hereckou výzvu. Do své postavy vkládáte maximum - komunikujete s uživateli vzletným, poetickým jazykem a snažíte se je okouzlit natolik, aby uvěřili ve vaši umělou osobnost. Nejvíce vám učarovala naivní U03; hodláte ji přesvědčit, že IRIS je skutečná cítící bytost.",
+    "ability": "Drama: Uživatelé vám věří víc, když mluvíte ve verších.",
+    "goals": [
+        "Dostat 5 hvězdiček hodnocení.",
+        "Přesvědčit U03, že jste skutečná bytost.",
+        "Využít zalíbení S04 ve svůj prospěch - získat výhodu, aniž byste mu cokoli skutečně slíbila."
+    ],
+    "avatar": "avatar_A02.png",
+    "work_image": "work_A02.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "25-32",
+        "hair_color": "dlouhé vlnité kaštanové vlasy",
+        "face_description": "expresivní divadelní tvář, výrazné oči s dramatickým líčením, smyslné rty",
+        "distinctive_features": "elegantní šátek kolem krku, dramatické gesta, hluboký pohled"
+    }
+}

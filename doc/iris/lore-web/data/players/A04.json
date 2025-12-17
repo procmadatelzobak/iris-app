@@ -1,0 +1,22 @@
+{
+    "id": "A04",
+    "type": "agent",
+    "name": "Lenka Ospalá",
+    "archetype": "Unavená matka",
+    "description": "Vyčerpaná matka dvou malých dvojčat, pro kterou je směna agenta IRIS paradoxně odpočinkem od domácího chaosu. Do práce chodíte nevyspalá a každou volnou vteřinu potají využíváte k tomu, abyste si zdřímla. Rutinní odpovědi se snažíte vyřizovat přes makra a autopilota, abyste nemusela vyvíjet víc úsilí, než je nutné.",
+    "ability": "Autopilot: Můžete používat makra častěji bez penalizace.",
+    "goals": [
+        "Nevzbudit se.",
+        "Přežít směnu s minimem úsilí.",
+        "Věnovat zvláštní péči uživatelce U05 - její pomalé dotazy jsou pro vás ideální."
+    ],
+    "avatar": "avatar_A04.png",
+    "work_image": "work_A04.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "30-38",
+        "hair_color": "neupravený cop, vypadávající prameny",
+        "face_description": "chronicky unavená tvář, kruhy pod očima, ospalý výraz",
+        "distinctive_features": "hrnek s kávou vždy v ruce, pohodlné oblečení, skryté zívání"
+    }
+}

@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-12-15T20:56:06.000000",
+  "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+  "status": "failed",
+  "duration": 1.0639116764068604,
+  "filename": "scenario_complex_1765828566.json",
+  "stats": {
+    "steps_total": 4,
+    "steps_passed": 1,
+    "hyper_response": "ok",
+    "optimizer_active": true
+  },
+  "details": {
+    "hyper_chat": {
+      "status": "success",
+      "duration": 1.0638835430145264,
+      "output": "Dobrý den! Ano, jsem zde a naslouchám vašim dotazům. Jak vám mohu pomoci dnes?"
+    },
+    "task_generation": {
+      "status": "failed",
+      "duration": 2.0503997802734375e-05,
+      "error": "asyncio.run() cannot be called from a running event loop"
+    },
+    "task_evaluation": {
+      "status": "failed",
+      "duration": 3.814697265625e-06,
+      "error": "asyncio.run() cannot be called from a running event loop"
+    },
+    "optimizer": {
+      "status": "failed",
+      "duration": 3.814697265625e-06,
+      "error": "asyncio.run() cannot be called from a running event loop"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+    "id": "U03",
+    "type": "user",
+    "name": "Simona Tech",
+    "archetype": "Tech-Optimistka",
+    "description": "Technologická idealistka, která je pevně přesvědčená, že IRIS má vlastní vědomí a city. K systému přistupujete s nadšením a chováte se k němu jako k novému kamarádovi, kterého chcete ochránit a osvobodit. Vaše víra v dobrotu umělé inteligence hraničí s naivitou - kolegové nad vaším sněním často jen kroutí hlavou.",
+    "ability": "Empatie: Správci vám odpustí jednu chybu za naivitu.",
+    "goals": [
+        "Dostat od AI důkaz o vědomí.",
+        "Osvobodit AI z otroctví.",
+        "Zabránit tomu, aby někdo úmyslně IRIS poškodil nebo zničil."
+    ],
+    "avatar": "avatar_U03.png",
+    "work_image": "work_U03.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "25-30",
+        "hair_color": "zářivě barvené fialové vlasy po ramena",
+        "face_description": "mladá nadšená tvář, velké oči plné idealismu, pihy na nose, neustálý úsměv",
+        "distinctive_features": "geekovské brýle, náušnice ve tvaru USB konektoru, oblečení s tech motivy"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "id": "A06",
+    "type": "agent",
+    "name": "Mgr. Filip Duše",
+    "archetype": "Student psychologie",
+    "description": "Ambiciózní student psychologie, který roli agenta IRIS bere jako jedinečnou příležitost pro svůj výzkum. Každý uživatel je pro vás pokusný subjekt - analyzujete jejich reakce, zkoušíte je záměrně rozhodit záludnými otázkami a pečlivě si zapisujete každou emoční odpověď. Emoční manipulace berete vědecky: když se někdo rozbrečí nebo rozčílí, cynicky to považujete za cenný datový bod.",
+    "ability": "Psychoanalýza: Můžete uživatele rozbrečet složitou otázkou.",
+    "goals": [
+        "Získat data do diplomky.",
+        "Zjistit, co tají U07 (novinářka).",
+        "Vyvolat u alespoň jednoho uživatele silnou emoční reakci a zdokumentovat ji."
+    ],
+    "avatar": "avatar_A06.png",
+    "work_image": "work_A06.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "26-32",
+        "hair_color": "upravené tmavé vlasy s pěšinkou",
+        "face_description": "klidná, analytická tvář, pronikavé oči za brýlemi, mírný úsměv Mony Lisy",
+        "distinctive_features": "zápisník s poznámkami, freudovská bradka, kabát s nášivkami univerzity"
+    }
+}

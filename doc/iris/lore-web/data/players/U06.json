@@ -1,0 +1,21 @@
+{
+    "id": "U06",
+    "type": "user",
+    "name": "Ivan Hrozný",
+    "archetype": "Konspirační teoretik",
+    "description": "Zapálený konspirační teoretik, který všude vidí tajné vládní plány. Projekt IRIS podle vás není skutečná AI, ale spíš prostředek mimozemšťanů nebo vlády ke sledování občanů - a kódové jméno HLINÍK ve vás budí řadu podezření. Při komunikaci s AI hledáte skryté významy a šifry, nosíte pro jistotu čepici z alobalu.",
+    "ability": "Paranoia: Můžete odmítnout jeden úkol jako podezřelý.",
+    "goals": [
+        "Odhalit pravdu o hliníku.",
+        "Dostat ban za šíření pravdy (morální vítězství).",
+        "Rozluštit záhadný kód ALOBAL-666 a použít ho k odhalení spiknutí."
+    ],
+    "avatar": "avatar_U06.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "40-50",
+        "hair_color": "rozcuchané šedivějící vlasy pod alobalovou čepicí",
+        "face_description": "paranoidní pohled, podezřívavě přimhouřené oči, neupravený plnovous",
+        "distinctive_features": "alobalová čepice, zápisník s konspiračními teoriemi, podezřívavě těkající oči"
+    }
+}

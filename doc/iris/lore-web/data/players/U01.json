@@ -1,0 +1,22 @@
+{
+    "id": "U01",
+    "type": "user",
+    "name": "Jana Nováková",
+    "archetype": "Zadlužená učitelka",
+    "description": "Středoškolská učitelka češtiny, která zoufale potřebuje peníze na opravu domu. Do testu IRIS jste se přihlásila, i když moderní technologie moc nechápete - píšete velmi spisovně a slušně. Přesto vás zaráží, jak drzé jsou občas odpovědi AI, a hodláte přijít na to, kdo nebo co za tím stojí. Jako pedant na gramatiku vidíte každou chybu v textu jako příležitost dát někomu lekci.",
+    "ability": "Grammar Nazi: Pokud opravíte gramatiku AI, dostanete bonus.",
+    "goals": [
+        "Vydělat 3000 NC na opravu.",
+        "Zjistit, proč je AI tak drzá (poznáte žáka Petra).",
+        "Vyjednat si u Správce S01 možnost přesčasové práce nebo zálohy."
+    ],
+    "avatar": "avatar_U01.png",
+    "work_image": "work_U01.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "45-55",
+        "hair_color": "šedivějící hnědé vlasy sepnuté do drdolu",
+        "face_description": "unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí a úst",
+        "distinctive_features": "vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled"
+    }
+}

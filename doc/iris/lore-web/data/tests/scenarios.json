@@ -1,0 +1,55 @@
+{
+    "meta": {
+        "version": "1.0",
+        "updated_at": "2025-12-15T22:00:00"
+    },
+    "tests": [
+        {
+            "id": "TEST-001",
+            "title": "Přihlášení uživatele",
+            "category": "HLINIK",
+            "created_at": "2025-12-10T10:00:00",
+            "description_md": "# Test přihlášení uživatele\n\n## Cíl testu\nOvěřit, že uživatel se může přihlásit do systému pomocí jména a hesla.\n\n## Předpoklady\n- Aplikace běží na `http://localhost:8000`\n- Existuje testovací účet `U01` s heslem `test123`\n\n## Kroky\n1. Otevři stránku `http://localhost:8000/auth/terminal`\n2. Zadej uživatelské jméno `U01`\n3. Zadej heslo `test123`\n4. Klikni na tlačítko **Přihlásit**\n5. **Screenshot**: Zachyť obrazovku po přihlášení\n\n## Očekávaný výsledek\n- Uživatel je přesměrován na svůj terminál\n- V UI se zobrazuje jméno přihlášeného uživatele\n- Žádné chybové hlášky\n\n## Logování\nUlož screenshot do `doc/iris/lore-web/data/test_protocols/` s názvem `TEST-001_[datum]_login_success.png`"
+        },
+        {
+            "id": "TEST-002",
+            "title": "Odeslání zprávy agentovi",
+            "category": "HLINIK",
+            "created_at": "2025-12-11T14:00:00",
+            "description_md": "# Test odeslání zprávy\n\n## Cíl testu\nOvěřit, že uživatel může odeslat zprávu a agent ji obdrží.\n\n## Kroky\n1. Přihlas se jako uživatel `U01`\n2. Napiš zprávu do textového pole\n3. Klikni na **Odeslat**\n4. **Screenshot**: Zachyť chat po odeslání\n5. Přihlas se jako agent `A01` v jiném okně\n6. Ověř, že zpráva dorazila\n\n## Očekávaný výsledek\n- Zpráva se zobrazí v chatu uživatele\n- Zpráva se zobrazí v chatu agenta\n- Časové razítko je správné"
+        },
+        {
+            "id": "TEST-003",
+            "title": "Meltdown scénář - LARP event",
+            "category": "IRIS",
+            "created_at": "2025-12-15T09:00:00",
+            "description_md": "# Meltdown scénář\n\n## Cíl testu\nOvěřit průběh finálního Meltdown eventu během LARPu.\n\n## Kroky pro organizátora\n1. Aktivuj Panic Mode jako ROOT\n2. Sleduj reakce hráčů\n3. **Screenshot**: Zachyť stav dashboardu\n4. Zaznamenej čas od aktivace do reakce správců\n\n## Očekávané chování\n- Všechny terminály zobrazí varování\n- Správci by měli reagovat do 2 minut\n- Agenti by měli přejít do HYPER módu"
+        }
+    ],
+    "protocols": [
+        {
+            "id": "PROT-001",
+            "test_id": "TEST-001",
+            "filename": "TEST-001_2025-12-14_run1.md",
+            "status": "pass",
+            "run_date": "2025-12-14T10:30:00",
+            "tester": "Organizátor"
+        },
+        {
+            "id": "PROT-002",
+            "test_id": "TEST-001",
+            "filename": "TEST-001_2025-12-15_run1.md",
+            "status": "pass",
+            "run_date": "2025-12-15T14:00:00",
+            "tester": "Organizátor"
+        },
+        {
+            "id": "PROT-003",
+            "test_id": "TEST-002",
+            "filename": "TEST-002_2025-12-15_run1.md",
+            "status": "fail",
+            "run_date": "2025-12-15T15:30:00",
+            "tester": "Agent tester"
+        }
+    ]
+}

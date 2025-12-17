@@ -1,0 +1,21 @@
+{
+    "id": "U08",
+    "type": "user",
+    "name": "Lukáš 'Speedy' Král",
+    "archetype": "Profi Gamer",
+    "description": "Mladý profesionální gamer, který test IRIS bere jako další online hru, ve které chce dominovat. Soutěživost máte v krvi - od první chvíle hledáte exploity v systému, spamujete dotazy a snažíte se vytěžit maximum kreditů v co nejkratším čase. Ostatní testery vnímáte spíš jako soupeře v žebříčku než kolegy.",
+    "ability": "APM (Actions Per Minute): Můžete poslat 3 dotazy najednou.",
+    "goals": [
+        "Být nejbohatší uživatel v žebříčku.",
+        "Shodit server přetížením.",
+        "Objevit a využít alespoň jeden zásadní exploit v systému."
+    ],
+    "avatar": "avatar_U08.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "18-24",
+        "hair_color": "odbarvené blond vlasy s modrými konečky",
+        "face_description": "mladá, soustředěná tvář, bledá pleť od sezení u PC, sluchátka kolem krku",
+        "distinctive_features": "herní mikina s kapucí, energy drink v ruce, rychle klepající prsty"
+    }
+}

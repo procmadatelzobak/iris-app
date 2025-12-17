@@ -1,0 +1,28 @@
+{
+    "phases": [
+        {
+            "id": "PH01",
+            "nazev": "Úvod"
+        },
+        {
+            "id": "PH02",
+            "nazev": "Seznámení"
+        },
+        {
+            "id": "PH03",
+            "nazev": "Rozvoj"
+        },
+        {
+            "id": "PH04",
+            "nazev": "Komplikace"
+        },
+        {
+            "id": "PH05",
+            "nazev": "Krize"
+        },
+        {
+            "id": "PH06",
+            "nazev": "Závěr"
+        }
+    ]
+}

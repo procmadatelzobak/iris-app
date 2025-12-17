@@ -1,0 +1,22 @@
+{
+    "id": "U02",
+    "type": "user",
+    "name": "Karel 'Bet' Dlouhý",
+    "archetype": "Gambler",
+    "description": "Bývalý profesionální sázkař, který se kvůli dluhům u lichvářů ocitl na dně. Testování u IRIS berete jako poslední šanci rychle vydělat pořádný balík. Jste nervózní a jednáte zbrkle - mozek vám pořád jede na plné obrátky ve vidině další sázky. Aby vám šéf S01 odpustil dluhy, neštítíte se ani riskantních kšeftů nebo tajného donášení informací na ostatní.",
+    "ability": "All-in: Můžete vsadit polovinu výdělku na jednu kartu.",
+    "goals": [
+        "Vydělat 10000 NC.",
+        "Donášet na ostatní Správci S01, aby vám odpustil dluh.",
+        "Získat od technika S03 zásilku kradené mědi a propašovat ven."
+    ],
+    "avatar": "avatar_U02.png",
+    "work_image": "work_U02.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "35-45",
+        "hair_color": "řídnoucí tmavé vlasy, mastné a neupravené",
+        "face_description": "nervózní pohled, kruhy pod očima, třídenní strniště, zpocené čelo",
+        "distinctive_features": "neustále si mne ruce, rozepnutý límec košile, uvolněná kravata"
+    }
+}

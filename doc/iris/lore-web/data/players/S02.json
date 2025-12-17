@@ -1,0 +1,22 @@
+{
+    "id": "S02",
+    "type": "admin",
+    "name": "Bc. Tereza Tichá",
+    "archetype": "HR a Happiness Manager",
+    "description": "Empatická personalistka, která byla pověřena rolí manažerky štěstí během testu IRIS. Konflikty a stres nesnášíte, a tak děláte všechno pro to, aby mezi účastníky panovala pohoda - rozdáváte úsměvy, pochvaly a v krajní nouzi i bonbóny na uklidnění. Když někde hrozí hádka nebo dokonce rvačka, okamžitě zasahujete a snažíte se uklidnit emoce.",
+    "ability": "Cukr: Můžete rozdávat bonbony na uklidnění.",
+    "goals": [
+        "Zabránit fyzickému násilí.",
+        "Aby nikdo nebrečel.",
+        "I v případě krizové situace udržet klid a morálku týmu."
+    ],
+    "avatar": "avatar_S02.png",
+    "work_image": "work_S02.png",
+    "appearance": {
+        "gender": "žena",
+        "age_range": "28-35",
+        "hair_color": "měkké blond vlasy ve volných vlnách",
+        "face_description": "přátelská, uklidňující tvář, vřelý úsměv, empatické oči",
+        "distinctive_features": "pastelové oblečení, míska s bonbony vždy po ruce, náramek s afirmacemi"
+    }
+}

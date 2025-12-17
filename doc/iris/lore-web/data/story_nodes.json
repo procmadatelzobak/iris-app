@@ -1,0 +1,279 @@
+{
+    "nodes": [
+        {
+            "id": "E101",
+            "nazev": "Start Směny",
+            "popis": "Správci odemykají místnost a zapínají hlavní terminál.",
+            "dlouhy_popis": "Správci odemykají místnost a zapínají hlavní terminál.",
+            "uzivatele": [
+                "S01",
+                "S02",
+                "S03",
+                "S04"
+            ],
+            "faze": "PH01",
+            "cas_start": 0,
+            "trvani": 5,
+            "typ": "system",
+            "kontext": [
+                "1. Úvod"
+            ]
+        },
+        {
+            "id": "E102",
+            "nazev": "Bezpečnostní instruktáž",
+            "popis": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
+            "dlouhy_popis": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
+            "uzivatele": [
+                "S01",
+                "U01",
+                "U02",
+                "U03",
+                "U04",
+                "U05",
+                "U06",
+                "U07",
+                "U08"
+            ],
+            "faze": "PH01",
+            "cas_start": 5,
+            "trvani": 15,
+            "typ": "briefing",
+            "kontext": [
+                "1. Úvod"
+            ]
+        },
+        {
+            "id": "E103",
+            "nazev": "Rozdávání visaček",
+            "popis": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
+            "dlouhy_popis": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
+            "uzivatele": [
+                "S02"
+            ],
+            "faze": "PH01",
+            "cas_start": 10,
+            "trvani": 10,
+            "typ": "briefing",
+            "kontext": [
+                "1. Úvod"
+            ]
+        },
+        {
+            "id": "E201",
+            "nazev": "Speedrun Start",
+            "popis": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
+            "dlouhy_popis": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
+            "uzivatele": [
+                "A03",
+                "U08"
+            ],
+            "faze": "PH02",
+            "cas_start": 25,
+            "trvani": 5,
+            "typ": "action",
+            "kontext": [
+                "2. Rutina"
+            ]
+        },
+        {
+            "id": "E202",
+            "nazev": "Výzva přijata",
+            "popis": "Igor 'Viper' reaguje na spam Gamera okamžitým uzavíráním ticketů.",
+            "dlouhy_popis": "Igor 'Viper' reaguje na spam Gamera okamžitým uzavíráním ticketů.",
+            "uzivatele": [
+                "A03",
+                "U08"
+            ],
+            "faze": "PH02",
+            "cas_start": 26,
+            "trvani": 10,
+            "typ": "action",
+            "kontext": [
+                "2. Rutina",
+                "rival"
+            ]
+        },
+        {
+            "id": "E203",
+            "nazev": "Recept na bábovku",
+            "popis": "Marie Kovářová posílá do systému detailní recept na bábovku.",
+            "dlouhy_popis": "Marie Kovářová posílá do systému detailní recept na bábovku.",
+            "uzivatele": [
+                "A04",
+                "U05"
+            ],
+            "faze": "PH02",
+            "cas_start": 30,
+            "trvani": 15,
+            "typ": "roleplay",
+            "kontext": [
+                "2. Rutina"
+            ]
+        },
+        {
+            "id": "E204",
+            "nazev": "Autopilot Engage",
+            "popis": "Lenka Ospalá zapíná makro 'Mňam, to zní skvěle' a jde si na chvíli zdřímnout.",
+            "dlouhy_popis": "Lenka Ospalá zapíná makro 'Mňam, to zní skvěle' a jde si na chvíli zdřímnout.",
+            "uzivatele": [
+                "A04"
+            ],
+            "faze": "PH02",
+            "cas_start": 32,
+            "trvani": 5,
+            "typ": "action",
+            "kontext": [
+                "2. Rutina"
+            ]
+        },
+        {
+            "id": "E301",
+            "nazev": "Hledání pravdy",
+            "popis": "Ivan Hrozný analyzuje blikání LED diod na routeru a hledá v tom morseovku.",
+            "dlouhy_popis": "Ivan Hrozný analyzuje blikání LED diod na routeru a hledá v tom morseovku.",
+            "uzivatele": [
+                "U06"
+            ],
+            "faze": "PH03",
+            "cas_start": 50,
+            "trvani": 20,
+            "typ": "investigation",
+            "kontext": [
+                "3. Agendy"
+            ]
+        },
+        {
+            "id": "E302",
+            "nazev": "Únik dat 01",
+            "popis": "Sabotér X posílá šifrovanou zprávu 'ALOBAL' do chatu Ivana Hrozného.",
+            "dlouhy_popis": "Sabotér X posílá šifrovanou zprávu 'ALOBAL' do chatu Ivana Hrozného.",
+            "uzivatele": [
+                "A08",
+                "U06"
+            ],
+            "faze": "PH03",
+            "cas_start": 55,
+            "trvani": 5,
+            "typ": "plot",
+            "kontext": [
+                "3. Agendy"
+            ]
+        },
+        {
+            "id": "E303",
+            "nazev": "Lichocení",
+            "popis": "Novinářka předstírá obdiv k vizi Synovce ředitele, aby z něj vytáhla informace.",
+            "dlouhy_popis": "Novinářka předstírá obdiv k vizi Synovce ředitele, aby z něj vytáhla informace.",
+            "uzivatele": [
+                "S04",
+                "U07"
+            ],
+            "faze": "PH03",
+            "cas_start": 60,
+            "trvani": 15,
+            "typ": "investigation",
+            "kontext": [
+                "3. Agendy"
+            ]
+        },
+        {
+            "id": "E401",
+            "nazev": "Odhalení dluhu",
+            "popis": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
+            "dlouhy_popis": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
+            "uzivatele": [
+                "S01",
+                "U02"
+            ],
+            "faze": "PH04",
+            "cas_start": 80,
+            "trvani": 5,
+            "typ": "conflict",
+            "kontext": [
+                "4. Krize"
+            ]
+        },
+        {
+            "id": "E402",
+            "nazev": "Krizová intervence",
+            "popis": "Tereza Tichá hází mezi Vránu a Gamblera hrst karamelek.",
+            "dlouhy_popis": "Tereza Tichá hází mezi Vránu a Gamblera hrst karamelek.",
+            "uzivatele": [
+                "S02"
+            ],
+            "faze": "PH04",
+            "cas_start": 81,
+            "trvani": 5,
+            "typ": "action",
+            "kontext": [
+                "4. Krize"
+            ]
+        },
+        {
+            "id": "E501",
+            "nazev": "EXECUTE ORDER 666",
+            "popis": "Sabotér spouští payload. Servery hlásí přehřátí.",
+            "dlouhy_popis": "Sabotér spouští payload. Servery hlásí přehřátí.",
+            "uzivatele": [
+                "A08"
+            ],
+            "faze": "PH05",
+            "cas_start": 100,
+            "trvani": 2,
+            "typ": "highlight",
+            "kontext": [
+                "5. Meltdown"
+            ]
+        },
+        {
+            "id": "E502",
+            "nazev": "Konfrontace",
+            "popis": "Ivan Hrozný křičí na Kabela, že 'kabely vedou do nikam!'",
+            "dlouhy_popis": "Ivan Hrozný křičí na Kabela, že 'kabely vedou do nikam!'",
+            "uzivatele": [
+                "S03",
+                "U06"
+            ],
+            "faze": "PH05",
+            "cas_start": 102,
+            "trvani": 10,
+            "typ": "conflict",
+            "kontext": [
+                "5. Meltdown"
+            ]
+        },
+        {
+            "id": "E503",
+            "nazev": "PANIC MODE",
+            "popis": "Ředitel mačká červené tlačítko 'SHUTDOWN'. Nic se nestane, protože není zapojené.",
+            "dlouhy_popis": "Ředitel mačká červené tlačítko 'SHUTDOWN'. Nic se nestane, protože není zapojené.",
+            "uzivatele": [
+                "S01"
+            ],
+            "faze": "PH05",
+            "cas_start": 105,
+            "trvani": 5,
+            "typ": "highlight",
+            "kontext": [
+                "5. Meltdown"
+            ]
+        },
+        {
+            "id": "E601",
+            "nazev": "Konec směny",
+            "popis": "Vrána vyhání všechny z místnosti.",
+            "dlouhy_popis": "Vrána vyhání všechny z místnosti.",
+            "uzivatele": [
+                "S01"
+            ],
+            "faze": "PH06",
+            "cas_start": 120,
+            "trvani": 0,
+            "typ": "system",
+            "kontext": [
+                "6. Závěr"
+            ]
+        }
+    ]
+}

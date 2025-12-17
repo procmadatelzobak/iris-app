@@ -1,0 +1,74 @@
+{
+    "types": [
+        {
+            "id": "RT001",
+            "nazev": "Minulost",
+            "popis": "Vztah založený na společné minulosti"
+        },
+        {
+            "id": "RT002",
+            "nazev": "Obchod",
+            "popis": "Obchodní nebo výměnný vztah"
+        },
+        {
+            "id": "RT003",
+            "nazev": "Vydírání",
+            "popis": "Jeden má nad druhým moc nebo vliv"
+        },
+        {
+            "id": "RT004",
+            "nazev": "Romance",
+            "popis": "Romantický nebo citový vztah"
+        },
+        {
+            "id": "RT005",
+            "nazev": "Spiknutí",
+            "popis": "Tajná spolupráce nebo konspirace"
+        },
+        {
+            "id": "RT006",
+            "nazev": "Empatie",
+            "popis": "Vztah založený na soucitu a porozumění"
+        },
+        {
+            "id": "RT007",
+            "nazev": "Rivalita",
+            "popis": "Soutěživý nebo nepřátelský vztah"
+        },
+        {
+            "id": "RT008",
+            "nazev": "Vyšetřování",
+            "popis": "Jeden vyšetřuje nebo sleduje druhého"
+        },
+        {
+            "id": "RT009",
+            "nazev": "Aliance",
+            "popis": "Spojenectví nebo vzájemná pomoc"
+        },
+        {
+            "id": "RT010",
+            "nazev": "Náklonnost",
+            "popis": "Jednostranný zájem nebo zalíbení"
+        },
+        {
+            "id": "RT011",
+            "nazev": "Ambice",
+            "popis": "Snaha o postup nebo převzetí pozice"
+        },
+        {
+            "id": "RT012",
+            "nazev": "Konflikt",
+            "popis": "Otevřený nebo skrytý spor"
+        },
+        {
+            "id": "RT013",
+            "nazev": "Péče",
+            "popis": "Starostlivost a ochrana"
+        },
+        {
+            "id": "RT014",
+            "nazev": "Podezření",
+            "popis": "Nedůvěra nebo sledování podezřelého"
+        }
+    ]
+}

@@ -1,0 +1,44 @@
+{
+    "types": [
+        {
+            "id": "TT001",
+            "nazev": "Finanční",
+            "popis": "Cíl týkající se vydělávání nebo získání peněz"
+        },
+        {
+            "id": "TT002",
+            "nazev": "Sociální",
+            "popis": "Cíl týkající se vztahů a interakcí s ostatními"
+        },
+        {
+            "id": "TT003",
+            "nazev": "Vyšetřování",
+            "popis": "Cíl týkající se odhalení pravdy nebo tajemství"
+        },
+        {
+            "id": "TT004",
+            "nazev": "Sabotáž",
+            "popis": "Cíl týkající se narušení systému nebo firmy"
+        },
+        {
+            "id": "TT005",
+            "nazev": "Kariérní",
+            "popis": "Cíl týkající se profesního postupu"
+        },
+        {
+            "id": "TT006",
+            "nazev": "Přežití",
+            "popis": "Cíl týkající se udržení pozice nebo vyhnutí se problémům"
+        },
+        {
+            "id": "TT007",
+            "nazev": "Ochrana",
+            "popis": "Cíl týkající se ochrany někoho nebo něčeho"
+        },
+        {
+            "id": "TT008",
+            "nazev": "Osobní",
+            "popis": "Osobní nebo emocionální cíl"
+        }
+    ]
+}

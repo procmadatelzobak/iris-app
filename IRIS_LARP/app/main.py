@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 import os
-from .routers import auth, sockets, admin_api, translations, docs, simulation
+from .routers import auth, sockets, admin_api, translations, docs, simulation, lore_editor_api
 from .database import init_db
 from .config import settings, BASE_DIR
 from .seed import seed_data
@@ -150,6 +150,7 @@ app.include_router(admin_api.router)
 app.include_router(translations.router)
 app.include_router(docs.router)
 app.include_router(simulation.router)
+app.include_router(lore_editor_api.router)
 
 @app.get("/health")
 async def health():

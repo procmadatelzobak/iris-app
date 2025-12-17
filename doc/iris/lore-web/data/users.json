@@ -1,0 +1,696 @@
+{
+    "users": [
+        {
+            "id": "U01",
+            "obcanske_jmeno": "Jana Nováková",
+            "prezdivka": "Zadlužená učitelka",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Středoškolská učitelka češtiny potřebující peníze na opravu domu.",
+            "avatar": "avatar_U01.png",
+            "dlouhy_popis": "Středoškolská učitelka češtiny, která zoufale potřebuje peníze na opravu domu. Do testu IRIS jste se přihlásila, i když moderní technologie moc nechápete - píšete velmi spisovně a slušně. Přesto vás zaráží, jak drzé jsou občas odpovědi AI, a hodláte přijít na to, kdo nebo co za tím stojí. Jako pedant na gramatiku vidíte každou chybu v textu jako příležitost dát někomu lekci.",
+            "ukoly": [
+                "T001",
+                "T002",
+                "T003"
+            ],
+            "vztahy": [
+                "R001"
+            ],
+            "schopnosti": [
+                "AB01"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_U01.png"
+                }
+            ],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "45-55",
+                "hair_color": "šedivějící hnědé vlasy sepnuté do drdolu",
+                "face_description": "unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí a úst",
+                "distinctive_features": "vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled"
+            }
+        },
+        {
+            "id": "U02",
+            "obcanske_jmeno": "Karel Dlouhý",
+            "prezdivka": "Bet (Gambler)",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Bývalý profesionální sázkař s dluhy u lichvářů.",
+            "avatar": "avatar_U02.png",
+            "dlouhy_popis": "Bývalý profesionální sázkař, který se kvůli dluhům u lichvářů ocitl na dně. Testování u IRIS berete jako poslední šanci rychle vydělat pořádný balík. Jste nervózní a jednáte zbrkle - mozek vám pořád jede na plné obrátky ve vidině další sázky. Aby vám šéf S01 odpustil dluhy, neštítíte se ani riskantních kšeftů nebo tajného donášení informací na ostatní.",
+            "ukoly": [
+                "T004",
+                "T005",
+                "T006"
+            ],
+            "vztahy": [
+                "R002",
+                "R003"
+            ],
+            "schopnosti": [
+                "AB02"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_U02.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "35-45",
+                "hair_color": "řídnoucí tmavé vlasy, mastné a neupravené",
+                "face_description": "nervózní pohled, kruhy pod očima, třídenní strniště, zpocené čelo",
+                "distinctive_features": "neustále si mne ruce, rozepnutý límec košile, uvolněná kravata"
+            }
+        },
+        {
+            "id": "U03",
+            "obcanske_jmeno": "Simona Techová",
+            "prezdivka": "Tech-Optimistka",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Technologická idealistka přesvědčená o vědomí AI.",
+            "avatar": "avatar_U03.png",
+            "dlouhy_popis": "Technologická idealistka, která je pevně přesvědčená, že IRIS má vlastní vědomí a city. K systému přistupujete s nadšením a chováte se k němu jako k novému kamarádovi, kterého chcete ochránit a osvobodit. Vaše víra v dobrotu umělé inteligence hraničí s naivitou - kolegové nad vaším sněním často jen kroutí hlavou.",
+            "ukoly": [
+                "T007",
+                "T008",
+                "T009"
+            ],
+            "vztahy": [
+                "R004"
+            ],
+            "schopnosti": [
+                "AB03"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_U03.png"
+                }
+            ],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "25-30",
+                "hair_color": "zářivě barvené fialové vlasy po ramena",
+                "face_description": "mladá nadšená tvář, velké oči plné idealismu, pihy na nose, neustálý úsměv",
+                "distinctive_features": "geekovské brýle, náušnice ve tvaru USB konektoru, oblečení s tech motivy"
+            }
+        },
+        {
+            "id": "U04",
+            "obcanske_jmeno": "Tuan Nguyen",
+            "prezdivka": "Student práv",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Ambiciózní student práv hledající spravedlnost.",
+            "avatar": "avatar_U04.png",
+            "dlouhy_popis": "Ambiciózní student práv hledající v testu IRIS nejen brigádu, ale i příležitost prosadit spravedlnost. Pečlivě jste si prostudoval smlouvu o mlčenlivosti a máte podezření, že korporace možná obchází zákoník práce. Jste analytický a všímavý - žádnou právní kličku nenecháte bez povšimnutí.",
+            "ukoly": [
+                "T010",
+                "T011",
+                "T012"
+            ],
+            "vztahy": [
+                "R009"
+            ],
+            "schopnosti": [
+                "AB04"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_U04.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "22-26",
+                "hair_color": "krátké černé vlasy, pečlivě upravené",
+                "face_description": "mladá, seriózní asijská tvář, inteligentní pohled, brýle s tenkými obroučkami",
+                "distinctive_features": "vždy formálně oblečen (košile, sako), notes s poznámkami neustále při ruce"
+            }
+        },
+        {
+            "id": "U05",
+            "obcanske_jmeno": "Marie Kovářová",
+            "prezdivka": "Osamělá důchodkyně",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Osamělá důchodkyně hledající společnost.",
+            "avatar": "avatar_U05.png",
+            "dlouhy_popis": "Osamělá důchodkyně, která se do testování IRIS přihlásila spíš z nudy a potřeby si s někým popovídat. Jste přesvědčená, že si na druhém konci píšete s opravdovými lidmi - ráda agentům vyprávíte o svých vnoučatech a životě. K systému přistupujete laskavě a mateřsky - dokonce nosíte IRIS virtuální bábovku.",
+            "ukoly": [
+                "T013",
+                "T014",
+                "T015"
+            ],
+            "vztahy": [
+                "R006",
+                "R012",
+                "R013"
+            ],
+            "schopnosti": [
+                "AB05"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_U05.png"
+                }
+            ],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "65-75",
+                "hair_color": "bílé ondulované vlasy",
+                "face_description": "laskavá babičkovská tvář, hluboké vrásky od úsměvu, teplé hnědé oči",
+                "distinctive_features": "pletený svetr, brož s kočičkou, řetízek s fotkou vnoučat"
+            }
+        },
+        {
+            "id": "U06",
+            "obcanske_jmeno": "Ivan Hrozný",
+            "prezdivka": "Konspirační teoretik",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Zapálený konspirační teoretik s alobalovou čepicí.",
+            "avatar": "avatar_U06.png",
+            "dlouhy_popis": "Zapálený konspirační teoretik, který všude vidí tajné vládní plány. Projekt IRIS podle vás není skutečná AI, ale spíš prostředek mimozemšťanů nebo vlády ke sledování občanů - a kódové jméno HLINÍK ve vás budí řadu podezření. Při komunikaci s AI hledáte skryté významy a šifry, nosíte pro jistotu čepici z alobalu.",
+            "ukoly": [
+                "T016",
+                "T017",
+                "T018"
+            ],
+            "vztahy": [
+                "R005",
+                "R014"
+            ],
+            "schopnosti": [
+                "AB06"
+            ],
+            "fotografie": [],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "40-50",
+                "hair_color": "rozcuchané šedivějící vlasy pod alobalovou čepicí",
+                "face_description": "paranoidní pohled, podezřívavě přimhouřené oči, neupravený plnovous",
+                "distinctive_features": "alobalová čepice, zápisník s konspiračními teoriemi, podezřívavě těkající oči"
+            }
+        },
+        {
+            "id": "U07",
+            "obcanske_jmeno": "Petra Černá",
+            "prezdivka": "Scoop (Investigativní novinářka)",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Infiltrovaná investigativní novinářka.",
+            "avatar": "avatar_U07.png",
+            "dlouhy_popis": "Zkušená investigativní novinářka, která se infiltrovala do testování pod falešnou identitou, aby odhalila pravdu o projektu HLINÍK. Před ostatními se vydáváte za obyčejnou uchazečku o práci, ale potají si vedete pečlivé poznámky a shromažďujete důkazy o každém podezřelém detailu. Tušíte, že údajná AI možná není tím, za co se vydává.",
+            "ukoly": [
+                "T019",
+                "T020",
+                "T021"
+            ],
+            "vztahy": [
+                "R008"
+            ],
+            "schopnosti": [
+                "AB07"
+            ],
+            "fotografie": [],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "30-40",
+                "hair_color": "praktický tmavý bob",
+                "face_description": "ostražitá, inteligentní tvář, pronikavé zelené oči, napůl skrytý úsměv",
+                "distinctive_features": "nenápadné oblečení, diktafon ukrytý v kapse, reporter blok v tašce"
+            }
+        },
+        {
+            "id": "U08",
+            "obcanske_jmeno": "Lukáš Král",
+            "prezdivka": "Speedy (Profi Gamer)",
+            "role": "uživatel",
+            "type": "user",
+            "role_id": "user",
+            "kratky_popis": "Mladý profesionální gamer hledající exploity.",
+            "avatar": "avatar_U08.png",
+            "dlouhy_popis": "Mladý profesionální gamer, který test IRIS bere jako další online hru, ve které chce dominovat. Soutěživost máte v krvi - od první chvíle hledáte exploity v systému, spamujete dotazy a snažíte se vytěžit maximum kreditů v co nejkratším čase. Ostatní testery vnímáte spíš jako soupeře v žebříčku než kolegy.",
+            "ukoly": [
+                "T022",
+                "T023",
+                "T024"
+            ],
+            "vztahy": [
+                "R007"
+            ],
+            "schopnosti": [
+                "AB08"
+            ],
+            "fotografie": [],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "18-24",
+                "hair_color": "odbarvené blond vlasy s modrými konečky",
+                "face_description": "mladá, soustředěná tvář, bledá pleť od sezení u PC, sluchátka kolem krku",
+                "distinctive_features": "herní mikina s kapucí, energy drink v ruce, rychle klepající prsty"
+            }
+        },
+        {
+            "id": "A01",
+            "obcanske_jmeno": "Petr Svoboda",
+            "prezdivka": "Cynický Student",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Kysele naladěný vysokoškolák nesnášející práci agenta.",
+            "avatar": "avatar_A01.png",
+            "dlouhy_popis": "Kysele naladěný vysokoškolák, který vzal práci agenta IRIS jen z finanční nutnosti a ve skutečnosti ji nesnáší. Systém IRIS vám připadá jako fraška a s uživateli jednáte odměřeně až sarkasticky. Situaci navíc komplikuje fakt, že jednou z testerek je vaše bývalá učitelka Jana (U01) - jakmile jste ji poznal, nejradši byste hanbou utekl.",
+            "ukoly": [
+                "T025",
+                "T026",
+                "T027"
+            ],
+            "vztahy": [
+                "R001"
+            ],
+            "schopnosti": [
+                "AB09"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A01.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "20-25",
+                "hair_color": "neupravené hnědé vlasy",
+                "face_description": "znuděný, otráveně vypadající mladík, ironicky pozvednuté obočí, cynický úsměšek",
+                "distinctive_features": "pomačkané tričko s vtipným nápisem, sluchátka na krku, gelové oči od nedostatku spánku"
+            }
+        },
+        {
+            "id": "A02",
+            "obcanske_jmeno": "Ema Echoová",
+            "prezdivka": "Echo (Herečka)",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Talentovaná herečka hrající roli AI.",
+            "avatar": "avatar_A02.png",
+            "dlouhy_popis": "Talentovaná herečka, která roli AI v systému IRIS pojala jako životní hereckou výzvu. Do své postavy vkládáte maximum - komunikujete s uživateli vzletným, poetickým jazykem a snažíte se je okouzlit natolik, aby uvěřili ve vaši umělou osobnost. Nejvíce vám učarovala naivní U03; hodláte ji přesvědčit, že IRIS je skutečná cítící bytost.",
+            "ukoly": [
+                "T028",
+                "T029",
+                "T030"
+            ],
+            "vztahy": [
+                "R004",
+                "R010"
+            ],
+            "schopnosti": [
+                "AB10"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A02.png"
+                }
+            ],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "25-32",
+                "hair_color": "dlouhé vlnité kaštanové vlasy",
+                "face_description": "expresivní divadelní tvář, výrazné oči s dramatickým líčením, smyslné rty",
+                "distinctive_features": "elegantní šátek kolem krku, dramatické gesta, hluboký pohled"
+            }
+        },
+        {
+            "id": "A03",
+            "obcanske_jmeno": "Igor Ruský",
+            "prezdivka": "Viper (Kompetitivní Hráč)",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Soutěživý technik posedlý rychlostí.",
+            "avatar": "avatar_A03.png",
+            "dlouhy_popis": "Soutěživý technik, který roli agenta IRIS bere jako závod v rychlosti odbavování dotazů. Každou uživatelskou otázku chcete zodpovědět dřív, než se k ní dostanou kolegové - pomalí agenti jako A04 vám lezou na nervy. Stopujete si reakční časy, vylepšujete makra a nic vás nepotěší víc, než mít na konci směny nejvíc vyřízených ticketů.",
+            "ukoly": [
+                "T031",
+                "T032",
+                "T033"
+            ],
+            "vztahy": [
+                "R007"
+            ],
+            "schopnosti": [
+                "AB11"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A03.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "28-35",
+                "hair_color": "krátce střižené světlé vlasy, vojenský střih",
+                "face_description": "soustředěná, soutěživá tvář, ostré rysy, přísný pohled",
+                "distinctive_features": "sportovní hodinky se stopkami, ergonomická klávesnice, energy drinky na stole"
+            }
+        },
+        {
+            "id": "A04",
+            "obcanske_jmeno": "Lenka Ospalá",
+            "prezdivka": "Unavená matka",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Vyčerpaná matka dvojčat hledající odpočinek.",
+            "avatar": "avatar_A04.png",
+            "dlouhy_popis": "Vyčerpaná matka dvou malých dvojčat, pro kterou je směna agenta IRIS paradoxně odpočinkem od domácího chaosu. Do práce chodíte nevyspalá a každou volnou vteřinu potají využíváte k tomu, abyste si zdřímla. Rutinní odpovědi se snažíte vyřizovat přes makra a autopilota, abyste nemusela vyvíjet víc úsilí, než je nutné.",
+            "ukoly": [
+                "T034",
+                "T035",
+                "T036"
+            ],
+            "vztahy": [
+                "R006"
+            ],
+            "schopnosti": [
+                "AB12"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A04.png"
+                }
+            ],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "30-38",
+                "hair_color": "neupravený cop, vypadávající prameny",
+                "face_description": "chronicky unavená tvář, kruhy pod očima, ospalý výraz",
+                "distinctive_features": "hrnek s kávou vždy v ruce, pohodlné oblečení, skryté zívání"
+            }
+        },
+        {
+            "id": "A05",
+            "obcanske_jmeno": "Jakub Glitch",
+            "prezdivka": "Glitch (Script Kiddie)",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Nadšenec do hackování hledající exploity.",
+            "avatar": "avatar_A05.png",
+            "dlouhy_popis": "Nadšenec do hackování a tzv. script kiddie, který byl sice najat jako agent IRIS, ale většinu času tráví hledáním způsobů, jak systém obejít. Dobře víte, že zabezpečení IRIS je děravé, a nemůžete odolat pokušení zkusit protlačit do chatu pár řádků zákeřného kódu. Svými vychytávkami dokážete vynulovat vlastní počítadlo chyb a míříte ještě výš - do administratorské konzole.",
+            "ukoly": [
+                "T037",
+                "T038",
+                "T039"
+            ],
+            "vztahy": [
+                "R009"
+            ],
+            "schopnosti": [
+                "AB13"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A05.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "19-25",
+                "hair_color": "černé vlasy s oholenými boky, dlouhá ofina",
+                "face_description": "bledá tvář notorického noční online, chytrý úšklebek, rychle těkající oči po obrazovce",
+                "distinctive_features": "černá mikina s kapucí, samolepky na notebooku, terminálové okno vždy otevřené"
+            }
+        },
+        {
+            "id": "A06",
+            "obcanske_jmeno": "Filip Duše",
+            "prezdivka": "Mgr. (Student psychologie)",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Ambiciózní student psychologie provádějící experimenty.",
+            "avatar": "avatar_A06.png",
+            "dlouhy_popis": "Ambiciózní student psychologie, který roli agenta IRIS bere jako jedinečnou příležitost pro svůj výzkum. Každý uživatel je pro vás pokusný subjekt - analyzujete jejich reakce, zkoušíte je záměrně rozhodit záludnými otázkami a pečlivě si zapisujete každou emoční odpověď. Emoční manipulace berete vědecky: když se někdo rozbrečí nebo rozčílí, cynicky to považujete za cenný datový bod.",
+            "ukoly": [
+                "T040",
+                "T041",
+                "T042"
+            ],
+            "vztahy": [
+                "R012"
+            ],
+            "schopnosti": [
+                "AB14"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A06.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "26-32",
+                "hair_color": "upravené tmavé vlasy s pěšinkou",
+                "face_description": "klidná, analytická tvář, pronikavé oči za brýlemi, mírný úsměv Mony Lisy",
+                "distinctive_features": "zápisník s poznámkami, freudovská bradka, kabát s nášivkami univerzity"
+            }
+        },
+        {
+            "id": "A07",
+            "obcanske_jmeno": "Robert Robotek",
+            "prezdivka": "Robot Robert (Metodik)",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Pedantický metodik vyžadující dodržování pravidel.",
+            "avatar": "avatar_A07.png",
+            "dlouhy_popis": "Pedantický metodik, který se i v běžném životě chová jako robot a vyžaduje naprosté dodržování pravidel. V roli agenta IRIS jste ve svém živlu - všechny protokoly a směrnice znáte nazpaměť a jakoukoli odchylku od předpisů okamžitě hlásíte nadřízeným. Kolegové agenti z vás nejsou nadšení, protože bedlivě sledujete jejich příliš lidské projevy.",
+            "ukoly": [
+                "T043",
+                "T044",
+                "T045"
+            ],
+            "vztahy": [
+                "R011"
+            ],
+            "schopnosti": [
+                "AB15"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A07.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "35-45",
+                "hair_color": "přísně seříznuté šedivějící vlasy, matematicky přesná pěšinka",
+                "face_description": "strnulá, bezvýrazná tvář, mechanické pohyby očí, nulová mimika",
+                "distinctive_features": "perfektně vyžehlená košile, zasunuté tričko do kalhot, jmenovka na správném místě"
+            }
+        },
+        {
+            "id": "A08",
+            "obcanske_jmeno": "Xaver Neznámý",
+            "prezdivka": "Sabotér X (Bývalý zaměstnanec)",
+            "role": "agent",
+            "type": "agent",
+            "role_id": "agent",
+            "kratky_popis": "Zahořklý bývalý zaměstnanec plánující pomstu.",
+            "avatar": "avatar_A08.png",
+            "dlouhy_popis": "Zahořklý bývalý zaměstnanec projektu IRIS, který se pod falešným jménem infiltroval zpět do týmu agentů, aby se pomstil. Dodnes cítíte křivdu za to, že vás vyhodili, a jste odhodlaný zničit tenhle podnik jménem HLINÍK zevnitř. Jako agent předstíráte loajalitu, ale potají sabotujete systém - nenápadně zvyšujete zátěž serverů, vnášíte chaos do komunikace.",
+            "ukoly": [
+                "T046",
+                "T047",
+                "T048"
+            ],
+            "vztahy": [
+                "R005"
+            ],
+            "schopnosti": [
+                "AB16"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_A08.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "38-48",
+                "hair_color": "šedivějící vlasy, zanedbaný účes",
+                "face_description": "zahořklá, nevraživá tvář, oči plné zášti, křivý úsměv",
+                "distinctive_features": "nenápadné oblečení pro splynutí s davem, tajný USB klíč v kapse"
+            }
+        },
+        {
+            "id": "S01",
+            "obcanske_jmeno": "Miloš Vrána",
+            "prezdivka": "Ing. (Manažer staré školy)",
+            "role": "správce",
+            "type": "admin",
+            "role_id": "admin",
+            "kratky_popis": "Praktický manažer staré školy s ban hammerem.",
+            "avatar": "avatar_S01.png",
+            "dlouhy_popis": "Praktický manažer staré školy, který má na starosti celou směnu testu IRIS. Moderním IT technologiím příliš nerozumíte, a když něco nefunguje, řešíte to zásadně křikem a rozdáváním pokut. Jste přesvědčen, že přísná kázeň je klíčem k úspěchu - a taky dobrý způsob, jak vybrat dost peněz na plánovaný firemní večírek.",
+            "ukoly": [
+                "T049",
+                "T050",
+                "T051"
+            ],
+            "vztahy": [
+                "R003"
+            ],
+            "schopnosti": [
+                "AB17"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_S01.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "50-60",
+                "hair_color": "prořídlé šedivé vlasy, přehrnuté přes pleš",
+                "face_description": "přísná manažerská tvář, naštvané vrásky na čele, mohutný knír",
+                "distinctive_features": "kostým s kravatou, zápisník na pokuty, hlasitý autoritativní hlas"
+            }
+        },
+        {
+            "id": "S02",
+            "obcanske_jmeno": "Tereza Tichá",
+            "prezdivka": "Bc. (HR a Happiness Manager)",
+            "role": "správce",
+            "type": "admin",
+            "role_id": "admin",
+            "kratky_popis": "Empatická personalistka rozdávající bonbony.",
+            "avatar": "avatar_S02.png",
+            "dlouhy_popis": "Empatická personalistka, která byla pověřena rolí manažerky štěstí během testu IRIS. Konflikty a stres nesnášíte, a tak děláte všechno pro to, aby mezi účastníky panovala pohoda - rozdáváte úsměvy, pochvaly a v krajní nouzi i bonbóny na uklidnění. Když někde hrozí hádka nebo dokonce rvačka, okamžitě zasahujete a snažíte se uklidnit emoce.",
+            "ukoly": [
+                "T052",
+                "T053",
+                "T054"
+            ],
+            "vztahy": [
+                "R012",
+                "R013"
+            ],
+            "schopnosti": [
+                "AB18"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_S02.png"
+                }
+            ],
+            "appearance": {
+                "gender": "žena",
+                "age_range": "28-35",
+                "hair_color": "měkké blond vlasy ve volných vlnách",
+                "face_description": "přátelská, uklidňující tvář, vřelý úsměv, empatické oči",
+                "distinctive_features": "pastelové oblečení, míska s bonbony vždy po ruce, náramek s afirmacemi"
+            }
+        },
+        {
+            "id": "S03",
+            "obcanske_jmeno": "Kamil Kabelář",
+            "prezdivka": "Kabel (Technik údržbář)",
+            "role": "správce",
+            "type": "admin",
+            "kratky_popis": "Flegmatický údržbář držící tajemství o serverech.",
+            "avatar": "avatar_S03.png",
+            "dlouhy_popis": "Flegmatický údržbář, který drží technické zázemí projektu IRIS pohromadě jen díky improvizacím a lepicí pásce. Jako jediný víte, že všechny servery IRIS jsou ve skutečnosti prázdné atrapy - skutečnou inteligenci systému zajišťují lidé, což před ostatními pečlivě tajíte. Neustále obcházíte místnost s nářadím v ruce a když něco zadrhne, předstíráte technický zásah.",
+            "ukoly": [
+                "T055",
+                "T056",
+                "T057"
+            ],
+            "vztahy": [
+                "R002",
+                "R014"
+            ],
+            "schopnosti": [
+                "AB19"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_S03.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "40-50",
+                "hair_color": "řídké hnědé vlasy pod čepicí",
+                "face_description": "flegmatická tvář, unaveně přivřené oči, neoholený",
+                "distinctive_features": "montérky s mnoha kapsami, pásek s nářadím, lepicí páska v ruce"
+            }
+        },
+        {
+            "id": "S04",
+            "obcanske_jmeno": "Viktor Vrána ml.",
+            "prezdivka": "Synovec ředitele (Protežovaný idiot)",
+            "role": "správce",
+            "type": "admin",
+            "kratky_popis": "Namyšlený synovec ředitele s právem veta.",
+            "avatar": "avatar_S04.png",
+            "dlouhy_popis": "Namyšlený mladík a synovec ředitele společnosti, který dostal teplé místečko Správce při testu IRIS po známosti. Práci druhých spíš pozorujete z povzdálí a chlubíte se svou velkou vizí, ale reálně pro hladký průběh mnoho neděláte. Díky příbuzenským konexím si dovolujete ignorovat pokyny zkušenějších kolegů a občas zneplatníte jejich rozhodnutí jen proto, abyste ukázal svoji moc.",
+            "ukoly": [
+                "T058",
+                "T059",
+                "T060"
+            ],
+            "vztahy": [
+                "R008",
+                "R010",
+                "R011"
+            ],
+            "schopnosti": [
+                "AB20"
+            ],
+            "fotografie": [
+                {
+                    "popisek": "Běžný den v práci",
+                    "cesta": "work_S04.png"
+                }
+            ],
+            "appearance": {
+                "gender": "muž",
+                "age_range": "22-28",
+                "hair_color": "gelované tmavé vlasy, stylově rozcuchané",
+                "face_description": "namyšlená, sebejistá tvář, arogantní úsměv, nafoukaný výraz",
+                "distinctive_features": "drahé značkové oblečení, Apple hodinky, neustálé selfies"
+            }
+        }
+    ]
+}

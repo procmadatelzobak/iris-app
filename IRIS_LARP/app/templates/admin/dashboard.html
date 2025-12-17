@@ -1,27 +1,9 @@
 {% extends "base.html" %}
 
 {% block head %}
-<link rel="stylesheet" href="/static/css/admin_chernobyl.css">
+<link rel="stylesheet" href="/static/css/admin_hlinik_modern.css">
 <style>
-    .nav-btn {
-        padding: 1rem 2rem;
-        color: #880;
-        border-right: 1px solid #330;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .nav-btn:hover {
-        background: #220;
-        color: #ff0;
-    }
-
-    .nav-btn.active {
-        background: #330;
-        color: #ff0;
-        border-bottom: 3px solid #f00;
-    }
-
+    /* Inline overrides for specific dynamic elements */
     .view-container {
         padding: 1rem;
         height: calc(100vh - 60px);
@@ -36,50 +18,47 @@
     }
 
     .session-card {
-        background: rgba(0, 10, 0, 0.9);
-        border: 1px solid #330000;
+        background: rgba(10, 25, 50, 0.9);
+        border: 1px solid rgba(79, 168, 255, 0.3);
+        border-radius: 8px;
         padding: 10px;
         height: 250px;
-        /* Fixed height for consistency */
         display: flex;
         flex-direction: column;
     }
 
     /* Controls Layout */
     .canvas-container {
-        border: 1px solid #330;
+        border: 1px solid rgba(79, 168, 255, 0.4);
+        border-radius: 8px;
         height: 100px;
         width: 100%;
         position: relative;
     }
 
-    /* Economy Table */
-    .eco-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .eco-table th,
-    .eco-table td {
-        border: 1px solid #330;
-        padding: 0.5rem;
-        text-align: left;
-    }
-
-    .eco-table th {
-        color: #f00;
-    }
-
     .btn-action {
-        border: 1px solid #555;
+        border: 1px solid rgba(100, 180, 255, 0.3);
+        border-radius: 4px;
         padding: 2px 8px;
-        color: #aaa;
+        color: #7fc4ff;
         cursor: pointer;
+        transition: all 0.2s;
     }
 
     .btn-action:hover {
-        border-color: #fff;
+        border-color: #4fa8ff;
         color: #fff;
+        background: rgba(79, 168, 255, 0.2);
+    }
+
+    /* Dashboard Grid Layout */
+    #hub-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        max-width: 1200px;
+        width: 100%;
+        padding: 2rem;
     }
 </style>
 {% endblock %}
@@ -88,77 +67,105 @@
 <div class="crt-overlay"></div>
 <div class="flex flex-col h-screen">
 
-    <div id="hub-view"
-        class="h-screen w-screen bg-black flex items-center justify-center gap-8 p-10 z-50 absolute inset-0 text-center">
+    <div id="hub-view" class="h-screen w-screen flex items-center justify-center z-50 absolute inset-0">
         <!-- Hub Docs Buttons -->
-        <div class="absolute top-4 right-4 flex gap-4">
-            <a href="/doc/view/admin" target="_blank"
-                class="border border-yellow-500 text-yellow-500 hover:bg-yellow-900 px-3 py-1 text-xs font-mono transition">[
+        <div class="absolute top-4 right-4 flex gap-4 z-50">
+            <a href="/doc/view/admin" target="_blank" class="chernobyl-btn px-3 py-1 text-xs">[
                 MANUÁL ]</a>
-            <a href="/doc/view/system" target="_blank"
-                class="border border-blue-500 text-blue-500 hover:bg-blue-900 px-3 py-1 text-xs font-mono transition">[
+            <a href="/doc/view/system" target="_blank" class="chernobyl-btn px-3 py-1 text-xs">[
                 SYSTEM ]</a>
         </div>
-        <div class="chernobyl-panel hover:bg-green-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
-            onclick="openStation('monitor')">
-            <h2 class="text-6xl text-green-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_1">MONITORING</h2>
-            <div class="text-green-300 editable-label" data-key="hub_desc_1">DOHLED</div>
-            <div class="mt-auto text-xs text-green-800"><span class="bulb on-green animate-pulse"></span> ONLINE</div>
-        </div>
-        <div class="chernobyl-panel hover:bg-yellow-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
-            onclick="openStation('controls')">
-            <h2 class="text-6xl text-yellow-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_2">OVLÁDÁNÍ</h2>
-            <div class="text-yellow-300 editable-label" data-key="hub_desc_2">KONTROLA</div>
-            <div class="mt-auto text-xs text-yellow-800"><span class="bulb on-amber"></span> ACTIVE</div>
-        </div>
-        <div class="chernobyl-panel hover:bg-blue-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
-            onclick="openStation('economy')">
-            <h2 class="text-6xl text-blue-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_3">EKONOMIKA</h2>
-            <div class="text-blue-300 editable-label" data-key="hub_desc_3">FINANCE</div>
-            <div class="mt-auto text-xs text-blue-800"><span class="bulb on-green"></span> STABLE</div>
-        </div>
-        <div class="chernobyl-panel hover:bg-purple-900/20 p-8 flex flex-col items-center justify-center cursor-pointer transition w-64 h-96 group"
-            onclick="openStation('tasks')">
-            <h2 class="text-6xl text-purple-500 font-bold mb-4 font-mono group-hover:text-white transition editable-label"
-                data-key="hub_station_4">ÚKOLY</h2>
-            <div class="text-purple-300 editable-label" data-key="hub_desc_4">AGENDA</div>
-            <div class="mt-auto text-xs text-purple-800"><span class="bulb on-amber animate-pulse"></span> PENDING</div>
+
+        <!-- 2x2 Grid of Dashboard Tiles -->
+        <div id="hub-grid">
+            <!-- 1. MONITORING -->
+            <div class="dashboard-tile h-64 cursor-pointer group" onclick="openStation('monitor')">
+                <div class="dashboard-tile-bg"
+                    style="background-image: url('/static/img/admin/dashboard_monitor.png');"></div>
+                <div class="dashboard-tile-content">
+                    <div class="text-6xl font-bold text-white mb-2 group-hover:text-cyan-400 transition"
+                        style="font-family: 'Orbitron', sans-serif;">01
+                    </div>
+                    <h2 class="text-2xl text-cyan-400 font-bold mb-2 group-hover:text-white transition editable-label"
+                        data-key="hub_station_1">SLEDOVÁNÍ SEZENÍ</h2>
+                    <div class="text-cyan-300/70 editable-label text-sm tracking-widest" data-key="hub_desc_1">
+                        MONITORING
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CONTROLS -->
+            <div class="dashboard-tile h-64 cursor-pointer group" onclick="openStation('controls')">
+                <div class="dashboard-tile-bg"
+                    style="background-image: url('/static/img/admin/dashboard_controls.png');"></div>
+                <div class="dashboard-tile-content">
+                    <div class="text-6xl font-bold text-white mb-2 group-hover:text-amber-400 transition"
+                        style="font-family: 'Orbitron', sans-serif;">02
+                    </div>
+                    <h2 class="text-2xl text-amber-400 font-bold mb-2 group-hover:text-white transition editable-label"
+                        data-key="hub_station_2">ŘÍDÍCÍ PANEL</h2>
+                    <div class="text-amber-300/70 editable-label text-sm tracking-widest" data-key="hub_desc_2">KONTROLA
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. ECONOMY -->
+            <div class="dashboard-tile h-64 cursor-pointer group" onclick="openStation('economy')">
+                <div class="dashboard-tile-bg"
+                    style="background-image: url('/static/img/admin/dashboard_economy.png');"></div>
+                <div class="dashboard-tile-content">
+                    <div class="text-6xl font-bold text-white mb-2 group-hover:text-blue-400 transition"
+                        style="font-family: 'Orbitron', sans-serif;">03
+                    </div>
+                    <h2 class="text-2xl text-blue-400 font-bold mb-2 group-hover:text-white transition editable-label"
+                        data-key="hub_station_3">EKONOMICKÝ PANEL</h2>
+                    <div class="text-blue-300/70 editable-label text-sm tracking-widest" data-key="hub_desc_3">FINANCE
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. TASKS -->
+            <div class="dashboard-tile h-64 cursor-pointer group" onclick="openStation('tasks')">
+                <div class="dashboard-tile-bg" style="background-image: url('/static/img/admin/dashboard_tasks.png');">
+                </div>
+                <div class="dashboard-tile-content">
+                    <div class="text-6xl font-bold text-white mb-2 group-hover:text-purple-400 transition"
+                        style="font-family: 'Orbitron', sans-serif;">04
+                    </div>
+                    <h2 class="text-2xl text-purple-400 font-bold mb-2 group-hover:text-white transition editable-label"
+                        data-key="hub_station_4">PANEL S ÚKOLY</h2>
+                    <div class="text-purple-300/70 editable-label text-sm tracking-widest" data-key="hub_desc_4">AGENDA
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Top Bar -->
-    <div id="station-nav"
-        class="admin-nav z-40 hidden flex justify-between items-center px-4 py-2 border-b-4 border-gray-700 bg-gray-900 shadow-xl">
+    <div id="station-nav" class="admin-nav z-40 hidden flex justify-between items-center px-4 py-2">
         <div class="text-2xl font-bold text-white flex items-center gap-4">
-            <span id="station-title" class="text-shadow bg-black px-2 border border-gray-600">STANICE</span>
+            <span id="station-title" class="text-shadow px-3 py-1">STANICE</span>
         </div>
 
         <div class="flex gap-4 ml-auto mr-4">
-            <a href="/doc/view/admin" target="_blank"
-                class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800 hover:text-white flex items-center justify-center">[
-                MANUÁL ]</a>
-            <a href="/doc/view/system" target="_blank"
-                class="chernobyl-btn px-4 py-1 text-sm text-blue-500 border-blue-800 hover:text-white flex items-center justify-center">[
-                SYSTEM ]</a>
-            <button class="chernobyl-btn px-4 py-1 text-sm" data-key="btn_labels" onclick="toggleEditMode()">UPRAVIT
-                POPISKY</button>
-            <button class="chernobyl-btn px-4 py-1 text-sm text-red-500 border-red-800 editable-label"
-                data-key="btn_reset_sys" onclick="triggerReset()">RESET SYSTÉMU</button>
-            <button class="chernobyl-btn px-4 py-1 text-sm text-yellow-500 border-yellow-800"
-                onclick="window.location.href='/auth/logout'">ODHLÁSIT</button>
-        </div>
+            <button class="chernobyl-btn px-4 py-1 text-sm font-bold" onclick="closeStation()">
+                [ VÝBĚR PANELU ]
+            </button>
 
-        <button class="chernobyl-btn px-4 py-1 text-red-400 hover:text-white" onclick="closeStation()">
-            [ X ]
-        </button>
+            <div class="w-[1px] bg-gray-600 h-6 mx-2"></div>
+
+            <a href="/doc/view/admin" target="_blank" class="chernobyl-btn px-4 py-1 text-sm">[
+                MANUÁL ]</a>
+            <button class="chernobyl-btn px-4 py-1 text-sm editable-label" data-key="btn_reset_sys"
+                onclick="triggerReset()">RESET</button>
+            <button class="chernobyl-btn px-4 py-1 text-sm"
+                onclick="window.location.href='/auth/logout'">LOGOUT</button>
+        </div>
     </div>
 
     <!-- View A: MONITOR (General, Logs, Graph) -->
     <!-- Force height to fill viewport minus header/padding to ensure graph is large -->
-    <div id="view-monitor" class="view-section hidden h-[calc(100vh-100px)] flex flex-col">
+    <div id="view-monitor" class="view-container hidden h-[calc(100vh-100px)] flex flex-col">
         <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-2 flex-none bg-black/50 p-2">
             <button class="nav-btn active editable-label" data-key="tab_all" onclick="switchMonitorTab('all')"
                 id="mtab-all">VŠEVIDOUCÍ</button>
@@ -233,119 +240,130 @@
     </div>
 
     <!-- View B: CONTROLS -->
-    <div id="view-controls" class="view-container hidden">
-        <div class="grid grid-cols-2 gap-8">
-            <!-- Global Shift -->
-            <div class="chernobyl-panel p-6 bg-black">
-                <h3 class="text-4xl text-yellow-500 mb-6 editable-label" data-key="lbl_shift">POSUN RELACE</h3>
-                <div class="text-8xl font-bold text-white mb-6 text-center border-2 border-yellow-900 p-4"
-                    id="controlShift">0</div>
-                <button class="w-full chernobyl-btn py-4 hover:bg-yellow-900 editable-label text-xl"
-                    data-key="btn_shift" onclick="triggerShift()">
-                    [ >> DALŠÍ FÁZE >> ]
-                </button>
+    <div id="view-controls" class="view-container hidden h-full">
+        <div class="tos-container">
+            <!-- Left Column: Master Control & Frequency -->
+            <div class="flex flex-col gap-6">
+
+                <!-- MASTER CONTROL (Shift) -->
+                <div class="tos-module">
+                    <div class="tos-header">MASTER CONTROL</div>
+
+                    <div class="tos-screen">
+                        <div class="tos-screen-grid"></div>
+                        <div class="text-center">
+                            <span class="tos-label editable-label" data-key="lbl_shift">CURRENT PHASE</span>
+                            <div class="tos-value-display" id="controlShift">0</div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button
+                            class="tos-jelly-btn jelly-large jelly-red shadow-lg transform hover:scale-105 transition-transform"
+                            onclick="triggerShift()" data-key="btn_shift">
+                            ENGAGE NEXT PHASE
+                        </button>
+                    </div>
+
+                    <div class="tos-jelly-row justify-center mt-6">
+                        <div class="tos-jelly-btn jelly-blue"></div>
+                        <div class="tos-jelly-btn jelly-white"></div>
+                        <div class="tos-jelly-btn jelly-gold"></div>
+                        <div class="tos-data-disc"></div>
+                    </div>
+                </div>
+
+                <!-- SUBSPACE FREQUENCY (Timer) -->
+                <div class="tos-module">
+                    <div class="tos-header">SUBSPACE FREQ</div>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="tos-label editable-label" data-key="lbl_timer">RESPONSE TIMEOUT</span>
+                        <div class="font-mono text-xl text-white font-bold" id="timerDisplay">-- s</div>
+                    </div>
+
+                    <input type="range" class="tos-slider" min="15" max="300" step="5" id="timerInput"
+                        oninput="updateTimerPreview(this.value)">
+
+                    <div class="flex justify-between">
+                        <div class="tos-rocker-group">
+                            <button class="tos-rocker-btn" onclick="saveResponseTimer()">SET</button>
+                            <button class="tos-rocker-btn" onclick="updateTimerPreview(60)">STD</button>
+                        </div>
+                        <div class="tos-data-disc" style="border-top-color: var(--tos-gold)"></div>
+                    </div>
+                    <div class="text-[10px] text-gray-400 mt-2 font-mono uppercase">Frequency calibration affects agent
+                        latency</div>
+                </div>
+
             </div>
 
-            <!-- Agent Response Timer -->
-            <div class="chernobyl-panel p-6 bg-black">
-                <h3 class="text-2xl text-green-400 mb-4 editable-label" data-key="lbl_timer">ČAS NA ODPOVĚĎ AGENTA</h3>
-                <div class="text-6xl font-bold text-white mb-4 text-center border border-green-900 p-3"
-                    id="timerDisplay">-- s</div>
-                <input type="range" class="w-full accent-green-500 bg-gray-800" min="15" max="300" step="5"
-                    id="timerInput" oninput="updateTimerPreview(this.value)">
-                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>15s</span>
-                    <span>300s</span>
-                </div>
-                <button
-                    class="w-full chernobyl-btn py-2 mt-4 border-green-900 text-green-400 hover:bg-green-900 transition"
-                    onclick="saveResponseTimer()">[ ULOŽIT LIMIT ]</button>
-                <div class="text-[10px] text-gray-500 mt-2">Úprava se projeví okamžitě na agentovi i uživateli.</div>
-            </div>
+            <!-- Right Column: Engineering -->
+            <div class="tos-module h-full flex flex-col">
+                <div class="tos-header">ENGINEERING</div>
 
-            <!-- Power & Instability Column -->
-            <div class="space-y-6">
-                <!-- Power Management v1.4 -->
-                <div class="chernobyl-panel p-6 bg-black">
-                    <h3 class="text-2xl text-blue-500 mb-4 editable-label" data-key="lbl_energy">ZÁTĚŽ SERVERU</h3>
-                    <div
-                        class="bg-gray-900 border border-blue-900 p-1 mb-4 relative overflow-hidden h-12 chernobyl-inset">
-                        <div id="powerBar" class="h-full bg-blue-600 transition-all duration-500 relative"
-                            style="width: 10%;">
-                            <!-- Stripe Pattern -->
-                            <div class="absolute inset-0"
-                                style="background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.3) 10px, rgba(0,0,0,0.3) 20px);">
-                            </div>
-                        </div>
-                        <div
-                            class="absolute inset-0 flex items-center justify-center text-white text-shadow font-bold z-10 text-xl">
-                            <span id="powerText">-- / -- MW</span>
-                        </div>
+                <!-- Dilithium Power -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="tos-label editable-label" data-key="lbl_energy">MATTER/ANTIMATTER</span>
+                        <span class="font-mono text-blue-300" id="powerText">-- / -- MW</span>
                     </div>
-                    <button class="w-full chernobyl-btn py-2 hover:bg-blue-900 transition editable-label"
-                        data-key="btn_buy_power" onclick="buyPower()" id="btnBuyPower">
-                        [ <span id="buyPowerText">NAVÝŠIT KAPACITU (+50MW) - 1000 CR</span> ]
-                    </button>
+
+                    <div class="tos-meter-container">
+                        <div id="powerBar" class="tos-meter-bar" style="width: 10%;"></div>
+                    </div>
+
+                    <div class="text-right mt-2">
+                        <button class="tos-jelly-btn jelly-blue"
+                            style="width: 120px; font-size: 0.8rem; font-weight: bold; color: #000;"
+                            onclick="buyPower()" id="btnBuyPower">
+                            BOOST POWER
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Instability -->
-                <div class="chernobyl-panel p-6 bg-black">
-                    <h3 class="text-2xl text-red-500 mb-6 editable-label" data-key="lbl_temperature">TEPLOTA SYSTÉMU
-                    </h3>
-                    <div
-                        class="bg-gray-900 border border-red-900 p-1 mb-4 relative overflow-hidden h-12 chernobyl-inset">
-                        <!-- Background Grid -->
-                        <div class="absolute inset-0 opacity-20"
-                            style="background-image: linear-gradient(90deg, transparent 50%, #300 50%); background-size: 20px 100%;">
-                        </div>
-
-                        <!-- The Bar -->
-                        <div id="chemBar" class="h-full transition-all duration-1000 ease-out relative"
-                            style="width: 0%; background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);">
-                            <div class="absolute right-0 top-0 bottom-0 w-2 bg-white opacity-50 animate-pulse"></div>
-                        </div>
-
-                        <!-- Overlay Text -->
-                        <div
-                            class="absolute inset-0 flex items-center justify-center font-bold text-shadow text-white z-10 text-xl">
-                            <span id="controlChernobyl">0%</span>
-                        </div>
+                <!-- Core Temp -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="tos-label editable-label" data-key="lbl_temperature">Tk CORE TEMPERATURE</span>
+                        <span class="font-mono text-red-300" id="controlChernobyl">0%</span>
                     </div>
 
-                    <div class="mb-6">
-                        <span class="text-gray-500 block mb-2 editable-label" data-key="lbl_mode">REŽIM VÝKONU</span>
-                        <div class="flex gap-2">
-                            <button
-                                class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:text-white transition editable-label"
-                                data-key="btn_mode_normal" onclick="setMode('normal')">NORMÁL</button>
-                            <button
-                                class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:text-white transition editable-label"
-                                data-key="btn_mode_low" onclick="setMode('low_power')"> ÚSPORA</button>
-                            <button
-                                class="flex-1 chernobyl-btn p-2 text-sm text-red-500 hover:bg-red-900 transition editable-label"
-                                data-key="btn_mode_oc" onclick="setMode('overclock')">PŘETÍŽENÍ</button>
-                        </div>
+                    <div class="tos-meter-container tos-meter-temp">
+                        <div id="chemBar" class="tos-meter-bar" style="width: 0%;"></div>
                     </div>
 
-                    <div class="mb-6 border-t border-gray-800 pt-4">
-                        <span class="text-gray-500 block mb-2 editable-label" data-key="lbl_vis">FILTR PRAVDY</span>
-                        <div class="flex gap-2">
-                            <button
-                                class="flex-1 chernobyl-btn p-2 text-sm text-blue-400 hover:text-white transition width-auto editable-label"
-                                data-key="btn_vis_norm" onclick="setHyperVis('normal')">ŽÁDNÝ</button>
-                            <button
-                                class="flex-1 chernobyl-btn p-2 text-sm text-gray-400 hover:bg-gray-900 transition width-auto editable-label"
-                                data-key="btn_vis_bb" onclick="setHyperVis('blackbox')">ČERNÁ SKŘÍŇKA</button>
-                            <button
-                                class="flex-1 chernobyl-btn p-2 text-sm text-purple-400 hover:bg-purple-900 transition width-auto editable-label"
-                                data-key="btn_vis_forensic" onclick="setHyperVis('forensic')">FOREZKA</button>
-                        </div>
-                    </div>
-
-                    <input type="range" class="w-full accent-red-600 bg-gray-800" min="20" max="400"
-                        id="manualChernobyl" oninput="sendChernobylLevel(this.value)">
-                    <div class="text-xs text-gray-600 mt-1">MANUÁLNÍ KOREKCE</div>
+                    <input type="range" class="tos-slider mt-2" min="20" max="400" id="manualChernobyl"
+                        oninput="sendChernobylLevel(this.value)">
                 </div>
+
+                <!-- Mode Selectors -->
+                <div class="mt-auto">
+                    <div class="mb-4">
+                        <span class="tos-label editable-label" data-key="lbl_mode">ENGINE MODE</span><br>
+                        <div class="tos-rocker-group">
+                            <button class="tos-rocker-btn" onclick="setMode('normal')"
+                                data-key="btn_mode_normal">IMPULSE</button>
+                            <button class="tos-rocker-btn" onclick="setMode('low_power')"
+                                data-key="btn_mode_low">AUX</button>
+                            <button class="tos-rocker-btn text-red-400" onclick="setMode('overclock')"
+                                data-key="btn_mode_oc">WARP</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="tos-label editable-label" data-key="lbl_vis">VISUAL DATA</span><br>
+                        <div class="tos-rocker-group">
+                            <button class="tos-rocker-btn" onclick="setHyperVis('normal')"
+                                data-key="btn_vis_norm">STD</button>
+                            <button class="tos-rocker-btn" onclick="setHyperVis('blackbox')"
+                                data-key="btn_vis_bb">RAW</button>
+                            <button class="tos-rocker-btn" onclick="setHyperVis('forensic')"
+                                data-key="btn_vis_forensic">SCAN</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -386,28 +404,77 @@
         </table>
     </div>
 
-    <!-- View D: TASKS -->
+    <!-- View D: TASKS - LCARS VOYAGER STYLE -->
     <div id="view-tasks" class="view-container hidden">
-        <div class="grid grid-cols-2 gap-4 h-full">
-            <div class="space-y-4">
-                <div class="chernobyl-panel border-blue-900 p-4 flex flex-col bg-black">
-                    <h3 class="text-blue-400 font-bold mb-2">POŽADAVKY NA ÚKOL</h3>
-                    <div class="flex-1 overflow-y-auto space-y-2" id="pendingTasksCtx"></div>
+        <div class="lcars-container">
+            <!-- LCARS Top Frame -->
+            <div class="lcars-top-frame">
+                <div class="lcars-elbow-left"></div>
+                <div class="lcars-top-bar">
+                    <span class="lcars-title">Správa Úkolů</span>
+                    <div class="lcars-indicator">
+                        <span class="lcars-indicator-dot"></span>
+                        <span>SYSTÉM AKTIVNÍ</span>
+                    </div>
                 </div>
-                <div class="chernobyl-panel border-yellow-900 p-4 flex flex-col bg-black">
-                    <h3 class="text-yellow-400 font-bold mb-2">ROZPRACOVANÉ</h3>
-                    <div class="flex-1 overflow-y-auto space-y-2" id="activeTasksCtx"></div>
+                <div class="lcars-elbow-right"></div>
+            </div>
+
+            <!-- LCARS Main Grid -->
+            <div class="lcars-grid">
+                <!-- Left Sidebar -->
+                <div class="lcars-sidebar"></div>
+
+                <!-- Column 1: Pending -->
+                <div class="lcars-column lcars-column-pending">
+                    <div class="lcars-header">
+                        <div class="lcars-header-cap"></div>
+                        <div class="lcars-header-bar">Požadavky na Úkol</div>
+                        <div class="lcars-header-end"></div>
+                    </div>
+                    <div class="lcars-tasks-scroll" id="pendingTasksCtx"></div>
+                </div>
+
+                <!-- Column 2: Active -->
+                <div class="lcars-column lcars-column-active">
+                    <div class="lcars-header">
+                        <div class="lcars-header-cap"></div>
+                        <div class="lcars-header-bar">Rozpracované</div>
+                        <div class="lcars-header-end"></div>
+                    </div>
+                    <div class="lcars-tasks-scroll" id="activeTasksCtx"></div>
+                </div>
+
+                <!-- Column 3: Submitted -->
+                <div class="lcars-column lcars-column-submitted">
+                    <div class="lcars-header">
+                        <div class="lcars-header-cap"></div>
+                        <div class="lcars-header-bar">Odevzdáno</div>
+                        <div class="lcars-header-end"></div>
+                    </div>
+                    <div class="lcars-tasks-scroll" id="submittedTasksCtx"></div>
+                </div>
+
+                <!-- Column 4: Paid -->
+                <div class="lcars-column lcars-column-paid">
+                    <div class="lcars-header">
+                        <div class="lcars-header-cap"></div>
+                        <div class="lcars-header-bar">Uzavřeno</div>
+                        <div class="lcars-header-end"></div>
+                    </div>
+                    <div class="lcars-tasks-scroll" id="paidTasksCtx"></div>
                 </div>
             </div>
-            <div class="space-y-4">
-                <div class="chernobyl-panel border-green-900 p-4 flex flex-col bg-black">
-                    <h3 class="text-green-400 font-bold mb-2">ODEVZDÁNO KE ZHODNOCENÍ</h3>
-                    <div class="flex-1 overflow-y-auto space-y-2" id="submittedTasksCtx"></div>
+
+            <!-- LCARS Bottom Frame -->
+            <div class="lcars-bottom-frame">
+                <div class="lcars-bottom-left"></div>
+                <div class="lcars-bottom-bar">
+                    <div class="lcars-indicator">
+                        <span>STARDATE {{ now().strftime('%Y.%j') if now else '2025.351' }}</span>
+                    </div>
                 </div>
-                <div class="chernobyl-panel border-gray-800 p-4 flex flex-col bg-black">
-                    <h3 class="text-gray-300 font-bold mb-2">UZAVŘENO / ZAPLACENO</h3>
-                    <div class="flex-1 overflow-y-auto space-y-2" id="paidTasksCtx"></div>
-                </div>
+                <div class="lcars-bottom-right"></div>
             </div>
         </div>
     </div>
@@ -415,52 +482,60 @@
 
 </div>
 
-<!-- Task Grading Modal -->
-<div id="gradingModal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-    <div
-        class="bg-gray-900 border border-yellow-600 rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
-        <div class="flex justify-between items-center p-4 border-b border-gray-700">
-            <h2 class="text-xl font-bold text-yellow-500">HODNOCENÍ ÚKOLU</h2>
-            <button onclick="closeGradingModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+<!-- Task Grading Modal - LCARS VOYAGER STYLE -->
+<div id="gradingModal" class="hidden fixed inset-0 lcars-modal-overlay z-50 flex items-center justify-center p-4">
+    <div class="lcars-modal w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+        <!-- LCARS Modal Header -->
+        <div class="lcars-modal-header">
+            <div class="lcars-modal-header-cap"></div>
+            <div class="lcars-modal-title">Hodnocení Úkolu</div>
+            <div class="lcars-modal-close" onclick="closeGradingModal()">&times;</div>
         </div>
-        <div class="flex-1 overflow-auto p-4">
-            <div class="grid grid-cols-2 gap-4 h-full">
+
+        <!-- LCARS Modal Body -->
+        <div class="lcars-modal-body flex-1 overflow-auto">
+            <div class="lcars-modal-grid h-full">
                 <!-- Left: Task Prompt -->
-                <div class="bg-black border border-gray-700 rounded p-4 overflow-auto">
-                    <h3 class="text-sm text-gray-400 mb-2 uppercase tracking-wider">📋 Zadání úkolu</h3>
-                    <div id="gradeTaskPrompt" class="text-white font-mono text-sm whitespace-pre-wrap">Načítám...</div>
+                <div class="lcars-modal-section lcars-modal-section-prompt">
+                    <div class="lcars-modal-section-header">
+                        <span>📋</span>
+                        <span class="lcars-modal-section-title">Zadání úkolu</span>
+                    </div>
+                    <div id="gradeTaskPrompt" class="lcars-modal-section-content">Načítám...</div>
                 </div>
                 <!-- Right: User Submission -->
-                <div class="bg-black border border-green-900 rounded p-4 overflow-auto">
-                    <h3 class="text-sm text-green-400 mb-2 uppercase tracking-wider">📝 Odpověď uživatele</h3>
-                    <div id="gradeTaskSubmission" class="text-white font-mono text-sm whitespace-pre-wrap">Načítám...
+                <div class="lcars-modal-section lcars-modal-section-response">
+                    <div class="lcars-modal-section-header">
+                        <span>📝</span>
+                        <span class="lcars-modal-section-title">Odpověď uživatele</span>
                     </div>
+                    <div id="gradeTaskSubmission" class="lcars-modal-section-content">Načítám...</div>
                 </div>
             </div>
         </div>
-        <div class="p-4 border-t border-gray-700 bg-gray-800">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-gray-400">Uživatel: <span id="gradeUsername"
-                        class="text-white font-bold">-</span></span>
-                <span class="text-gray-400">Nabízená odměna: <span id="gradeReward"
-                        class="text-yellow-400 font-bold">-</span> CR</span>
+
+        <!-- LCARS Modal Footer -->
+        <div class="lcars-modal-footer">
+            <div class="lcars-modal-info">
+                <div class="lcars-modal-info-item">
+                    Uživatel: <span id="gradeUsername" class="lcars-modal-info-value">-</span>
+                </div>
+                <div class="lcars-modal-info-item lcars-modal-info-reward">
+                    Nabízená odměna: <span id="gradeReward" class="lcars-modal-info-value">-</span> CR
+                </div>
             </div>
-            <div class="grid grid-cols-4 gap-3">
-                <button onclick="gradeTask(0.0)"
-                    class="py-3 rounded font-bold text-lg bg-red-900 hover:bg-red-800 text-red-300 border border-red-600">
-                    ⛔ ZAMÍTNOUT (0%)
+            <div class="lcars-grade-buttons">
+                <button onclick="gradeTask(0.0)" class="lcars-grade-btn lcars-grade-reject">
+                    ⛔ Zamítnout (0%)
                 </button>
-                <button onclick="gradeTask(0.5)"
-                    class="py-3 rounded font-bold text-lg bg-yellow-900 hover:bg-yellow-800 text-yellow-300 border border-yellow-600">
-                    ⚠️ ČÁSTEČNÉ (50%)
+                <button onclick="gradeTask(0.5)" class="lcars-grade-btn lcars-grade-partial">
+                    ⚠️ Částečné (50%)
                 </button>
-                <button onclick="gradeTask(1.0)"
-                    class="py-3 rounded font-bold text-lg bg-green-900 hover:bg-green-800 text-green-300 border border-green-600">
-                    ✅ SCHVÁLIT (100%)
+                <button onclick="gradeTask(1.0)" class="lcars-grade-btn lcars-grade-approve">
+                    ✅ Schválit (100%)
                 </button>
-                <button onclick="gradeTask(2.0)"
-                    class="py-3 rounded font-bold text-lg bg-purple-900 hover:bg-purple-800 text-purple-300 border border-purple-600">
-                    🌟 BONUS (200%)
+                <button onclick="gradeTask(2.0)" class="lcars-grade-btn lcars-grade-bonus">
+                    🌟 Bonus (200%)
                 </button>
             </div>
         </div>

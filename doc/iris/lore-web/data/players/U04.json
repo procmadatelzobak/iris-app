@@ -1,0 +1,22 @@
+{
+    "id": "U04",
+    "type": "user",
+    "name": "Tuan Nguyen",
+    "archetype": "Student práv",
+    "description": "Ambiciózní student práv hledající v testu IRIS nejen brigádu, ale i příležitost prosadit spravedlnost. Pečlivě jste si prostudoval smlouvu o mlčenlivosti a máte podezření, že korporace možná obchází zákoník práce. Jste analytický a všímavý - žádnou právní kličku nenecháte bez povšimnutí.",
+    "ability": "Právník: Můžete zpochybnit jednu pokutu od Správce citací zákoníku.",
+    "goals": [
+        "Najít ve smlouvě důkaz, že firma porušuje zákoník práce.",
+        "Vydělat na skripta.",
+        "Nezaplatit ani jednu pokutu - využít své právnické znalosti k obhájení."
+    ],
+    "avatar": "avatar_U04.png",
+    "work_image": "work_U04.png",
+    "appearance": {
+        "gender": "muž",
+        "age_range": "22-26",
+        "hair_color": "krátké černé vlasy, pečlivě upravené",
+        "face_description": "mladá, seriózní asijská tvář, inteligentní pohled, brýle s tenkými obroučkami",
+        "distinctive_features": "vždy formálně oblečen (košile, sako), notes s poznámkami neustále při ruce"
+    }
+}

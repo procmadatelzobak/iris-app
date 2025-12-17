@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-12-15T13:07:26.000000",
+  "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+  "status": "success",
+  "duration": 4.7751359939575195,
+  "filename": "scenario_complex_1765800446.json",
+  "stats": {
+    "steps_total": 4,
+    "steps_passed": 4,
+    "hyper_response": "ok",
+    "optimizer_active": true
+  },
+  "details": {
+    "hyper_chat": {
+      "status": "success",
+      "duration": 1.6576292514801025,
+      "output": "Dobrý den, ano, jsem plně aktivní a připravená vám pomoci. Jak vám mohu asistovat dnes?"
+    },
+    "task_generation": {
+      "status": "success",
+      "duration": 1.2947237491607666,
+      "output": "Analyzujte dopad nedávných změn v uživatelském rozhraní na zkušenost uživatele a navrhněte dvě konkrétní zlepšení pro budoucí iterace."
+    },
+    "task_evaluation": {
+      "status": "success",
+      "duration": 0.553619384765625,
+      "output": 85
+    },
+    "optimizer": {
+      "status": "success",
+      "duration": 1.2691636085510254,
+      "output": "Dobrý den, systém vykazuje technické problémy. Je nezbytné řešit situaci okamžitě. Děkuji."
+    }
+  }
+}

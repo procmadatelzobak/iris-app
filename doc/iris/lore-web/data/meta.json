@@ -1,0 +1,16 @@
+{
+    "version": "4.2.0",
+    "phase": 38,
+    "updated_at": "2025-12-16",
+    "title": "IRIS Organizátorská Wiki",
+    "offline_compatible": true,
+    "description": "Dokumentační web pro LARP projekt IRIS/HLINÍK. Funguje offline otevřením index.html v prohlížeči.",
+    "data_structure": {
+        "players": "Informace o všech 20 postavách (8 Users, 8 Agents, 4 Admins)",
+        "relations": "Vztahy mezi postavami",
+        "lore": "Příběhové informace - timeline a definice",
+        "manuals": "Příručky pro hráče a organizátory",
+        "hlinik": "Data specifická pro HLINÍK aplikaci (features, LLM prompty, issues)",
+        "tests": "Testovací scénáře a běhy"
+    }
+}

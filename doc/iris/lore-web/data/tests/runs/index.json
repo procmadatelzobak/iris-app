@@ -1,0 +1,273 @@
+[
+  {
+    "timestamp": "2025-12-15T20:56:06.688252",
+    "scenario_name": "HLINIK Workflow Automation",
+    "status": "running",
+    "duration": 26.567045211791992,
+    "filename": "hlinik_workflow_1765828593.json",
+    "stats": {
+      "steps_completed": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T20:56:06.000000",
+    "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+    "status": "failed",
+    "duration": 1.0639116764068604,
+    "filename": "scenario_complex_1765828566.json",
+    "stats": {
+      "steps_total": 4,
+      "steps_passed": 1,
+      "hyper_response": "ok",
+      "optimizer_active": true
+    }
+  },
+  {
+    "timestamp": "2025-12-15T19:30:00.000000",
+    "scenario_name": "Phase 36: Advanced Automation Protocol",
+    "status": "success",
+    "duration": 45.0,
+    "filename": "test_phase36_advanced.json",
+    "stats": {
+      "total_tests": 7,
+      "fixed_bugs": 1
+    }
+  },
+  {
+    "timestamp": "2025-12-15T17:41:02.691994",
+    "scenario_name": "HLINIK Workflow Automation",
+    "status": "success",
+    "duration": 2.1234164237976074,
+    "filename": "hlinik_workflow_1765816864.json",
+    "stats": {
+      "steps_completed": 5
+    }
+  },
+  {
+    "timestamp": "2025-12-15T17:40:24.929221",
+    "scenario_name": "HLINIK Workflow Automation",
+    "status": "failed",
+    "duration": 0.5484769344329834,
+    "filename": "hlinik_workflow_1765816825.json",
+    "stats": {
+      "steps_completed": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T17:10:05.000000",
+    "scenario_name": "Phase 36B: HLINIK Advanced Sync & Purgatory Recovery",
+    "status": "success",
+    "duration": 1200.0,
+    "filename": "manual_test_hlinik_advanced.json",
+    "stats": {
+      "total_tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "warnings": 1,
+      "critical_bugs": 0,
+      "screenshots": 4
+    }
+  },
+  {
+    "timestamp": "2025-12-15T14:55:00.000000",
+    "scenario_name": "Phase 36: Advanced Multi-User Workflow & Economy Integration",
+    "status": "success",
+    "duration": 2640.0,
+    "filename": "manual_test_phase36.json",
+    "stats": {
+      "total_tests": 28,
+      "passed": 26,
+      "failed": 0,
+      "warnings": 2,
+      "critical_bugs": 0,
+      "screenshots": 35
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:42:00.000000",
+    "scenario_name": "Phase 35: Critical Failure & Recovery Protocol",
+    "status": "success",
+    "duration": 720.0,
+    "filename": "manual_test_recovery.json",
+    "stats": {},
+    "duration_note": "Simulace krizov\u00e9ho sc\u00e9n\u00e1\u0159e a n\u00e1sledn\u00e1 anal\u00fdza"
+  },
+  {
+    "timestamp": "2025-12-15T13:22:37.000000",
+    "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+    "status": "success",
+    "duration": 4.699824810028076,
+    "filename": "scenario_complex_1765801357.json",
+    "stats": {
+      "steps_total": 4,
+      "steps_passed": 4,
+      "hyper_response": "ok",
+      "optimizer_active": true
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:07:26.000000",
+    "scenario_name": "Phase 35: Complex Scenario (Hyper/Task/Opt)",
+    "status": "success",
+    "duration": 4.7751359939575195,
+    "filename": "scenario_complex_1765800446.json",
+    "stats": {
+      "steps_total": 4,
+      "steps_passed": 4,
+      "hyper_response": "ok",
+      "optimizer_active": true
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:04:19.000000",
+    "scenario_name": "Phase 35: LLM Functional Test",
+    "status": "success",
+    "duration": 1.92,
+    "filename": "llm_func_1765800257.json",
+    "stats": {
+      "provider": "OPENAI",
+      "model": "gpt-3.5-turbo",
+      "prompt_len": 45,
+      "response_len": 531,
+      "sanity_check": "passed"
+    }
+  },
+  {
+    "timestamp": "2025-12-15T13:03:39.000000",
+    "scenario_name": "Phase 35: LLM Functional Test",
+    "status": "success",
+    "duration": 0.59,
+    "filename": "llm_func_1765800218.json",
+    "stats": {
+      "provider": "OPENROUTER",
+      "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
+      "prompt_len": 45,
+      "response_len": 191,
+      "sanity_check": "passed"
+    }
+  },
+  {
+    "timestamp": "2025-12-15T08:49:31.000000",
+    "scenario_name": "HLINIK Manual Testing - Comprehensive UI/UX and Functionality Audit",
+    "status": "failed",
+    "duration": 540.0,
+    "filename": "manual_test_1765789771.json",
+    "stats": {},
+    "duration_note": "Celkov\u00fd \u010das testov\u00e1n\u00ed v\u010detn\u011b anal\u00fdzy a dokumentace"
+  },
+  {
+    "timestamp": "2025-12-15T02:38:33.071673",
+    "scenario_name": "LLM Hour Simulation",
+    "status": "success",
+    "duration": 60.01,
+    "filename": "llm_sim_1765762713.json",
+    "stats": {
+      "start_time": "2025-12-15T02:38:33.071673",
+      "end_time": "2025-12-15T02:39:33.084785",
+      "duration_seconds": 60.013102,
+      "total_messages": 85,
+      "total_tasks": 1,
+      "total_errors": 0,
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "hyper_mode_activations": 1,
+      "optimizer_calls": 0,
+      "screenshots_taken": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T02:37:44.385145",
+    "scenario_name": "LLM Hour Simulation",
+    "status": "success",
+    "duration": 38.46,
+    "filename": "llm_sim_1765762664.json",
+    "stats": {
+      "start_time": "2025-12-15T02:37:44.385145",
+      "end_time": "2025-12-15T02:38:22.841275",
+      "duration_seconds": 38.456111,
+      "total_messages": 14,
+      "total_tasks": 0,
+      "total_errors": 0,
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "hyper_mode_activations": 0,
+      "optimizer_calls": 0,
+      "screenshots_taken": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T02:36:49.600431",
+    "scenario_name": "LLM Hour Simulation",
+    "status": "success",
+    "duration": 42.51,
+    "filename": "llm_sim_1765762609.json",
+    "stats": {
+      "start_time": "2025-12-15T02:36:49.600431",
+      "end_time": "2025-12-15T02:37:32.108213",
+      "duration_seconds": 42.507765,
+      "total_messages": 15,
+      "total_tasks": 0,
+      "total_errors": 0,
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "hyper_mode_activations": 0,
+      "optimizer_calls": 0,
+      "screenshots_taken": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T02:12:54.196714",
+    "scenario_name": "HLINIK Comprehensive Simulation - All Roles, All Phases",
+    "status": "failed",
+    "duration": 54.06,
+    "filename": "run_1765761174.json",
+    "stats": {
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "total_connections": 20,
+      "avg_latency": 0,
+      "errors": 1,
+      "warnings": 23,
+      "screenshots": 30,
+      "economy_events": 3,
+      "relationship_events": 2
+    }
+  },
+  {
+    "timestamp": "2025-12-15T01:38:39.489664",
+    "scenario_name": "Full System Simulation (Load + UI)",
+    "status": "success",
+    "duration": 2.83,
+    "filename": "run_1765759119.json",
+    "stats": {
+      "users_active": 12,
+      "avg_latency": 0,
+      "errors": 0
+    }
+  },
+  {
+    "timestamp": "2025-12-15T01:23:13.284100",
+    "scenario_name": "LLM Short Test (5 min)",
+    "status": "success",
+    "duration": 30.0,
+    "filename": "llm_sim_1765761793.json",
+    "stats": {
+      "start_time": "2025-12-15T01:23:13.284100",
+      "end_time": "2025-12-15T01:23:43.285967",
+      "duration_seconds": 30.00186,
+      "total_messages": 16,
+      "total_tasks": 0,
+      "total_errors": 0,
+      "users_active": 8,
+      "agents_active": 8,
+      "admins_active": 4,
+      "hyper_mode_activations": 0,
+      "optimizer_calls": 0,
+      "screenshots_taken": 0
+    }
+  }
+]
