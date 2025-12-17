@@ -263,6 +263,9 @@ window.openStation = function (name) {
         if (!window.currentTab) switchMonitorTab('all');
         refreshSystemLogs();
     }
+    if (name === 'controls' && window.thermalScope) {
+        requestAnimationFrame(() => window.thermalScope.resize());
+    }
 };
 
 window.closeStation = function () {
@@ -1204,27 +1207,13 @@ function updateMonitorChat(msg) {
     });
 }
 
-// Temperature UI
-function updateTemperatureUI(val) {
-    const label = document.getElementById('controlChernobyl');
-    if (label) label.innerText = Math.round(val) + "°C";
-
-    const bar = document.getElementById('chemBar');
-    if (bar) {
-        let pct = (val / 350) * 100;
-        bar.style.width = Math.min(pct, 100) + "%";
-
-        if (val > 350) {
-            bar.style.background = "#ff0000";
-        } else if (val > 300) {
-            bar.style.background = "linear-gradient(90deg, #ffaa00, #ff4400)";
-        } else if (val > 100) {
-            bar.style.background = "linear-gradient(90deg, #00ff00, #ffff00)";
-        } else {
-            bar.style.background = "#00ff00";
-        }
-    }
-}
+// Old updateTemperatureUI (Removed/Obsolete due to ThermalScope)
+// The function is now defined at the bottom of the file or handling global scope.
+// However, to avoid conflicts, I will just empty this one or let the bottom one override it.
+// Better practice: Remove this definition entirely and rely on the one I just added (or swapped).
+// But since I am editing non-contiguous blocks, I should just replace this with the new logic here and remove the bottom one?
+// Actually, I replaced the bottom one with the new logic. So I should remove this top one to avoid double definition or confusion.
+// Let's replace this block with an empty comment or remove it.
 
 // Power UI
 function updatePowerUI(load, cap, overloaded) {
@@ -1457,14 +1446,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.loadControlState();
     loadLabels();
+
+    // Init Thermal Scope
+    if (typeof ThermalScope !== 'undefined') {
+        window.thermalScope = new ThermalScope('thermalScopeCanvas');
+    }
 });
 
 // Placeholder for updateTemperatureUI, updatePowerUI, setHyperVisUI if not defined elsewhere
 // Assuming these are defined globally or in other parts of the code.
 // If not, they would need to be added here as well.
-function updateTemperatureUI(temp) {
-    const el = document.getElementById('monitorTemp');
-    if (el) el.innerText = temp + "°C";
+// Modified updateTemperatureUI for ThermalScope
+function updateTemperatureUI(val) {
+    const label = document.getElementById('controlChernobyl');
+    if (label) label.innerText = Math.round(val) + "°C";
+
+    if (window.thermalScope) {
+        window.thermalScope.setTemperature(val);
+    }
 }
 
 function updatePowerUI(load, capacity, isOverloaded) {

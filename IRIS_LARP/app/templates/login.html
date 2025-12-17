@@ -2,125 +2,134 @@
 
 {% block content %}
 
-<div class="bg-black text-green-500 font-mono min-h-screen flex items-center justify-center relative overflow-hidden">
-    <div class="crt-overlay"></div>
-    <div class="scan-line"></div>
+<div
+    class="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4 font-sans text-zinc-100 selection:bg-zinc-700 selection:text-white relative overflow-hidden">
 
-    <div class="flex flex-col items-center gap-8 relative z-10 w-full max-w-6xl">
-        <!-- Main Form -->
-        <div class="bg-gray-900 border border-green-800 p-8 shadow-2xl w-96 relative">
-            <h1 class="text-3xl font-bold mb-6 text-center glitch-effect tracking-widest text-green-400">HLINIK
-            </h1>
+    <!-- Background Elements (Abstract Corporate) -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none opacity-20">
+        <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-zinc-800 rounded-full blur-[128px]"></div>
+        <div class="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-zinc-900 rounded-full blur-[128px]"></div>
+    </div>
 
+    <!-- Main Content -->
+    <div class="relative z-10 w-full max-w-md flex flex-col items-center">
+
+        <!-- Logo Section -->
+        <div class="mb-10 text-center">
+            <h1 class="text-5xl font-bold tracking-[0.2em] text-zinc-100 mb-2"
+                style="font-family: 'Inter', sans-serif;">HLINIK</h1>
+            <div class="h-px w-24 bg-gradient-to-r from-transparent via-zinc-500 to-transparent mx-auto mb-2"></div>
+            <p class="text-zinc-500 text-[10px] tracking-[0.3em] uppercase">Integrovaný Responzivní Inteligentní Systém
+            </p>
+        </div>
+
+        <!-- Login Card -->
+        <div
+            class="w-full bg-zinc-900/80 backdrop-blur-md border border-zinc-800/50 rounded-xl shadow-2xl p-8 transition-all hover:border-zinc-700/50">
             <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-xs mb-1 text-green-700">IDENTIFIKÁTOR</label>
+                <div class="space-y-2">
+                    <label
+                        class="block text-xs font-semibold text-zinc-500 tracking-wider uppercase ml-1">Identifikátor</label>
                     <input type="text" name="username" id="id_username"
-                        class="w-full bg-black border border-green-700 p-2 text-green-400 focus:outline-none focus:border-green-400"
-                        required autofocus autocomplete="off">
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-light"
+                        placeholder="Zadejte své ID" required autofocus autocomplete="off">
                 </div>
 
-                <div>
-                    <label class="block text-xs mb-1 text-green-700">HESLO</label>
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-zinc-500 tracking-wider uppercase ml-1">Heslo</label>
                     <input type="password" name="password" id="id_password"
-                        class="w-full bg-black border border-green-700 p-2 text-green-400 focus:outline-none focus:border-green-400"
-                        required>
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-light"
+                        placeholder="••••••••" required>
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-green-900 text-green-100 p-3 hover:bg-green-700 border border-green-600 transition duration-150 uppercase tracking-widest font-bold">
-                    [ PŘIHLÁSIT ]
+                    class="w-full bg-zinc-100 text-zinc-900 p-3 rounded-lg hover:bg-white hover:shadow-lg transition-all duration-200 font-semibold tracking-wide mt-4 flex justify-center items-center gap-2">
+                    <span>PŘIHLÁSIT SE</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
                 </button>
-                <div id="errorMsg" class="hidden text-red-500 text-xs text-center border border-red-500 p-2"></div>
+
+                <div id="errorMsg"
+                    class="hidden mt-4 p-3 rounded bg-red-900/20 border border-red-900/50 text-red-400 text-xs text-center">
+                </div>
             </form>
-
-            <div class="mt-4 text-center text-xs text-green-900">
-                NEOPRÁVNĚNÝ PŘÍSTUP JE TRESTNÝ<br>
-                PROTOKOL V.3.1.2
-            </div>
         </div>
 
-        {% if test_mode %}
-        <!-- Fast Login Panel -->
-        <div class="bg-gray-900 border border-yellow-800 p-6 shadow-2xl w-[900px] relative">
-            <div class="flex justify-between items-center border-b border-yellow-900 pb-2 mb-4">
-                <h3 class="text-yellow-500 font-bold animate-pulse text-xs tracking-widest">
-                    ⚠ TESTOVACÍ REŽIM: RYCHLÉ PŘIHLÁŠENÍ AKTIVNÍ ⚠
-                </h3>
-                <button onclick="quickLogin('root')"
-                    class="text-xs bg-purple-900 text-purple-200 px-2 py-1 border border-purple-500 hover:bg-purple-700 font-bold">
-                    [ ROOT PŘÍSTUP ]
-                </button>
-            </div>
-
-            <div class="grid grid-cols-4 gap-4 h-full text-xs">
-                <!-- Col 1: Admins -->
-                <div class="flex flex-col gap-1 border-r border-gray-800 pr-2">
-                    <div class="text-red-500 font-bold mb-2 text-center">SPRÁVCI</div>
-                    {% for u in users if u.role.value == 'admin' %}
-                    <button onclick="quickLogin('{{ u.username }}')"
-                        class="p-1 border border-red-900 text-red-400 hover:bg-gray-800 text-center">
-                        {{ u.username|upper }}
-                    </button>
-                    {% endfor %}
-                </div>
-
-                <!-- Cols 2-3: Agents -->
-                <div class="col-span-2 grid grid-cols-2 gap-2 border-r border-gray-800 pr-2">
-                    <div class="col-span-2 text-blue-500 font-bold mb-2 text-center">AGENTI (HYPER)</div>
-                    <!-- First 4 -->
-                    <div class="flex flex-col gap-1">
-                        {% for u in users if u.role.value == 'agent' %}
-                        {% if loop.index <= 4 %} <button onclick="quickLogin('{{ u.username }}')"
-                            class="p-1 border border-blue-900 text-blue-400 hover:bg-gray-800 text-center">
-                            {{ u.username|upper }}
-                            </button>
-                            {% endif %}
-                            {% endfor %}
-                    </div>
-                    <!-- Next 4 -->
-                    <div class="flex flex-col gap-1">
-                        {% for u in users if u.role.value == 'agent' %}
-                        {% if loop.index > 4 %}
-                        <button onclick="quickLogin('{{ u.username }}')"
-                            class="p-1 border border-blue-900 text-blue-400 hover:bg-gray-800 text-center">
-                            {{ u.username|upper }}
-                        </button>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Cols 4-5: Users -->
-                <div class="col-span-2 grid grid-cols-2 gap-2">
-                    <div class="col-span-2 text-green-500 font-bold mb-2 text-center">SUBJEKTY</div>
-                    <!-- First 4 -->
-                    <div class="flex flex-col gap-1">
-                        {% for u in users if u.role.value == 'user' %}
-                        {% if loop.index <= 4 %} <button onclick="quickLogin('{{ u.username }}')"
-                            class="p-1 border border-green-900 text-green-400 hover:bg-gray-800 text-center">
-                            {{ u.username|upper }}
-                            </button>
-                            {% endif %}
-                            {% endfor %}
-                    </div>
-                    <!-- Next 4 -->
-                    <div class="flex flex-col gap-1">
-                        {% for u in users if u.role.value == 'user' %}
-                        {% if loop.index > 4 %}
-                        <button onclick="quickLogin('{{ u.username }}')"
-                            class="p-1 border border-green-900 text-green-400 hover:bg-gray-800 text-center">
-                            {{ u.username|upper }}
-                        </button>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+        <!-- Footer Info -->
+        <div class="mt-8 text-center space-y-2">
+            <p class="text-zinc-600 text-xs">Bezpečnostní protokol aktivní. Veškerá aktivita je monitorována.</p>
+            <p class="text-zinc-700 text-[10px] font-mono">SYSTEM_VER: 3.1.2 // BUILD: RELEASE_PHASE_38</p>
         </div>
-        {% endif %}
     </div>
+
+    {% if test_mode %}
+    <!-- Developer Shortcuts (Hidden/Collapsible) -->
+    <div class="fixed bottom-0 left-0 w-full p-4 z-20 flex justify-center pointer-events-none">
+        <details open
+            class="w-full max-w-5xl bg-zinc-950/90 border-t border-zinc-800 backdrop-blur pointer-events-auto rounded-t-xl overflow-hidden group transition-all">
+            <summary
+                class="p-2 text-center text-zinc-600 cursor-pointer text-[10px] uppercase tracking-widest hover:text-zinc-300 hover:bg-zinc-900 transition-colors select-none">
+                [ /// DEVELOPMENT LOGIN BYPASS /// ]
+            </summary>
+
+            <div class="p-6 grid grid-cols-4 gap-6 max-h-[300px] overflow-y-auto border-t border-zinc-900">
+                <!-- Root/Special -->
+                <div class="flex flex-col gap-2">
+                    <div class="text-[10px] font-bold text-zinc-500 uppercase mb-2 text-center tracking-widest">System
+                        Override</div>
+                    <button onclick="quickLogin('root')"
+                        class="py-1 px-3 bg-red-900/20 border border-red-900/30 text-red-500 hover:bg-red-900/40 rounded text-xs font-mono transition-colors">ROOT
+                        ACCESS</button>
+                </div>
+
+                <!-- Admins -->
+                <div class="flex flex-col gap-2 border-l border-zinc-900 pl-4">
+                    <div class="text-[10px] font-bold text-zinc-500 uppercase mb-2 text-center tracking-widest">
+                        Administrators</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for u in users if u.role.value == 'admin' %}
+                        <button onclick="quickLogin('{{ u.username }}')"
+                            class="py-1 px-2 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 rounded text-xs transition-colors">{{
+                            u.username }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Agents (Hyper) -->
+                <div class="flex flex-col gap-2 border-l border-zinc-900 pl-4">
+                    <div class="text-[10px] font-bold text-zinc-500 uppercase mb-2 text-center tracking-widest">Active
+                        Agents</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for u in users if u.role.value == 'agent' %}
+                        <button onclick="quickLogin('{{ u.username }}')"
+                            class="py-1 px-2 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 rounded text-xs transition-colors">{{
+                            u.username }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Users (Subjects) -->
+                <div class="flex flex-col gap-2 border-l border-zinc-900 pl-4">
+                    <div class="text-[10px] font-bold text-zinc-500 uppercase mb-2 text-center tracking-widest">Subjects
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for u in users if u.role.value == 'user' %}
+                        <button onclick="quickLogin('{{ u.username }}')"
+                            class="py-1 px-2 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 rounded text-xs transition-colors">{{
+                            u.username }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </details>
+    </div>
+    {% endif %}
+
 </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -129,6 +138,12 @@
         e.preventDefault();
         const formData = new FormData(e.target);
         const errorMsg = document.getElementById('errorMsg');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+
+        // Loading state
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="animate-pulse">PRACUJI...</span>';
+        submitBtn.disabled = true;
 
         try {
             const response = await fetch('/auth/login', {
@@ -140,16 +155,27 @@
 
             if (response.ok) {
                 sessionStorage.setItem('token', data.access_token);
-                // Cookie is set server-side but may be shared across tabs
-                // Pass token in URL for reliable tab-isolated auth
+                // Redirect
                 window.location.href = '/auth/terminal?token=' + encodeURIComponent(data.access_token);
             } else {
-                errorMsg.textContent = data.detail || 'Access Denied';
+                errorMsg.textContent = data.detail || 'Přístup odepřen: Neplatné údaje';
                 errorMsg.classList.remove('hidden');
+
+                // Shake effect
+                const card = document.querySelector('.bg-zinc-900\\/80'); // Escape / for selector
+                if (card) {
+                    card.classList.add('animate-pulse', 'border-red-500');
+                    setTimeout(() => card.classList.remove('animate-pulse', 'border-red-500'), 500);
+                }
+
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
             }
         } catch (err) {
-            errorMsg.textContent = 'Connection Error';
+            errorMsg.textContent = 'Chyba připojení k serveru';
             errorMsg.classList.remove('hidden');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
         }
     });
 
@@ -157,7 +183,6 @@
         let password = "";
         if (username === "root") password = "master_control_666";
         else if (username.startsWith("admin")) {
-            // Extract ID
             let id = username.replace("admin", "");
             password = `secure_admin_${id}`;
         } else if (username.startsWith("agent")) {
@@ -171,7 +196,6 @@
         document.getElementById('id_username').value = username;
         document.getElementById('id_password').value = password;
 
-        // Auto Submit
         document.getElementById('loginForm').dispatchEvent(new Event('submit'));
     }
 </script>
