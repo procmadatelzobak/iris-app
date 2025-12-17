@@ -3,7 +3,7 @@ from fastapi import WebSocket
 from ..config import settings
 from ..database import UserRole
 from .gamestate import gamestate
-import json # Added for the new method
+import json
 
 class ConnectionManager:
     def __init__(self):
@@ -15,22 +15,6 @@ class ConnectionManager:
         self.user_logical_ids: Dict[int, int] = {}
         # Admin connections are just a list for broadcast
         self.admin_connections: List[WebSocket] = []
-        
-        # Autopilot State
-        self.active_autopilots: Dict[int, bool] = {} # AgentID -> True/False
-        self.hyper_histories: Dict[int, List] = {}  # AgentID -> conversation history for autopilot
-        # v1.4 Timer State
-        self.session_last_msg_time: Dict[int, float] = {} # SessionID -> timestamp
-        
-        # Pending response tracking: session_id -> timestamp when user sent message
-        # Used to track if agent needs to respond within timeout window
-        self.pending_responses: Dict[int, float] = {}  # SessionID -> timestamp
-        # Sessions that have timed out (agent can no longer respond)
-        self.timed_out_sessions: Dict[int, float] = {}  # SessionID -> timeout timestamp
-        # Latest user message cache per session (for panic mode/context)
-        self.latest_user_messages: Dict[int, str] = {}
-        # Panic mode (full censorship) state per session
-        self.panic_modes: Dict[int, Dict[str, bool]] = {}  # {session_id: {"user": False, "agent": False}}
 
     async def connect(self, websocket: WebSocket, role: UserRole, user_id: int, logical_id: Optional[int] = None):
         await websocket.accept()
@@ -126,40 +110,6 @@ class ConnectionManager:
                     try: await con.send_text(message)
                     except: pass
     
-    # Panic Logic
-    def set_panic_mode(self, session_id: int, role: str, enabled: bool):
-        if session_id not in self.panic_modes:
-            self.panic_modes[session_id] = {"user": False, "agent": False}
-        self.panic_modes[session_id][role] = enabled
-
-    def get_panic_state(self, session_id: int) -> Dict[str, bool]:
-        return self.panic_modes.get(session_id, {"user": False, "agent": False})
-    
-    def clear_panic_state(self, session_id: int):
-        if session_id in self.panic_modes:
-            del self.panic_modes[session_id]
-
-    # Timeout / Pendings
-    def start_pending_response(self, session_id: int):
-        import time
-        self.pending_responses[session_id] = time.time()
-        
-    def clear_pending_response(self, session_id: int):
-        if session_id in self.pending_responses:
-            del self.pending_responses[session_id]
-            
-    def mark_session_timeout(self, session_id: int):
-        import time
-        self.timed_out_sessions[session_id] = time.time()
-        self.clear_pending_response(session_id)
-        
-    def is_session_timed_out(self, session_id: int) -> bool:
-        return session_id in self.timed_out_sessions
-        
-    def clear_session_timeout(self, session_id: int):
-        if session_id in self.timed_out_sessions:
-            del self.timed_out_sessions[session_id]
-
     async def send_timeout_error_to_user(self, session_id: int):
         # Find user for session
         target_uid = None
@@ -197,12 +147,6 @@ class ConnectionManager:
                         try: await con.send_text(msg)
                         except: pass
 
-    def set_last_user_message(self, session_id: int, content: str):
-        self.latest_user_messages[session_id] = content
-
-    def get_last_user_message(self, session_id: int) -> Optional[str]:
-        return self.latest_user_messages.get(session_id)
-
     def get_online_status(self):
         return {
             "users": list(self.user_logical_ids.values()),
@@ -212,7 +156,7 @@ class ConnectionManager:
     def get_active_counts(self):
         return {
             "users": len(self.user_connections),
-            "autopilots": sum(1 for v in self.active_autopilots.values() if v)
+            "autopilots": sum(1 for v in gamestate.active_autopilots.values() if v)
         }
 
 routing_logic = ConnectionManager()

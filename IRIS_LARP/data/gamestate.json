@@ -6,5 +6,6 @@
   "is_overloaded": false,
   "power_capacity": 20,
   "power_load": 15.0,
-  "optimizer_active": false
+  "optimizer_active": false,
+  "active_autopilots": {}
 }

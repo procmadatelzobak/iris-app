@@ -45,11 +45,12 @@ async def monitor_latency():
             limit = gamestate.agent_response_window
             
             # Iterate over pending responses to check for timeouts
-            for session_id in list(routing_logic.pending_responses.keys()):
-                start_time = routing_logic.pending_responses.get(session_id)
+            # Uses GAMESTATE now
+            for session_id in list(gamestate.pending_responses.keys()):
+                start_time = gamestate.pending_responses.get(session_id)
                 if start_time and (now - start_time > limit):
                      # Timeout!
-                     routing_logic.mark_session_timeout(session_id)
+                     gamestate.mark_session_timeout(session_id)
                      await routing_logic.send_timeout_error_to_user(session_id)
                      await routing_logic.send_timeout_to_agent(session_id)
                 

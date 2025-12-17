@@ -30,10 +30,10 @@ class ChatService:
 
         if cmd_type == "autopilot_toggle":
             status = msg_data.get("status") # true/false
-            routing_logic.active_autopilots[agent_logical_id] = status
+            gamestate.active_autopilots[agent_logical_id] = status
             if not status:
                     # Clear history on OFF
-                    routing_logic.hyper_histories[agent_logical_id] = []
+                    gamestate.hyper_histories[agent_logical_id] = []
             return
 
         if cmd_type == "typing_sync":
@@ -55,11 +55,13 @@ class ChatService:
         session_id = session_index + 1
 
         # Ensure session tracking exists even if user prompt was not recorded yet
-        if session_id not in routing_logic.pending_responses:
-            routing_logic.start_pending_response(session_id)
+        # Uses GAMESTATE now
+        if session_id not in gamestate.pending_responses:
+            gamestate.start_pending_response(session_id)
 
         # Check if session has timed out - agent can no longer respond
-        if routing_logic.is_session_timed_out(session_id):
+        # Uses GAMESTATE now
+        if gamestate.is_session_timed_out(session_id):
             await websocket.send_text(json.dumps({
                 "type": "error",
                 "msg": "Odpověď vypršela. Čekejte na novou zprávu od uživatele."
@@ -69,18 +71,18 @@ class ChatService:
         # v1.5 AI Optimizer && v2.0 Confirm Flow
         final_content = content
         was_rewritten = False
-        panic_state = routing_logic.get_panic_state(session_id)
+        panic_state = gamestate.get_panic_state(session_id)
 
         is_confirming = msg_data.get("confirm_opt", False) # Flag sent by client
 
         # Panic mode for agent: override outgoing content with censorship LLM
         if panic_state.get("agent"):
-            prompt_source = routing_logic.get_last_user_message(session_id)
+            prompt_source = gamestate.get_last_user_message(session_id)
             if not prompt_source:
                 latest_user = get_latest_user_message(db, session_id)
                 if latest_user and latest_user.sender and latest_user.sender.role == UserRole.USER and latest_user.content:
                     prompt_source = latest_user.content
-                    routing_logic.set_last_user_message(session_id, prompt_source)
+                    gamestate.set_last_user_message(session_id, prompt_source)
             if not prompt_source:
                 prompt_source = content
             final_content = await llm_service.generate_response(
@@ -130,7 +132,7 @@ class ChatService:
         db.commit()
 
         # Agent responded - clear pending response timer
-        routing_logic.clear_pending_response(session_id)
+        gamestate.clear_pending_response(session_id)
 
         # Broadcast to Session (User sees final_content)
         exclude_target = None if is_confirming else websocket
@@ -229,22 +231,22 @@ class ChatService:
             return
 
         session_id = self._get_logical_id(user.username, "user")
-        panic_state = routing_logic.get_panic_state(session_id)
+        panic_state = gamestate.get_panic_state(session_id)
         if panic_state.get("user"):
             censored = await llm_service.generate_response(
                 gamestate.llm_config_censor,
                 [{"role": "user", "content": content}]
             )
             content = censored or PANIC_USER_FALLBACK
-        routing_logic.set_last_user_message(session_id, content)
+        gamestate.set_last_user_message(session_id, content)
         # Save User Message
         log = ChatLog(session_id=session_id, sender_id=user.id, content=content)
         db.add(log)
         db.commit()
         
         # Clear any previous timeout and start pending response timer
-        routing_logic.clear_session_timeout(session_id)
-        routing_logic.start_pending_response(session_id)
+        gamestate.clear_session_timeout(session_id)
+        gamestate.start_pending_response(session_id)
         
         await routing_logic.broadcast_to_session(session_id, json.dumps({
             "sender": user.username,
@@ -261,16 +263,16 @@ class ChatService:
         agent_index = (session_id - 1 - shift) % total
         agent_logical_id = agent_index + 1 # This is the Agent mapped to this user
         
-        if routing_logic.active_autopilots.get(agent_logical_id):
+        if gamestate.active_autopilots.get(agent_logical_id):
             await routing_logic.broadcast_to_session(session_id, json.dumps({
                 "type": "optimizing_start",
                 "mode": "hyper"
             }))
             # 1. Update History
-            if agent_logical_id not in routing_logic.hyper_histories:
-                routing_logic.hyper_histories[agent_logical_id] = []
+            if agent_logical_id not in gamestate.hyper_histories:
+                gamestate.hyper_histories[agent_logical_id] = []
             
-            history = routing_logic.hyper_histories[agent_logical_id]
+            history = gamestate.hyper_histories[agent_logical_id]
             history.append({"role": "user", "content": content})
             
             # 2. Generate Reply
@@ -293,7 +295,7 @@ class ChatService:
                 db.commit()
                 
                 # Autopilot responded - clear pending response timer
-                routing_logic.clear_pending_response(session_id)
+                gamestate.clear_pending_response(session_id)
                 
                 await routing_logic.broadcast_to_session(session_id, json.dumps({
                     "sender": agent_username,
@@ -327,4 +329,3 @@ class ChatService:
                         "role": "agent",
                         "session_id": target_session_id
                     }), exclude_ws=websocket)
-

@@ -1,5 +1,6 @@
 from ..config import settings
 from .llm_core import LLMConfig, LLMProvider
+from typing import Dict, List, Optional
 import enum
 import asyncio
 import json
@@ -141,6 +142,14 @@ class GameState:
         self.custom_labels = {}  # Admin-defined custom labels
         self.auto_panic_engaged = False
         
+        # --- State moved from routing.py ---
+        self.active_autopilots: Dict[int, bool] = {} 
+        self.hyper_histories: Dict[int, List] = {}
+        self.pending_responses: Dict[int, float] = {}
+        self.timed_out_sessions: Dict[int, float] = {}
+        self.latest_user_messages: Dict[int, str] = {}
+        self.panic_modes: Dict[int, Dict[str, bool]] = {}
+        
         self.initialized = True
         
     def set_temperature(self, value: float):
@@ -266,6 +275,14 @@ class GameState:
         self.llm_config_censor = self._default_censor_config()
         self.custom_labels = {}
         self.auto_panic_engaged = False
+        
+        # Clear new dictionaries
+        self.active_autopilots = {}
+        self.hyper_histories = {}
+        self.pending_responses = {}
+        self.timed_out_sessions = {}
+        self.latest_user_messages = {}
+        self.panic_modes = {}
 
     def _default_censor_config(self) -> LLMConfig:
         return LLMConfig(
@@ -316,6 +333,7 @@ class GameState:
             "power_capacity": self.power_capacity,
             "power_load": self.power_load,
             "optimizer_active": self.optimizer_active,
+            "active_autopilots": self.active_autopilots, # Should we persist this? Maybe.
         }
 
     def import_state(self, state_data: dict):
@@ -343,5 +361,49 @@ class GameState:
             self.power_load = float(state_data.get("power_load", self.power_load))
         if "optimizer_active" in state_data:
             self.optimizer_active = bool(state_data.get("optimizer_active", self.optimizer_active))
+        if "active_autopilots" in state_data:
+            # Keys are likely strings in JSON, convert back to int
+            raw = state_data.get("active_autopilots", {})
+            self.active_autopilots = {int(k): v for k, v in raw.items()}
+
+    # --- Methods moved from routing.py ---
+
+    def set_panic_mode(self, session_id: int, role: str, enabled: bool):
+        if session_id not in self.panic_modes:
+            self.panic_modes[session_id] = {"user": False, "agent": False}
+        self.panic_modes[session_id][role] = enabled
+
+    def get_panic_state(self, session_id: int) -> Dict[str, bool]:
+        return self.panic_modes.get(session_id, {"user": False, "agent": False})
+    
+    def clear_panic_state(self, session_id: int):
+        if session_id in self.panic_modes:
+            del self.panic_modes[session_id]
+
+    def start_pending_response(self, session_id: int):
+        import time
+        self.pending_responses[session_id] = time.time()
+        
+    def clear_pending_response(self, session_id: int):
+        if session_id in self.pending_responses:
+            del self.pending_responses[session_id]
+            
+    def mark_session_timeout(self, session_id: int):
+        import time
+        self.timed_out_sessions[session_id] = time.time()
+        self.clear_pending_response(session_id)
+        
+    def is_session_timed_out(self, session_id: int) -> bool:
+        return session_id in self.timed_out_sessions
+        
+    def clear_session_timeout(self, session_id: int):
+        if session_id in self.timed_out_sessions:
+            del self.timed_out_sessions[session_id]
+
+    def set_last_user_message(self, session_id: int, content: str):
+        self.latest_user_messages[session_id] = content
+
+    def get_last_user_message(self, session_id: int) -> Optional[str]:
+        return self.latest_user_messages.get(session_id)
 
 gamestate = GameState()

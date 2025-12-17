@@ -73,15 +73,16 @@ class AdminService:
             gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
             
             # Reset custom labels (delete admin_labels.json)
-            labels_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'admin_labels.json') # Adjust path if needed
             # Better way: config.BASE_DIR
             from ..config import BASE_DIR
             labels_path = BASE_DIR / "data" / "admin_labels.json"
 
             if os.path.exists(labels_path):
                 os.remove(labels_path)
-            routing_logic.panic_modes = {}
-            routing_logic.latest_user_messages = {}
+            
+            # Reset GameState Dicts
+            gamestate.panic_modes = {}
+            gamestate.latest_user_messages = {}
             
             # Broadcast failover message to ALL users
             await routing_logic.broadcast_global(json.dumps({
@@ -151,8 +152,8 @@ class AdminService:
             enabled = msg_data.get("enabled", False)
             # Global Panic set for all sessions
             for i in range(1, settings.TOTAL_SESSIONS + 1):
-                    routing_logic.set_panic_mode(i, "user", enabled)
-                    routing_logic.set_panic_mode(i, "agent", enabled)
+                    gamestate.set_panic_mode(i, "user", enabled)
+                    gamestate.set_panic_mode(i, "agent", enabled)
             
             await routing_logic.broadcast_global(json.dumps({
                 "type": "gamestate_update",
