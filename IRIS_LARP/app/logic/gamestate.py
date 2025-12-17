@@ -154,6 +154,10 @@ class GameState:
         self.temperature += 15.0 # Increased impact for new scale
         return self.temperature
 
+    def manual_heat(self, amount: float = 2.5):
+        self.temperature += amount
+        return self.temperature
+
     def calc_load(self, active_terminals: int = 0, active_autopilots: int = 0, low_latency_active: bool = False):
         load = self.COST_BASE
         load += self.COST_PER_USER * active_terminals
@@ -168,22 +172,28 @@ class GameState:
         self.power_load = load
         return self.power_load
 
-    def check_overload(self):
+    def check_overload(self) -> dict:
+        events = {}
         was_overloaded = self.is_overloaded
+        
         # Overload if Power > Cap OR Temp > Threshold
         power_bad = self.power_load > self.power_capacity
         temp_bad = self.temperature > self.TEMP_THRESHOLD
         self.is_overloaded = power_bad or temp_bad
 
+        # Detekce změny Overloadu
+        if self.is_overloaded != was_overloaded:
+            events["overload_changed"] = self.is_overloaded
+
         if temp_bad and not self.auto_panic_engaged:
             self.auto_panic_engaged = True
-            self._trigger_panic_mode(enabled=True)
+            events["panic_trigger"] = True
         elif self.auto_panic_engaged and not temp_bad:
             # Clear auto panic once thermal danger subsides
             self.auto_panic_engaged = False
-            self._trigger_panic_mode(enabled=False)
+            events["panic_trigger"] = False
 
-        return self.is_overloaded != was_overloaded
+        return events
 
     def process_tick(self):
         # Decay logic
@@ -333,38 +343,5 @@ class GameState:
             self.power_load = float(state_data.get("power_load", self.power_load))
         if "optimizer_active" in state_data:
             self.optimizer_active = bool(state_data.get("optimizer_active", self.optimizer_active))
-
-    def _trigger_panic_mode(self, enabled: bool):
-        """Auto-toggle global panic (censorship) when thermal overload crosses threshold."""
-        # Imported lazily to avoid circular dependency during module load
-        try:
-            from .routing import routing_logic
-        except ImportError as exc:
-            logger.warning("Routing logic unavailable for panic toggle: %s", exc)
-            return
-
-        total_sessions = getattr(settings, "TOTAL_SESSIONS", 0)
-        if total_sessions < 1:
-            return
-        for i in range(MIN_SESSION_ID, total_sessions + 1):
-            routing_logic.set_panic_mode(i, "user", enabled)
-            routing_logic.set_panic_mode(i, "agent", enabled)
-
-        try:
-            loop = asyncio.get_running_loop()
-            task = loop.create_task(routing_logic.broadcast_global(json.dumps({
-                "type": "gamestate_update",
-                "panic_global": enabled,
-                "temperature": self.temperature,
-                "is_overloaded": self.is_overloaded
-            })))
-            task.add_done_callback(self._log_panic_task)
-        except RuntimeError as exc:
-            logger.debug("No running event loop for panic broadcast: %s", exc)
-
-    def _log_panic_task(self, task):
-        exc = task.exception()
-        if exc:
-            logger.warning("Panic broadcast task failed: %s", exc)
 
 gamestate = GameState()

@@ -127,7 +127,7 @@
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, var(--text-color), #ffff00, var(--alert-color));
-            transition: width 0.1s linear;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .marker {
@@ -212,35 +212,6 @@
             background: #000;
         }
 
-        /* Admin Panel */
-        #admin-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            font-size: 0.9em;
-            color: #888;
-        }
-
-        .control-group {
-            background: #111;
-            padding: 10px;
-            border: 1px solid #333;
-        }
-
-        .control-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #aaa;
-        }
-
-        .control-group input {
-            width: 100%;
-            background: #000;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 5px;
-        }
-
         /* Log */
         #log-area {
             height: 100px;
@@ -258,10 +229,24 @@
         .log-entry.warn {
             color: var(--alert-color);
         }
+
+        #ws-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #333;
+        }
     </style>
 </head>
 
 <body>
+    <!-- WS Status Indicator -->
+    <div id="ws-status-indicator"
+        style="position:fixed;top:10px;right:10px;width:12px;height:12px;border-radius:50%;background:#444;z-index:9999;"
+        title="WebSocket Status"></div>
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen" class="full-screen flex-center">
@@ -272,7 +257,7 @@
                 <input type="password" class="login-input" placeholder="Heslo" id="password-input">
                 <button class="login-btn" onclick="attemptLogin()">PŘIPOJIT K JÁDRU</button>
             </div>
-            <div id="auth-msg" class="hidden" style="margin-top: 20px; font-size: 1.2em;">AUTHORIZING...</div>
+            <div id="auth-msg" class="hidden" style="margin-top: 20px; font-size: 1.2em; color: red;"></div>
         </div>
     </div>
 
@@ -290,43 +275,15 @@
             <div id="marker-alarm" class="marker" style="background: red;">
                 <div class="marker-label">ALARM</div>
             </div>
-            <div id="marker-restart" class="marker" style="background: white;">
-                <div class="marker-label">RST</div>
-            </div>
         </div>
 
         <!-- Center Display -->
         <div class="main-display">
-            <div id="temp-display">20 °C</div>
-            <button id="heat-btn" onmousedown="startHeating()" onmouseup="stopHeating()" onmouseleave="stopHeating()"
-                ontouchstart="startHeating()" ontouchend="stopHeating()">
+            <div id="temp-display">-- °C</div>
+            <button id="heat-btn">
                 ZVYŠOVAT TEPLOTU
             </button>
         </div>
-
-        <!-- Admin / Root Panel -->
-        <details>
-            <summary style="cursor: pointer; color: #555;">ROOT CONTROLS [ADMIN PANEL]</summary>
-            <div id="admin-panel" style="margin-top: 10px;">
-                <div class="control-group">
-                    <label>Práh Alarmu (Code Red)</label>
-                    <input type="number" id="input-alarm" value="350" onchange="updateSettings()">
-                </div>
-                <div class="control-group">
-                    <label>Práh automatického restartu</label>
-                    <input type="number" id="input-restart" value="500" onchange="updateSettings()">
-                </div>
-                <div class="control-group">
-                    <label>Koeficient chlazení</label>
-                    <input type="number" id="input-cooling" value="0.5" step="0.1" onchange="updateSettings()">
-                </div>
-                <div class="control-group" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="check-autorestart" style="width: auto; margin-right: 10px;"
-                        onchange="updateSettings()">
-                    <label style="margin:0;">Zapnout automatický restart</label>
-                </div>
-            </div>
-        </details>
 
         <div id="log-area">
             <div>--- SYSTEM LOG INITIATED ---</div>
@@ -338,21 +295,17 @@
         <div class="alarm-text">POZOR: CODE RED AKTIVNÍ</div>
     </div>
 
+    <!-- SCRIPTS -->
+    <script src="/static/js/socket_client.js"></script>
     <script>
         // --- STATE ---
-        let currentTemp = 20.0;
-        let isHeating = false;
+        let currentTemp = 0.0;
+        let socket = null;
+        let heatInterval = null;
 
-        // Settings
-        let settings = {
-            alarmThreshold: 350,
-            restartThreshold: 500,
-            coolingFactor: 0.5,
-            autoRestart: false
-        };
-
-        const MAX_SCALE = 10000;
-        const HEAT_RATE = 2.5; // Temp increase per tick
+        // Constants
+        const MAX_SCALE = 10000; // Visual scale max
+        const ALARM_THRESHOLD = 350; // Visual marker
 
         // --- ELEMENTS ---
         const ui = {
@@ -363,63 +316,143 @@
             tempDisplay: document.getElementById('temp-display'),
             tempBar: document.getElementById('temp-bar'),
             markerAlarm: document.getElementById('marker-alarm'),
-            markerRestart: document.getElementById('marker-restart'),
             overlay: document.getElementById('code-red-overlay'),
             log: document.getElementById('log-area'),
-            inputs: {
-                alarm: document.getElementById('input-alarm'),
-                restart: document.getElementById('input-restart'),
-                cooling: document.getElementById('input-cooling'),
-                autoRestart: document.getElementById('check-autorestart')
-            }
+            heatBtn: document.getElementById('heat-btn')
         };
 
-        // --- LOGIN LOGIC ---
-        function attemptLogin() {
-            // No auth check, just flow
-            ui.loginForm.classList.add('hidden');
-            ui.authMsg.classList.remove('hidden');
+        // --- AUTH LOGIC ---
+        async function attemptLogin() {
+            const username = document.getElementById('username-input').value;
+            const password = document.getElementById('password-input').value;
 
-            setTimeout(() => {
+            ui.authMsg.classList.add('hidden');
+            ui.authMsg.innerText = "Authorizing...";
+            ui.authMsg.classList.remove('hidden');
+            ui.authMsg.style.color = "#888";
+
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Přístup zamítnut');
+                }
+
+                const data = await response.json();
+                const token = data.access_token;
+
+                // Success
                 ui.authMsg.innerText = "PŘÍSTUP POVOLEN";
                 ui.authMsg.style.color = "#00ff41";
-            }, 1000);
 
-            setTimeout(() => {
-                ui.loginScreen.style.opacity = '0';
                 setTimeout(() => {
-                    ui.loginScreen.classList.add('hidden');
-                    ui.dashboard.style.opacity = '1';
-                    startGameLoop();
+                    initApp(token);
                 }, 1000);
-            }, 2000);
+
+            } catch (err) {
+                ui.authMsg.innerText = "CHYBA: " + err.message;
+                ui.authMsg.style.color = "red";
+            }
         }
 
-        // --- CORE LOGIC ---
-        function startHeating() { isHeating = true; }
-        function stopHeating() { isHeating = false; }
+        // --- APP INIT ---
+        function initApp(token) {
+            // Hide Login
+            ui.loginScreen.style.opacity = '0';
+            setTimeout(() => {
+                ui.loginScreen.classList.add('hidden');
+                ui.dashboard.style.opacity = '1';
+            }, 1000);
 
-        function updateSettings() {
-            settings.alarmThreshold = parseFloat(ui.inputs.alarm.value) || 350;
-            settings.restartThreshold = parseFloat(ui.inputs.restart.value) || 500;
-            settings.coolingFactor = parseFloat(ui.inputs.cooling.value) || 0.5;
-            settings.autoRestart = ui.inputs.autoRestart.checked;
+            // Connect WS
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/connect`;
 
+            socket = new SocketClient(wsUrl, handleWsMessage, handleWsStatus);
+            socket.connect(token);
+
+            // Setup Controls
             updateMarkers();
-            addLog("Settings updated by Root.");
+            setupControls();
+        }
+
+        // --- WEBSOCKET HANDLERS ---
+        function handleWsMessage(data) {
+            if (data.type === 'gamestate_update') {
+                // Updating State
+                if (data.temperature !== undefined) {
+                    currentTemp = data.temperature;
+                    renderTemp();
+                }
+
+                // Handle Overload Alert
+                if (data.is_overloaded) {
+                    showAlarm(true);
+                } else {
+                    showAlarm(false);
+                }
+
+                // Log Logic? 
+                // Maybe add log on status change?
+            }
+        }
+
+        function handleWsStatus(status) {
+            // SocketClient updates indicator automatically if element exists
+            if (status === 'connected') {
+                addLog("Připojeno k jádru.");
+            } else if (status === 'disconnected') {
+                addLog("Spojení ztraceno.", "warn");
+            }
+        }
+
+        // --- UI RENDERING ---
+        function renderTemp() {
+            // Display
+            ui.tempDisplay.innerText = `${currentTemp.toFixed(1)} °C`;
+
+            // Bar
+            let pct = (currentTemp / MAX_SCALE) * 100;
+            if (pct > 100) pct = 100;
+            ui.tempBar.style.width = `${pct}%`;
+
+            // Color
+            if (currentTemp >= ALARM_THRESHOLD) {
+                ui.tempBar.style.background = 'red';
+                ui.tempDisplay.style.color = 'red';
+            } else {
+                ui.tempBar.style.background = 'linear-gradient(90deg, var(--text-color), #ffff00, var(--alert-color))';
+                ui.tempDisplay.style.color = 'var(--text-color)';
+            }
+        }
+
+        function showAlarm(isAlarm) {
+            if (isAlarm) {
+                if (ui.overlay.style.display !== 'flex') {
+                    ui.overlay.style.display = 'flex';
+                    ui.overlay.classList.remove('hidden');
+                    document.body.style.backgroundColor = '#200';
+                    addLog("CRITICAL: SYSTEM OVERLOAD", "warn");
+                }
+            } else {
+                if (ui.overlay.style.display === 'flex') {
+                    ui.overlay.style.display = 'none';
+                    ui.overlay.classList.add('hidden');
+                    document.body.style.backgroundColor = 'var(--bg-color)';
+                }
+            }
         }
 
         function updateMarkers() {
-            const alarmPct = (settings.alarmThreshold / MAX_SCALE) * 100;
+            const alarmPct = (ALARM_THRESHOLD / MAX_SCALE) * 100;
             ui.markerAlarm.style.left = `${Math.min(alarmPct, 99)}%`;
-
-            if (settings.autoRestart) {
-                ui.markerRestart.classList.remove('hidden');
-                const rstPct = (settings.restartThreshold / MAX_SCALE) * 100;
-                ui.markerRestart.style.left = `${Math.min(rstPct, 99)}%`;
-            } else {
-                ui.markerRestart.classList.add('hidden');
-            }
         }
 
         function addLog(msg, type = 'info') {
@@ -430,86 +463,34 @@
             ui.log.prepend(div);
         }
 
-        function gameLoop() {
-            // Physics
-            if (isHeating) {
-                currentTemp += HEAT_RATE;
-            } else {
-                currentTemp -= settings.coolingFactor;
-            }
+        // --- CONTROLS ---
+        function setupControls() {
+            const btn = ui.heatBtn;
 
-            // Bounds
-            if (currentTemp < 20) currentTemp = 20;
+            const startHeat = () => {
+                if (heatInterval) return;
+                socket.send({ type: 'action', action: 'heat_tick' }); // Initial instant tick
+                heatInterval = setInterval(() => {
+                    socket.send({ type: 'action', action: 'heat_tick' });
+                }, 100); // 10 ticks per second
+            };
 
-            // Logic
-            checkAlarm();
-            checkAutoRestart();
-
-            // UI Render
-            render();
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        function checkAlarm() {
-            if (currentTemp >= settings.alarmThreshold) {
-                if (ui.overlay.style.display !== 'flex') {
-                    ui.overlay.style.display = 'flex'; // Show Warning
-                    ui.overlay.classList.remove('hidden');
-                    document.body.style.backgroundColor = '#200';
-                    ui.tempDisplay.style.color = 'red';
+            const stopHeat = () => {
+                if (heatInterval) {
+                    clearInterval(heatInterval);
+                    heatInterval = null;
                 }
-            } else {
-                if (ui.overlay.style.display === 'flex') {
-                    ui.overlay.style.display = 'none';
-                    ui.overlay.classList.add('hidden');
-                    document.body.style.backgroundColor = 'var(--bg-color)';
-                    ui.tempDisplay.style.color = 'var(--text-color)';
-                }
-            }
+            };
+
+            btn.addEventListener('mousedown', startHeat);
+            btn.addEventListener('mouseup', stopHeat);
+            btn.addEventListener('mouseleave', stopHeat);
+
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); startHeat(); });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); stopHeat(); });
         }
 
-        function checkAutoRestart() {
-            if (settings.autoRestart && currentTemp >= settings.restartThreshold) {
-                // TRIGGER RESTART
-                currentTemp = 20;
-                addLog("AUTOMATICKÝ RESTART SYSTÉMU", "warn");
-
-                // Flash white
-                let flash = document.createElement('div');
-                flash.style.position = 'fixed';
-                flash.style.inset = '0';
-                flash.style.background = 'white';
-                flash.style.zIndex = '999';
-                document.body.appendChild(flash);
-                setTimeout(() => flash.remove(), 100);
-            }
-        }
-
-        function render() {
-            // Display Number
-            ui.tempDisplay.innerText = `${currentTemp.toFixed(1)} °C`;
-
-            // Progress Bar
-            let pct = (currentTemp / MAX_SCALE) * 100;
-            if (pct > 100) pct = 100;
-            ui.tempBar.style.width = `${pct}%`;
-
-            // Color change of bar
-            if (currentTemp >= settings.alarmThreshold) {
-                ui.tempBar.style.background = 'red';
-            } else {
-                ui.tempBar.style.background = 'linear-gradient(90deg, var(--text-color), #ffff00, var(--alert-color))';
-            }
-        }
-
-        function startGameLoop() {
-            updateMarkers();
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Init
-        // Enter key for login
+        // Init Inputs
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !ui.loginScreen.classList.contains('hidden')) {
                 attemptLogin();

@@ -1306,3 +1306,241 @@ textarea:focus {
     margin-bottom: 0.25rem;
     font-weight: bold;
 }
+
+/* =========================================== */
+/* STAR TREK ENTERPRISE (NX-01) - ECONOMY PANEL */
+/* =========================================== */
+
+:root {
+    /* NX-01 Palette */
+    --nx-gunmetal: #242830;
+    --nx-metal-blue: #3A4B60;
+    --nx-metal-light: #5A6B80;
+    --nx-bronze: #B08D55;
+    --nx-bronze-dim: #705530;
+    --nx-highlight: #88AACC;
+    --nx-orange: #D9531E;
+    --nx-black: #0E1014;
+}
+
+/* Main NX Container */
+.nx-container {
+    background-color: var(--nx-black);
+    background-image:
+        radial-gradient(circle at 50% 50%, #1a1e26 0%, transparent 100%),
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.1) 0px, rgba(0, 0, 0, 0.1) 2px, transparent 2px, transparent 4px);
+    padding: 1rem;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1.5rem;
+    color: var(--nx-highlight);
+    border: 1px solid var(--nx-metal-blue);
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+/* NX Panel (Riveted Metal) */
+.nx-panel {
+    background: linear-gradient(135deg, var(--nx-metal-blue) 0%, var(--nx-gunmetal) 100%);
+    border: 1px solid var(--nx-metal-light);
+    border-radius: 2px;
+    padding: 1rem;
+    position: relative;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.5),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Corner Bolts */
+.nx-panel::before,
+.nx-panel::after {
+    content: '+';
+    position: absolute;
+    color: var(--nx-metal-light);
+    font-family: monospace;
+    font-weight: bold;
+    opacity: 0.5;
+}
+
+.nx-panel::before {
+    top: 4px;
+    left: 6px;
+}
+
+.nx-panel::after {
+    top: 4px;
+    right: 6px;
+}
+
+/* NX Header */
+.nx-header {
+    font-family: 'Microgramma', 'Eurostile', 'Orbitron', sans-serif;
+    color: var(--nx-bronze);
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    letter-spacing: 0.2em;
+    border-bottom: 2px solid var(--nx-bronze-dim);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Key Value Box */
+.nx-metric-box {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--nx-metal-light);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.nx-metric-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 2rem;
+    color: var(--nx-highlight);
+    text-shadow: 0 0 5px rgba(136, 170, 204, 0.4);
+}
+
+.nx-metric-label {
+    color: var(--nx-bronze);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+}
+
+/* TABLE STYLING */
+.nx-table-container {
+    overflow: auto;
+    border: 1px solid var(--nx-metal-light);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.nx-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.nx-table th {
+    background: linear-gradient(to bottom, var(--nx-metal-blue), var(--nx-gunmetal));
+    color: var(--nx-bronze);
+    font-weight: normal;
+    text-transform: uppercase;
+    padding: 0.75rem;
+    border-bottom: 2px solid var(--nx-bronze-dim);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-align: left;
+}
+
+.nx-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--nx-highlight);
+    font-size: 0.9rem;
+}
+
+.nx-table tr:hover td {
+    background: rgba(176, 141, 85, 0.1);
+}
+
+/* PHYSICAL BUTTONS */
+.nx-btn {
+    background: linear-gradient(to bottom, #4a5b70 0%, #2a3b50 100%);
+    border: 1px solid #1a2b30;
+    border-top: 1px solid #5a6b80;
+    color: #ddeeff;
+    padding: 4px 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    border-radius: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: all 0.1s;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* NAVIGATION TABS (Monitoring View) */
+.nav-btn {
+    padding: 1rem 2rem;
+    color: #ff9900;
+    border: none;
+    border-right: 1px solid #331100;
+    background: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: none;
+}
+
+.nav-btn:hover {
+    background: #221100;
+    color: #ffaa00;
+    text-shadow: 0 0 8px #ffaa00;
+}
+
+.nav-btn.active {
+    background: #331100;
+    color: #ffcc00;
+    border-bottom: 3px solid #ffcc00;
+    box-shadow: 0 0 15px rgba(255, 180, 0, 0.2);
+}
+
+.nx-btn:hover {
+    background: linear-gradient(to bottom, #5a6b80 0%, #3a4b60 100%);
+    color: #fff;
+    box-shadow: 0 0 5px var(--nx-highlight);
+}
+
+.nx-btn:active {
+    background: #2a3b50;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    transform: translateY(1px);
+}
+
+.nx-btn-action {
+    background: linear-gradient(to bottom, #d9632e 0%, #a9330e 100%);
+    border: 1px solid #59130e;
+    border-top: 1px solid #f9834e;
+    color: #ffe;
+}
+
+.nx-btn-action:hover {
+    background: linear-gradient(to bottom, #e9733e 0%, #b9431e 100%);
+}
+
+/* STATUS LEDS */
+.nx-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    margin-right: 4px;
+}
+
+.nx-led.on {
+    background: #66ff66;
+    box-shadow: 0 0 5px #66ff66;
+}
+
+.nx-led.off {
+    background: #334433;
+}
+
+.nx-led.alert {
+    background: #ff3333;
+    box-shadow: 0 0 5px #ff3333;
+}
+
+.nx-led.warn {
+    background: #ffaa33;
+    box-shadow: 0 0 5px #ffaa33;
+}

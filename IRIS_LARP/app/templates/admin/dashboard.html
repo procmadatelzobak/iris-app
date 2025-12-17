@@ -368,40 +368,58 @@
         </div>
     </div>
 
-    <!-- View C: ECONOMY -->
-    <div id="view-economy" class="view-container hidden">
-        <div class="chernobyl-panel p-4 mb-6 bg-black flex justify-between items-center shadow-lg shadow-yellow-900/20">
-            <div>
-                <h3 class="text-yellow-500 font-bold tracking-widest text-sm mb-1 editable-label"
-                    data-key="lbl_treasury">NÁRODNÍ BANKA BAHNA</h3>
-                <div class="text-4xl text-white font-mono" id="treasuryBalance">---- CR</div>
-            </div>
-            <div class="text-right font-mono text-sm">
-                <div class="text-gray-400">DAŇ: <span class="text-white">10%</span></div>
-                <div class="text-gray-400">STAV: <span class="text-green-500">STABILNÍ</span></div>
-            </div>
-        </div>
+    <!-- View C: ECONOMY (NX-01 STYLE) -->
+    <div id="view-economy" class="view-container hidden h-full">
+        <div class="nx-container">
+            <!-- Top Logistics Panel -->
+            <div class="nx-panel">
+                <div class="nx-header editable-label" data-key="nx_header_logistics">LOGISTIKA A REKVIZICE</div>
 
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl text-yellow-600 font-bold editable-label" data-key="hdr_eco_sub">EKONOMIKA PODDANÝCH</h2>
-            <button class="chernobyl-btn border-yellow-500 text-yellow-500 px-4 py-1 editable-label"
-                data-key="btn_refresh_eco" onclick="refreshEconomy()">VYKOPAT POKLAD</button>
+                <div class="flex justify-between items-end">
+                    <div class="flex gap-8 items-center">
+                        <div>
+                            <div class="nx-metric-label editable-label" data-key="lbl_treasury">CENTRÁLNÍ POKLADNA</div>
+                            <div class="text-3xl font-mono text-white" id="treasuryBalance"
+                                style="text-shadow: 0 0 10px rgba(255,255,255,0.2);">---- CR</div>
+                        </div>
+                        <div>
+                            <div class="nx-metric-label editable-label" data-key="tax_label">DAŇ</div>
+                            <div class="text-xl font-mono text-gray-400">10%</div>
+                        </div>
+                        <div>
+                            <div class="nx-metric-label editable-label" data-key="nx_market_status">STAV TRHU</div>
+                            <div class="text-xl font-mono text-green-400 editable-label" data-key="status_stable">
+                                STABILNÍ</div>
+                        </div>
+                    </div>
+
+                    <button class="nx-btn nx-btn-action editable-label" data-key="btn_refresh_eco"
+                        onclick="refreshEconomy()" style="padding: 8px 16px; font-size: 0.9rem;">
+                        NAČÍST DATA
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Manifest Table -->
+            <div class="nx-table-container">
+                <table class="nx-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;" class="editable-label" data-key="eco_table_id">ID</th>
+                            <th class="editable-label" data-key="eco_table_user">UŽIVATEL</th>
+                            <th style="text-align: right;" class="editable-label" data-key="eco_table_credits">KREDITY
+                            </th>
+                            <th class="editable-label" data-key="eco_table_status">STATUS</th>
+                            <th class="editable-label" data-key="eco_table_lock">ZÁMEK</th>
+                            <th class="editable-label" data-key="eco_table_actions">AKCE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="economyTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <table class="eco-table w-full border border-gray-700 bg-gray-900 text-sm">
-            <thead>
-                <tr class="bg-black text-yellow-500">
-                    <th class="border border-gray-700 p-2">ID</th>
-                    <th class="border border-gray-700 p-2">UŽIVATEL</th>
-                    <th class="border border-gray-700 p-2">KREDITY</th>
-                    <th class="border border-gray-700 p-2">STATUS</th>
-                    <th class="border border-gray-700 p-2">ZÁMEK</th>
-                    <th class="border border-gray-700 p-2">AKCE</th>
-                </tr>
-            </thead>
-            <tbody id="economyTableBody">
-                <!-- JS -->
-            </tbody>
-        </table>
     </div>
 
     <!-- View D: TASKS - LCARS VOYAGER STYLE -->

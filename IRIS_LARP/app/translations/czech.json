@@ -155,7 +155,11 @@
     "card_channel": "KANÁL",
     "card_object": "OBJEKT",
     "card_shadow": "STÍN",
-    "online_count": "Online uživatelé"
+    "online_count": "Online uživatelé",
+    "nx_header_logistics": "LOGISTIKA A REKVIZICE",
+    "nx_market_status": "STAV TRHU",
+    "eco_btn_unlock": "ODEMKNOUT",
+    "eco_btn_lock_verb": "ZAMKNOUT"
   },
   "root_dashboard": {
     "nav_dashboard": "DASHBOARD",

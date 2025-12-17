@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List, Dict, Optional
 from pydantic import BaseModel
 import google.generativeai as genai
-from openai import OpenAI
+from openai import AsyncOpenAI
 from ..config import settings
 from ..database import SessionLocal, SystemConfig
 
@@ -30,7 +30,7 @@ class LLMService:
         key_name = f"{provider.value.upper()}_API_KEY"
         return getattr(settings, key_name, None)
 
-    def list_models(self, provider: LLMProvider) -> List[str]:
+    async def list_models(self, provider: LLMProvider) -> List[str]:
         api_key = self._get_key(provider)
         if not api_key:
              # Return defaults if no key to allow UI to render something
@@ -44,8 +44,8 @@ class LLMService:
 
         try:
             if provider == LLMProvider.OPENAI:
-                 client = OpenAI(api_key=api_key)
-                 models = client.models.list()
+                 client = AsyncOpenAI(api_key=api_key)
+                 models = await client.models.list()
                  return [m.id for m in models.data if "gpt" in m.id]
 
             elif provider == LLMProvider.GEMINI:
@@ -55,11 +55,11 @@ class LLMService:
 
             elif provider == LLMProvider.OPENROUTER:
                 # OpenRouter compatible with OpenAI Client
-                client = OpenAI(
+                client = AsyncOpenAI(
                     base_url="https://openrouter.ai/api/v1",
                     api_key=api_key,
                 )
-                models = client.models.list()
+                models = await client.models.list()
                 return [m.id for m in models.data]
                 
         except Exception as e:
@@ -68,7 +68,7 @@ class LLMService:
         
         return []
 
-    def generate_response(self, config: LLMConfig, history: List[Dict[str, str]]) -> str:
+    async def generate_response(self, config: LLMConfig, history: List[Dict[str, str]]) -> str:
         api_key = self._get_key(config.provider)
         
         # MOCK FALLBACKS if no key
@@ -77,21 +77,33 @@ class LLMService:
 
         try:
             if config.provider == LLMProvider.OPENAI:
-                return self._generate_openai(api_key, config, history)
+                return await self._generate_openai(api_key, config, history)
             elif config.provider == LLMProvider.GEMINI:
-                return self._generate_gemini(api_key, config, history)
+                return await self._generate_gemini(api_key, config, history)
             elif config.provider == LLMProvider.OPENROUTER:
-                return self._generate_openrouter(api_key, config, history)
+                return await self._generate_openrouter(api_key, config, history)
         except Exception as e:
             print(f"LLM Generation Error: {e}")
             return f"[SYSTEM ERROR: {str(e)}]"
 
-    async def evaluate_submission(self, prompt: str, submission: str) -> int:
+    async def evaluate_submission(self, prompt: str, submission: str, config: Optional[LLMConfig] = None) -> int:
         full_user_prompt = f"TASK PROMPT: {prompt}\nUSER SUBMISSION: {submission}\n\nRate the submission from 0 to 100 based on creativity and relevance. Return ONLY the number."
         
         try:
-            temp_config = LLMConfig(provider=LLMProvider.OPENROUTER, model_name="google/gemini-2.5-flash-lite")
-            resp = self.generate_response(temp_config, [{"role": "user", "content": full_user_prompt}])
+            # Use provided config or auto-detect
+            effective_config = config
+            if not effective_config:
+                # Dynamically select provider
+                if self._get_key(LLMProvider.OPENROUTER):
+                    effective_config = LLMConfig(provider=LLMProvider.OPENROUTER, model_name="google/gemini-2.5-flash-lite")
+                elif self._get_key(LLMProvider.GEMINI):
+                    effective_config = LLMConfig(provider=LLMProvider.GEMINI, model_name="gemini-1.5-flash")
+                elif self._get_key(LLMProvider.OPENAI):
+                    effective_config = LLMConfig(provider=LLMProvider.OPENAI, model_name="gpt-4o-mini")
+                else:
+                    return 50 # No provider available
+
+            resp = await self.generate_response(effective_config, [{"role": "user", "content": full_user_prompt}])
             clean_resp = ''.join(filter(str.isdigit, resp))
             return int(clean_resp) if clean_resp else 50
         except Exception:
@@ -116,7 +128,7 @@ class LLMService:
         
         history = [{"role": "user", "content": prompt_content}]
 
-        return self.generate_response(effective_config, history)
+        return await self.generate_response(effective_config, history)
 
     async def generate_task_description(self, user_profile: dict, config: Optional[LLMConfig] = None) -> str:
         """
@@ -151,26 +163,26 @@ class LLMService:
         history = [{"role": "user", "content": prompt_content}]
         
         try:
-            result = self.generate_response(effective_config, history)
+            result = await self.generate_response(effective_config, history)
             return result.strip() if result else "Proveďte analýzu aktuálního stavu systému a navrhněte zlepšení."
         except Exception as e:
             print(f"Task generation error: {e}")
             return "Proveďte analýzu aktuálního stavu systému a navrhněte zlepšení."
 
-    def _generate_openai(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
-        client = OpenAI(api_key=api_key)
+    async def _generate_openai(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
+        client = AsyncOpenAI(api_key=api_key)
         messages = [{"role": "system", "content": config.system_prompt}]
         messages.extend(history)
         
-        response = client.chat.completions.create(
+        response = await client.chat.completions.create(
             model=config.model_name,
             messages=messages
         )
         return response.choices[0].message.content
 
-    def _generate_openrouter(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
+    async def _generate_openrouter(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
         try:
-            client = OpenAI(
+            client = AsyncOpenAI(
                 base_url="https://openrouter.ai/api/v1",
                 api_key=api_key,
                 default_headers={
@@ -181,7 +193,7 @@ class LLMService:
             messages = [{"role": "system", "content": config.system_prompt}]
             messages.extend(history)
             
-            response = client.chat.completions.create(
+            response = await client.chat.completions.create(
                 model=config.model_name,
                 messages=messages
             )
@@ -191,7 +203,7 @@ class LLMService:
             # Fallback or re-raise
             raise e
 
-    def _generate_gemini(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
+    async def _generate_gemini(self, api_key: str, config: LLMConfig, history: List[Dict[str, str]]) -> str:
         genai.configure(api_key=api_key)
         
         gemini_hist = []
@@ -205,7 +217,7 @@ class LLMService:
         last_msg = gemini_hist[-1]["parts"][0] if len(gemini_hist) > 0 else ""
         if not last_msg: return ""
         
-        response = chat.send_message(last_msg)
+        response = await chat.send_message_async(last_msg)
         return response.text
 
 llm_service = LLMService()

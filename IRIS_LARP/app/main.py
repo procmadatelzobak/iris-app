@@ -52,14 +52,35 @@ async def game_loop():
             )
             
             # 3. Check Overload
-            is_overloaded = gamestate.check_overload()
+            overload_events = gamestate.check_overload()
+            current_is_overloaded = gamestate.is_overloaded
+
+            # Process Panic Mode (moved from gamestate)
+            if "panic_trigger" in overload_events:
+                should_panic = overload_events["panic_trigger"]
+                # Safe to call routing here
+                total_sessions = getattr(settings, "TOTAL_SESSIONS", 8) # Fallback to 8 if generic
+                # Or just settings.TOTAL_SESSIONS as imported
+                total_sessions = settings.TOTAL_SESSIONS
+                
+                for i in range(1, total_sessions + 1):
+                    routing_logic.set_panic_mode(i, "user", should_panic)
+                    routing_logic.set_panic_mode(i, "agent", should_panic)
+                
+                # Send special panic update
+                await routing_logic.broadcast_global(json.dumps({
+                    "type": "gamestate_update",
+                    "panic_global": should_panic,
+                    "temperature": gamestate.temperature,
+                    "is_overloaded": current_is_overloaded
+                }))
             
             # 4. Broadcast
             # Detect changes (Optimization: only send if changed)
             if (int(new_val) != int(last_val) or 
                 current_load != last_load or 
                 gamestate.treasury_balance != last_treasury or
-                is_overloaded != last_overload):
+                current_is_overloaded != last_overload):
                 
                 await routing_logic.broadcast_global(json.dumps({
                     "type": "gamestate_update",
@@ -68,7 +89,7 @@ async def game_loop():
                     "power_load": current_load,
                     "power_capacity": gamestate.power_capacity,
                     "treasury": gamestate.treasury_balance,
-                    "is_overloaded": is_overloaded,
+                    "is_overloaded": current_is_overloaded,
                     "agent_window": gamestate.agent_response_window,
                     "hyper_mode": gamestate.hyper_visibility_mode.value
                 }))
@@ -76,7 +97,7 @@ async def game_loop():
                 last_val = new_val
                 last_load = current_load
                 last_treasury = gamestate.treasury_balance
-                last_overload = is_overloaded
+                last_overload = current_is_overloaded
                 
         except asyncio.CancelledError:
             # Handle cancellation gracefully

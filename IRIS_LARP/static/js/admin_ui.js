@@ -682,6 +682,7 @@ function t(key, defaultVal) {
     return defaultVal;
 }
 
+// --- ECONOMY (NX-01 STYLE) ---
 window.refreshEconomy = async function () {
     try {
         const res = await fetch('/api/admin/data/users', {
@@ -694,26 +695,36 @@ window.refreshEconomy = async function () {
 
         users.forEach(u => {
             const tr = document.createElement('tr');
-            let statusClass = "text-green-500";
-            if (u.status_level === 'party') statusClass = "text-pink-500 animate-pulse";
-            if (u.status_level === 'high') statusClass = "text-yellow-500";
+
+            // Status Logic
+            let statusLedClass = "off";
+            if (u.status_level === 'party') statusLedClass = "alert"; // Pinkish -> Alert Red
+            if (u.status_level === 'high') statusLedClass = "warn";   // Yellow -> Warn Orange
+            if (u.status_level === 'mid') statusLedClass = "on";      // Green -> On
+
+            // Credits Color
+            const credClass = u.credits < 0 ? 'text-red-400' : 'text-blue-300';
 
             tr.innerHTML = `
-                <td class="p-2 border border-gray-700">${u.id}</td>
-                <td class="p-2 border border-gray-700 font-bold text-white">${u.username}</td>
-                <td class="p-2 border border-gray-700 ${u.credits < 0 ? 'text-red-500' : 'text-green-500'} font-mono text-right">${u.credits} CR</td>
-                <td class="p-2 border border-gray-700 ${statusClass}">${u.status_level.toUpperCase()}</td>
-                <td class="p-2 border border-gray-700 ${u.is_locked ? 'text-red-500' : 'text-gray-500'}">${u.is_locked ? 'LOCKED' : 'OPEN'}</td>
-                <td class="p-2 border border-gray-700 flex flex-wrap gap-1">
-                    <button class="bg-gray-800 text-red-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('fine', ${u.id})">${t('eco_btn_fine', 'POKUTA')}</button>
-                    <button class="bg-gray-800 text-green-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('bonus', ${u.id})">${t('eco_btn_bribe', 'ÚPLATEK')}</button>
-                    <button class="bg-gray-800 text-yellow-400 border border-gray-600 hover:text-white px-2 py-1 text-xs" onclick="ecoAction('toggle_lock', ${u.id})">${t('eco_btn_lock', 'ZÁMEK')}</button>
-                    <div class="border-l border-gray-600 pl-1 ml-1 flex gap-1">
-                        <button class="text-xs px-1 border border-gray-700 text-gray-500 hover:text-white" onclick="setStatus(${u.id}, 'low')">${t('eco_status_l', 'L')}</button>
-                        <button class="text-xs px-1 border border-green-900 text-green-500 hover:text-white" onclick="setStatus(${u.id}, 'mid')">${t('eco_status_m', 'M')}</button>
-                        <button class="text-xs px-1 border border-yellow-900 text-yellow-500 hover:text-white" onclick="setStatus(${u.id}, 'high')">${t('eco_status_h', 'H')}</button>
-                        <button class="text-xs px-1 border border-pink-900 text-pink-500 hover:text-white" onclick="setStatus(${u.id}, 'party')">${t('eco_status_p', 'P')}</button>
-                    </div>
+                <td>${u.id}</td>
+                <td style="font-weight: bold; color: #fff;">${u.username}</td>
+                <td class="${credClass}" style="text-align: right; font-family: monospace;">${u.credits} CR</td>
+                <td>
+                    <span class="nx-led ${statusLedClass}"></span>
+                    ${u.status_level.toUpperCase()}
+                </td>
+                <td style="${u.is_locked ? 'color: var(--nx-orange);' : 'color: var(--nx-metal-light);'}">
+                    ${u.is_locked ? t('eco_status_locked', 'UZAMČENO') : t('eco_status_open', 'OTEVŘENO')}
+                </td>
+                <td style="display: flex; gap: 4px; flex-wrap: wrap;">
+                    <button class="nx-btn" onclick="ecoAction('fine', ${u.id})">${t('eco_btn_fine', 'POKUTA')}</button>
+                    <button class="nx-btn" onclick="ecoAction('bonus', ${u.id})">${t('eco_btn_bribe', 'ÚPLATEK')}</button>
+                    <button class="nx-btn" onclick="ecoAction('toggle_lock', ${u.id})">${u.is_locked ? t('eco_btn_unlock', 'ODEMKNOUT') : t('eco_btn_lock_verb', 'ZAMKNOUT')}</button>
+                    <div style="width: 1px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
+                    <button class="nx-btn" style="color: #aaa;" onclick="setStatus(${u.id}, 'low')">${t('eco_status_l', 'L')}</button>
+                    <button class="nx-btn" style="color: #afa;" onclick="setStatus(${u.id}, 'mid')">${t('eco_status_m', 'M')}</button>
+                    <button class="nx-btn" style="color: #fa0;" onclick="setStatus(${u.id}, 'high')">${t('eco_status_h', 'H')}</button>
+                    <button class="nx-btn" style="color: #f5f;" onclick="setStatus(${u.id}, 'party')">${t('eco_status_p', 'P')}</button>
                 </td>
             `;
             tbody.appendChild(tr);

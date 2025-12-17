@@ -8,6 +8,7 @@ from ..database import User, UserRole, SessionLocal, ChatLog
 from ..config import settings
 import json
 import asyncio
+import time
 from jose import jwt, JWTError
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -53,21 +54,14 @@ async def monitor_latency():
             now = time.time()
             limit = gamestate.agent_response_window
             
-            # Iterate over active sessions (Users waiting for Agent)
-            # We need to track who is waiting. 
-            # routing_logic should probably track "last_user_message_at"
-            # For now, let's access routing_logic state if possible or add tracking here.
-            
-            from ..logic.routing import routing_logic
-            
-            # This requires routing_logic to expose effective waiting state.
-            # Let's assume routing_logic has a method or we add one.
-            # Simplified: Check all active user connections in routing_logic
-            
-            for session_id, session_data in routing_logic.active_sessions.items():
-                # Check if it's a USER session and if they are waiting for reply?
-                # Actually, simpler: Use routing_logic to check timeouts.
-                await routing_logic.check_timeouts(now, limit)
+            # Iterate over pending responses to check for timeouts
+            for session_id in list(routing_logic.pending_responses.keys()):
+                start_time = routing_logic.pending_responses.get(session_id)
+                if start_time and (now - start_time > limit):
+                     # Timeout!
+                     routing_logic.mark_session_timeout(session_id)
+                     await routing_logic.send_timeout_error_to_user(session_id)
+                     await routing_logic.send_timeout_to_agent(session_id)
                 
         except Exception as e:
             print(f"Latency Monitor Error: {e}")
@@ -298,7 +292,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                                 routing_logic.set_last_user_message(session_id, prompt_source)
                         if not prompt_source:
                             prompt_source = content
-                        final_content = llm_service.generate_response(
+                        final_content = await llm_service.generate_response(
                             gamestate.llm_config_censor,
                             [{"role": "user", "content": prompt_source or PANIC_PROMPT_FALLBACK}]
                         ) or PANIC_RESPONSE_FALLBACK
@@ -362,6 +356,17 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
 
                 elif user.role == UserRole.USER:
                     cmd_type = msg_data.get("type")
+
+                    # Generic Action Handling (v1.9)
+                    if cmd_type == "action":
+                        action = msg_data.get("action")
+                        if action == "heat_tick":
+                            gamestate.manual_heat()
+                            await routing_logic.broadcast_global(json.dumps({
+                                "type": "gamestate_update", 
+                                "temperature": gamestate.temperature
+                            }))
+                            continue
 
                     # User Mirroring
                     if cmd_type == "typing_sync":
@@ -533,7 +538,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                     session_id = get_logical_id(user.username, "user")
                     panic_state = routing_logic.get_panic_state(session_id)
                     if panic_state.get("user"):
-                        censored = llm_service.generate_response(
+                        censored = await llm_service.generate_response(
                             gamestate.llm_config_censor,
                             [{"role": "user", "content": content}]
                         )
@@ -578,7 +583,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         history.append({"role": "user", "content": content})
                         
                         # 2. Generate Reply
-                        reply = llm_service.generate_response(gamestate.llm_config_hyper, history)
+                        reply = await llm_service.generate_response(gamestate.llm_config_hyper, history)
                         
                         # 3. Add Reply to History
                         history.append({"role": "assistant", "content": reply})
@@ -644,6 +649,16 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                 elif user.role == UserRole.ADMIN:
                     # Admin commands
                     cmd_type = msg_data.get("type")
+                    
+                    if cmd_type == "action":
+                        action = msg_data.get("action")
+                        if action == "heat_tick":
+                            gamestate.manual_heat()
+                            await routing_logic.broadcast_global(json.dumps({
+                                "type": "gamestate_update", 
+                                "temperature": gamestate.temperature
+                            }))
+                            continue
                     if cmd_type == "shift_command":
                         new_shift = gamestate.increment_shift()
                         # Broadcast Shift and Temp to EVERYONE so UIs update
