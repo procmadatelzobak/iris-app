@@ -266,6 +266,9 @@ window.openStation = function (name) {
     if (name === 'controls' && window.thermalScope) {
         requestAnimationFrame(() => window.thermalScope.resize());
     }
+    if (name === 'economy' && window.economySensor) {
+        requestAnimationFrame(() => window.economySensor.resize());
+    }
 };
 
 window.closeStation = function () {
@@ -732,6 +735,12 @@ window.refreshEconomy = async function () {
             `;
             tbody.appendChild(tr);
         });
+
+        // Update Sensor
+        if (window.economySensor) {
+            window.economySensor.updateData(users);
+        }
+
     } catch (e) { console.error('Eco fetch fail', e); }
 };
 
@@ -1450,6 +1459,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Init Thermal Scope
     if (typeof ThermalScope !== 'undefined') {
         window.thermalScope = new ThermalScope('thermalScopeCanvas');
+    }
+
+    // Init Economy Sensor
+    if (typeof EconomySensor !== 'undefined') {
+        window.economySensor = new EconomySensor('ecoSensorCanvas');
     }
 });
 

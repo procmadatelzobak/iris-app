@@ -241,7 +241,7 @@
 
     <!-- View B: CONTROLS -->
     <div id="view-controls" class="view-container hidden h-full">
-        <div class="tos-container">
+        <div class="tos-container relative">
             <!-- Left Column: Master Control & Frequency -->
             <div class="flex flex-col gap-6">
 
@@ -299,7 +299,10 @@
             </div>
 
             <!-- Right Column: Engineering -->
-            <div class="tos-module h-full flex flex-col">
+            <div class="tos-module h-full flex flex-col relative">
+                <div
+                    class="absolute bottom-2 right-2 text-[10px] text-stone-500 font-mono opacity-50 tracking-widest pointer-events-none">
+                    DESIGN: STAR TREK TOS</div>
                 <div class="tos-header">ENGINEERING</div>
 
                 <!-- Dilithium Power -->
@@ -374,7 +377,7 @@
 
     <!-- View C: ECONOMY (NX-01 STYLE) -->
     <div id="view-economy" class="view-container hidden h-full">
-        <div class="nx-container">
+        <div class="nx-container relative">
             <!-- Top Logistics Panel -->
             <div class="nx-panel">
                 <div class="nx-header editable-label" data-key="nx_header_logistics">LOGISTIKA A REKVIZICE</div>
@@ -404,31 +407,45 @@
                 </div>
             </div>
 
-            <!-- Main Manifest Table -->
-            <div class="nx-table-container">
-                <table class="nx-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;" class="editable-label" data-key="eco_table_id">ID</th>
-                            <th class="editable-label" data-key="eco_table_user">UŽIVATEL</th>
-                            <th style="text-align: right;" class="editable-label" data-key="eco_table_credits">KREDITY
-                            </th>
-                            <th class="editable-label" data-key="eco_table_status">STATUS</th>
-                            <th class="editable-label" data-key="eco_table_lock">ZÁMEK</th>
-                            <th class="editable-label" data-key="eco_table_actions">AKCE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="economyTableBody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
+            <!-- Main Content Split -->
+            <div class="flex-1 min-h-0 flex gap-4 mt-4">
+                <!-- Left: Table -->
+                <div class="w-1/2 nx-table-container flex-col h-full overflow-hidden relative">
+                    <div class="overflow-y-auto h-full pr-2">
+                        <table class="nx-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;" class="editable-label" data-key="eco_table_id">ID</th>
+                                    <th class="editable-label" data-key="eco_table_user">UŽIVATEL</th>
+                                    <th style="text-align: right;" class="editable-label" data-key="eco_table_credits">
+                                        CR</th>
+                                    <th class="editable-label" data-key="eco_table_status">STAV</th>
+                                    <th class="editable-label" data-key="eco_table_actions">AKCE</th>
+                                </tr>
+                            </thead>
+                            <tbody id="economyTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: Sensor -->
+                <div class="w-1/2 h-full relative"
+                    style="background: rgba(0, 10, 5, 0.3); border: 1px solid rgba(100, 255, 150, 0.1); border-radius: 8px; overflow: hidden;">
+                    <canvas id="ecoSensorCanvas" class="w-full h-full block"></canvas>
+                    <div class="absolute top-2 right-2 text-[10px] text-green-900 font-mono">ECO-SENSOR-8</div>
+                </div>
             </div>
+            <div
+                class="absolute bottom-2 right-2 text-[10px] text-[#5A6B80] font-mono opacity-60 tracking-widest pointer-events-none">
+                DESIGN: STAR TREK ENTERPRISE (NX-01)</div>
         </div>
     </div>
 
     <!-- View D: TASKS - LCARS VOYAGER STYLE -->
     <div id="view-tasks" class="view-container hidden">
-        <div class="lcars-container">
+        <div class="lcars-container relative">
             <!-- LCARS Top Frame -->
             <div class="lcars-top-frame">
                 <div class="lcars-elbow-left"></div>
@@ -498,6 +515,8 @@
                 </div>
                 <div class="lcars-bottom-right"></div>
             </div>
+            <div class="absolute bottom-6 right-16 text-[10px] text-[#ff9900] opacity-80 tracking-widest pointer-events-none font-bold"
+                style="font-family: 'Antonio', sans-serif;">DESIGN: STAR TREK VOYAGER (LCARS)</div>
         </div>
     </div>
 
@@ -571,6 +590,7 @@
     window.TRANS = {{ translations | tojson | safe }};
 </script>
 <script src="/static/js/thermal_scope.js"></script>
+<script src="/static/js/economy_sensor.js"></script>
 <script src="/static/js/socket_client.js"></script>
 <script src="/static/js/admin_ui.js?v=30.5"></script>
 {% endblock %}
