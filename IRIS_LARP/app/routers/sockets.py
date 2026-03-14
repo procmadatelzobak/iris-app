@@ -90,8 +90,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
         await routing_logic.broadcast_to_admins(json.dumps({
             "type": "status_update",
             "role": user.role.value,
-            "id": user.id, # Uses raw DB ID, user1 might be ID 1 or 10 depending on seed order
-            "username": user.username, # Send username for easier mapping
+            "id": user.id,
+            "logical_id": logical_id,
+            "username": user.username,
             "status": "online"
         }))
 
@@ -145,14 +146,13 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             history = db.query(ChatLog).filter(ChatLog.session_id == session_id_to_load).order_by(ChatLog.timestamp).all()
             
             # Hyper Visibility Filter for Agents
+            # NORMAL: show history, FORENSIC: show history (reveal on unlock)
+            # BLACKBOX: hide history, EPHEMERAL: hide history (deleted on unlock)
             should_send_history = True
             if user.role == UserRole.AGENT:
                 from ..logic.gamestate import HyperVisibilityMode
-                if gamestate.hyper_visibility_mode == HyperVisibilityMode.BLACKBOX:
+                if gamestate.hyper_visibility_mode in (HyperVisibilityMode.BLACKBOX, HyperVisibilityMode.EPHEMERAL):
                     should_send_history = False
-                elif gamestate.hyper_visibility_mode == HyperVisibilityMode.EPHEMERAL: # Not in Enum yet, but logic placeholder
-                     # Assuming Ephemeral means empty history for now as per spec
-                     should_send_history = False
             
             if should_send_history:
                 for log in history:
@@ -235,6 +235,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                 "type": "status_update",
                 "role": user.role.value,
                 "id": user.id,
+                "logical_id": logical_id,
                 "username": user.username,
                 "status": "offline"
             }))

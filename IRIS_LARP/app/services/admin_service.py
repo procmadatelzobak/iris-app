@@ -121,12 +121,14 @@ class AdminService:
         elif cmd_type == "hyper_vis_command":
             mode_str = msg_data.get("mode", "normal")
             from ..logic.gamestate import HyperVisibilityMode
-            if mode_str == "normal":
-                gamestate.hyper_visibility_mode = HyperVisibilityMode.NORMAL
-            elif mode_str == "blackbox":
-                gamestate.hyper_visibility_mode = HyperVisibilityMode.BLACKBOX
-            elif mode_str == "forensic":
-                gamestate.hyper_visibility_mode = HyperVisibilityMode.FORENSIC
+            mode_map = {
+                "normal": HyperVisibilityMode.NORMAL,
+                "blackbox": HyperVisibilityMode.BLACKBOX,
+                "forensic": HyperVisibilityMode.FORENSIC,
+                "ephemeral": HyperVisibilityMode.EPHEMERAL,
+            }
+            if mode_str in mode_map:
+                gamestate.hyper_visibility_mode = mode_map[mode_str]
             
             # Log
             db_log = SessionLocal()

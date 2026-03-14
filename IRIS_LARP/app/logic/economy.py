@@ -41,15 +41,15 @@ def process_task_payment(task_id: int, rating: int, db: Optional[Session] = None
         user = db.query(User).filter(User.id == task.user_id).first()
         if user:
             user.credits += net_reward
-            
-        # Update Treasury
-        gamestate.treasury_balance += tax_amount
-        
+
         # Update Task
         task.final_rating = safe_rating
         task.status = TaskStatus.PAID
+
+        # Commit DB changes first — only update treasury if DB succeeds
         db.commit()
-        
+        gamestate.treasury_balance += tax_amount
+
         return {
             "status": "paid",
             "base_reward": base_reward,

@@ -247,7 +247,7 @@ async def pay_task(action: TaskAction, admin=Depends(get_current_admin)):
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     # Broadcast updates
-    await routing_logic.broadcast_to_session(result.get("user_id", action.task_id), json.dumps({
+    await routing_logic.broadcast_to_session(result["user_id"], json.dumps({
         "type": "task_update",
         "task_id": action.task_id,
         "status": "paid",
@@ -506,26 +506,24 @@ async def restart_server(admin=Depends(get_current_root)):
     import subprocess
     import sys
     import os
-    
+
     db = SessionLocal()
     db.add(SystemLog(event_type="ROOT", message=f"Server RESTART initiated by {admin.username}"))
     db.commit()
     db.close()
-    
+
     await routing_logic.broadcast_global('{"type": "server_restart", "message": "Server restarting in 3 seconds..."}')
-    
+
+    run_dir = str(BASE_DIR)
     restart_script = f"""
-import time
-import os
-import signal
-import subprocess
+import time, os, signal, subprocess
 time.sleep(2)
 os.kill({os.getpid()}, signal.SIGTERM)
 time.sleep(1)
-subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.dirname(os.path.dirname(__file__)))}')
+subprocess.Popen([{sys.executable!r}, 'run.py'], cwd={run_dir!r})
 """
     subprocess.Popen([sys.executable, '-c', restart_script], start_new_session=True)
-    
+
     return {"status": "restarting", "message": "Server will restart in ~3 seconds"}
 
 @router.post("/root/factory_reset")
@@ -533,32 +531,32 @@ async def factory_reset(admin=Depends(get_current_root)):
     import subprocess
     import sys
     import os
-    
+
     db = SessionLocal()
     db.add(SystemLog(event_type="ROOT", message=f"FACTORY RESET initiated by {admin.username}"))
     db.commit()
     db.close()
-    
+
     await routing_logic.broadcast_global('{"type": "factory_reset", "message": "System will be wiped and restarted in 5 seconds..."}')
-    
-    data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data')
-    db_path = os.path.join(data_dir, 'iris.db')
-    labels_path = os.path.join(data_dir, 'admin_labels.json')
-    
+
+    db_path = str(BASE_DIR / "data" / "iris.db")
+    labels_path = str(BASE_DIR / "data" / "admin_labels.json")
+    gamestate_path = str(BASE_DIR / "data" / "gamestate.json")
+    run_dir = str(BASE_DIR)
+
     reset_script = f"""
-import time
-import os
-import signal
-import subprocess
+import time, os, signal, subprocess
 time.sleep(3)
-if os.path.exists('{db_path}'):
-    os.remove('{db_path}')
-if os.path.exists('{labels_path}'):
-    os.remove('{labels_path}')
+for path in [{db_path!r}, {labels_path!r}, {gamestate_path!r}]:
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+    except OSError as e:
+        print(f"Warning: could not remove {{path}}: {{e}}")
 os.kill({os.getpid()}, signal.SIGTERM)
 time.sleep(1)
-subprocess.Popen(['{sys.executable}', 'run.py'], cwd='{os.path.dirname(os.path.dirname(os.path.dirname(__file__)))}')
+subprocess.Popen([{sys.executable!r}, 'run.py'], cwd={run_dir!r})
 """
     subprocess.Popen([sys.executable, '-c', reset_script], start_new_session=True)
-    
+
     return {"status": "resetting", "message": "Database will be deleted and server restarted in ~5 seconds"}

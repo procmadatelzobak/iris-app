@@ -35,6 +35,11 @@
         pointer-events: none;
     }
 
+    body.mode-ephemeral #chatHistory {
+        opacity: 0.4;
+        font-style: italic;
+    }
+
     body.mode-forensic {
         filter: contrast(1.5) sepia(1) hue-rotate(240deg);
 
@@ -589,7 +594,11 @@
         }
     }
 
-    // Helper for applying HyperVis (Already there)
+    function applyHyperVisibility(mode) {
+        document.body.classList.remove('mode-normal', 'mode-blackbox', 'mode-forensic', 'mode-ephemeral');
+        document.body.classList.add('mode-' + mode);
+    }
+
     // --- HYPER LOCK LOGIC ---
     function toggleAutopilot() {
         const toggle = document.getElementById('autopilotToggle');

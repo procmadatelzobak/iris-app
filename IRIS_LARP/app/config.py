@@ -9,7 +9,7 @@ DEFAULT_DB_PATH = BASE_DIR / "data" / "iris.db"
 
 class Settings:
     PROJECT_NAME: str = "IRIS System"
-    VERSION: str = "1.0.0"
+    VERSION: str = "3.1.2"
     
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
@@ -26,9 +26,7 @@ class Settings:
     
     # System Defaults
     DEFAULT_GLOBAL_SHIFT_OFFSET: int = 0
-    DEFAULT_HYPER_VISIBILITY: str = "transparent" # transparent, ephemeral, blackbox, forensic
-    DEFAULT_CHERNOBYL_VALUE: int = 0
-    
+
     # Game Logic
     TOTAL_SESSIONS: int = 8
     

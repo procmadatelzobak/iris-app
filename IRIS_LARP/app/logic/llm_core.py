@@ -212,10 +212,15 @@ class LLMService:
             gemini_hist.append({"role": role, "parts": [msg["content"]]})
             
         model = genai.GenerativeModel(config.model_name, system_instruction=config.system_prompt)
-        chat = model.start_chat(history=gemini_hist[:-1] if len(gemini_hist) > 0 else [])
-        
-        last_msg = gemini_hist[-1]["parts"][0] if len(gemini_hist) > 0 else ""
-        if not last_msg: return ""
+
+        if not gemini_hist:
+            return ""
+
+        # History = all messages except the last; last message is sent as the new prompt
+        chat = model.start_chat(history=gemini_hist[:-1])
+        last_msg = gemini_hist[-1]["parts"][0]
+        if not last_msg:
+            return ""
         
         response = await chat.send_message_async(last_msg)
         return response.text

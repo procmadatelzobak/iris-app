@@ -298,20 +298,42 @@ class ChatService:
             agent_db_user = db.query(User).filter(User.username == agent_username).first()
             
             if agent_db_user and reply:
-                log_ai = ChatLog(session_id=session_id, sender_id=agent_db_user.id, content=reply)
+                log_ai = ChatLog(session_id=session_id, sender_id=agent_db_user.id, content=reply, is_hyper=True)
                 db.add(log_ai)
                 db.commit()
-                
+
                 # Autopilot responded - clear pending response timer
                 gamestate.clear_pending_response(session_id)
-                
-                await routing_logic.broadcast_to_session(session_id, json.dumps({
+
+                hyper_msg = json.dumps({
                     "sender": agent_username,
                     "role": "agent",
                     "content": reply,
                     "session_id": session_id,
-                    "id": log_ai.id
-                }))
+                    "id": log_ai.id,
+                    "is_hyper": True
+                })
+
+                # Hyper Visibility: BLACKBOX/FORENSIC hide live HYPER from agent
+                # NORMAL/EPHEMERAL show live HYPER to agent
+                from ..logic.gamestate import HyperVisibilityMode
+                hide_live = gamestate.hyper_visibility_mode in (
+                    HyperVisibilityMode.BLACKBOX,
+                    HyperVisibilityMode.FORENSIC,
+                )
+
+                if hide_live:
+                    # Send only to user (not agent) in this session
+                    for uid, lid in routing_logic.user_logical_ids.items():
+                        if lid == session_id and uid in routing_logic.user_connections:
+                            for con in routing_logic.user_connections[uid]:
+                                try: await con.send_text(hyper_msg)
+                                except: pass
+                    # Also notify admins
+                    await routing_logic.broadcast_to_admins(hyper_msg)
+                else:
+                    # Normal broadcast to entire session (user + agent)
+                    await routing_logic.broadcast_to_session(session_id, hyper_msg)
 
     async def handle_typing_indicator(self, user: User, msg_data: dict, websocket: WebSocket):
         msg_type = msg_data.get("type")

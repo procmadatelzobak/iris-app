@@ -4,9 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IRIS LARP System ("HLINIK") — a full-stack web application serving as a game engine and administration platform for a cooperative LARP event. Built with FastAPI (Python backend) and vanilla JavaScript frontend. Game content is in Czech; code and docs in English.
+This repository contains **two separate applications** for the IRIS LARP project. Game content is in Czech; code in English.
 
-The **Lore Web** (`doc/iris/lore-web/wiki/index.html`) is the master source of truth for all game mechanics, role definitions, economy rules, and narrative context. Always check it before implementing game logic.
+### HLINÍK (`IRIS_LARP/`)
+Full-stack game engine for players during the LARP event. FastAPI (Python) backend with vanilla JavaScript frontend. Handles real-time terminals, WebSocket communication, economy, tasks, and LLM-driven interactions.
+
+### Lore-Web (`doc/iris/lore-web/`)
+Organizer wiki and planning tool — a standalone client-side SPA (vanilla JS + D3.js). Contains 20 characters with profiles, 14 relationships with graph visualization, player manuals, event timeline, feature tracking, and test protocols. Data stored in JSON files under `data/`. Works fully offline (`index.html` opened directly in browser). Also mounted at `/lore-web` in the HLINÍK FastAPI app and editable via `lore_editor_api` router.
+
+Lore-Web is the **master source of truth** for all game mechanics, role definitions, economy rules, and narrative context. Always check it before implementing game logic in HLINÍK.
 
 ## Commands
 
@@ -77,8 +83,8 @@ Vanilla JS + Jinja2 templates. No framework. Key templates:
 - `admin/dashboard.html` — admin controls (monitor, controls, economy, tasks)
 - `admin/root_dashboard.html` — ROOT superuser with all controls + lore viewer
 
-### Static Lore Wiki
-`doc/iris/lore-web/` — mounted at `/lore-web` in FastAPI. Editable via `lore_editor_api` router.
+### Lore-Web Integration
+HLINÍK mounts `doc/iris/lore-web/` at `/lore-web` and exposes `lore_editor_api` router for editing lore data from the admin dashboard.
 
 ## Code Conventions
 
