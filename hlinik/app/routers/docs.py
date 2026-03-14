@@ -5,11 +5,12 @@ import markdown
 import os
 from ..dependencies import get_current_user_cookie
 from ..database import User, UserRole
+from ..config import BASE_DIR
 
 router = APIRouter(prefix="/doc", tags=["docs"])
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
 
-DOCS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "docs")
+DOCS_DIR = str(BASE_DIR / "docs")
 
 def get_manual_path(doc_key: str) -> str:
     mapping = {

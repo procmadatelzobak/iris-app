@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 from typing import Annotated
 from .. import dependencies, database
 
+from ..config import BASE_DIR
+
 router = APIRouter(prefix="/auth", tags=["auth"])
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
 
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 
@@ -65,7 +67,7 @@ async def terminal(request: Request, current_user: Annotated[database.User, Depe
     translations = {}
     try:
         # Assuming czech is default/active
-        with open("app/translations/czech.json", "r", encoding="utf-8") as f:
+        with open(str(BASE_DIR / "app" / "translations" / "czech.json"), "r", encoding="utf-8") as f:
             translations = json.load(f)
     except Exception as e:
         print(f"Translation load error: {e}")
