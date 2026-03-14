@@ -1,6 +1,5 @@
 /**
  * IRIS Organizer Wiki - Main Application
- * IRIS 4.1 aktuální k HLINIK Phase 35
  */
 
 // ============================================
