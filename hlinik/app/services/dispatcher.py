@@ -21,7 +21,7 @@ class Dispatcher:
         msg_type = message.get("type", "")
         
         # 1. ADMIN Routing
-        if user.role == UserRole.ADMIN or user.role == UserRole.ROOT:
+        if user.role == UserRole.ADMIN:
             # Route all admin messages (including 'admin_' prefied or specific commands) to AdminService
             await self.admin_service.handle_admin_command(db, user, message, websocket)
             return

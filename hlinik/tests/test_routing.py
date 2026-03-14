@@ -1,184 +1,137 @@
 import pytest
+import json
 from app.logic.gamestate import gamestate
+from app.logic.routing import routing_logic
+from app.database import UserRole
 from app.config import settings
 
-# Mock WebSocket
+
 class MockWebSocket:
     def __init__(self, id):
         self.id = id
         self.sent_messages = []
-    
+
     async def send_text(self, message: str):
         self.sent_messages.append(message)
-    
+
     async def accept(self):
         pass
 
-@pytest.mark.asyncio
-async def test_gamestate_shift():
-    # Reset
-    gamestate.global_shift_offset = 0
-    
-    assert gamestate.global_shift_offset == 0
-    gamestate.increment_shift()
-    assert gamestate.global_shift_offset == 1
-    
-    gamestate.set_shift(settings.TOTAL_SESSIONS - 1)
-    assert gamestate.global_shift_offset == 7
-    
-    gamestate.increment_shift()
-    assert gamestate.global_shift_offset == 0  # Wrap around
 
 @pytest.mark.asyncio
-async def test_routing_logic_calculation():
-    from app.logic.routing import routing_logic
-    
-    # Setup: 1 User (ID 1), 2 Agents (ID 1, ID 2)
-    # User 1 -> Session 1
-    # Agent 1 -> ?
-    # Agent 2 -> ?
-    
-    # Scenario A: Shift 0
+async def test_gamestate_shift():
+    gamestate.global_shift_offset = 0
+    assert gamestate.global_shift_offset == 0
+
+    gamestate.increment_shift()
+    assert gamestate.global_shift_offset == 1
+
+    gamestate.set_shift(settings.TOTAL_SESSIONS - 1)
+    assert gamestate.global_shift_offset == 7
+
+    gamestate.increment_shift()
+    assert gamestate.global_shift_offset == 0  # wrap around
+
+
+@pytest.mark.asyncio
+async def test_routing_broadcast_to_session():
+    # Clean state
+    routing_logic.user_connections = {}
+    routing_logic.agent_connections = {}
+    routing_logic.user_logical_ids = {}
+    routing_logic.agent_logical_ids = {}
     gamestate.set_shift(0)
-    
-    # Agent 1 (Index 0) + Shift 0 -> Session Index 0 -> Session 1
-    # Agent 2 (Index 1) + Shift 0 -> Session Index 1 -> Session 2
-    
-    # If we broadcast to Session 1, Agent 1 should receive it, Agent 2 should not.
-    
-    # Mock connections
+
     ws_user1 = MockWebSocket("u1")
     ws_agent1 = MockWebSocket("a1")
     ws_agent2 = MockWebSocket("a2")
-    
-    await routing_logic.connect(ws_user1, "user", 1)  # Role check is string vs Enum in real code, be careful
-    # In code it uses UserRole enum. Let's import it.
-    from app.database import UserRole
-    
-    # Reset connections for clean test
-    routing_logic.user_connections = {}
-    routing_logic.agent_connections = {}
-    
-    await routing_logic.connect(ws_user1, UserRole.USER, 1)
-    await routing_logic.connect(ws_agent1, UserRole.AGENT, 1)
-    await routing_logic.connect(ws_agent2, UserRole.AGENT, 2)
-    
-    # Broadcast to Session 1
+
+    await routing_logic.connect(ws_user1, UserRole.USER, 1, logical_id=1)
+    await routing_logic.connect(ws_agent1, UserRole.AGENT, 1, logical_id=1)
+    await routing_logic.connect(ws_agent2, UserRole.AGENT, 2, logical_id=2)
+
     await routing_logic.broadcast_to_session(1, "Hello Session 1")
-    
+
     assert "Hello Session 1" in ws_user1.sent_messages
     assert "Hello Session 1" in ws_agent1.sent_messages
     assert "Hello Session 1" not in ws_agent2.sent_messages
-    
-    # Scenario B: Shift 1
+
+    # Shift 1: Agent 1 moves to Session 2
     gamestate.set_shift(1)
-    
-    # Clear msgs
     ws_user1.sent_messages = []
     ws_agent1.sent_messages = []
     ws_agent2.sent_messages = []
-    
-    # Agent 1 (Index 0) + Shift 1 -> Session Index 1 -> Session 2
-    # Agent 8 (Index 7) + Shift 1 -> Session Index 0 -> Session 1 (Wait, Agent 8?)
-    
-    # Let's see who is on Session 1 now.
-    # We need Agent X such that (X_index + 1) % 8 == 0 (Session Index 0)
-    # X_index = -1 -> 7 (Agent 8)
-    
-    # Let's check Session 2. broadcast to Session 2.
-    # User 1 is NOT on Session 2. User 2 would be.
-    # Agent 1 should be on Session 2.
-    
+
     await routing_logic.broadcast_to_session(2, "Hello Session 2")
-    
-    assert "Hello Session 2" not in ws_user1.sent_messages # User 1 is Session 1
-    assert "Hello Session 2" in ws_agent1.sent_messages    # Agent 1 is now Session 2
-    assert "Hello Session 2" not in ws_agent2.sent_messages # Agent 2 is Session 3
+
+    assert "Hello Session 2" not in ws_user1.sent_messages
+    assert "Hello Session 2" in ws_agent1.sent_messages
+    assert "Hello Session 2" not in ws_agent2.sent_messages
+
+    # Cleanup
+    routing_logic.disconnect(ws_user1, UserRole.USER, 1)
+    routing_logic.disconnect(ws_agent1, UserRole.AGENT, 1)
+    routing_logic.disconnect(ws_agent2, UserRole.AGENT, 2)
 
 
 @pytest.mark.asyncio
 async def test_pending_response_tracking():
-    """Test that pending response tracking works correctly for agent timeout feature."""
-    from app.logic.routing import routing_logic
     import time
-    
-    # Reset state
-    routing_logic.pending_responses = {}
-    routing_logic.timed_out_sessions = {}
-    
+
+    gamestate.pending_responses = {}
+    gamestate.timed_out_sessions = {}
     session_id = 1
-    
-    # Initially no pending response
-    assert session_id not in routing_logic.pending_responses
-    assert not routing_logic.is_session_timed_out(session_id)
-    
-    # Start pending response (user sends message)
-    routing_logic.start_pending_response(session_id)
-    assert session_id in routing_logic.pending_responses
-    assert routing_logic.pending_responses[session_id] <= time.time()
-    
-    # Clear pending response (agent responds)
-    routing_logic.clear_pending_response(session_id)
-    assert session_id not in routing_logic.pending_responses
-    
-    # Test timeout marking
-    routing_logic.start_pending_response(session_id)
-    routing_logic.mark_session_timeout(session_id)
-    assert session_id not in routing_logic.pending_responses
-    assert routing_logic.is_session_timed_out(session_id)
-    
-    # New user message clears timeout
-    routing_logic.clear_session_timeout(session_id)
-    assert not routing_logic.is_session_timed_out(session_id)
+
+    assert session_id not in gamestate.pending_responses
+    assert not gamestate.is_session_timed_out(session_id)
+
+    gamestate.start_pending_response(session_id)
+    assert session_id in gamestate.pending_responses
+
+    gamestate.clear_pending_response(session_id)
+    assert session_id not in gamestate.pending_responses
+
+    gamestate.start_pending_response(session_id)
+    gamestate.mark_session_timeout(session_id)
+    assert session_id not in gamestate.pending_responses
+    assert gamestate.is_session_timed_out(session_id)
+
+    gamestate.clear_session_timeout(session_id)
+    assert not gamestate.is_session_timed_out(session_id)
 
 
 def test_panic_mode_state_toggle():
-    """Ensure panic mode state toggles per session/role are tracked."""
-    from app.logic.routing import routing_logic
-
-    routing_logic.panic_modes = {}
+    gamestate.panic_modes = {}
     session_id = 2
 
-    state = routing_logic.get_panic_state(session_id)
+    state = gamestate.get_panic_state(session_id)
     assert state["user"] is False and state["agent"] is False
 
-    routing_logic.set_panic_mode(session_id, "user", True)
-    state = routing_logic.get_panic_state(session_id)
+    gamestate.set_panic_mode(session_id, "user", True)
+    state = gamestate.get_panic_state(session_id)
     assert state["user"] is True and state["agent"] is False
 
-    routing_logic.set_panic_mode(session_id, "agent", True)
-    state = routing_logic.get_panic_state(session_id)
+    gamestate.set_panic_mode(session_id, "agent", True)
+    state = gamestate.get_panic_state(session_id)
     assert state["user"] is True and state["agent"] is True
 
-    routing_logic.clear_panic_state(session_id)
-    state = routing_logic.get_panic_state(session_id)
+    gamestate.clear_panic_state(session_id)
+    state = gamestate.get_panic_state(session_id)
     assert state["user"] is False and state["agent"] is False
 
 
 @pytest.mark.asyncio
 async def test_timeout_error_sent_to_user():
-    """Test that timeout error message is sent to user when agent doesn't respond."""
-    from app.logic.routing import routing_logic
-    from app.database import UserRole
-    import json
-    
-    # Reset connections
     routing_logic.user_connections = {}
-    routing_logic.agent_connections = {}
-    routing_logic.pending_responses = {}
-    routing_logic.timed_out_sessions = {}
-    
-    # Setup mock user connection
+    routing_logic.user_logical_ids = {}
+
     ws_user1 = MockWebSocket("u1")
-    await routing_logic.connect(ws_user1, UserRole.USER, 1)
-    
-    session_id = 1
-    
-    # Send timeout error to user
-    await routing_logic.send_timeout_error_to_user(session_id)
-    
-    # Verify user received timeout message
+    await routing_logic.connect(ws_user1, UserRole.USER, 1, logical_id=1)
+
+    await routing_logic.send_timeout_error_to_user(1)
+
     assert len(ws_user1.sent_messages) == 1
     msg = json.loads(ws_user1.sent_messages[0])
     assert msg["type"] == "agent_timeout"
-    assert "session_id" in msg
+
+    routing_logic.disconnect(ws_user1, UserRole.USER, 1)

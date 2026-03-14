@@ -12,12 +12,15 @@ import traceback
 import json
 import time
 
+SAVE_INTERVAL = 60  # Save gamestate every 60 seconds
+
 async def game_loop():
     last_val = -1
     last_load = -1
     last_treasury = -1
     last_overload = False
-    
+    ticks_since_save = 0
+
     from .logic.gamestate import gamestate
     from .logic.routing import routing_logic
 
@@ -98,7 +101,18 @@ async def game_loop():
                 last_load = current_load
                 last_treasury = gamestate.treasury_balance
                 last_overload = current_is_overloaded
-                
+
+            # Periodic save (survives SIGKILL)
+            ticks_since_save += 1
+            if ticks_since_save >= SAVE_INTERVAL:
+                ticks_since_save = 0
+                try:
+                    state_file = BASE_DIR / "data" / "gamestate.json"
+                    with open(state_file, "w") as f:
+                        json.dump(gamestate.export_state(), f, indent=2)
+                except Exception as e:
+                    print(f"WARN: Periodic save failed: {e}")
+
         except asyncio.CancelledError:
             # Handle cancellation gracefully
             break
