@@ -152,14 +152,11 @@ app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=li
 
 # Static Files
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
-lore_web_dir = BASE_DIR.parent / "doc" / "iris" / "lore-web"
+lore_web_dir = BASE_DIR.parent / "lore-web"
 
 if lore_web_dir.exists():
-    # Phase 34: Consolidated Lore Web
     app.mount("/lore-web", StaticFiles(directory=str(lore_web_dir), html=True), name="lore-web")
     app.mount("/organizer-wiki", StaticFiles(directory=str(lore_web_dir), html=True), name="wiki")
-
-app.mount("/docs/images", StaticFiles(directory=BASE_DIR / "docs" / "images"), name="docs_images")
 
 # Templates
 templates = Jinja2Templates(directory=BASE_DIR / "app" / "templates")

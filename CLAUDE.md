@@ -6,11 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repository contains **two separate applications** for the IRIS LARP project. Game content is in Czech; code in English.
 
-### HLINÍK (`IRIS_LARP/`)
+### HLINÍK (`hlinik/`)
 Full-stack game engine for players during the LARP event. FastAPI (Python) backend with vanilla JavaScript frontend. Handles real-time terminals, WebSocket communication, economy, tasks, and LLM-driven interactions.
 
-### Lore-Web (`doc/iris/lore-web/`)
-Organizer wiki and planning tool — a standalone client-side SPA (vanilla JS + D3.js). Contains 20 characters with profiles, 14 relationships with graph visualization, player manuals, event timeline, feature tracking, and test protocols. Data stored in JSON files under `data/`. Works fully offline (`index.html` opened directly in browser). Also mounted at `/lore-web` in the HLINÍK FastAPI app and editable via `lore_editor_api` router.
+### Lore-Web (`lore-web/`)
+Organizer wiki and planning tool — a standalone client-side SPA (vanilla JS, canvas-based graph). Contains characters, relationships, player manuals, event timeline, and feature tracking. Data stored in JSON files under `data/`. Works fully offline (`index.html` opened directly in browser). Also mounted at `/lore-web` in the HLINÍK FastAPI app and editable via `lore_editor_api` router.
 
 Lore-Web is the **master source of truth** for all game mechanics, role definitions, economy rules, and narrative context. Always check it before implementing game logic in HLINÍK.
 
@@ -19,16 +19,16 @@ Lore-Web is the **master source of truth** for all game mechanics, role definiti
 ### Running the app
 ```bash
 # From repo root:
-python IRIS_LARP/run.py
+python hlinik/run.py
 
-# Or from IRIS_LARP/:
+# Or from hlinik/:
 ./run.sh                    # activates venv, kills stale port 8000, runs app
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### Testing
 ```bash
-cd IRIS_LARP
+cd hlinik
 
 # All tests
 pytest tests/ -v --tb=short
@@ -39,15 +39,11 @@ pytest tests/test_hlinik_economy.py -v
 # E2E with Playwright (requires: playwright install chromium)
 ./run_suite_a.sh            # headed browser
 ./run_suite_a.sh --ci       # headless
-
-# Grand simulation E2E
-./run_suite_f.sh            # headed
-./run_suite_f.sh --ci       # headless
 ```
 
 ### Dependencies
 ```bash
-cd IRIS_LARP
+cd hlinik
 pip install -r requirements.txt
 ```
 
@@ -71,7 +67,7 @@ No linter or formatter is configured in the repo.
 `app/logic/economy.py` — task payment = reward x rating, with configurable tax rate (default 20%) deducted to treasury.
 
 ### LLM Integration
-`app/logic/llm_core.py` — multi-provider (OpenAI, OpenRouter, Gemini) with role-specific Czech system prompts: Task Evaluator (corporate tone), HYPER/Autopilot (empathetic AI), Optimizer (formal rewriting), Censor (panic mode sanitization). API keys stored in `.env` and `SystemConfig` DB table.
+`app/logic/llm_core.py` — multi-provider (OpenAI, OpenRouter, Gemini) with role-specific Czech system prompts: Task Evaluator (corporate tone), HYPER/Autopilot (empathetic AI), Optimizer (formal rewriting), Censor (panic mode sanitization). API keys stored in `.env`.
 
 ### Database
 SQLite via SQLAlchemy. Key models in `app/database.py`: `User`, `ChatLog`, `Task`, `SystemConfig`, `SystemLog`. Enums: `UserRole` (USER/AGENT/ADMIN), `StatusLevel`, `TaskStatus`, `HyperVisibilityMode`.
@@ -84,7 +80,7 @@ Vanilla JS + Jinja2 templates. No framework. Key templates:
 - `admin/root_dashboard.html` — ROOT superuser with all controls + lore viewer
 
 ### Lore-Web Integration
-HLINÍK mounts `doc/iris/lore-web/` at `/lore-web` and exposes `lore_editor_api` router for editing lore data from the admin dashboard.
+HLINÍK mounts `lore-web/` at `/lore-web` and exposes `lore_editor_api` router for editing lore data from the admin dashboard.
 
 ## Code Conventions
 
@@ -97,7 +93,7 @@ HLINÍK mounts `doc/iris/lore-web/` at `/lore-web` and exposes `lore_editor_api`
 ## Documentation
 
 Each application has a **MANUAL.md** that serves as the living specification:
-- `IRIS_LARP/MANUAL.md` — complete spec for HLINÍK (roles, terminals, API, DB, game mechanics)
-- `doc/iris/lore-web/MANUAL.md` — complete spec for Lore-Web (sections, data models, integration)
+- `hlinik/MANUAL.md` — complete spec for HLINÍK (roles, terminals, API, DB, game mechanics)
+- `lore-web/MANUAL.md` — complete spec for Lore-Web (sections, data models, integration)
 
 **The manual is the source of truth.** If the manual and code disagree, the manual wins and the code gets fixed. The original LARP design document is in `docs/ORIGINAL_DESIGN.md`.

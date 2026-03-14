@@ -287,7 +287,7 @@ async def get_control_state(admin=Depends(get_current_admin)):
 @router.get("/lore/data")
 async def get_lore_data(admin=Depends(get_current_admin)):
     try:
-        lore_data_dir = BASE_DIR.parent / "doc" / "iris" / "lore-web" / "data"
+        lore_data_dir = BASE_DIR.parent / "lore-web" / "data"
         roles_path = lore_data_dir / "roles.json"
         relations_path = lore_data_dir / "relations.json"
         

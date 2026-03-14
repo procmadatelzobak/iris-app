@@ -111,10 +111,9 @@ venv.bak/
 *.sqlite3
 
 # Data files that should not be tracked
-IRIS_LARP/data/*.db
-IRIS_LARP/data/admin_labels.json
-IRIS_LARP/server.log
-# NOTE: IRIS_LARP/data/default_scenario.json IS tracked (template config)
+hlinik/data/*.db
+hlinik/data/admin_labels.json
+hlinik/server.log
 
 # Temporary files
 *.tmp
@@ -128,4 +127,4 @@ __pycache__/
 .env
 *.log
 *.db
-doc/iris/*.zip
+lore-web/*.zip

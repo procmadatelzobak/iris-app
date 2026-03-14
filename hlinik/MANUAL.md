@@ -629,7 +629,7 @@ Event log (timestamp, event_type, message, data).
 ### 12.1 Instalace
 
 ```bash
-cd IRIS_LARP
+cd hlinik
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -637,7 +637,7 @@ pip install -r requirements.txt
 
 ### 12.2 Konfigurace
 
-Soubor `.env` v adresáři `IRIS_LARP/`:
+Soubor `.env` v adresáři `hlinik/`:
 
 ```env
 SECRET_KEY=<bezpečný-náhodný-řetězec>
@@ -650,9 +650,9 @@ GEMINI_API_KEY=<klíč>
 
 ```bash
 # Z kořene repa:
-python IRIS_LARP/run.py
+python hlinik/run.py
 
-# Nebo z IRIS_LARP/:
+# Nebo z hlinik/:
 ./run.sh          # aktivuje venv, zabije port 8000, spustí
 ```
 

@@ -17,7 +17,7 @@ from ..config import BASE_DIR
 router = APIRouter(prefix="/api/lore-editor", tags=["lore-editor"])
 
 # Path to lore-web data directory
-LORE_DATA_DIR = BASE_DIR.parent / "doc" / "iris" / "lore-web" / "data"
+LORE_DATA_DIR = BASE_DIR.parent / "lore-web" / "data"
 
 # Editable JSON files configuration
 EDITABLE_FILES = {

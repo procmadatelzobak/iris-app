@@ -223,7 +223,7 @@ async def get_simulation_history(
     
     # Path to index.json
     base_dir = Path(__file__).resolve().parent.parent.parent.parent
-    index_file = base_dir / "doc" / "iris" / "lore-web" / "data" / "test_runs" / "index.json"
+    index_file = base_dir / "lore-web" / "data" / "test_runs" / "index.json"
     
     if not index_file.exists():
         return {"runs": [], "message": "Žádné předchozí simulace"}
