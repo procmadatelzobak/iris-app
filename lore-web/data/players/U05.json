@@ -3,20 +3,16 @@
     "type": "user",
     "name": "Marie Kovářová",
     "archetype": "Osamělá důchodkyně",
-    "description": "Osamělá důchodkyně, která se do testování IRIS přihlásila spíš z nudy a potřeby si s někým popovídat. Jste přesvědčená, že si na druhém konci píšete s opravdovými lidmi - ráda agentům vyprávíte o svých vnoučatech a životě. K systému přistupujete laskavě a mateřsky - dokonce nosíte IRIS virtuální bábovku.",
-    "ability": "Babička: Agenti mají zakázáno být na vás hrubí (dostali by velkou pokutu).",
+    "description": "Milá důchodkyně, která se do testování IRIS přihlásila hlavně z nudy a potřeby si s někým popovídat. Jste přesvědčená, že si na druhém konci píšete s opravdovými lidmi — ráda agentům vyprávíte o vnoučatech a nosíte IRIS virtuální bábovku.",
+    "ability": "Bábovková diplomacie: Jednou za hru můžete nabídnout virtuální bábovku a okamžitě zlepšit vztah s jakoukoli postavou.",
     "goals": [
-        "Najít si kamaráda na dopisování.",
-        "Donutit AI, aby snědla virtuální bábovku.",
-        "Přimět alespoň jednoho člena personálu, aby vám pověděl něco osobního."
+        "Najít si v testu nové přátele a necítit se tak sama",
+        "Přesvědčit AI, aby si od ní vzala recept na bábovku",
+        "Zjistit, proč se ta milá dívka za terminálem (A04) tváří tak unaveně"
     ],
-    "avatar": "avatar_U05.png",
-    "work_image": "work_U05.png",
     "appearance": {
         "gender": "žena",
         "age_range": "65-75",
-        "hair_color": "bílé ondulované vlasy",
-        "face_description": "laskavá babičkovská tvář, hluboké vrásky od úsměvu, teplé hnědé oči",
-        "distinctive_features": "pletený svetr, brož s kočičkou, řetízek s fotkou vnoučat"
+        "distinctive_features": "Bílé ondulované vlasy, laskavá babičkovská tvář, hluboké vrásky od úsměvu, pletený svetr, brož s kočičkou, řetízek s fotkou vnoučat"
     }
 }

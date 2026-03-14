@@ -1,22 +1,18 @@
 {
     "id": "S04",
     "type": "admin",
-    "name": "Synovec ředitele",
-    "archetype": "Protežovaný idiot",
-    "description": "Namyšlený mladík a synovec ředitele společnosti, který dostal teplé místečko Správce při testu IRIS po známosti. Práci druhých spíš pozorujete z povzdálí a chlubíte se svou velkou vizí, ale reálně pro hladký průběh mnoho neděláte. Díky příbuzenským konexím si dovolujete ignorovat pokyny zkušenějších kolegů a občas zneplatníte jejich rozhodnutí jen proto, abyste ukázal svoji moc.",
-    "ability": "Veto: Můžete zrušit rozhodnutí jiného Správce.",
+    "name": "Viktor Vrána ml.",
+    "archetype": "Šéfova synovec, co dělá, že všemu rozumí",
+    "description": "Namyšlený synovec ředitele společnosti, který dostal teplé místečko správce po protekcí a reálně nic nedělá. Chlubíte se velkou vizí, ale zkušenějších kolegů si nevšímáte. Díky konexím si dovolujete ignorovat pokyny a občas zneplatníte rozhodnutí jen proto, abyste ukázal svou moc.",
+    "ability": "Právo veta: Jednou za hru můžete zrušit jakékoli rozhodnutí jiného správce pouhým mávnutím ruky.",
     "goals": [
-        "Vymyslet nový slogan.",
-        "Sbalit Agentku A02 (Herečku).",
-        "Prosadit během testu alespoň jeden svůj nápad navzdory nesouhlasu ostatních Správců."
+        "Zapůsobit na hezkou agentku A02 svou mocí a vizionářstvím",
+        "Udržet si teplé místečko a vyhnout se jakékoli skutečné práci",
+        "Zabránit metodikovi A07, aby odhalil, jak málo toho vlastně víte"
     ],
-    "avatar": "avatar_S04.png",
-    "work_image": "work_S04.png",
     "appearance": {
         "gender": "muž",
         "age_range": "22-28",
-        "hair_color": "gelované tmavé vlasy, stylově rozcuchané",
-        "face_description": "namyšlená, sebejistá tvář, arogantní úsměv, nafoukaný výraz",
-        "distinctive_features": "drahé značkové oblečení, Apple hodinky, neustálé selfies"
+        "distinctive_features": "Gelované tmavé vlasy stylově rozcuchané, namyšlená sebejistá tvář, arogantní úsměv, drahé značkové oblečení, Apple hodinky, neustálé selfies"
     }
 }

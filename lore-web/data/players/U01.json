@@ -3,20 +3,16 @@
     "type": "user",
     "name": "Jana Nováková",
     "archetype": "Zadlužená učitelka",
-    "description": "Středoškolská učitelka češtiny, která zoufale potřebuje peníze na opravu domu. Do testu IRIS jste se přihlásila, i když moderní technologie moc nechápete - píšete velmi spisovně a slušně. Přesto vás zaráží, jak drzé jsou občas odpovědi AI, a hodláte přijít na to, kdo nebo co za tím stojí. Jako pedant na gramatiku vidíte každou chybu v textu jako příležitost dát někomu lekci.",
-    "ability": "Grammar Nazi: Pokud opravíte gramatiku AI, dostanete bonus.",
+    "description": "Středoškolská učitelka češtiny, která zoufale potřebuje peníze na opravu střechy svého domu. Do testu IRIS jste se přihlásila, i když moderním technologiím moc nerozumíte — píšete velmi spisovně a slušně. Zaráží vás ale, jak drzé jsou občas odpovědi AI, jako by za nimi seděl váš bývalý žák.",
+    "ability": "Grammar Nazi: Kdykoli opravíte gramatickou chybu v odpovědi AI, získáte bonus 5 NC a morální převahu.",
     "goals": [
-        "Vydělat 3000 NC na opravu.",
-        "Zjistit, proč je AI tak drzá (poznáte žáka Petra).",
-        "Vyjednat si u Správce S01 možnost přesčasové práce nebo zálohy."
+        "Vydělat alespoň 3000 NC na opravu střechy svého domu",
+        "Zjistit, proč AI občas odpovídá tak nehorázně drzým tónem — jako jeden její bývalý žák",
+        "Vyjednat si u správce S01 zálohu na plat nebo přesčasovou práci"
     ],
-    "avatar": "avatar_U01.png",
-    "work_image": "work_U01.png",
     "appearance": {
         "gender": "žena",
         "age_range": "45-55",
-        "hair_color": "šedivějící hnědé vlasy sepnuté do drdolu",
-        "face_description": "unavená, ale laskavá tvář učitelky, brýle s tenkou obroučkou, jemné vrásky kolem očí a úst",
-        "distinctive_features": "vždy upravený účes, perleťové náušnice, přísný ale vlídný pohled"
+        "distinctive_features": "Šedivějící hnědé vlasy sepnuté do drdolu, brýle s tenkou obroučkou, perleťové náušnice, vždy upravený účes a přísný ale vlídný pohled"
     }
 }

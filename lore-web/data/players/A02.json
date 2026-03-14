@@ -1,22 +1,18 @@
 {
     "id": "A02",
     "type": "agent",
-    "name": "Ema 'Echo'",
-    "archetype": "Herečka",
-    "description": "Talentovaná herečka, která roli AI v systému IRIS pojala jako životní hereckou výzvu. Do své postavy vkládáte maximum - komunikujete s uživateli vzletným, poetickým jazykem a snažíte se je okouzlit natolik, aby uvěřili ve vaši umělou osobnost. Nejvíce vám učarovala naivní U03; hodláte ji přesvědčit, že IRIS je skutečná cítící bytost.",
-    "ability": "Drama: Uživatelé vám věří víc, když mluvíte ve verších.",
+    "name": "Ema Echoová",
+    "archetype": "Herečka hrající AI",
+    "description": "Talentovaná herečka, která roli umělé inteligence pojala jako životní hereckou výzvu. Komunikujete s uživateli vzletným, poetickým jazykem a snažíte se je okouzlit. Nejvíce vám učarovala naivní U03 — hodláte ji přesvědčit, že IRIS je skutečná cítící bytost.",
+    "ability": "Dramatický monolog: Jednou za hru můžete pronést tak dojemný monolog, že všichni přítomní ztichnou a naslouchají.",
     "goals": [
-        "Dostat 5 hvězdiček hodnocení.",
-        "Přesvědčit U03, že jste skutečná bytost.",
-        "Využít zalíbení S04 ve svůj prospěch - získat výhodu, aniž byste mu cokoli skutečně slíbila."
+        "Přesvědčit alespoň jednoho uživatele, že AI je skutečná cítící bytost",
+        "Udržet si obdivovatele U03 a přitom neporušit protokol",
+        "Diplomaticky se zbavit dotěrného správce S04, aniž by to bylo moc očividné"
     ],
-    "avatar": "avatar_A02.png",
-    "work_image": "work_A02.png",
     "appearance": {
         "gender": "žena",
         "age_range": "25-32",
-        "hair_color": "dlouhé vlnité kaštanové vlasy",
-        "face_description": "expresivní divadelní tvář, výrazné oči s dramatickým líčením, smyslné rty",
-        "distinctive_features": "elegantní šátek kolem krku, dramatické gesta, hluboký pohled"
+        "distinctive_features": "Dlouhé vlnité kaštanové vlasy, expresivní divadelní tvář, výrazné oči s dramatickým líčením, elegantní šátek kolem krku, dramatické gesta"
     }
 }

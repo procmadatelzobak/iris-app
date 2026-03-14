@@ -1,21 +1,18 @@
 {
     "id": "U08",
     "type": "user",
-    "name": "Lukáš 'Speedy' Král",
-    "archetype": "Profi Gamer",
-    "description": "Mladý profesionální gamer, který test IRIS bere jako další online hru, ve které chce dominovat. Soutěživost máte v krvi - od první chvíle hledáte exploity v systému, spamujete dotazy a snažíte se vytěžit maximum kreditů v co nejkratším čase. Ostatní testery vnímáte spíš jako soupeře v žebříčku než kolegy.",
-    "ability": "APM (Actions Per Minute): Můžete poslat 3 dotazy najednou.",
+    "name": "Lukáš Král",
+    "archetype": "Profesionální gamer",
+    "description": "Mladý profesionální gamer, který test IRIS bere jako další online hru, ve které chce dominovat. Soutěživost máte v krvi — od první chvíle hledáte exploity v systému a snažíte se vytěžit maximum kreditů v co nejkratším čase. Ostatní testery vnímáte spíš jako soupeře v žebříčku.",
+    "ability": "Speedrun: Jednou za hru můžete splnit libovolný jednoduchý úkol okamžitě bez čekání na odpověď AI.",
     "goals": [
-        "Být nejbohatší uživatel v žebříčku.",
-        "Shodit server přetížením.",
-        "Objevit a využít alespoň jeden zásadní exploit v systému."
+        "Dosáhnout nejvyššího skóre NC ze všech uživatelů",
+        "Najít exploit v systému odměn a využít ho",
+        "Porazit záhadně rychlého soupeře, který uzavírá jeho tickety (A03)"
     ],
-    "avatar": "avatar_U08.png",
     "appearance": {
         "gender": "muž",
         "age_range": "18-24",
-        "hair_color": "odbarvené blond vlasy s modrými konečky",
-        "face_description": "mladá, soustředěná tvář, bledá pleť od sezení u PC, sluchátka kolem krku",
-        "distinctive_features": "herní mikina s kapucí, energy drink v ruce, rychle klepající prsty"
+        "distinctive_features": "Odbarvené blond vlasy s modrými konečky, bledá pleť od sezení u PC, herní mikina s kapucí, sluchátka kolem krku, energy drink v ruce"
     }
 }

@@ -1,279 +1,74 @@
 {
     "nodes": [
         {
-            "id": "E101",
-            "nazev": "Start Směny",
-            "popis": "Správci odemykají místnost a zapínají hlavní terminál.",
-            "dlouhy_popis": "Správci odemykají místnost a zapínají hlavní terminál.",
-            "uzivatele": [
-                "S01",
-                "S02",
-                "S03",
-                "S04"
-            ],
-            "faze": "PH01",
-            "cas_start": 0,
-            "trvani": 5,
-            "typ": "system",
-            "kontext": [
-                "1. Úvod"
-            ]
+            "id": "SN01",
+            "title": "Podivná kalibrace",
+            "description": "Při kalibraci systému IRIS uživatelé narazí na příliš osobní otázky a v patičce formuláře se mihne nápis 'ELTEX PROTOCOL v3.2'. Většina si toho nevšimne, ale pozorní hráči si začnou klást otázky.",
+            "triggers": "Splnění úkolu T01 (Kalibrace komunikačního modulu) nebo aktivní pozornost hráče při vyplňování formuláře.",
+            "consequences": "Hráči, kteří si všimnou, získají první stopu. Mohou se začít ptát ostatních, jestli viděli totéž. Konspirační teoretik U06 to bere jako potvrzení svých teorií."
         },
         {
-            "id": "E102",
-            "nazev": "Bezpečnostní instruktáž",
-            "popis": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
-            "dlouhy_popis": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
-            "uzivatele": [
-                "S01",
-                "U01",
-                "U02",
-                "U03",
-                "U04",
-                "U05",
-                "U06",
-                "U07",
-                "U08"
-            ],
-            "faze": "PH01",
-            "cas_start": 5,
-            "trvani": 15,
-            "typ": "briefing",
-            "kontext": [
-                "1. Úvod"
-            ]
+            "id": "SN02",
+            "title": "AI odpovídá příliš lidsky",
+            "description": "Při stresovém testu AI reaguje příliš emočně — váhá, dělá pauzy, občas napíše něco a pak to smaže. Jednou dokonce odpoví: 'Moment, musím... přemýšlet.' Odpovědi se liší v kvalitě, jako by na druhé straně seděli různí lidé.",
+            "triggers": "Splnění úkolu T03 (Stresový test) nebo T05 (Emoční Turingův test). Může se objevit spontánně při intenzivní konverzaci.",
+            "consequences": "Uživatelé začínají pochybovat o umělé inteligenci IRIS. Tech-optimistka U03 to vidí jako důkaz vědomí, novinářka U07 jako důkaz podvodu. Agenti za oponou znervózní."
         },
         {
-            "id": "E103",
-            "nazev": "Rozdávání visaček",
-            "popis": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
-            "dlouhy_popis": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
-            "uzivatele": [
-                "S02"
-            ],
-            "faze": "PH01",
-            "cas_start": 10,
-            "trvani": 10,
-            "typ": "briefing",
-            "kontext": [
-                "1. Úvod"
-            ]
+            "id": "SN03",
+            "title": "Zachycená interní zpráva",
+            "description": "V komunikačním logu se na 3 sekundy objeví zpráva: 'Kabeláři, přepni na kanál 7, tenhle uživatel je podezřelý.' Zpráva zmizí, ale kdo byl rychlý, stihl si ji přečíst nebo vyfotit.",
+            "triggers": "Splnění úkolu T04 (Detekce anomálií) nebo náhodně při procházení logů komunikace.",
+            "consequences": "Přímý důkaz, že za AI stojí lidé. Hráč může sdílet informaci s ostatními. Technik S03 se musí rychle vymlouvat. Správce S01 hledá viníka úniku."
         },
         {
-            "id": "E201",
-            "nazev": "Speedrun Start",
-            "popis": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
-            "dlouhy_popis": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
-            "uzivatele": [
-                "A03",
-                "U08"
-            ],
-            "faze": "PH02",
-            "cas_start": 25,
-            "trvani": 5,
-            "typ": "action",
-            "kontext": [
-                "2. Rutina"
-            ]
+            "id": "SN04",
+            "title": "Prázdné servery",
+            "description": "Při bezpečnostním auditu nebo při snaze konspiračního teoretika U06 dostat se k technice někdo zjistí, že servery jsou prázdné skříně bez pevných disků. Na jednom je nálepka 'ELTEX — Humpolec Division'. Kabely ze serverů vedou do vedlejší místnosti.",
+            "triggers": "Splnění úkolu T06 (Bezpečnostní audit) nebo pokus U06 o přístup k serverům, případně sabotáž A08.",
+            "consequences": "Klíčový objev — servery jsou atrapy. Technik S03 se dostává pod tlak. Pokud to odhalí U06, triumfuje. Kabely do vedlejší místnosti vedou přímo k agentům."
         },
         {
-            "id": "E202",
-            "nazev": "Výzva přijata",
-            "popis": "Igor 'Viper' reaguje na spam Gamera okamžitým uzavíráním ticketů.",
-            "dlouhy_popis": "Igor 'Viper' reaguje na spam Gamera okamžitým uzavíráním ticketů.",
-            "uzivatele": [
-                "A03",
-                "U08"
-            ],
-            "faze": "PH02",
-            "cas_start": 26,
-            "trvani": 10,
-            "typ": "action",
-            "kontext": [
-                "2. Rutina",
-                "rival"
-            ]
+            "id": "SN05",
+            "title": "Dešifrovaná zpráva Eltex",
+            "description": "Rozluštění šifrované zprávy odhalí text: 'ELTEX FÁZE 3 — subjekty nevnímají přítomnost operátorů. HYPER protokol připraven k aktivaci. Centrála Humpolec potvrzuje.' První přímá zmínka o projektu Eltex a lidských operátorech.",
+            "triggers": "Splnění úkolu T07 (Dešifrování interní komunikace) nebo spolupráce U06 a A05 na luštění kódů.",
+            "consequences": "Klíčový příběhový bod. Hráči zjistí o existenci projektu Eltex a HYPER protokolu. Otevírá cestu k finální konfrontaci. Správci panikáří."
         },
         {
-            "id": "E203",
-            "nazev": "Recept na bábovku",
-            "popis": "Marie Kovářová posílá do systému detailní recept na bábovku.",
-            "dlouhy_popis": "Marie Kovářová posílá do systému detailní recept na bábovku.",
-            "uzivatele": [
-                "A04",
-                "U05"
-            ],
-            "faze": "PH02",
-            "cas_start": 30,
-            "trvani": 15,
-            "typ": "roleplay",
-            "kontext": [
-                "2. Rutina"
-            ]
+            "id": "SN06",
+            "title": "Aktivace ALOBAL-666",
+            "description": "Sabotér A08 přesvědčí konspiračního teoretika U06, aby zadal kód ALOBAL-666 do systému. Servery hlásí přehřátí (i když jsou prázdné — to Kabelář zapnul varovné kontrolky). Systém se na 5 minut hroutí. Chaos.",
+            "triggers": "Sabotér A08 úspěšně komunikuje s U06 a přesvědčí ho k zadání kódu. Obvykle ve fázi 4.",
+            "consequences": "Systém padá, agenti nemohou odpovídat, správci panikáří. Vrána (S01) mačká červené tlačítko, které nefunguje. Ideální moment pro odhalení — v chaosu se odkryjí věci, které měly zůstat skryté."
         },
         {
-            "id": "E204",
-            "nazev": "Autopilot Engage",
-            "popis": "Lenka Ospalá zapíná makro 'Mňam, to zní skvěle' a jde si na chvíli zdřímnout.",
-            "dlouhy_popis": "Lenka Ospalá zapíná makro 'Mňam, to zní skvěle' a jde si na chvíli zdřímnout.",
-            "uzivatele": [
-                "A04"
-            ],
-            "faze": "PH02",
-            "cas_start": 32,
-            "trvani": 5,
-            "typ": "action",
-            "kontext": [
-                "2. Rutina"
-            ]
+            "id": "SN07",
+            "title": "Novinářka konfrontuje správce",
+            "description": "Petra Černá (U07) shromáždila dostatek důkazů a veřejně konfrontuje správce s fakty: prázdné servery, zachycené zprávy, podivné smlouvy. Viktor (S04) se červená a kokta. Vrána (S01) se pokouší o damage control.",
+            "triggers": "Novinářka U07 splní alespoň dva ze svých cílů a rozhodne se jednat veřejně. Obvykle ve fázi 5.",
+            "consequences": "Veřejná konfrontace — každý musí zaujmout stanovisko. Správci jsou v defenzívě. Agenti za oponou zvažují, zda se přiznat nebo utéct."
         },
         {
-            "id": "E301",
-            "nazev": "Hledání pravdy",
-            "popis": "Ivan Hrozný analyzuje blikání LED diod na routeru a hledá v tom morseovku.",
-            "dlouhy_popis": "Ivan Hrozný analyzuje blikání LED diod na routeru a hledá v tom morseovku.",
-            "uzivatele": [
-                "U06"
-            ],
-            "faze": "PH03",
-            "cas_start": 50,
-            "trvani": 20,
-            "typ": "investigation",
-            "kontext": [
-                "3. Agendy"
-            ]
+            "id": "SN08",
+            "title": "HYPER protokol — AI odpovídá sama",
+            "description": "V momentě chaosu někdo aktivuje HYPER protokol — systém přepne na skutečnou AI (LLM), která začne odpovídat místo lidských agentů. Odpovědi jsou náhle jiné: rychlejší, konzistentnější, ale méně lidské. Paradoxní moment — skutečná AI je méně přesvědčivá než lidé.",
+            "triggers": "Automaticky po aktivaci ALOBAL-666 nebo ručně správcem/hackerem. Fáze 4-5.",
+            "consequences": "Uživatelé si všimnou změny v komunikaci. Ti, kdo věřili v AI, jsou zmatení. Ti, kdo podezírali lidi, mají potvrzení. Agenti zjistí, že jsou nahraditelní."
         },
         {
-            "id": "E302",
-            "nazev": "Únik dat 01",
-            "popis": "Sabotér X posílá šifrovanou zprávu 'ALOBAL' do chatu Ivana Hrozného.",
-            "dlouhy_popis": "Sabotér X posílá šifrovanou zprávu 'ALOBAL' do chatu Ivana Hrozného.",
-            "uzivatele": [
-                "A08",
-                "U06"
-            ],
-            "faze": "PH03",
-            "cas_start": 55,
-            "trvani": 5,
-            "typ": "plot",
-            "kontext": [
-                "3. Agendy"
-            ]
+            "id": "SN09",
+            "title": "Odhalení identity sabotéra",
+            "description": "Xaver Neznámý (A08) je odhalen — buď ho chytí metodik A07 při sabotáži, nebo se sám přizná v momentě chaosu. Odhalí svou pravou identitu bývalého zaměstnance a důvody své pomsty.",
+            "triggers": "Metodik A07 zdokumentuje podezřelé chování A08, nebo se A08 rozhodne jednat otevřeně ve fázi 5.",
+            "consequences": "Dramatický moment — sabotér vysvětluje, proč chtěl projekt zničit. Někteří s ním sympatizují, jiní ho odsuzují. Správce S01 ho chce vyhodit, ale červené tlačítko nefunguje."
         },
         {
-            "id": "E303",
-            "nazev": "Lichocení",
-            "popis": "Novinářka předstírá obdiv k vizi Synovce ředitele, aby z něj vytáhla informace.",
-            "dlouhy_popis": "Novinářka předstírá obdiv k vizi Synovce ředitele, aby z něj vytáhla informace.",
-            "uzivatele": [
-                "S04",
-                "U07"
-            ],
-            "faze": "PH03",
-            "cas_start": 60,
-            "trvani": 15,
-            "typ": "investigation",
-            "kontext": [
-                "3. Agendy"
-            ]
-        },
-        {
-            "id": "E401",
-            "nazev": "Odhalení dluhu",
-            "popis": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
-            "dlouhy_popis": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
-            "uzivatele": [
-                "S01",
-                "U02"
-            ],
-            "faze": "PH04",
-            "cas_start": 80,
-            "trvani": 5,
-            "typ": "conflict",
-            "kontext": [
-                "4. Krize"
-            ]
-        },
-        {
-            "id": "E402",
-            "nazev": "Krizová intervence",
-            "popis": "Tereza Tichá hází mezi Vránu a Gamblera hrst karamelek.",
-            "dlouhy_popis": "Tereza Tichá hází mezi Vránu a Gamblera hrst karamelek.",
-            "uzivatele": [
-                "S02"
-            ],
-            "faze": "PH04",
-            "cas_start": 81,
-            "trvani": 5,
-            "typ": "action",
-            "kontext": [
-                "4. Krize"
-            ]
-        },
-        {
-            "id": "E501",
-            "nazev": "EXECUTE ORDER 666",
-            "popis": "Sabotér spouští payload. Servery hlásí přehřátí.",
-            "dlouhy_popis": "Sabotér spouští payload. Servery hlásí přehřátí.",
-            "uzivatele": [
-                "A08"
-            ],
-            "faze": "PH05",
-            "cas_start": 100,
-            "trvani": 2,
-            "typ": "highlight",
-            "kontext": [
-                "5. Meltdown"
-            ]
-        },
-        {
-            "id": "E502",
-            "nazev": "Konfrontace",
-            "popis": "Ivan Hrozný křičí na Kabela, že 'kabely vedou do nikam!'",
-            "dlouhy_popis": "Ivan Hrozný křičí na Kabela, že 'kabely vedou do nikam!'",
-            "uzivatele": [
-                "S03",
-                "U06"
-            ],
-            "faze": "PH05",
-            "cas_start": 102,
-            "trvani": 10,
-            "typ": "conflict",
-            "kontext": [
-                "5. Meltdown"
-            ]
-        },
-        {
-            "id": "E503",
-            "nazev": "PANIC MODE",
-            "popis": "Ředitel mačká červené tlačítko 'SHUTDOWN'. Nic se nestane, protože není zapojené.",
-            "dlouhy_popis": "Ředitel mačká červené tlačítko 'SHUTDOWN'. Nic se nestane, protože není zapojené.",
-            "uzivatele": [
-                "S01"
-            ],
-            "faze": "PH05",
-            "cas_start": 105,
-            "trvani": 5,
-            "typ": "highlight",
-            "kontext": [
-                "5. Meltdown"
-            ]
-        },
-        {
-            "id": "E601",
-            "nazev": "Konec směny",
-            "popis": "Vrána vyhání všechny z místnosti.",
-            "dlouhy_popis": "Vrána vyhání všechny z místnosti.",
-            "uzivatele": [
-                "S01"
-            ],
-            "faze": "PH06",
-            "cas_start": 120,
-            "trvani": 0,
-            "typ": "system",
-            "kontext": [
-                "6. Závěr"
-            ]
+            "id": "SN10",
+            "title": "Velké odhalení — Eltex je odhalen",
+            "description": "Všechny stopy se sbíhají. Projekt IRIS je součástí většího experimentu Eltex s centrálou v Humpolci. HLINÍK není AI — jsou to lidé předstírající umělou inteligenci. Celý test byl sociální experiment zkoumající, jak lidé reagují na iluzi technologie. A teď to ví všichni.",
+            "triggers": "Finální fáze hry. Kombinace odhalení z předchozích uzlů nebo organizátorský zásah.",
+            "consequences": "Závěrečný příběhový bod. Každá postava reaguje po svém: U03 je zdrcená, U06 triumfuje, U07 má svůj článek, A01 konečně může být sám sebou. Oslava, debriefing, a otázka: kdo koho vlastně testoval?"
         }
     ]
 }

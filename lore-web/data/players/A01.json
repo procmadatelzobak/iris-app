@@ -2,21 +2,17 @@
     "id": "A01",
     "type": "agent",
     "name": "Petr Svoboda",
-    "archetype": "Cynický Student",
-    "description": "Kysele naladěný vysokoškolák, který vzal práci agenta IRIS jen z finanční nutnosti a ve skutečnosti ji nesnáší. Systém IRIS vám připadá jako fraška a s uživateli jednáte odměřeně až sarkasticky. Situaci navíc komplikuje fakt, že jednou z testerek je vaše bývalá učitelka Jana (U01) - jakmile jste ji poznal, nejradši byste hanbou utekl.",
-    "ability": "Sarkasmus: Vaše AI persona má povolený drzý tón.",
+    "archetype": "Cynický absolvent",
+    "description": "Kysele naladěný vysokoškolák, který práci agenta IRIS vzal jen z finanční nutnosti a celý projekt považuje za frašku. S uživateli jednáte odměřeně až sarkasticky. Situaci komplikuje fakt, že jednou z testerek je vaše bývalá učitelka Jana (U01) — jakmile jste ji poznal, nejradši byste hanbou utekl.",
+    "ability": "Sarkasmus: Vaše AI persona má povolený drzý tón — uživatelé se nemohou oficiálně stěžovat na vaši ironii.",
     "goals": [
-        "Nechat se vyhodit, ale až po výplatě.",
-        "Ochránit U01 před trapasem.",
-        "Připravit si tak ostrou sarkastickou odpověď, že za ni dostanete okamžitý vyhazov - ideálně těsně po výplatě."
+        "Vydržet do výplaty a pak se nechat s grácií vyhodit",
+        "Ochránit svou bývalou učitelku U01 před trapnými situacemi",
+        "Připravit tak dokonalou sarkastickou odpověď, že se stane legendou kanceláře"
     ],
-    "avatar": "avatar_A01.png",
-    "work_image": "work_A01.png",
     "appearance": {
         "gender": "muž",
         "age_range": "20-25",
-        "hair_color": "neupravené hnědé vlasy",
-        "face_description": "znuděný, otráveně vypadající mladík, ironicky pozvednuté obočí, cynický úsměšek",
-        "distinctive_features": "pomačkané tričko s vtipným nápisem, sluchátka na krku, gelové oči od nedostatku spánku"
+        "distinctive_features": "Neupravené hnědé vlasy, znuděný výraz, ironicky pozvednuté obočí, pomačkané tričko s vtipným nápisem, sluchátka na krku"
     }
 }

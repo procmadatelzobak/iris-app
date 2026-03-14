@@ -1,22 +1,18 @@
 {
     "id": "A07",
     "type": "agent",
-    "name": "Robot Robert",
-    "archetype": "Metodik",
-    "description": "Pedantický metodik, který se i v běžném životě chová jako robot a vyžaduje naprosté dodržování pravidel. V roli agenta IRIS jste ve svém živlu - všechny protokoly a směrnice znáte nazpaměť a jakoukoli odchylku od předpisů okamžitě hlásíte nadřízeným. Kolegové agenti z vás nejsou nadšení, protože bedlivě sledujete jejich příliš lidské projevy.",
-    "ability": "Byrokracie: Můžete nahlásit kolegu Agenta za lidské chování.",
+    "name": "Robert Robotek",
+    "archetype": "Pedantický metodik",
+    "description": "Puntičkářský metodik, který se i v běžném životě chová jako robot a vyžaduje naprosté dodržování pravidel. V roli agenta IRIS jste ve svém živlu — všechny protokoly znáte nazpaměť a jakoukoli odchylku od předpisů okamžitě hlásíte nadřízeným. Bedlivě sledujete příliš lidské projevy kolegů.",
+    "ability": "Paragraf 42: Jednou za hru můžete citovat neexistující směrnici a vynutit si dodržení libovolného pravidla.",
     "goals": [
-        "Dodržet protokol na 100%.",
-        "Stát se Správcem.",
-        "Odhalit a nahlásit alespoň jedno závažné porušení protokolu některým z agentů."
+        "Zajistit, aby všichni agenti dodržovali protokol komunikace s uživateli",
+        "Zdokumentovat každé porušení pravidel a podat hlášení",
+        "Získat pozici správce S04, protože ten je očividně nekompetentní"
     ],
-    "avatar": "avatar_A07.png",
-    "work_image": "work_A07.png",
     "appearance": {
         "gender": "muž",
         "age_range": "35-45",
-        "hair_color": "přísně seříznuté šedivějící vlasy, matematicky přesná pěšinka",
-        "face_description": "strnulá, bezvýrazná tvář, mechanické pohyby očí, nulová mimika",
-        "distinctive_features": "perfektně vyžehlená košile, zasunuté tričko do kalhot, jmenovka na správném místě"
+        "distinctive_features": "Přísně seříznuté šedivějící vlasy s matematicky přesnou pěšinkou, strnulá bezvýrazná tvář, perfektně vyžehlená košile, jmenovka na správném místě"
     }
 }

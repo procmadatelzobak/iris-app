@@ -1,21 +1,18 @@
 {
     "id": "U07",
     "type": "user",
-    "name": "Petra 'Scoop' Černá",
-    "archetype": "Investigativní novinářka",
-    "description": "Zkušená investigativní novinářka, která se infiltrovala do testování pod falešnou identitou, aby odhalila pravdu o projektu HLINÍK. Před ostatními se vydáváte za obyčejnou uchazečku o práci, ale potají si vedete pečlivé poznámky a shromažďujete důkazy o každém podezřelém detailu. Tušíte, že údajná AI možná není tím, za co se vydává.",
-    "ability": "Screenshot: Můžete si nahrát konverzaci jako důkaz.",
+    "name": "Petra Černá",
+    "archetype": "Infiltrovaná novinářka",
+    "description": "Zkušená investigativní novinářka, která se infiltrovala do testování pod falešnou identitou, aby odhalila pravdu o projektu HLINÍK. Před ostatními se vydáváte za obyčejnou uchazečku, ale potají si vedete pečlivé poznámky. Tušíte, že údajná AI možná není tím, za co se vydává.",
+    "ability": "Investigativní čuch: Jednou za hru můžete položit postavě otázku, na kterou musí odpovědět pravdivě (nemůže lhát ani mlčet).",
     "goals": [
-        "Získat přiznání od zaměstnance.",
-        "Vynést informace ven.",
-        "Udržet svou pravou identitu novinářky v tajnosti po celou dobu testu."
+        "Shromáždit důkazy o podvodné povaze projektu IRIS",
+        "Vytáhnout z naivního správce S04 kompromitující informace",
+        "Napsat článek, který odhalí celou kauzu Eltex veřejnosti"
     ],
-    "avatar": "avatar_U07.png",
     "appearance": {
         "gender": "žena",
         "age_range": "30-40",
-        "hair_color": "praktický tmavý bob",
-        "face_description": "ostražitá, inteligentní tvář, pronikavé zelené oči, napůl skrytý úsměv",
-        "distinctive_features": "nenápadné oblečení, diktafon ukrytý v kapse, reporter blok v tašce"
+        "distinctive_features": "Praktický tmavý bob, ostražitá inteligentní tvář, pronikavé zelené oči, nenápadné oblečení, diktafon ukrytý v kapse"
     }
 }

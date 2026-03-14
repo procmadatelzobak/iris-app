@@ -1,22 +1,18 @@
 {
     "id": "S03",
     "type": "admin",
-    "name": "Kamil 'Kabel'",
-    "archetype": "Technik údržbář",
-    "description": "Flegmatický údržbář, který drží technické zázemí projektu IRIS pohromadě jen díky improvizacím a lepicí pásce. Jako jediný víte, že všechny servery IRIS jsou ve skutečnosti prázdné atrapy - skutečnou inteligenci systému zajišťují lidé, což před ostatními pečlivě tajíte. Neustále obcházíte místnost s nářadím v ruce a když něco zadrhne, předstíráte technický zásah.",
-    "ability": "Restart: Můžete vyhlásit technickou pauzu (všichni musí mlčet 1 minutu).",
+    "name": "Kamil Kabelář",
+    "archetype": "Technik-nerd údržbář",
+    "description": "Flegmatický údržbář, který drží technické zázemí projektu IRIS pohromadě díky improvizacím a lepicí pásce. Jako jediný víte, že servery IRIS jsou prázdné atrapy — skutečnou inteligenci systému zajišťují lidé. Neustále obcházíte místnost s nářadím a předstíráte technické zásahy.",
+    "ability": "Technická údržba: Jednou za hru můžete předstírat kritickou opravu a na 5 minut uzavřít jakoukoli místnost.",
     "goals": [
-        "Udržet tu hromadu šrotu pohromadě.",
-        "Prodat kradené kabely U02 (Gamblerovi).",
-        "Utajit před všemi fakt, že servery IRIS jsou ve skutečnosti prázdné."
+        "Udržet v tajnosti, že servery jsou prázdné atrapy",
+        "Zabránit konspiračnímu teoretikovi U06, aby se dostal k technice",
+        "Prodat U02 dostatek kradené mědi na splacení vlastních dluhů"
     ],
-    "avatar": "avatar_S03.png",
-    "work_image": "work_S03.png",
     "appearance": {
         "gender": "muž",
         "age_range": "40-50",
-        "hair_color": "řídké hnědé vlasy pod čepicí",
-        "face_description": "flegmatická tvář, unaveně přivřené oči, neoholený",
-        "distinctive_features": "montérky s mnoha kapsami, pásek s nářadím, lepicí páska v ruce"
+        "distinctive_features": "Řídké hnědé vlasy pod čepicí, flegmatická tvář, unaveně přivřené oči, montérky s mnoha kapsami, pásek s nářadím, lepicí páska v ruce"
     }
 }

@@ -3,19 +3,16 @@
     "type": "user",
     "name": "Ivan Hrozný",
     "archetype": "Konspirační teoretik",
-    "description": "Zapálený konspirační teoretik, který všude vidí tajné vládní plány. Projekt IRIS podle vás není skutečná AI, ale spíš prostředek mimozemšťanů nebo vlády ke sledování občanů - a kódové jméno HLINÍK ve vás budí řadu podezření. Při komunikaci s AI hledáte skryté významy a šifry, nosíte pro jistotu čepici z alobalu.",
-    "ability": "Paranoia: Můžete odmítnout jeden úkol jako podezřelý.",
+    "description": "Zapálený konspirační teoretik, který všude vidí tajné vládní plány. Projekt IRIS podle vás není skutečná AI, ale prostředek vlády ke sledování občanů. Kódové jméno HLINÍK ve vás budí řadu podezření. Nosíte pro jistotu čepici z alobalu a při komunikaci s AI hledáte skryté šifry.",
+    "ability": "Alobalový štít: Jednou za hru můžete odmítnout jakýkoli příkaz s odůvodněním, že je to pokus o manipulaci, a nelze vás za to potrestat.",
     "goals": [
-        "Odhalit pravdu o hliníku.",
-        "Dostat ban za šíření pravdy (morální vítězství).",
-        "Rozluštit záhadný kód ALOBAL-666 a použít ho k odhalení spiknutí."
+        "Odhalit skutečný účel projektu HLINÍK a jeho vazby na Eltex",
+        "Rozluštit šifrované zprávy, které údajně posílá systém",
+        "Přesvědčit ostatní, že AI je ve skutečnosti ovládána lidmi"
     ],
-    "avatar": "avatar_U06.png",
     "appearance": {
         "gender": "muž",
         "age_range": "40-50",
-        "hair_color": "rozcuchané šedivějící vlasy pod alobalovou čepicí",
-        "face_description": "paranoidní pohled, podezřívavě přimhouřené oči, neupravený plnovous",
-        "distinctive_features": "alobalová čepice, zápisník s konspiračními teoriemi, podezřívavě těkající oči"
+        "distinctive_features": "Rozcuchané šedivějící vlasy pod alobalovou čepicí, paranoidní pohled, neupravený plnovous, zápisník s konspiračními teoriemi, podezřívavě těkající oči"
     }
 }

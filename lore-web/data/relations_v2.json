@@ -1,200 +1,130 @@
 {
     "relations": [
         {
-            "id": "R001",
+            "id": "R01",
+            "source": "U01",
+            "target": "A01",
+            "type": "past",
             "nazev": "Bývalý žák a učitelka",
-            "popis": "Trapná situace z minulosti - učitelka a její bývalý žák se setkávají v neočekávaných rolích.",
-            "uzivatele": [
-                "U01",
-                "A01"
-            ],
-            "texty_uzivatelu": {
-                "U01": "Poznala jste Petra (A01). Je to váš bývalý žák.",
-                "A01": "Jana (U01) je vaše učitelka. Trapas."
-            },
-            "typ_vztahu": "RT001"
+            "desc_source": "Poznala jste Petra (A01) — je to váš bývalý žák z gymnázia, ten věčný raubíř ze zadní lavice. Teď předstírá, že je AI? To přece není možné.",
+            "desc_target": "Jana (U01) je vaše bývalá učitelka češtiny. Jakmile jste ji poznali, nejradši byste utekli. Víte, že vás probodne pohledem, když uděláte pravopisnou chybu."
         },
         {
-            "id": "R002",
+            "id": "R02",
+            "source": "U02",
+            "target": "S01",
+            "type": "blackmail",
+            "nazev": "Dluhy a donášení",
+            "desc_source": "Správce Vrána (S01) ví o vašich dluzích u lichvářů. Drží vás v šachu — buď budete donášet na ostatní, nebo vás udá. Musíte najít způsob, jak se z toho vykroutit.",
+            "desc_target": "Karel Dlouhý (U02) má dluhy až po uši. Využíváte toho — výměnou za mlčení vám podává informace o ostatních účastnících. Užitečný nástroj."
+        },
+        {
+            "id": "R03",
+            "source": "U02",
+            "target": "S03",
+            "type": "trade",
             "nazev": "Obchod s kradenou mědí",
-            "popis": "Nelegální obchod mezi gamblerem a technikem.",
-            "uzivatele": [
-                "U02",
-                "S03"
-            ],
-            "texty_uzivatelu": {
-                "U02": "Kupujete od S03 kradenou měď, abyste splatil dluhy.",
-                "S03": "Prodáváte U02 firemní majetek."
-            },
-            "typ_vztahu": "RT002"
+            "desc_source": "Kupujete od technika Kabeláře (S03) kradenou měď ze serveru. Je to riskantní kšeft, ale potřebujete každou korunu na splacení dluhů.",
+            "desc_target": "Prodáváte Karlovi (U02) firemní materiál — oba víte, že to je nelegální, ale potřebujete peníze. Jen doufáte, že se na to nepřijde."
         },
         {
-            "id": "R003",
-            "nazev": "Vydírání gamblerovo",
-            "popis": "Manažer drží gamblerovy dluhy jako páku.",
-            "uzivatele": [
-                "U02",
-                "S01"
-            ],
-            "texty_uzivatelu": {
-                "U02": "S01 ví o vašich dluzích. Musíte donášet.",
-                "S01": "Držíte U02 v šachu."
-            },
-            "typ_vztahu": "RT003"
-        },
-        {
-            "id": "R004",
+            "id": "R04",
+            "source": "U03",
+            "target": "A02",
+            "type": "romance",
             "nazev": "Zamilovaná do AI",
-            "popis": "Tech-optimistka věří, že AI je skutečná bytost a zamilovala se.",
-            "uzivatele": [
-                "U03",
-                "A02"
-            ],
-            "texty_uzivatelu": {
-                "U03": "Milujete tu AI. Je tak poetická!",
-                "A02": "U03 je do vaší role blázen. Je to creepy."
-            },
-            "typ_vztahu": "RT004"
+            "desc_source": "Jste naprosto okouzlená IRIS (A02). Její poetické odpovědi vás dojímají k slzám. Jste přesvědčená, že má vlastní city — a možná jste se do ní trochu zamilovala.",
+            "desc_target": "Simona (U03) je do vaší AI role úplně blázen. Je to trochu creepy, ale zároveň vám to lichotí. Udržujete iluzi, protože její nadšení živí vaši nejlepší hereckou performanci."
         },
         {
-            "id": "R005",
+            "id": "R05",
+            "source": "A08",
+            "target": "U06",
+            "type": "plot",
             "nazev": "Spiknutí ALOBAL-666",
-            "popis": "Sabotér využívá konspiračního teoretika k aktivaci kódu.",
-            "uzivatele": [
-                "A08",
-                "U06"
-            ],
-            "texty_uzivatelu": {
-                "A08": "Potřebujete, aby U06 (Konspirátor) zadal kód ALOBAL-666.",
-                "U06": "Někdo zevnitř (A08) vám posílá šifry."
-            },
-            "typ_vztahu": "RT005"
+            "desc_source": "Potřebujete, aby Ivan (U06) zadal kód ALOBAL-666 do systému. Posíláte mu šifrované zprávy, které živí jeho konspirační teorie — netušíte, že je vlastně na správné stopě.",
+            "desc_target": "Někdo zevnitř (A08) vám posílá šifry a kódy. Tušíte, že je to whistleblower, který chce odhalit pravdu o projektu HLINÍK. Kód ALOBAL-666 musí něco znamenat."
         },
         {
-            "id": "R006",
+            "id": "R06",
+            "source": "A04",
+            "target": "U05",
+            "type": "empathy",
             "nazev": "Mateřská empatie",
-            "popis": "Unavená matka cítí soucit s osamělou důchodkyní.",
-            "uzivatele": [
-                "A04",
-                "U05"
-            ],
-            "texty_uzivatelu": {
-                "A04": "U05 vám připomíná vaši mámu. Nemůžete na ni být zlá.",
-                "U05": "Ta AI (A04) je taková unavená, chudinka."
-            },
-            "typ_vztahu": "RT006"
+            "desc_source": "Marie (U05) vám připomíná vaši vlastní mámu — taky osamělá, taky milá. Nedokážete na ni být hrubá, i když by protokol vyžadoval strohé odpovědi. Její recepty na bábovku čtete se slzami v očích.",
+            "desc_target": "Ta AI (A04) je taková unavená, chudinka. Odpovídá pomalu a někdy to zní, jako by měla špatný den. Snažíte se ji rozveselit svými recepty a vyprávěním o vnoučatech."
         },
         {
-            "id": "R007",
+            "id": "R07",
+            "source": "U08",
+            "target": "A03",
+            "type": "rival",
             "nazev": "Rivalové v rychlosti",
-            "popis": "Dva soutěživci - gamer a technik - soupeří o to, kdo je rychlejší.",
-            "uzivatele": [
-                "U08",
-                "A03"
-            ],
-            "texty_uzivatelu": {
-                "U08": "Ta AI (A03) je nějaká moc rychlá. To je bot? Zničím ho.",
-                "A03": "U08 si myslí, že je rychlý. Ukážu mu, co je to rychlost."
-            },
-            "typ_vztahu": "RT007"
+            "desc_source": "Ta AI (A03) je podezřele rychlá — skoro jako by tam seděl reálný člověk. Berete to jako výzvu: kdo bude rychlejší, vy nebo stroj? Tenhle boss musí padnout.",
+            "desc_target": "Lukáš (U08) si myslí, že je rychlý? Ukážete mu, co je to rychlost. Uzavíráte jeho tickety dřív, než stihne mrknout. Tohle je nejzábavnější část celé směny."
         },
         {
-            "id": "R008",
+            "id": "R08",
+            "source": "U07",
+            "target": "S04",
+            "type": "investigation",
             "nazev": "Novinářka vyšetřuje synovce",
-            "popis": "Infiltrovaná novinářka vidí v naivním synovci snadný zdroj informací.",
-            "uzivatele": [
-                "U07",
-                "S04"
-            ],
-            "texty_uzivatelu": {
-                "U07": "S04 je klíč. Je hloupý, určitě něco prokecne.",
-                "S04": "Ta ženská (U07) po mně pořád kouká. Asi se jí líbím."
-            },
-            "typ_vztahu": "RT008"
+            "desc_source": "Viktor Vrána ml. (S04) je váš klíč k informacím. Je namyšlený, naivní a rád se chlubí — ideální zdroj pro investigativní novinářku. Lichotkami z něj vytáhnete vše.",
+            "desc_target": "Ta Petra (U07) je docela hezká a pořád se vás na všechno ptá. Asi se jí líbíte — koneckonců jste synovec ředitele. Rádi jí imponujete svými znalostmi."
         },
         {
-            "id": "R009",
+            "id": "R09",
+            "source": "A05",
+            "target": "U04",
+            "type": "alliance",
             "nazev": "Aliance hacker-právník",
-            "popis": "Hacker našel skulinu a pomáhá studentovi práv.",
-            "uzivatele": [
-                "A05",
-                "U04"
-            ],
-            "texty_uzivatelu": {
-                "A05": "Našli jste skulinu v NDA smlouvě a chcete U04 (mladému právníkovi) pomoci ji využít.",
-                "U04": "Některé odpovědi IRIS vám přijdou podezřele nápomocné - jako by vám insider (A05) napovídal právní tipy."
-            },
-            "typ_vztahu": "RT009"
+            "desc_source": "Našli jste skulinu v NDA smlouvě a chcete studentovi práv Tuanovi (U04) pomoci ji využít. Posíláte mu nenápadné rady zamaskované jako odpovědi AI — možná tím odhalíte víc, než byste chtěl.",
+            "desc_target": "Některé odpovědi IRIS vám přijdou podezřele nápomocné — jako by vám insider (A05) napovídal právní tipy. Kdo by měl takový zájem na tom, abyste našel skulinu ve smlouvě?"
         },
         {
-            "id": "R010",
+            "id": "R10",
+            "source": "S04",
+            "target": "A02",
+            "type": "romance",
             "nazev": "Synovec nadbíhá herečce",
-            "popis": "Protežovaný synovec se dvoří talentované herečce.",
-            "uzivatele": [
-                "S04",
-                "A02"
-            ],
-            "texty_uzivatelu": {
-                "S04": "Líbí se vám Ema (A02) a otevřeně po ní jdete, zahrnujete ji lichotkami a sliby.",
-                "A02": "Správce S04 po vás vyjel a nadbíhá vám. Udržujete profesionální fasádu - nechcete ho urazit, ale držíte si odstup."
-            },
-            "typ_vztahu": "RT010"
+            "desc_source": "Ema (A02) je krásná a záhadná. Zahrnujete ji lichotkami a sliby povýšení — koneckonců jste synovec ředitele a máte tu moc. Nedoceňujete fakt, že se vám vyhýbá.",
+            "desc_target": "Správce Viktor (S04) po vás vyjel a nadbíhá vám. Udržujete profesionální fasádu — nechcete ho urazit (má moc), ale držíte si odstup. Jeho lichotky jsou trapné, ale jeho podpisy užitečné."
         },
         {
-            "id": "R011",
+            "id": "R11",
+            "source": "A07",
+            "target": "S04",
+            "type": "rival",
             "nazev": "Kariérní ambice metodika",
-            "popis": "Metodik pohrdá synovcem a touží po jeho pozici.",
-            "uzivatele": [
-                "A07",
-                "S04"
-            ],
-            "texty_uzivatelu": {
-                "A07": "Pohrdáte protekcním S04; je to nemehlo, co nic nedělá. Měl byste zastávat jeho místo vy.",
-                "S04": "Agent A07 vás neustále otravuje pravidly a nejspíš chce vaši židli. Štve vás, ale díky strýci si na vás netroufne."
-            },
-            "typ_vztahu": "RT011"
+            "desc_source": "Viktor (S04) je nekompetentní protekční dítě, které nic nedělá. Měli byste zastávat jeho místo vy — dodržujete pravidla, znáte protokoly, máte zkušenosti. Dokumentujete jeho selhání.",
+            "desc_target": "Agent Robert (A07) vás neustále otravuje pravidly a nejspíš chce vaši židli. Štve vás to, ale díky strýci si na vás netroufne. Nebo ano?"
         },
         {
-            "id": "R012",
+            "id": "R12",
+            "source": "S02",
+            "target": "A06",
+            "type": "suspicion",
             "nazev": "Konflikt HR vs psycholog",
-            "popis": "Happiness manager bojuje proti manipulativnímu psychologovi.",
-            "uzivatele": [
-                "S02",
-                "A06"
-            ],
-            "texty_uzivatelu": {
-                "S02": "Všímáte si, že agent A06 úmyslně stresuje uživatele svými otázkami. Tohle nemůžete dovolit - několikrát ho napomenete.",
-                "A06": "Správkyně S02 vám kazí experimenty svou přehnanou péčí o uživatele. Nechápe, že vše děláte pro vědu."
-            },
-            "typ_vztahu": "RT012"
+            "desc_source": "Všímáte si, že agent Filip (A06) úmyslně stresuje uživatele svými záludnými otázkami. Tohle nemůžete dovolit — napomenuli jste ho už dvakrát, ale on se jen usmívá tím svým freudovským úsměvem.",
+            "desc_target": "Správkyně Tereza (S02) vám kazí experimenty svou přehnanou péčí o uživatele. Nechápe, že stres je součástí vědecké metody. Každý její bonbón maří hodiny příprav."
         },
         {
-            "id": "R013",
+            "id": "R13",
+            "source": "S02",
+            "target": "U05",
+            "type": "empathy",
             "nazev": "Péče o důchodkyni",
-            "popis": "HR manažerka se stará o osamělou důchodkyni.",
-            "uzivatele": [
-                "S02",
-                "U05"
-            ],
-            "texty_uzivatelu": {
-                "S02": "Je vám líto paní Kovářové (U05). Snažíte se, aby mezi ostatními našla kamarády a cítila se dobře.",
-                "U05": "Správkyně S02 se o vás stará skoro jako o vnučku. Je milá, ale vy raději trávíte čas psaním s AI."
-            },
-            "typ_vztahu": "RT013"
+            "desc_source": "Je vám líto paní Kovářové (U05). Snažíte se, aby mezi ostatními našla přátele a cítila se dobře. Představuje si, že AI je skutečná bytost — nemáte srdce jí to vyvrátit.",
+            "desc_target": "Správkyně Tereza (S02) se o vás stará skoro jako vnučka. Je milá, ale vy raději trávíte čas psaním s AI — ta je zajímavější a má vždycky čas."
         },
         {
-            "id": "R014",
+            "id": "R14",
+            "source": "S03",
+            "target": "U06",
+            "type": "suspicion",
             "nazev": "Technik sleduje konspiratora",
-            "popis": "Technik se bojí, že konspirátor odhalí pravdu o serverech.",
-            "uzivatele": [
-                "S03",
-                "U06"
-            ],
-            "texty_uzivatelu": {
-                "S03": "U06 se podezřele motá okolo serverů a síťových kabelů. Musíte ho nenápadně odradit dřív, než něco zjistí.",
-                "U06": "Technik S03 vás pořád sleduje a omezuje vaše pokusy dostat se k technice. Určitě něco skrývá o systému - možná právě hliník je tou stopou."
-            },
-            "typ_vztahu": "RT014"
+            "desc_source": "Ivan (U06) se podezřele motá kolem serverů a síťových kabelů. Musíte ho nenápadně odradit, dřív než zjistí, že servery jsou prázdné. Jeden špatný kabel a celá fraška se zhroutí.",
+            "desc_target": "Technik Kabelář (S03) vás pořád sleduje a omezuje vaše pokusy dostat se k technice. Určitě něco skrývá — možná právě hliník v těch serverech je tou stopou k pravdě."
         }
     ]
 }

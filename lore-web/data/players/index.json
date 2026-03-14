@@ -1,29 +1,28 @@
 {
-    "users": [
-        "U01",
-        "U02",
-        "U03",
-        "U04",
-        "U05",
-        "U06",
-        "U07",
-        "U08"
+    "players": [
+        { "id": "U01", "type": "user", "name": "Jana Nováková", "archetype": "Zadlužená učitelka" },
+        { "id": "U02", "type": "user", "name": "Karel Dlouhý", "archetype": "Paranoidní IT technik" },
+        { "id": "U03", "type": "user", "name": "Simona Techová", "archetype": "Ambiciózní tech-optimistka" },
+        { "id": "U04", "type": "user", "name": "Tuan Nguyen", "archetype": "Student práv" },
+        { "id": "U05", "type": "user", "name": "Marie Kovářová", "archetype": "Osamělá důchodkyně" },
+        { "id": "U06", "type": "user", "name": "Ivan Hrozný", "archetype": "Konspirační teoretik" },
+        { "id": "U07", "type": "user", "name": "Petra Černá", "archetype": "Infiltrovaná novinářka" },
+        { "id": "U08", "type": "user", "name": "Lukáš Král", "archetype": "Profesionální gamer" },
+        { "id": "A01", "type": "agent", "name": "Petr Svoboda", "archetype": "Cynický absolvent" },
+        { "id": "A02", "type": "agent", "name": "Ema Echoová", "archetype": "Herečka hrající AI" },
+        { "id": "A03", "type": "agent", "name": "Igor Ruský", "archetype": "Kompetitivní speed-agent" },
+        { "id": "A04", "type": "agent", "name": "Lenka Ospalá", "archetype": "Unavená matka na autopilotu" },
+        { "id": "A05", "type": "agent", "name": "Jakub Glitch", "archetype": "Hacker script-kiddie" },
+        { "id": "A06", "type": "agent", "name": "Filip Duše", "archetype": "Manipulativní psycholog" },
+        { "id": "A07", "type": "agent", "name": "Robert Robotek", "archetype": "Pedantický metodik" },
+        { "id": "A08", "type": "agent", "name": "Xaver Neznámý", "archetype": "Infiltrovaný sabotér" },
+        { "id": "S01", "type": "admin", "name": "Ing. Miloš Vrána", "archetype": "Puntičkářský manažer" },
+        { "id": "S02", "type": "admin", "name": "Bc. Tereza Tichá", "archetype": "PR a happiness manažerka" },
+        { "id": "S03", "type": "admin", "name": "Kamil Kabelář", "archetype": "Technik-nerd údržbář" },
+        { "id": "S04", "type": "admin", "name": "Viktor Vrána ml.", "archetype": "Šéfova synovec" }
     ],
-    "agents": [
-        "A01",
-        "A02",
-        "A03",
-        "A04",
-        "A05",
-        "A06",
-        "A07",
-        "A08"
-    ],
-    "admins": [
-        "S01",
-        "S02",
-        "S03",
-        "S04"
-    ],
+    "users": ["U01", "U02", "U03", "U04", "U05", "U06", "U07", "U08"],
+    "agents": ["A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08"],
+    "admins": ["S01", "S02", "S03", "S04"],
     "total": 20
 }

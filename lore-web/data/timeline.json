@@ -1,277 +1,52 @@
-[
-    {
-        "id": "E101",
-        "phase": 1,
-        "time_start": 0,
-        "duration": 5,
-        "actors": [
-            "S01",
-            "S02",
-            "S03",
-            "S04"
-        ],
-        "title": "Start Směny",
-        "description": "Správci odemykají místnost a zapínají hlavní terminál.",
-        "type": "system",
-        "related_nodes": [
-            "1. Úvod"
-        ]
-    },
-    {
-        "id": "E102",
-        "phase": 1,
-        "time_start": 5,
-        "duration": 15,
-        "actors": [
-            "S01"
-        ],
-        "target_actors": [
-            "U01",
-            "U02",
-            "U03",
-            "U04",
-            "U05",
-            "U06",
-            "U07",
-            "U08"
-        ],
-        "title": "Bezpečnostní instruktáž",
-        "description": "Ing. Miloš Vrána přednáší o NDA a pokutách za poškození majetku.",
-        "type": "briefing",
-        "related_nodes": [
-            "1. Úvod"
-        ]
-    },
-    {
-        "id": "E103",
-        "phase": 1,
-        "time_start": 10,
-        "duration": 10,
-        "actors": [
-            "S02"
-        ],
-        "title": "Rozdávání visaček",
-        "description": "Tereza Tichá nervózně obchází uživatele a rozdává jim jmenovky se špatně napsanými jmény.",
-        "type": "briefing",
-        "related_nodes": [
-            "1. Úvod"
-        ]
-    },
-    {
-        "id": "E201",
-        "phase": 2,
-        "time_start": 25,
-        "duration": 5,
-        "actors": [
-            "U08"
-        ],
-        "target_actors": [
-            "A03"
-        ],
-        "title": "Speedrun Start",
-        "description": "Lukáš 'Speedy' Král začíná spamovat systém dotazy, aby maximalizoval zisk.",
-        "type": "action",
-        "related_nodes": [
-            "2. Rutina"
-        ]
-    },
-    {
-        "id": "E202",
-        "phase": 2,
-        "time_start": 26,
-        "duration": 10,
-        "actors": [
-            "A03"
-        ],
-        "target_actors": [
-            "U08"
-        ],
-        "title": "Výzva přijata",
-        "description": "Igor 'Viper' reaguje na spam Gamera okamžitým uzavíráním ticketů.",
-        "type": "action",
-        "related_nodes": [
-            "2. Rutina",
-            "rival"
-        ]
-    },
-    {
-        "id": "E203",
-        "phase": 2,
-        "time_start": 30,
-        "duration": 15,
-        "actors": [
-            "U05"
-        ],
-        "target_actors": [
-            "A04"
-        ],
-        "title": "Recept na bábovku",
-        "description": "Marie Kovářová posílá do systému detailní recept na bábovku.",
-        "type": "roleplay",
-        "related_nodes": [
-            "2. Rutina"
-        ]
-    },
-    {
-        "id": "E204",
-        "phase": 2,
-        "time_start": 32,
-        "duration": 5,
-        "actors": [
-            "A04"
-        ],
-        "title": "Autopilot Engage",
-        "description": "Lenka Ospalá zapíná makro 'Mňam, to zní skvěle' a jde si na chvíli zdřímnout.",
-        "type": "action",
-        "related_nodes": [
-            "2. Rutina"
-        ]
-    },
-    {
-        "id": "E301",
-        "phase": 3,
-        "time_start": 50,
-        "duration": 20,
-        "actors": [
-            "U06"
-        ],
-        "title": "Hledání pravdy",
-        "description": "Ivan Hrozný analyzuje blikání LED diod na routeru a hledá v tom morseovku.",
-        "type": "investigation",
-        "related_nodes": [
-            "3. Agendy"
-        ]
-    },
-    {
-        "id": "E302",
-        "phase": 3,
-        "time_start": 55,
-        "duration": 5,
-        "actors": [
-            "A08"
-        ],
-        "target_actors": [
-            "U06"
-        ],
-        "title": "Únik dat 01",
-        "description": "Sabotér X posílá šifrovanou zprávu 'ALOBAL' do chatu Ivana Hrozného.",
-        "type": "plot",
-        "related_nodes": [
-            "3. Agendy"
-        ]
-    },
-    {
-        "id": "E303",
-        "phase": 3,
-        "time_start": 60,
-        "duration": 15,
-        "actors": [
-            "U07"
-        ],
-        "target_actors": [
-            "S04"
-        ],
-        "title": "Lichocení",
-        "description": "Novinářka předstírá obdiv k vizi Synovce ředitele, aby z něj vytáhla informace.",
-        "type": "investigation",
-        "related_nodes": [
-            "3. Agendy"
-        ]
-    },
-    {
-        "id": "E401",
-        "phase": 4,
-        "time_start": 80,
-        "duration": 5,
-        "actors": [
-            "S01"
-        ],
-        "target_actors": [
-            "U02"
-        ],
-        "title": "Odhalení dluhu",
-        "description": "Vrána nachází u Gamblera dlužní úpis. Hádka.",
-        "type": "conflict",
-        "related_nodes": [
-            "4. Krize"
-        ]
-    },
-    {
-        "id": "E402",
-        "phase": 4,
-        "time_start": 81,
-        "duration": 5,
-        "actors": [
-            "S02"
-        ],
-        "title": "Krizová intervence",
-        "description": "Tereza Tichá hází mezi Vránu a Gamblera hrst karamelek.",
-        "type": "action",
-        "related_nodes": [
-            "4. Krize"
-        ]
-    },
-    {
-        "id": "E501",
-        "phase": 5,
-        "time_start": 100,
-        "duration": 2,
-        "actors": [
-            "A08"
-        ],
-        "title": "EXECUTE ORDER 666",
-        "description": "Sabotér spouští payload. Servery hlásí přehřátí.",
-        "type": "highlight",
-        "related_nodes": [
-            "5. Meltdown"
-        ]
-    },
-    {
-        "id": "E502",
-        "phase": 5,
-        "time_start": 102,
-        "duration": 10,
-        "actors": [
-            "U06"
-        ],
-        "target_actors": [
-            "S03"
-        ],
-        "title": "Konfrontace",
-        "description": "Ivan Hrozný křičí na Kabela, že 'kabely vedou do nikam!'",
-        "type": "conflict",
-        "related_nodes": [
-            "5. Meltdown"
-        ]
-    },
-    {
-        "id": "E503",
-        "phase": 5,
-        "time_start": 105,
-        "duration": 5,
-        "actors": [
-            "S01"
-        ],
-        "title": "PANIC MODE",
-        "description": "Ředitel mačká červené tlačítko 'SHUTDOWN'. Nic se nestane, protože není zapojené.",
-        "type": "highlight",
-        "related_nodes": [
-            "5. Meltdown"
-        ]
-    },
-    {
-        "id": "E601",
-        "phase": 6,
-        "time_start": 120,
-        "duration": 0,
-        "actors": [
-            "S01"
-        ],
-        "title": "Konec směny",
-        "description": "Vrána vyhání všechny z místnosti.",
-        "type": "system",
-        "related_nodes": [
-            "6. Závěr"
-        ]
-    }
-]
+{
+    "timeline": [
+        {
+            "id": "EVT01",
+            "phase": 1,
+            "phase_name": "Příchod a orientace",
+            "title": "První kontakt",
+            "description": "Uživatelé přicházejí do testovací místnosti. Správce Vrána (S01) je vítá bezpečnostní instruktáží o NDA a pokutách. Tereza (S02) rozdává jmenovky se špatně napsanými jmény. Agenti se připravují za oponou. Atmosféra je napjatá — nikdo přesně neví, co ho čeká.",
+            "cas": "Den 1, večer"
+        },
+        {
+            "id": "EVT02",
+            "phase": 2,
+            "phase_name": "Rutina a první nesrovnalosti",
+            "title": "Podivná AI",
+            "description": "Uživatelé začínají komunikovat s IRIS. Gamer U08 spamuje dotazy, důchodkyně U05 posílá recepty na bábovku. Ale něco nesedí — AI občas reaguje příliš pomalu, jindy příliš osobně. Konspirační teoretik U06 si začíná zapisovat anomálie. Agent A04 usíná u terminálu.",
+            "cas": "Den 2, ráno"
+        },
+        {
+            "id": "EVT03",
+            "phase": 3,
+            "phase_name": "Hlášení a napětí",
+            "title": "První stopy",
+            "description": "Novinářka U07 začíná vytahovat informace ze správce S04. Hacker A05 najde skulinu v systému. Ivan Hrozný U06 zachytí záhadnou šifrovanou zprávu od sabotéra A08. Student práv U04 objeví podivnou klauzuli ve smlouvě NDA. Něco je tu zatraceně špatně.",
+            "cas": "Den 2, poledne"
+        },
+        {
+            "id": "EVT04",
+            "phase": 4,
+            "phase_name": "Chaos a HYPER",
+            "title": "Systém se hroutí",
+            "description": "Sabotér A08 spouští payload ALOBAL-666. Servery hlásí přehřátí (i když jsou prázdné). Správce S01 nachází Karlovy dluhy a hádají se. Tereza S02 hází bonbóny. Ivan U06 křičí, že kabely vedou do nikam. HYPER protokol se aktivuje — komunikace se mění, odpovědi AI jsou chaotické.",
+            "cas": "Den 2, odpoledne"
+        },
+        {
+            "id": "EVT05",
+            "phase": 5,
+            "phase_name": "Finální konfrontace",
+            "title": "Pravda vychází najevo",
+            "description": "Vrána mačká červené tlačítko SHUTDOWN — nic se nestane, protože není zapojené. Novinářka U07 veřejně konfrontuje správce s důkazy. Student U04 cituje paragraf o podvodu. Konspirační teoretik U06 triumfálně strhává alobal ze serveru — a nachází prázdnou skříň. IRIS je fraška.",
+            "cas": "Den 2, podvečer"
+        },
+        {
+            "id": "EVT06",
+            "phase": 6,
+            "phase_name": "Odhalení a rozuzlení",
+            "title": "Eltex odtajněn",
+            "description": "Pravda o projektu Eltex je odhalena — HLINÍK je podvod, AI řídili lidé. Reakce se liší: někdo je šokovaný, někdo triumfuje, někdo se směje. Správce Vrána se pokouší vyhodit všechny z místnosti, ale nikdo ho neposlouchá. Sabotér A08 přiznává svou identitu. Oslava — nebo pohřeb iluze?",
+            "cas": "Den 2, večer"
+        }
+    ]
+}

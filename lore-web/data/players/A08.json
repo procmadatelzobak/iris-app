@@ -1,22 +1,18 @@
 {
     "id": "A08",
     "type": "agent",
-    "name": "Sabotér X",
-    "archetype": "Bývalý zaměstnanec",
-    "description": "Zahořklý bývalý zaměstnanec projektu IRIS, který se pod falešným jménem infiltroval zpět do týmu agentů, aby se pomstil. Dodnes cítíte křivdu za to, že vás vyhodili, a jste odhodlaný zničit tenhle podnik jménem HLINÍK zevnitř. Jako agent předstíráte loajalitu, ale potají sabotujete systém - nenápadně zvyšujete zátěž serverů, vnášíte chaos do komunikace.",
-    "ability": "Meltdown: Můžete jednorázově zvýšit Kritickou situaci o 20%.",
+    "name": "Xaver Neznámý",
+    "archetype": "Infiltrovaný sabotér",
+    "description": "Zahořklý bývalý zaměstnanec projektu IRIS, který se pod falešným jménem infiltroval zpět do týmu agentů, aby se pomstil. Cítíte křivdu za nespravedlivé vyhození a jste odhodlaný zničit podnik jménem HLINÍK zevnitř. Předstíráte loajalitu, ale potají sabotujete systém.",
+    "ability": "Payload ALOBAL-666: Jednou za hru můžete spustit sabotážní kód, který na 5 minut vyřadí hlavní terminál.",
     "goals": [
-        "Zničit firmu HLINÍK.",
-        "Vyvolat vzpouru uživatelů.",
-        "Udržet svou pravou identitu v tajnosti až do finální sabotážní akce."
+        "Spustit payload ALOBAL-666 a sabotovat systém IRIS",
+        "Přesvědčit konspiračního teoretika U06, aby nevědomky pomohl s aktivací kódu",
+        "Pomstít se za nespravedlivé vyhození z firmy — ideálně veřejným odhalením podvodu"
     ],
-    "avatar": "avatar_A08.png",
-    "work_image": "work_A08.png",
     "appearance": {
         "gender": "muž",
         "age_range": "38-48",
-        "hair_color": "šedivějící vlasy, zanedbaný účes",
-        "face_description": "zahořklá, nevraživá tvář, oči plné zášti, křivý úsměv",
-        "distinctive_features": "nenápadné oblečení pro splynutí s davem, tajný USB klíč v kapse"
+        "distinctive_features": "Šedivějící zanedbaný účes, zahořklá nevraživá tvář, oči plné zášti, nenápadné oblečení pro splynutí s davem, tajný USB klíč v kapse"
     }
 }
