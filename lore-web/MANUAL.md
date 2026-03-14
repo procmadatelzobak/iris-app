@@ -1,6 +1,6 @@
 # Lore-Web — Kompletní návod
 
-**Verze:** 4.2.0 | **Phase:** 38 | **Datum:** 2026-03-14
+**Datum:** 2026-03-14
 
 Tento dokument je **závazná specifikace** aplikace Lore-Web. Kód musí odpovídat tomuto návodu.
 

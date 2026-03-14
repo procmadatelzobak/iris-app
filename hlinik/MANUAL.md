@@ -1,6 +1,6 @@
 # HLINÍK — Kompletní návod
 
-**Verze:** 3.1.2 | **Phase:** 38 | **Datum:** 2026-03-14
+**Datum:** 2026-03-14
 
 Tento dokument je **závazná specifikace** aplikace HLINÍK. Kód musí odpovídat tomuto návodu. Pokud se návod a kód rozcházejí, návod má přednost a kód se opraví.
 
@@ -668,14 +668,16 @@ Běží na pozadí každou sekundu:
 
 ### 12.5 Persistence
 
-GameState se exportuje do `data/gamestate.json` při shutdown a importuje při startu. Pokud se proces zabije (SIGKILL), stav se ztratí.
+GameState se exportuje do `data/gamestate.json`:
+- Při shutdown (SIGTERM) — automaticky
+- Každých 60 sekund z game loop — přežije i SIGKILL (max 60s ztráta)
+- Při startu se importuje zpět
 
 ---
 
 ## 13. Známé omezení
 
 1. **Žádné DB migrace** — změna schématu vyžaduje factory reset
-2. **SQLite only** — není pro produkční multi-process provoz
+2. **SQLite only** — pro LARP na lokální síti stačí, pro cloud ne
 3. **Token bez revokace** — zamčený/smazaný user zůstane přihlášený do expirace (24h)
 4. **Žádný rate limiting** na LLM API
-5. **httponly=false** na auth cookie
