@@ -94,6 +94,10 @@ HLINÍK mounts `doc/iris/lore-web/` at `/lore-web` and exposes `lore_editor_api`
 
 **Singletons**: `GameState` and `RoutingLogic` use `__new__` pattern.
 
-## Development Workflow
+## Documentation
 
-Development follows a phase-based structure (currently Phase 38). Each phase: Planning (check Lore Web) -> Execution -> Verification (tests + manual) -> Documentation. See `AGENT_WORKFLOW.md` for full details.
+Each application has a **MANUAL.md** that serves as the living specification:
+- `IRIS_LARP/MANUAL.md` — complete spec for HLINÍK (roles, terminals, API, DB, game mechanics)
+- `doc/iris/lore-web/MANUAL.md` — complete spec for Lore-Web (sections, data models, integration)
+
+**The manual is the source of truth.** If the manual and code disagree, the manual wins and the code gets fixed. The original LARP design document is in `docs/ORIGINAL_DESIGN.md`.
