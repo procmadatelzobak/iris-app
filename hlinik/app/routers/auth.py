@@ -45,11 +45,9 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
     
     # Server-side cookie setting for robust session management
     response = JSONResponse(content={"access_token": access_token, "token_type": "bearer", "role": user.role.value})
-    # HTTPOnly=False because we might need JS to read it? 
-    # Actually, login.html uses localStorage for WS. 
-    # But get_current_user_cookie needs it. 
-    # Let's use httponly=False so JS can sync if needed, but path=/ is key.
-    response.set_cookie(key="access_token", value=access_token, httponly=False, path="/")
+    # httponly=True: cookie nelze číst z JS (bezpečnější)
+    # Token pro WebSocket se předává přes login response JSON → localStorage
+    response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="lax", path="/")
     return response
 
 @router.get("/logout")

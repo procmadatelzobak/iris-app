@@ -35,32 +35,6 @@ async def get_user_from_token(token: str):
     except JWTError:
         return None
 
-# --- v1.4 Latency Monitor ---
-async def monitor_latency():
-    """Background task to check for agent response timeouts."""
-    while True:
-        try:
-            await asyncio.sleep(5)
-            now = time.time()
-            limit = gamestate.agent_response_window
-            
-            # Iterate over pending responses to check for timeouts
-            # Uses GAMESTATE now
-            for session_id in list(gamestate.pending_responses.keys()):
-                start_time = gamestate.pending_responses.get(session_id)
-                if start_time and (now - start_time > limit):
-                     # Timeout!
-                     gamestate.mark_session_timeout(session_id)
-                     await routing_logic.send_timeout_error_to_user(session_id)
-                     await routing_logic.send_timeout_to_agent(session_id)
-                
-        except Exception as e:
-            print(f"Latency Monitor Error: {e}")
-            await asyncio.sleep(5)
-
-@router.on_event("startup")
-async def startup_event():
-    asyncio.create_task(monitor_latency())
 
 @router.websocket("/ws/connect")
 async def websocket_endpoint(websocket: WebSocket, token: str):
