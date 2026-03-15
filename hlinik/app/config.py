@@ -10,8 +10,8 @@ DEFAULT_DB_PATH = BASE_DIR / "data" / "iris.db"
 class Settings:
     PROJECT_NAME: str = "IRIS System"
     VERSION: str = "3.1.2"
-    
-    # Database
+
+    # Database — set DATABASE_URL in .env for MySQL, falls back to local SQLite
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
     
     # Security

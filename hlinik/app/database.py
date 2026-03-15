@@ -4,9 +4,16 @@ from datetime import datetime
 import enum
 from .config import settings
 
-# SQLite specifics: check_same_thread=False is needed for FastAPI's threading
-connect_args = {"check_same_thread": False}
-engine = create_engine(settings.DATABASE_URL, connect_args=connect_args)
+# Engine configuration depends on the database backend
+_engine_kwargs = {}
+if settings.DATABASE_URL.startswith("sqlite"):
+    _engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    # MySQL/MariaDB: recycle connections before server timeout (default 8h)
+    _engine_kwargs["pool_recycle"] = 3600
+    _engine_kwargs["pool_pre_ping"] = True
+
+engine = create_engine(settings.DATABASE_URL, **_engine_kwargs)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -36,8 +43,8 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    password_hash = Column(String)
+    username = Column(String(100), unique=True, index=True)
+    password_hash = Column(String(255))
     role = Column(Enum(UserRole), default=UserRole.USER)
     credits = Column(Integer, default=100)
     status_level = Column(Enum(StatusLevel), default=StatusLevel.LOW)
@@ -77,17 +84,17 @@ class Task(Base):
 class SystemConfig(Base):
     __tablename__ = "system_config"
 
-    key = Column(String, primary_key=True, index=True)
-    value = Column(String) # JSON or simple string
+    key = Column(String(255), primary_key=True, index=True)
+    value = Column(Text) # JSON or simple string
 
 class SystemLog(Base):
     __tablename__ = "system_logs"
 
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    event_type = Column(String, index=True) # e.g. "ACTION", "ALERT", "ECONOMY", "ROOT"
+    event_type = Column(String(50), index=True) # e.g. "ACTION", "ALERT", "ECONOMY", "ROOT"
     message = Column(Text)
-    data = Column(String, nullable=True) # Optional JSON details
+    data = Column(Text, nullable=True) # Optional JSON details
 
 def init_db():
     Base.metadata.create_all(bind=engine)
