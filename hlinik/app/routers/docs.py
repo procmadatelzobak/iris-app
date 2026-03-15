@@ -13,17 +13,25 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
 DOCS_DIR = str(BASE_DIR / "docs")
 
 def get_manual_path(doc_key: str) -> str:
+    # Role-specific manuals in docs/, falling back to main MANUAL.md
     mapping = {
         "user": "manual_user.md",
         "agent": "manual_agent.md",
         "admin": "manual_admin.md",
-        "root": "manual_admin.md", # Root shares admin manual
-        "system": "README.md" # System docs = README (for now, or ARCHITEKTURA.md)
+        "root": "manual_admin.md",
+        "system": "README.md"
     }
     filename = mapping.get(doc_key)
     if not filename:
         return None
-    return os.path.join(DOCS_DIR, filename)
+    path = os.path.join(DOCS_DIR, filename)
+    if os.path.exists(path):
+        return path
+    # Fallback to main MANUAL.md
+    fallback = os.path.join(BASE_DIR, "MANUAL.md")
+    if os.path.exists(fallback):
+        return fallback
+    return None
 
 @router.get("/view/{doc_key}", response_class=HTMLResponse)
 async def view_documentation(request: Request, doc_key: str, current_user: User = Depends(get_current_user_cookie)):

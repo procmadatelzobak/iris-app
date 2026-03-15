@@ -104,8 +104,11 @@ class GameState:
         self.task_reward_high = 175
         self.task_reward_party = 200
         
+        # Report reward for successful anomaly reports
+        self.report_reward = 25
+
         # v1.4 Timer
-        self.agent_response_window = 120 
+        self.agent_response_window = 120
         
         # v1.5 AI Optimizer
         self.optimizer_active = False

@@ -1,10 +1,18 @@
 import json
 import os
+import re
 from ..database import SessionLocal, SystemLog, User
 from ..logic.routing import routing_logic
 from ..logic.gamestate import gamestate
 from ..config import settings
 from fastapi import WebSocket
+
+
+def _session_id_from_username(username: str) -> int:
+    """Extract logical session ID (1-8) from username like 'user3' -> 3."""
+    match = re.search(r'\d+', username)
+    return int(match.group()) if match else 0
+
 
 class AdminService:
     async def handle_admin_command(self, db: SessionLocal, user: User, msg_data: dict, websocket: WebSocket):
@@ -197,12 +205,13 @@ class AdminService:
     async def fine_user(self, db: SessionLocal, user_id: int, amount: int, reason: str):
         user = db.query(User).filter(User.id == user_id).first()
         if user:
+            session_id = _session_id_from_username(user.username)
             user.credits -= amount
             if user.credits < 0 and not user.is_locked:
                 user.is_locked = True
-                await routing_logic.broadcast_to_session(user.id, json.dumps({"type": "lock_update", "locked": True}))
+                await routing_logic.broadcast_to_session(session_id, json.dumps({"type": "lock_update", "locked": True}))
             db.commit()
-            await routing_logic.broadcast_to_session(user.id, json.dumps({
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
                 "type": "economy_update",
                 "credits": user.credits,
                 "msg": f"FINED: {reason}",
@@ -212,16 +221,17 @@ class AdminService:
     async def bonus_user(self, db: SessionLocal, user_id: int, amount: int, reason: str):
         user = db.query(User).filter(User.id == user_id).first()
         if user:
+            session_id = _session_id_from_username(user.username)
             user.credits += amount
             if user.credits < 0 and not user.is_locked:
                 user.is_locked = True
-                await routing_logic.broadcast_to_session(user.id, json.dumps({"type": "lock_update", "locked": True}))
+                await routing_logic.broadcast_to_session(session_id, json.dumps({"type": "lock_update", "locked": True}))
             elif user.credits >= 0 and user.is_locked:
                 user.is_locked = False
-                await routing_logic.broadcast_to_session(user.id, json.dumps({"type": "lock_update", "locked": False}))
-            
+                await routing_logic.broadcast_to_session(session_id, json.dumps({"type": "lock_update", "locked": False}))
+
             db.commit()
-            await routing_logic.broadcast_to_session(user.id, json.dumps({
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
                 "type": "economy_update",
                 "credits": user.credits,
                 "msg": f"BONUS: {reason}",
@@ -231,10 +241,11 @@ class AdminService:
     async def toggle_lock(self, db: SessionLocal, user_id: int):
         user = db.query(User).filter(User.id == user_id).first()
         if user:
+            session_id = _session_id_from_username(user.username)
             user.is_locked = not user.is_locked
             db.commit()
-            await routing_logic.broadcast_to_session(user.id, json.dumps({
-                "type": "lock_update", 
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
+                "type": "lock_update",
                 "locked": user.is_locked
             }))
             return "LOCKED" if user.is_locked else "UNLOCKED"
@@ -243,12 +254,13 @@ class AdminService:
     async def set_user_status(self, db: SessionLocal, user_id: int, status: str):
         if status not in ["low", "mid", "high", "party"]:
             raise ValueError("Invalid status")
-        
+
         user = db.query(User).filter(User.id == user_id).first()
         if user:
+            session_id = _session_id_from_username(user.username)
             user.status_level = status
             db.commit()
-            await routing_logic.broadcast_to_session(user.id, json.dumps({
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
                 "type": "theme_update",
                 "theme": status
             }))
@@ -257,10 +269,11 @@ class AdminService:
     async def global_bonus(self, db: SessionLocal, amount: int, reason: str):
         from ..database import UserRole
         users = db.query(User).filter(User.role == UserRole.USER).all()
-        
+
         for user in users:
+            session_id = _session_id_from_username(user.username)
             user.credits += amount
-            await routing_logic.broadcast_to_session(user.id, json.dumps({
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
                 "type": "economy_update",
                 "credits": user.credits,
                 "msg": f"GLOBAL STIMULUS: {reason}"
@@ -272,9 +285,10 @@ class AdminService:
         from ..database import UserRole
         users = db.query(User).filter(User.role == UserRole.USER).all()
         for user in users:
+            session_id = _session_id_from_username(user.username)
             user.credits = 100
             user.is_locked = False
-            await routing_logic.broadcast_to_session(user.id, json.dumps({
+            await routing_logic.broadcast_to_session(session_id, json.dumps({
                 "type": "user_status",
                 "credits": 100,
                 "is_locked": False
@@ -320,15 +334,16 @@ class AdminService:
         db_log.close()
         
         # Notify
+        user_session_id = _session_id_from_username(user.username) if user else 0
         await routing_logic.broadcast_to_session(
-            task.user_id,
+            user_session_id,
             json.dumps({
                 "type": "task_update",
                 "id": task.id,
                 "task_id": task.id,
                 "status": "active",
                 "reward": task.reward_offered,
-                "prompt": task.prompt_desc, 
+                "prompt": task.prompt_desc,
                 "description": task.prompt_desc
             })
         )
@@ -351,17 +366,18 @@ class AdminService:
             message=f"Task #{task_id} graded at {int(modifier*100)}%. Net: {result.get('net_reward')}"
         ))
         
+        user_session_id = _session_id_from_username(user.username) if user else 0
         if user:
             task_name = task.prompt_desc[:50] if task and task.prompt_desc else "Úkol"
             db.add(ChatLog(
-                session_id=user.id,
+                session_id=user_session_id,
                 sender_id=user.id,
                 content=f"📋 Úkol '{task_name}...' vyhodnocen. Odměna: {result.get('net_reward', 0)} kreditů."
             ))
         db.commit()
-        
+
         # Notify
-        await routing_logic.broadcast_to_session(result.get("user_id", task_id), json.dumps({
+        await routing_logic.broadcast_to_session(user_session_id, json.dumps({
             "type": "task_update",
             "task_id": task_id,
             "status": "paid",
@@ -369,8 +385,8 @@ class AdminService:
             "net_reward": result.get("net_reward"),
             "rating": int(modifier * 100)
         }))
-        
-        await routing_logic.broadcast_to_session(result.get("user_id", task_id), json.dumps({
+
+        await routing_logic.broadcast_to_session(user_session_id, json.dumps({
             "type": "economy_update",
             "credits": result.get("net_reward", 0),
             "msg": f"Odměna za úkol: +{result.get('net_reward', 0)} CR"

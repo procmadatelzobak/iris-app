@@ -196,26 +196,37 @@ class ChatService:
                         "reason": "SYSTEM_VERIFIED"
                     }))
                 else:
-                    # Normal Report -> Heat Up
+                    # Normal Report -> Heat Up + Reward User
                     gamestate.report_anomaly()
                     target_log.was_reported = True
+
+                    # Reward the reporting user
+                    report_reward = gamestate.report_reward
+                    user.credits += report_reward
+
                     db.commit()
-                    
+
                     # Broadcast new temp
                     await routing_logic.broadcast_global(json.dumps({
-                        "type": "gamestate_update", 
+                        "type": "gamestate_update",
                         "temperature": gamestate.temperature
                     }))
-                    
+
+                    # Send reward update to user
+                    await websocket.send_text(json.dumps({
+                        "type": "economy_update",
+                        "credits": user.credits
+                    }))
+
                     # Ack
                     await websocket.send_text(json.dumps({
                         "type": "report_accepted",
-                        "msg": "Report filed. Anomaly detected."
+                        "msg": f"Anomálie zaznamenána. Odměna: +{report_reward} CR."
                     }))
-                    
+
                     # Log
                     db_log = SessionLocal()
-                    db_log.add(SystemLog(event_type="REPORT", message=f"{user.username} reported message {msg_id}"))
+                    db_log.add(SystemLog(event_type="REPORT", message=f"{user.username} reported message {msg_id}, reward: {report_reward} CR"))
                     db_log.commit()
                     db_log.close()
             return
