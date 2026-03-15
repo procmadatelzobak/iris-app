@@ -3,14 +3,10 @@
 {% block head %}
 <link href="/static/css/terminal.css" rel="stylesheet">
 <style>
-    /* Agent specific overrides */
+    /* Agent terminal: pink/magenta theme */
     body {
         color: #f0f;
         text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
-    }
-
-    .status-panel {
-        border-right: 1px solid #f0f;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -29,6 +25,29 @@
         opacity: 0.8;
     }
 
+    /* Hyper (autopilot) message badge */
+    .chat-bubble .badge-hyper {
+        display: inline-block;
+        font-size: 0.5rem;
+        background: #7c3aed;
+        color: #e9d8fd;
+        padding: 0 4px;
+        border-radius: 2px;
+        margin-left: 4px;
+        vertical-align: middle;
+    }
+
+    .chat-bubble .badge-verified {
+        display: inline-block;
+        font-size: 0.5rem;
+        background: #065f46;
+        color: #6ee7b7;
+        padding: 0 4px;
+        border-radius: 2px;
+        margin-left: 4px;
+        vertical-align: middle;
+    }
+
     /* Hyper Visibility Modes */
     body.mode-blackbox #chatHistory {
         filter: blur(20px) brightness(0.1);
@@ -42,143 +61,173 @@
 
     body.mode-forensic {
         filter: contrast(1.5) sepia(1) hue-rotate(240deg);
+    }
 
-        /* AI Optimizer Feedback */
-        .optimizer-feedback {
-            border: 1px dashed #d6bcfa;
-            background: rgba(40, 0, 40, 0.6);
-            padding: 4px 6px;
-            margin-bottom: 6px;
-            font-size: 0.65rem;
-            color: #e9d8fd;
-            border-radius: 2px;
-        }
+    /* Optimizer feedback (forensic mode context) */
+    .optimizer-feedback {
+        border: 1px dashed #d6bcfa;
+        background: rgba(40, 0, 40, 0.6);
+        padding: 4px 6px;
+        margin-bottom: 6px;
+        font-size: 0.65rem;
+        color: #e9d8fd;
+        border-radius: 2px;
+    }
 
-        .optimizer-original {
-            text-decoration: line-through;
-            opacity: 0.6;
-            color: #f687b3;
-        }
+    .optimizer-original {
+        text-decoration: line-through;
+        opacity: 0.6;
+        color: #f687b3;
+    }
 
-        .optimizer-arrow {
-            color: #fff;
-            margin: 0 3px;
-        }
+    .optimizer-arrow {
+        color: #fff;
+        margin: 0 3px;
+    }
 
-        .optimizer-final {
-            color: #4ade80;
-            font-weight: bold;
-        }
+    .optimizer-final {
+        color: #4ade80;
+        font-weight: bold;
+    }
+
+    /* Status section styling */
+    .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2px 0;
+    }
+
+    .status-label {
+        color: #d946ef;
+        font-size: 0.625rem;
+    }
+
+    .status-value {
+        color: #fff;
+        font-weight: bold;
+        font-size: 0.625rem;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="crt-overlay"></div>
+
 <!-- Overload Signal -->
-<div id="overloadSignal" data-key="agent_terminal.overload_warning"
+<div id="overloadSignal"
     class="fixed top-1 right-1 border border-red-600 bg-red-900/80 text-white font-bold px-2 py-1 text-[10px] z-50 animate-pulse hidden">
     ⚠ SYSTÉMOVÉ PŘETÍŽENÍ ⚠
 </div>
 
-<!-- Manual Button -->
-<a href="/doc/view/agent" target="_blank"
-    class="fixed top-1 right-56 z-50 border border-pink-500 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
-    [ MANUÁL ]
-</a>
+<!-- Top bar buttons -->
+<div class="fixed top-1 right-20 z-50 flex gap-1">
+    <a href="/doc/view/agent" target="_blank"
+        class="border border-pink-500/50 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
+        MANUÁL
+    </a>
+    <a href="/auth/logout"
+        class="border border-pink-500/50 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
+        ODPOJIT
+    </a>
+</div>
 
-<!-- Logout Button -->
-<a href="/auth/logout" data-key="agent_terminal.disconnect"
-    class="fixed top-1 right-32 z-50 border border-pink-500 text-pink-500 hover:bg-pink-900 px-1.5 py-0.5 text-[10px] font-mono transition">
-    [ ODPOJIT ]
-</a>
+<!-- HYPER LOCK SCREEN -->
+<div id="hyperLockOverlay" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col items-center justify-center">
+    <div class="text-pink-500 text-2xl font-bold mb-2 animate-pulse">HYPER-VISIBILITY AKTIVNÍ</div>
+    <div class="text-pink-800 font-mono mb-4 text-sm">NEURÁLNÍ SPOJENÍ NAVÁZÁNO // JE NUTNÝ MANUÁLNÍ OVERRIDE</div>
+    <div class="flex flex-col gap-2 w-56">
+        <input type="password" id="unlockPass" placeholder="ZADEJTE OVLÁDACÍ KÓD"
+            class="bg-black border border-pink-900 text-center text-white p-1.5 text-sm focus:border-pink-500 outline-none">
+        <button onclick="attemptUnlock()"
+            class="bg-pink-900 text-white border border-pink-500 p-1.5 text-sm hover:bg-pink-700">
+            DEAKTIVOVAT HYPER
+        </button>
+        <a href="/auth/logout" class="text-center text-gray-500 text-[10px] hover:text-white mt-2">
+            [ NOUZOVÉ ODPOJENÍ ]
+        </a>
+    </div>
+</div>
 
 <div class="flex h-screen bg-black font-mono overflow-hidden w-full">
 
-    <!-- HYPER LOCK SCREEN OVERLAY -->
-    <div id="hyperLockOverlay" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col items-center justify-center">
-        <div class="text-pink-500 text-2xl font-bold mb-2 animate-pulse" data-key="agent_terminal.hyper_lock_title">
-            HYPER-VISIBILITY AKTIVNÍ</div>
-        <div class="text-pink-800 font-mono mb-4 text-sm" data-key="agent_terminal.hyper_lock_message">NEURÁLNÍ SPOJENÍ
-            NAVÁZÁNO // JE NUTNÝ MANUÁLNÍ OVERRIDE</div>
-        <div class="flex flex-col gap-2 w-56">
-            <input type="password" id="unlockPass" placeholder="ZADEJTE OVLÁDACÍ KÓD"
-                class="bg-black border border-pink-900 text-center text-white p-1.5 text-sm focus:border-pink-500 outline-none">
-            <button onclick="attemptUnlock()"
-                class="bg-pink-900 text-white border border-pink-500 p-1.5 text-sm hover:bg-pink-700"
-                data-key="agent_terminal.deactivate_hyper">
-                DEAKTIVOVAT HYPER
-            </button>
-            <a href="/auth/logout" class="text-center text-gray-500 text-[10px] hover:text-white mt-2"
-                data-key="agent_terminal.emergency_disconnect">[ NOUZOVÉ ODPOJENÍ ]</a>
-        </div>
-    </div>
+    <!-- LEFT PANEL: Status + Timer -->
+    <div class="w-64 flex-shrink-0 flex flex-col h-full border-r border-pink-900/30 bg-black/30">
 
-    <!-- Left Panel: Status -->
-    <div class="w-[30%] min-w-[260px] max-w-md flex flex-col h-full gap-3 p-3 border-r border-pink-900/30 bg-black/30">
-        <div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1">
-            <!-- Status Card -->
-            <div class="bg-black/60 border border-pink-800 relative p-3 flex flex-col gap-2">
-                <h3 class="text-pink-500 border-b border-pink-900 pb-1 font-bold text-xs"
-                    data-key="agent_terminal.status">STAV</h3>
-                <div class="grid grid-cols-1 gap-1 text-[10px] font-mono text-pink-300">
-                    <div>AGENT: <span class="text-white font-bold">{{ user.username|upper }}</span></div>
-                    <div><span data-key="agent_terminal.session_id">ID RELACE</span>: <span id="sessionIdDisplay"
-                            class="text-white">...</span></div>
-                    <div>SHIFT: <span id="shiftDisplay" class="text-white">...</span></div>
-                    <div>TEPLOTA: <span id="tempDisplay" class="text-white">...</span>°C</div>
-                    <div>OKNO: <span id="responseWindowDisplay" class="text-white">120s</span></div>
-                    <div><span data-key="agent_terminal.llm_status">LLM</span>: <span id="llmStatus"
-                            class="text-green-500" data-key="agent_terminal.llm_online">ONLINE</span></div>
+        <!-- Status Card -->
+        <div class="p-3 border-b border-pink-900/30">
+            <h3 class="text-pink-500 border-b border-pink-900 pb-1 mb-2 font-bold text-xs">STAV AGENTA</h3>
+            <div class="space-y-1">
+                <div class="status-row">
+                    <span class="status-label">AGENT</span>
+                    <span class="status-value">{{ user.username|upper }}</span>
                 </div>
-
-                <div class="mt-2 pt-2 border-t border-pink-900">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-pink-500 font-bold text-[10px]"
-                            data-key="agent_terminal.hyper_mode">HYPER-MÓD</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="autopilotToggle" class="sr-only peer"
-                                onchange="toggleAutopilot()">
-                            <div
-                                class="w-8 h-4 bg-pink-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-500">
-                            </div>
-                        </label>
-                    </div>
-                    <div class="text-[8px] text-pink-800 leading-tight" data-key="agent_terminal.hyper_description">
-                        Aktivuje automatickou neurální odpověď. Vstup uživatele bude uzamčen.
-                    </div>
+                <div class="status-row">
+                    <span class="status-label">RELACE</span>
+                    <span id="sessionIdDisplay" class="status-value">...</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">SHIFT</span>
+                    <span id="shiftDisplay" class="status-value">...</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">TEPLOTA</span>
+                    <span class="status-value"><span id="tempDisplay">...</span>°C</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">OKNO</span>
+                    <span id="responseWindowDisplay" class="status-value">120s</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">LLM</span>
+                    <span id="llmStatus" class="status-value text-green-500">ONLINE</span>
                 </div>
             </div>
         </div>
 
-        <!-- Timer Bar -->
-        <div class="bg-black/60 border border-pink-800 p-3 shadow-lg">
+        <!-- Hyper Mode Toggle -->
+        <div class="p-3 border-b border-pink-900/30">
+            <div class="flex justify-between items-center">
+                <span class="text-pink-500 font-bold text-[10px]">HYPER-MÓD</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="autopilotToggle" class="sr-only peer" onchange="toggleAutopilot()">
+                    <div
+                        class="w-8 h-4 bg-pink-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-500">
+                    </div>
+                </label>
+            </div>
+            <div class="text-[8px] text-pink-800 leading-tight mt-1">
+                AI odpovídá místo vás. Vstup bude uzamčen.
+            </div>
+        </div>
+
+        <!-- Spacer -->
+        <div class="flex-1"></div>
+
+        <!-- Timer Bar (anchored to bottom) -->
+        <div class="p-3 border-t border-pink-900/30">
             <div class="flex items-center justify-between mb-1">
-                <h3 class="text-pink-500 font-bold text-[10px]">ODPOVĚĎ TIMER</h3>
-                <span class="text-[9px] text-pink-300">limit: <span id="timerLimitDisplay">120s</span></span>
+                <h3 class="text-pink-500 font-bold text-[10px]">ODPOVĚĎ</h3>
+                <span class="text-[9px] text-pink-300"><span id="timerLimitDisplay">120s</span></span>
             </div>
             <div class="h-3 bg-gray-900 border border-pink-900 relative overflow-hidden">
                 <div id="timerBar" class="h-full bg-yellow-500 transition-all duration-1000 linear"
-                    style="width: 100%;">
-                </div>
+                    style="width: 100%;"></div>
             </div>
-            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-2"
-                data-key="agent_terminal.timer_waiting">ČEKÁM NA UŽIVATELE</div>
+            <div id="timerText" class="text-center text-[9px] text-pink-400 mt-1">ČEKÁM NA UŽIVATELE</div>
         </div>
     </div>
 
-    <!-- Right Panel: Chat Area -->
+    <!-- RIGHT PANEL: Chat -->
     <div class="flex-1 flex flex-col bg-black relative">
-        <!-- Chat History -->
-        <div id="chatHistory" class="flex-1 p-2 overflow-y-auto space-y-2 custom-scrollbar pb-16">
-            <!-- Messages go here -->
-        </div>
 
-        <!-- Lock Overlay if needed -->
+        <!-- Chat History -->
+        <div id="chatHistory" class="flex-1 p-2 overflow-y-auto space-y-2 custom-scrollbar pb-16"></div>
+
+        <!-- Lock Overlay -->
         <div id="lockOverlay"
-            class="absolute inset-x-0 bottom-0 top-0 bg-black/80 z-20 flex items-center justify-center hidden">
-            <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-lg"
-                data-key="agent_terminal.transmission_blocked">
+            class="absolute inset-0 bg-black/80 z-20 flex items-center justify-center hidden">
+            <div class="text-red-500 font-mono animate-pulse font-bold tracking-widest text-lg">
                 ⚠️ PŘENOS BLOKOVÁN ⚠️
             </div>
         </div>
@@ -190,8 +239,7 @@
                     class="flex-1 bg-black border border-pink-700 text-pink-400 p-1.5 text-sm focus:outline-none focus:border-pink-400 font-mono"
                     placeholder="Vložte odpověď..." autocomplete="off">
                 <button type="submit"
-                    class="bg-pink-900 hover:bg-pink-700 text-white px-4 py-1.5 text-sm border border-pink-600 font-bold transition"
-                    data-key="agent_terminal.transmit_button">
+                    class="bg-pink-900 hover:bg-pink-700 text-white px-4 py-1.5 text-sm border border-pink-600 font-bold transition">
                     ODESLAT
                 </button>
             </form>
